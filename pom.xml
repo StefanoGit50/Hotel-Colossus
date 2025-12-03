@@ -15,7 +15,7 @@
         <maven.compiler.target>25</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javafx.version>25.0.1</javafx.version>
-        <main.class>it.unisa.Main</main.class>
+        <main.class>it.unisa.main.Main</main.class>
     </properties>
 
     <dependencies>
@@ -39,7 +39,17 @@
             <artifactId>bcrypt</artifactId>
             <version>0.10.2</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>9.4.0</version>
+        </dependency>
+
+
     </dependencies>
+
+
 
     <build>
         <extensions>
