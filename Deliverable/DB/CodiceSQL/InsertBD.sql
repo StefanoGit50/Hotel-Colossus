@@ -30,15 +30,25 @@ INSERT INTO RicevutaFiscale VALUES
 
 -- Inserimento servizi
 INSERT INTO Servizio VALUES
-('WiFi',10.0,1),
-('Colazione',15.0,2),
-('Spa',50.0,3);
+('WiFi',10.0),
+('Colazione',15.0),
+('Spa',50.0);
 
 -- Inserimento trattamenti
 INSERT INTO Trattamento VALUES
-('Massaggio',50.0,1,50.0),
-('Trattamento viso',70.0,2,70.0),
-('Percorso benessere',100.0,3,100.0);
+('Massaggio',50.0),
+('Trattamento viso',70.0),
+('Percorso benessere',100.0);
+
+INSERT INTO ha VALUES
+('Wifi',1),
+('Colazione',2),
+('Spa',3);
+
+INSERT INTO associato VALUES
+('Massaggio',1,50.0),
+('Trattamento viso',2,75.6),
+('Percorso benessere',3,94.8);
 
 -- Inserimento impiegati
 INSERT INTO Impiegato VALUES

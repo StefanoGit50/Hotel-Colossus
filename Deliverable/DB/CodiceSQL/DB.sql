@@ -66,18 +66,28 @@ create table RicevutaFiscale(
 create table Servizio(
 	Nome varchar(50) not null,
     Prezzo double not null,
-    IDPrenotazione int null,
-    primary key(Nome),
-	foreign key(IDPrenotazione) references Prenotazione(IDPrenotazione) on delete cascade on update cascade
+    primary key(Nome)
 );
 
 create table Trattamento(
 	Nome varchar(50) not null,
 	Prezzo double not null,
-	IDPrenotazione int null,
-	PrezzoAcquisto double not null,
-    primary key(Nome),
-    foreign key(IDPrenotazione) references Prenotazione(IDPrenotazione) on delete cascade on update cascade 
+    primary key(Nome)
+);
+
+create table ha(
+       Nome varchar(50) not null,
+	   IDPrenotazione int not null,
+       foreign key(Nome)references Servizio(Nome) on update cascade	on delete cascade,
+       foreign key(IDPrenotazione)references prenotazione(IDPrenotazione) on update cascade on delete cascade
+);
+
+create table associato(
+	Nome varchar(50) not null,
+	IDPrenotazione int not null,
+    PrezzoAcquisto double not null,
+    foreign key(Nome)references trattamento(Nome) on update cascade on delete cascade,
+    foreign key(IDPrenotazione) references prenotazione(IDPrenotazione) on update cascade on delete cascade
 );
 
 create table Impiegato(
