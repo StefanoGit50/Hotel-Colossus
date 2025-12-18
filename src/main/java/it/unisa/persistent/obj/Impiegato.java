@@ -1,6 +1,6 @@
 package it.unisa.persistent.obj;
 
-import persistent.util.Ruolo;
+import it.unisa.persistent.util.Ruolo;
 
 import java.time.LocalDate;
 import java.util.Objects;

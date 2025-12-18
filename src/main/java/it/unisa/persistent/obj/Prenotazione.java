@@ -1,6 +1,6 @@
 package it.unisa.persistent.obj;
 
-import persistent.util.Util;
+import it.unisa.persistent.util.Util;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -172,10 +172,10 @@ public class Prenotazione implements Cloneable {
      *
      * @return L'oggetto {@code RicevutaFiscale2} generato.
      */
-    public RicevutaFiscale checkout() {
+    //public RicevutaFiscale checkout() {
         // Implementazione logica del check-out
-        return new RicevutaFiscale(); // Assumendo esista una classe RicevutaFiscale2
-    }
+    //    return new RicevutaFiscale(); // Assumendo esista una classe RicevutaFiscale2
+  //  }
 
 
     // --- Getter e Setter ---

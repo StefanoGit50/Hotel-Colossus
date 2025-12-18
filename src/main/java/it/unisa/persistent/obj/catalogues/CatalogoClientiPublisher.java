@@ -1,7 +1,7 @@
 package it.unisa.persistent.obj.catalogues;
 
-import persistent.obj.Cliente;
-import persistent.util.Util;
+import it.unisa.persistent.obj.Cliente;
+import it.unisa.persistent.util.Util;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

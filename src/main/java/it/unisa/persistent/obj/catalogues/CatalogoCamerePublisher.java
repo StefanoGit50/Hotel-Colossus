@@ -1,7 +1,7 @@
 package it.unisa.persistent.obj.catalogues;
 
-import persistent.obj.Camera;
-import persistent.util.Util;
+import it.unisa.persistent.obj.Camera;
+import it.unisa.persistent.util.Util;
 
 import java.util.ArrayList;
 

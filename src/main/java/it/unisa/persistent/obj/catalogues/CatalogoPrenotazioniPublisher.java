@@ -1,5 +1,5 @@
 package it.unisa.persistent.obj.catalogues;
-import persistent.obj.Prenotazione;
+import it.unisa.persistent.obj.Prenotazione;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ public class CatalogoPrenotazioniPublisher {
 
     /**
      * Costruttore della classe CatalogoPrenotazioniPublisher.
-     * @param listaPrenotazioni Lista di prenotazioni di tipo {@link persistent.obj.Prenotazione} del catalogo.
+     * @param listaPrenotazioni Lista di prenotazioni di tipo {@link it.unisa.persistent.obj.Prenotazione} del catalogo.
      */
     public CatalogoPrenotazioniPublisher(List<Prenotazione> listaPrenotazioni) {
         this.listaPrenotazioni = listaPrenotazioni;
@@ -44,9 +44,9 @@ public class CatalogoPrenotazioniPublisher {
     /**
      * Avvia la procedura di checkout per una specifica prenotazione.
      */
-    public void effettuaCheckout(Prenotazione prenotazione) {
-        prenotazione.checkout();
-    }
+    //public void effettuaCheckout(Prenotazione prenotazione) {
+    //    prenotazione.checkout();
+    //}
 
     /**
      * Cerca prenotazioni in base a criteri specifici.

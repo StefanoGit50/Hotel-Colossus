@@ -1,8 +1,8 @@
 package it.unisa.persistent.util;
 
-import persistent.obj.Camera;
-import persistent.obj.Cliente;
-import persistent.obj.Servizio;
+import it.unisa.persistent.obj.Camera;
+import it.unisa.persistent.obj.Cliente;
+import it.unisa.persistent.obj.Servizio;
 
 import java.util.ArrayList;
 

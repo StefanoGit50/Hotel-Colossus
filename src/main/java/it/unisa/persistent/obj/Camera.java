@@ -1,6 +1,6 @@
 package it.unisa.persistent.obj;
 
-import persistent.util.Stato;
+import it.unisa.persistent.util.Stato;
 
 import java.util.Objects;
 
