@@ -1,0 +1,21 @@
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Gestisce l'elenco complessivo delle prenotazioni, permettendo la registrazione,
+ * la ricerca e la rimozione delle stesse.
+ */
+public class CatalogoPrenotazionePublisher {
+
+    private List<Prenotazione> listaPrenotazioni;
+
+    /**
+     * Costruttore che inizializza il catalogo.
+     */
+    public CatalogoPrenotazionePublisher() {
+        this.listaPrenotazioni = new ArrayList<>();
+    }
+
+    // --- Metodi di Business ---
+
+}
