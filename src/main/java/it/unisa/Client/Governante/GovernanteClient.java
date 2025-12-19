@@ -51,10 +51,10 @@ public class GovernanteClient
                     case 3:
                     {
                         List<Stanza> stanze = governanteInterface.getStanze();
-                        
+
                         for(Stanza s: stanze)
                         {
-                            System.out.println("Stanza: " + s.getNumero() + "   \n\tStato globale: " + s.getStatoGlobale() + "\n\tStato pulizie: " + s.getStatoPulizie());
+                            System.out.println("Stanza: " + governanteInterface.getStanza(s.getNumero()).getNumero() + "   \n\tStato globale: " + governanteInterface.getStanza(s.getNumero()).getStatoGlobale() + "\n\tStato pulizie: " + governanteInterface.getStanza(s.getNumero()).getStatoPulizie());
                         }
                         break;
                     }
