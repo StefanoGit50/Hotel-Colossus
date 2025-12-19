@@ -1,10 +1,10 @@
-package it.unisa.gestionePrenotazioni.clients;
+package it.unisa.Client.FrontDesk;
 
-import it.unisa.gestionePrenotazioni.Interfacce.GestioneCamereInterface;
-import it.unisa.gestionePrenotazioni.Interfacce.GestionePrenotazioniInterface;
-import it.unisa.gestionePrenotazioni.gestioneCamere.Stanza;
-import it.unisa.gestionePrenotazioni.gestionePrenotazioni.Cliente;
-import it.unisa.gestionePrenotazioni.gestionePrenotazioni.Prenotazione;
+import it.unisa.interfacce.GovernanteInterface;
+import it.unisa.interfacce.FrontDeskInterface;
+import it.unisa.Server.gestioneCamere.Stanza;
+import it.unisa.Server.gestioneClienti.Cliente;
+import it.unisa.Server.gestionePrenotazioni.Prenotazione;
 
 import java.rmi.Naming;
 import java.util.List;
@@ -21,10 +21,10 @@ public class FrontDeskClient
         {
             logger.info("Sto cercando gli oggetti remoti GestionePrenotazioni e Gestionecamere...");
             
-            GestionePrenotazioniInterface gestionePrenotazioniInterface = (GestionePrenotazioniInterface) Naming.lookup("rmi://localhost/GestionePrenotazioni");
+            FrontDeskInterface frontDeskInterface = (FrontDeskInterface) Naming.lookup("rmi://localhost/GestionePrenotazioni");
             logger.info("Trovato GestionePrenotazioni! ...");
             
-            GestioneCamereInterface gestioneCamereInterface = (GestioneCamereInterface) Naming.lookup("rmi://localhost/GestoreCamere");
+            GovernanteInterface governanteInterface = (GovernanteInterface) Naming.lookup("rmi://localhost/GestoreCamere");
             logger.info("Trovato GestioneCamere! ...");
             
             int x=0;
@@ -51,7 +51,7 @@ public class FrontDeskClient
                         
                         String id = c.getNome() + "" + s.getNumero();
                         
-                        gestionePrenotazioniInterface.effettuaPrenotazione(id, c, s);
+                        frontDeskInterface.effettuaPrenotazione(id, c, s);
                         
                         break;
                     }
@@ -67,13 +67,13 @@ public class FrontDeskClient
                         
                         String id = c.getNome() + "" + s.getNumero();
                         
-                        gestionePrenotazioniInterface.cancellaPrenotazione(new Prenotazione(id, c, s));
+                        frontDeskInterface.cancellaPrenotazione(new Prenotazione(id, c, s));
                         
                         break;
                     }
                     case 3:
                     {
-                        List<Prenotazione> prenotazioni = gestionePrenotazioniInterface.getPrenotazioni();
+                        List<Prenotazione> prenotazioni = frontDeskInterface.getPrenotazioni();
                         
                         for(Prenotazione p: prenotazioni)
                         {

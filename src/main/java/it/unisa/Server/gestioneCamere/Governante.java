@@ -1,6 +1,6 @@
-package it.unisa.gestionePrenotazioni.gestioneCamere;
+package it.unisa.Server.gestioneCamere;
 
-import it.unisa.gestionePrenotazioni.Interfacce.GestioneCamereInterface;
+import it.unisa.interfacce.GovernanteInterface;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class GestioneCamere extends UnicastRemoteObject implements GestioneCamereInterface
+public class Governante extends UnicastRemoteObject implements GovernanteInterface
 {
     private static final long serialVersionUID = -34234234L;
     static Logger logger = Logger.getLogger("global");
@@ -19,7 +19,7 @@ public class GestioneCamere extends UnicastRemoteObject implements GestioneCamer
 
     private static List<Stanza> stanze = new ArrayList<>();
 
-    public GestioneCamere() throws RemoteException {}
+    public Governante() throws RemoteException {}
 
     @Override
     public Stanza getStanza(int numero)
@@ -106,7 +106,7 @@ public class GestioneCamere extends UnicastRemoteObject implements GestioneCamer
             }
 
             logger.info("Sto creando il gestore camere...");
-            GestioneCamere gc = new GestioneCamere();
+            Governante gc = new Governante();
             logger.info("Gestore camere creato... ");
 
             logger.info("Effettuo il rebind del gestore camere...");

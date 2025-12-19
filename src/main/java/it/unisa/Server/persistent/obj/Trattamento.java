@@ -1,4 +1,4 @@
-package it.unisa.Server.gestionePrenotazioni.persistent.obj;
+package it.unisa.Server.persistent.obj;
 
 import java.util.Objects;
 

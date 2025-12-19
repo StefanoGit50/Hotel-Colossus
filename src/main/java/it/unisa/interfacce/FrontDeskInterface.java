@@ -1,14 +1,14 @@
-package it.unisa.Client.Interfacce;
+package it.unisa.interfacce;
 
-import it.unisa.Server.gestionePrenotazioni.gestioneCamere.Stanza;
-import it.unisa.Server.gestionePrenotazioni.gestionePrenotazioni.Cliente;
-import it.unisa.Server.gestionePrenotazioni.gestionePrenotazioni.Prenotazione;
+import it.unisa.Server.gestioneCamere.Stanza;
+import it.unisa.Server.gestioneClienti.Cliente;
+import it.unisa.Server.gestionePrenotazioni.Prenotazione;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
-public interface GestionePrenotazioniInterface extends Remote
+public interface FrontDeskInterface extends Remote
 {
     public void effettuaPrenotazione(String id, Cliente cliente, Stanza stanza) throws RemoteException;
     public List<Prenotazione> getPrenotazioni() throws RemoteException;

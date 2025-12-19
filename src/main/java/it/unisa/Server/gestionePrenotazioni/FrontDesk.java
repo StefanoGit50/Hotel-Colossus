@@ -1,8 +1,9 @@
-package it.unisa.gestionePrenotazioni.gestionePrenotazioni;
+package it.unisa.Server.gestionePrenotazioni;
 
-import it.unisa.gestionePrenotazioni.Interfacce.GestioneCamereInterface;
-import it.unisa.gestionePrenotazioni.Interfacce.GestionePrenotazioniInterface;
-import it.unisa.gestionePrenotazioni.gestioneCamere.Stanza;
+import it.unisa.Server.gestioneClienti.Cliente;
+import it.unisa.interfacce.GovernanteInterface;
+import it.unisa.interfacce.FrontDeskInterface;
+import it.unisa.Server.gestioneCamere.Stanza;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
@@ -11,13 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class GestionePrenotazioni extends UnicastRemoteObject implements GestionePrenotazioniInterface
+public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
 {
     static Logger logger = Logger.getLogger("global");
     
     List<Prenotazione> prenotazioni = new ArrayList<>();
     
-    public GestionePrenotazioni() throws RemoteException {}
+    public FrontDesk() throws RemoteException {}
 
     @Override
     public void effettuaPrenotazione(String id, Cliente cliente, Stanza stanza)
@@ -28,7 +29,7 @@ public class GestionePrenotazioni extends UnicastRemoteObject implements Gestion
             prenotazioni.add(p);
             
             try{
-                GestioneCamereInterface gs = (GestioneCamereInterface) Naming.lookup("rmi://localhost/GestoreCamere");
+                GovernanteInterface gs = (GovernanteInterface) Naming.lookup("rmi://localhost/GestoreCamere");
                 gs.setOccupataGlobale(stanza);
             } catch(Exception e)
             {
@@ -81,7 +82,7 @@ public class GestionePrenotazioni extends UnicastRemoteObject implements Gestion
         try
         {
             logger.info("Genero il gestore prenotazioni...");
-            GestionePrenotazioni gp = new GestionePrenotazioni();
+            FrontDesk gp = new FrontDesk();
             logger.info("Gestore prenotazioni ottenuto");
             
             logger.info("Effettuo il rebind di gestione prenotazioni...");

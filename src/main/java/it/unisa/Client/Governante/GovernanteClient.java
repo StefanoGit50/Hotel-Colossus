@@ -1,7 +1,7 @@
-package it.unisa.gestionePrenotazioni.clients;
+package it.unisa.Client.Governante;
 
-import it.unisa.gestionePrenotazioni.Interfacce.GestioneCamereInterface;
-import it.unisa.gestionePrenotazioni.gestioneCamere.Stanza;
+import it.unisa.interfacce.GovernanteInterface;
+import it.unisa.Server.gestioneCamere.Stanza;
 
 import java.rmi.Naming;
 import java.util.List;
@@ -19,7 +19,7 @@ public class GovernanteClient
         {
             logger.info("Sto cercando l' oggetto remoto Gestionecamere...");
             
-            GestioneCamereInterface gestioneCamereInterface = (GestioneCamereInterface) Naming.lookup("rmi://localhost/GestoreCamere");
+            GovernanteInterface governanteInterface = (GovernanteInterface) Naming.lookup("rmi://localhost/GestoreCamere");
             logger.info("Trovato GestioneCamere! ...");
             
             int x=0;
@@ -38,19 +38,19 @@ public class GovernanteClient
                     {
                         System.out.println("Inserisci numero camera da pulire: ");
                         Scanner sc2 = new Scanner(System.in);
-                        gestioneCamereInterface.setOccupataPulizie(new Stanza(sc2.nextInt()));
+                        governanteInterface.setOccupataPulizie(new Stanza(sc2.nextInt()));
                         break;
                     }
                     case 2: 
                     {
                         System.out.println("Inserisci numero camera da liberare: ");
                         Scanner sc2 = new Scanner(System.in);
-                        gestioneCamereInterface.setLiberaPulizie(new Stanza(sc2.nextInt()));
+                        governanteInterface.setLiberaPulizie(new Stanza(sc2.nextInt()));
                         break;
                     }
                     case 3:
                     {
-                        List<Stanza> stanze = gestioneCamereInterface.getStanze();
+                        List<Stanza> stanze = governanteInterface.getStanze();
                         
                         for(Stanza s: stanze)
                         {

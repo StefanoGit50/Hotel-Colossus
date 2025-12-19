@@ -1,4 +1,4 @@
-package it.unisa.Server.gestionePrenotazioni.persistent.util;
+package it.unisa.Server.persistent.util;
 
 /**
  * Elenco degli stati possibili di una camera
