@@ -1,8 +1,4 @@
-<<<<<<<< Updated upstream:src/main/java/it/unisa/gestionePrenotazioni/Interfacce/GestionePrenotazioniInterface.java
-package it.unisa.gestionePrenotazioni.Interfacce;
-========
-package it.unisa.Client.FrontDesk.clients.FrontDesk;
->>>>>>>> Stashed changes:src/main/java/it/unisa/Client/FrontDesk/clients/FrontDesk/GestionePrenotazioniInterface.java
+package it.unisa.Client.Interfacce;
 
 import it.unisa.Server.gestionePrenotazioni.gestioneCamere.Stanza;
 import it.unisa.Server.gestionePrenotazioni.gestionePrenotazioni.Cliente;
