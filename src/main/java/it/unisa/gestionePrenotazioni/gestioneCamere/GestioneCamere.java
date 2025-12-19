@@ -1,6 +1,6 @@
 package it.unisa.gestionePrenotazioni.gestioneCamere;
 
-import it.unisa.gestionePrenotazioni.clients.GestioneCamereInterface;
+import it.unisa.gestionePrenotazioni.Interfacce.GestioneCamereInterface;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;

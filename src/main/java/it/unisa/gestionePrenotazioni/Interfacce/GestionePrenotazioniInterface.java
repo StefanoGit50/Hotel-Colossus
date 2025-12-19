@@ -1,4 +1,4 @@
-package it.unisa.gestionePrenotazioni.clients;
+package it.unisa.gestionePrenotazioni.Interfacce;
 
 import it.unisa.gestionePrenotazioni.gestioneCamere.Stanza;
 import it.unisa.gestionePrenotazioni.gestionePrenotazioni.Cliente;

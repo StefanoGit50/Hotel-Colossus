@@ -1,5 +1,6 @@
 package it.unisa.gestionePrenotazioni.clients;
 
+import it.unisa.gestionePrenotazioni.Interfacce.GestioneCamereInterface;
 import it.unisa.gestionePrenotazioni.gestioneCamere.Stanza;
 
 import java.rmi.Naming;
