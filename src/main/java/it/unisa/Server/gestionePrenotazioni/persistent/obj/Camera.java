@@ -1,6 +1,6 @@
-package it.unisa.persistent.obj;
+package it.unisa.Server.gestionePrenotazioni.persistent.obj;
 
-import it.unisa.persistent.util.Stato;
+import it.unisa.Server.gestionePrenotazioni.persistent.util.Stato;
 
 import java.util.Objects;
 

@@ -1,8 +1,12 @@
+<<<<<<<< Updated upstream:src/main/java/it/unisa/gestionePrenotazioni/Interfacce/GestionePrenotazioniInterface.java
 package it.unisa.gestionePrenotazioni.Interfacce;
+========
+package it.unisa.Client.FrontDesk.clients.FrontDesk;
+>>>>>>>> Stashed changes:src/main/java/it/unisa/Client/FrontDesk/clients/FrontDesk/GestionePrenotazioniInterface.java
 
-import it.unisa.gestionePrenotazioni.gestioneCamere.Stanza;
-import it.unisa.gestionePrenotazioni.gestionePrenotazioni.Cliente;
-import it.unisa.gestionePrenotazioni.gestionePrenotazioni.Prenotazione;
+import it.unisa.Server.gestionePrenotazioni.gestioneCamere.Stanza;
+import it.unisa.Server.gestionePrenotazioni.gestionePrenotazioni.Cliente;
+import it.unisa.Server.gestionePrenotazioni.gestionePrenotazioni.Prenotazione;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

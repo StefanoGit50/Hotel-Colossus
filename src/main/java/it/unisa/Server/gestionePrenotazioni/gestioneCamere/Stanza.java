@@ -1,4 +1,4 @@
-package it.unisa.gestionePrenotazioni.gestioneCamere;
+package it.unisa.Server.gestionePrenotazioni.gestioneCamere;
 
 import java.io.Serializable;
 

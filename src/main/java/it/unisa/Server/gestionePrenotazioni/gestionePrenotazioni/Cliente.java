@@ -1,4 +1,4 @@
-package it.unisa.gestionePrenotazioni.gestionePrenotazioni;
+package it.unisa.Server.gestionePrenotazioni.gestionePrenotazioni;
 
 import java.io.Serializable;
 

@@ -1,6 +1,6 @@
-package it.unisa.persistent.obj;
+package it.unisa.Server.gestionePrenotazioni.persistent.obj;
 
-import it.unisa.persistent.util.Util;
+import it.unisa.Server.gestionePrenotazioni.persistent.util.Util;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

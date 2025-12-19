@@ -1,4 +1,4 @@
-package it.unisa.persistent.util;
+package it.unisa.Server.gestionePrenotazioni.persistent.util;
 
 /**
  * Elenco dei possibili ruoli assumibili dagli impiegati

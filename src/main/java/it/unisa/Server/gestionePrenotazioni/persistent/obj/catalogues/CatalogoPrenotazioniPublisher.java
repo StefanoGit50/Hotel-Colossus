@@ -1,5 +1,5 @@
-package it.unisa.persistent.obj.catalogues;
-import it.unisa.persistent.obj.Prenotazione;
+package it.unisa.Server.gestionePrenotazioni.persistent.obj.catalogues;
+import it.unisa.Server.gestionePrenotazioni.persistent.obj.Prenotazione;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ public class CatalogoPrenotazioniPublisher {
 
     /**
      * Costruttore della classe CatalogoPrenotazioniPublisher.
-     * @param listaPrenotazioni Lista di prenotazioni di tipo {@link it.unisa.persistent.obj.Prenotazione} del catalogo.
+     * @param listaPrenotazioni Lista di prenotazioni di tipo {@link Prenotazione} del catalogo.
      */
     public CatalogoPrenotazioniPublisher(List<Prenotazione> listaPrenotazioni) {
         this.listaPrenotazioni = listaPrenotazioni;

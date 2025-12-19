@@ -1,7 +1,7 @@
-package it.unisa.persistent.obj.catalogues;
+package it.unisa.Server.gestionePrenotazioni.persistent.obj.catalogues;
 
-import it.unisa.persistent.obj.Camera;
-import it.unisa.persistent.util.Util;
+import it.unisa.Server.gestionePrenotazioni.persistent.obj.Camera;
+import it.unisa.Server.gestionePrenotazioni.persistent.util.Util;
 
 import java.util.ArrayList;
 
