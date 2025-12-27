@@ -1,4 +1,4 @@
-package it.unisa.Server.persistent.obj;
+package it.unisa.Common;
 
 import it.unisa.Server.persistent.util.Stato;
 
@@ -27,6 +27,8 @@ public class Camera implements Cloneable{
      * Numero massimo di clienti che possono soggiornare nella camera.
      */
     private int capacità;
+
+    private String noteCamera;
 
     /**
      * Costruttore per creare una nuova istanza di {@code Camera}.
@@ -105,6 +107,11 @@ public class Camera implements Cloneable{
     public void setCapacità(int capacità) {
         this.capacità = capacità;
     }
+
+    public void setNoteCamera(String noteCamera){ this.noteCamera = noteCamera;}
+
+    public String getNoteCamera(){ return this.noteCamera;}
+
 
     /**
      * @param obj   L'oggetto da confrontare.

@@ -14,4 +14,6 @@ public interface FrontDeskInterface extends Remote
     public List<Prenotazione> getPrenotazioni() throws RemoteException;
     public void cancellaPrenotazione(Prenotazione p) throws RemoteException;
     public Prenotazione getPrenotazione(String id) throws RemoteException;
+
+
 }

@@ -1,24 +1,17 @@
-package it.unisa.Server.gestioneCamere;
+package it.unisa.Client.Governante;
 
-import java.io.Serializable;
-
-public class Stanza implements Serializable
-{
-    private static final long serialVersionUID = 324234L;
-    
+public class Stanza {
     private int numero;
     private String statoGlobale;
     private String statoPulizie;
 
     public Stanza() {
     }
-
     public Stanza(int numero) {
         this.numero = numero;
         this.statoGlobale = "libera";
         this.statoPulizie = "libera";
     }
-    
     // GETTERS AND SETTERS
 
     public int getNumero() {
@@ -44,9 +37,9 @@ public class Stanza implements Serializable
     public void setStatoPulizie(String statoPulizie) {
         this.statoPulizie = statoPulizie;
     }
-    
+
     public String toString(){
-       return ("numero="+this.numero);
+        return ("numero="+this.numero);
     }
-    
+
 }

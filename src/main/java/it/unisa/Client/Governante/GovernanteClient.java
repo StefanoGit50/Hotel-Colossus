@@ -1,7 +1,9 @@
 package it.unisa.Client.Governante;
 
-import it.unisa.interfacce.GovernanteInterface;
+//import it.unisa.Server.gestioneCamere.Stanza;
 import it.unisa.Server.gestioneCamere.Stanza;
+import it.unisa.interfacce.GovernanteInterface;
+//import it.unisa.Server.gestioneCamere.Stanza;
 
 import java.rmi.Naming;
 import java.util.List;
@@ -36,25 +38,26 @@ public class GovernanteClient
                 {
                     case 1: 
                     {
-                        System.out.println("Inserisci numero camera da pulire: ");
+                        System.out.println("Inserisci 1 per visualizzare le camere: ");
                         Scanner sc2 = new Scanner(System.in);
-                        governanteInterface.setOccupataPulizie(new Stanza(sc2.nextInt()));
+                        List<Stanza> stanza = governanteInterface.getStanze();
+
                         break;
                     }
                     case 2: 
                     {
                         System.out.println("Inserisci numero camera da liberare: ");
                         Scanner sc2 = new Scanner(System.in);
-                        governanteInterface.setLiberaPulizie(new Stanza(sc2.nextInt()));
+                        //governanteInterface.setLiberaPulizie(new Stanza(sc2.nextInt()));
                         break;
                     }
                     case 3:
                     {
-                        List<Stanza> stanze = governanteInterface.getStanze();
+                        //List<Stanza> stanze = governanteInterface.getStanze();
 
-                        for(Stanza s: stanze)
+                        //for(Stanza s: stanze)
                         {
-                            System.out.println("Stanza: " + governanteInterface.getStanza(s.getNumero()).getNumero() + "   \n\tStato globale: " + governanteInterface.getStanza(s.getNumero()).getStatoGlobale() + "\n\tStato pulizie: " + governanteInterface.getStanza(s.getNumero()).getStatoPulizie());
+                       //     System.out.println("Stanza: " + governanteInterface.getStanza(s.getNumero()).getNumero() + "   \n\tStato globale: " + governanteInterface.getStanza(s.getNumero()).getStatoGlobale() + "\n\tStato pulizie: " + governanteInterface.getStanza(s.getNumero()).getStatoPulizie());
                         }
                         break;
                     }

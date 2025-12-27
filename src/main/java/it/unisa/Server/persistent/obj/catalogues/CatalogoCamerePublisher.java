@@ -1,6 +1,6 @@
 package it.unisa.Server.persistent.obj.catalogues;
 
-import it.unisa.Server.persistent.obj.Camera;
+import it.unisa.Common.Camera;
 import it.unisa.Server.persistent.util.Util;
 
 import java.util.ArrayList;

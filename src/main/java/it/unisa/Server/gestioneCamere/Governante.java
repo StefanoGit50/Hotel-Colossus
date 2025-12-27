@@ -86,6 +86,7 @@ public class Governante extends UnicastRemoteObject implements GovernanteInterfa
         for(int i=101; i<600; i++)
         {
             stanze.add(new Stanza(i));
+            IO.println(stanze.toString());
         }
 
         logger.info("Camere ottenute!");

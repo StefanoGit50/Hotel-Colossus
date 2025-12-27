@@ -1,5 +1,5 @@
 package it.unisa.Server.persistent.obj.catalogues;
-import it.unisa.Server.persistent.obj.Prenotazione;
+import it.unisa.Common.Prenotazione;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -49,5 +49,5 @@ public class Prenotazione implements Serializable
     public void setStanza(Stanza stanza) {
         this.stanza = stanza;
     }
-    
+
 }

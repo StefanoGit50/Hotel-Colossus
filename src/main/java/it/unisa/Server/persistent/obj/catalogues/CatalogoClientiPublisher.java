@@ -1,6 +1,6 @@
 package it.unisa.Server.persistent.obj.catalogues;
 
-import it.unisa.Server.persistent.obj.Cliente;
+import it.unisa.Common.Cliente;
 import it.unisa.Server.persistent.util.Util;
 
 import java.time.LocalDate;
