@@ -1,4 +1,4 @@
-package it.unisa.Database;
+package it.unisa.Storage;
 
 public class FrontOfficeStorage {
 }
