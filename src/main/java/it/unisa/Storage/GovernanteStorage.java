@@ -1,4 +1,5 @@
 package it.unisa.Storage;
 
-public class GovernanteStorage {
+public interface GovernanteStorage{
+
 }

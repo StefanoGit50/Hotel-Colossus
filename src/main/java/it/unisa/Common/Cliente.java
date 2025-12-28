@@ -15,6 +15,8 @@ public class Cliente implements Cloneable {
      */
     private String nome;
 
+    private String CF;
+
     /**
      * Il cognome del cliente.
      */
