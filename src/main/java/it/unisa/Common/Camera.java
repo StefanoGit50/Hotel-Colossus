@@ -108,11 +108,13 @@ public class Camera implements Cloneable{
         this.capacità = capacità;
     }
 
-    public void setNoteCamera(String noteCamera){ this.noteCamera = noteCamera;}
+    public void setNoteCamera(String noteCamera){
+        this.noteCamera = noteCamera;
+    }
 
-    public String getNoteCamera(){ return this.noteCamera;}
-
-
+    public String getNoteCamera(){
+        return this.noteCamera;
+    }
     /**
      * @param obj   L'oggetto da confrontare.
      * @return {@code true} se l'oggetto obj è un'istanza di Camera, {@code false} altrimenti.
