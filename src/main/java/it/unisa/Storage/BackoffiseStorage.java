@@ -1,7 +1,5 @@
 package it.unisa.Storage;
 
-import it.unisa.Storage.DAO.QueryInterface;
-
 import java.sql.SQLException;
 import java.util.Collection;
 
