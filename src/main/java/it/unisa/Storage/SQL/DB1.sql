@@ -1,9 +1,9 @@
 drop database hotelcolossus;
-create database hotelcolossus;
+create database HotelColossus;
 use HotelColossus;
 
 create table Cliente(
-	CF char(16) not null,
+    CF char(16) not null,
 	nome varchar(50) not null,
     cognome varchar(50) not null,
     Cap char(5) not null,
@@ -32,7 +32,7 @@ create table Camera(
 );
 
 create table Prenotazione(
-	IDPrenotazione int not null auto_increment,
+	IDPrenotazione int not null,
     DataPrenotazione date not null,
     DataArrivoCliente date not null,
     DataPartenzaCliente date not null,
@@ -46,45 +46,44 @@ create table Prenotazione(
 );
 
 create table Associato_a(
-	CF char(16) not null,
-    NumeroCamera int not null,
-    IDPrenotazione int not null auto_increment,
+	CF char(16) null,
+    NumeroCamera int null,
+    IDPrenotazione int null,
     PrezzoAcquisto double not null,
-    foreign key(CF) references Cliente(CF),
-    foreign key(NumeroCamera) references Camera(NumeroCamera),
-    foreign key(IDPrenotazione) references Prenotazione(IDPrenotazione)
+	foreign key(CF) references Cliente(CF) on delete cascade on update cascade,
+    foreign key(NumeroCamera) references Camera(NumeroCamera) on delete cascade on update cascade,
+    foreign key(IDPrenotazione) references Prenotazione(IDPrenotazione) on delete cascade on update cascade
 );
 
 create table RicevutaFiscale(
-	IDRicevutaFiscale int not null auto_increment,
+	IDRicevutaFiscale int not null,
     IDPrenotazione int not null,
+    Totale double not null,
 	DataEmissione date not null,
-    PrezzoCamera double null,
-    PrezzoTrattamento double null,
-    PrezzoServizio double null,
-    foreign key(IDPrenotazione)references Prenotazione(IDPrenotazione),
+	foreign key(IDPrenotazione)references Prenotazione(IDPrenotazione) on delete cascade on update cascade,
     primary key(IDRicevutaFiscale , IDPrenotazione)
 );
 
 create table Servizio(
 	Nome varchar(50) not null,
     Prezzo double not null,
-    IDPrenotazione int not null auto_increment,
+    IDPrenotazione int null,
     primary key(Nome),
-    foreign key(IDPrenotazione) references Prenotazione(IDPrenotazione)
+	foreign key(IDPrenotazione) references Prenotazione(IDPrenotazione) on delete cascade on update cascade
 );
 
 create table Trattamento(
 	Nome varchar(50) not null,
 	Prezzo double not null,
-	IDPrenotazione int not null auto_increment,
+	IDPrenotazione int null,
 	PrezzoAcquisto double not null,
     primary key(Nome),
-    foreign key(IDPrenotazione) references Prenotazione(IDPrenotazione)
+    foreign key(IDPrenotazione) references Prenotazione(IDPrenotazione) on delete cascade on update cascade 
 );
 
 create table Impiegato(
 	CF char(16) not null,
+    Stipedio double not null,
 	Nome varchar(50) not null,
     Cognome varchar(50) not null,
     Cap char(5) not null,
@@ -104,5 +103,5 @@ create table Impiegato(
     DataScadenza date not null,
     CF1 char(16) not null,
     primary key(CF),
-    foreign key(CF1) references Impiegato(CF)
+   foreign key(CF1) references Impiegato(CF) on delete cascade on update cascade
 );

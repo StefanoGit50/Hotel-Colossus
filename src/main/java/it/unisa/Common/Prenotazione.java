@@ -16,7 +16,7 @@ public class Prenotazione implements Cloneable {
     /**
      * Codice univoco della prenotazione.
      */
-    private String codicePrenotazione;
+    private int codicePrenotazione;
 
     /**
      * Data in cui è stata creata la prenotazione.
@@ -64,6 +64,11 @@ public class Prenotazione implements Cloneable {
     private String noteAggiuntive;
 
     /**
+     * Il numero del documento del cliente
+     */
+    private int numeroDocumento;
+
+    /**
      * Lista delle camere incluse nella prenotazione.
      */
     private ArrayList<Camera> listaCamere;
@@ -95,11 +100,12 @@ public class Prenotazione implements Cloneable {
      * @param listaCamere Lista delle camere prenotate.
      * @param listaServizi Lista dei servizi aggiuntivi.
      * @param listaClienti Lista dei clienti.
+     * @param numeroDocumento il numero del documento
      */
-    public Prenotazione(String codicePrenotazione, LocalDate dataCreazionePrenotazione, LocalDate dataInizio, LocalDate dataFine,
+    public Prenotazione(int codicePrenotazione, LocalDate dataCreazionePrenotazione, LocalDate dataInizio, LocalDate dataFine,
                         Trattamento trattamento, String tipoDocumento, LocalDate dataRilascio, LocalDate dataScadenza,
                         String intestatario, String noteAggiuntive, ArrayList<Camera> listaCamere, ArrayList<Servizio> listaServizi,
-                        ArrayList<Cliente> listaClienti) {
+                        ArrayList<Cliente> listaClienti ,int numeroDocumento) {
         this.codicePrenotazione = codicePrenotazione;
         this.dataCreazionePrenotazione = dataCreazionePrenotazione;
         this.dataInizio = dataInizio;
@@ -114,8 +120,8 @@ public class Prenotazione implements Cloneable {
         this.listaCamere = Util.deepCopyArrayList(listaCamere);
         this.listaServizi = Util.deepCopyArrayList(listaServizi);
         this.listaClienti = Util.deepCopyArrayList(listaClienti);
+        this.numeroDocumento = numeroDocumento;
     }
-
      /**
      * Aggiunge un cliente alla lista dei clienti.
      *
@@ -181,11 +187,11 @@ public class Prenotazione implements Cloneable {
     // --- Getter e Setter ---
     // I getter per le liste restituiscono deep copy per l'incapsulamento
 
-    public String getCodicePrenotazione() {
+    public int getCodicePrenotazione() {
         return codicePrenotazione;
     }
 
-    public void setCodicePrenotazione(String codicePrenotazione) {
+    public void setCodicePrenotazione(int codicePrenotazione) {
         this.codicePrenotazione = codicePrenotazione;
     }
 
@@ -261,6 +267,13 @@ public class Prenotazione implements Cloneable {
         this.noteAggiuntive = noteAggiuntive;
     }
 
+    public void setNumeroDocumento(int numeroDocumento){
+        this.numeroDocumento = numeroDocumento;
+    }
+
+    public int getNumeroDocumento(){
+        return numeroDocumento;
+    }
     /**
      * Restituisce una deep copy della lista delle camere.
      *
