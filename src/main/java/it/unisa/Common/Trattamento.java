@@ -83,6 +83,10 @@ public class Trattamento implements Cloneable {
         return prezzoAcquisto;
     }
 
+    /**
+     *
+     * @param prezzoAcquisto il parametro
+     */
     public void setPrezzoAcquisto(double prezzoAcquisto) {
         this.prezzoAcquisto = prezzoAcquisto;
     }
