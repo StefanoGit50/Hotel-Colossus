@@ -19,7 +19,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
             }else{
                 throw new CodiceFiscaleNotSupportedException();
             }
-            preparedStatement.setString(2,o.se);
+            preparedStatement.setString(2,o);
     }
 
     @Override

@@ -21,14 +21,21 @@ public class Trattamento implements Cloneable {
     private double prezzo;
 
     /**
+     * Il prezzo del trattamento all'acquisto
+     */
+    private double prezzoAcquisto;
+
+    /**
      * Costruttore per creare una nuova istanza di {@code Trattamento}.
      *
      * @param nome Il nome del trattamento.
      * @param prezzo Il prezzo del trattamento.
+     * @param prezzoAcquisto il prezzo del trattamento all'acquisto
      */
-    public Trattamento(String nome, double prezzo) {
+    public Trattamento(String nome, double prezzo , double prezzoAcquisto){
         this.nome = nome;
         this.prezzo = prezzo;
+        this.prezzoAcquisto = prezzoAcquisto;
     }
 
     /**
@@ -65,6 +72,19 @@ public class Trattamento implements Cloneable {
      */
     public void setPrezzo(double prezzo) {
         this.prezzo = prezzo;
+    }
+
+    /**
+     * Ritorna il prezzo di Acquisto fatto al mom
+     * @return prezzoAcquisto
+     */
+
+    public double getPrezzoAcquisto() {
+        return prezzoAcquisto;
+    }
+
+    public void setPrezzoAcquisto(double prezzoAcquisto) {
+        this.prezzoAcquisto = prezzoAcquisto;
     }
 
     /**
