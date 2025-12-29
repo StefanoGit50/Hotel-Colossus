@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class ConnectionStorage{
     private static List<Connection> freeDbConnections;
@@ -17,7 +18,7 @@ public class ConnectionStorage{
         }
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            shutdown();
+            shutdown(); //Quando l'applicazione si spegne, il codice viene eseguito
         }));
     }
 
@@ -56,22 +57,29 @@ public class ConnectionStorage{
     }
 
     public static synchronized void releaseConnection(Connection connection) throws SQLException {
-        if(connection != null) freeDbConnections.add(connection);
+        if(connection!=null && freeDbConnections.size()<60){
+            freeDbConnections.add(connection);
+        }else {
+            try{
+                connection.close();
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
     }
+
     public static synchronized void shutdown() {
-        System.out.println("Chiusura connessioni...");
+        Logger.getLogger("Chiusura connessioni...");
         for (Connection conn : freeDbConnections) {
             try {
                 if (conn != null && !conn.isClosed()) {
-                    conn.close();
+                    conn.close();  //logica per chiudere forzatamente tutte le connessioni in freeDbConnections
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
         freeDbConnections.clear();
-        System.out.println("✓ Connessioni chiuse");
+        Logger.getLogger("✓ Connessioni chiuse");
     }
-
-
 }
