@@ -9,9 +9,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 public class ClienteDAO implements FrontDeskStorage<Cliente> {
-    public void doSave(Cliente o) throws SQLException,CodiceFiscaleNotSupportedException{
+    public void doSave(Cliente o) throws SQLException{
             Connection connection = ConnectionStorage.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO CLIENTE(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
             if(o.getCf().length() == 16){
@@ -19,7 +20,27 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
             }else{
                 throw new CodiceFiscaleNotSupportedException();
             }
-            preparedStatement.setString(2,o);
+
+            if(o.getNome().length() <= 50 && !o.getNome().isEmpty()){
+                preparedStatement.setString(2,o.getNome());
+            }else{
+                throw new NomeException();
+            }
+
+            if(o.getNome().length() <= 50 && !o.getNome().isEmpty()){
+                preparedStatement.setString(3,o.getCognome());
+            }else{
+                throw new CognomeException();
+            }
+
+            Integer cap = o.getCAP();
+
+            if(cap.compareTo(10000) > 0 && cap.compareTo(99999) < 0){
+
+            }
+
+
+
     }
 
     @Override

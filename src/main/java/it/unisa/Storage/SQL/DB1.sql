@@ -6,7 +6,7 @@ create table Cliente(
     CF char(16) not null,
 	nome varchar(50) not null,
     cognome varchar(50) not null,
-    Cap char(5) not null,
+    Cap int not null,
     comune varchar(50) not null,
     civico int not null,
     provincia varchar(50) not null,
