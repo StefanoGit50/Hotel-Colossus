@@ -1,4 +1,3 @@
--- Inserimento clienti
 INSERT INTO Cliente VALUES
 ('RSSMRA85M01H501X','Mario','Rossi','00100','Roma',12,'RM','Via Roma','mario.rossi@email.com','M','345678901','Carta di credito','Italiana',FALSE),
 ('VRDLGI90F45F205Y','Giulia','Verdi','20100','Milano',7,'MI','Corso Milano','giulia.verdi@email.com','F','345678902','Paypal','Italiana',FALSE),
@@ -11,10 +10,10 @@ INSERT INTO Camera VALUES
 (201,4,'Suite con jacuzzi','Disponibile',2,'Suite',300.0);
 
 -- Inserimento prenotazioni
-INSERT INTO Prenotazione VALUES
-(1,'2025-11-15','2025-12-20','2025-12-25','Nessuna','Mario Rossi','2025-12-01',123456,'2020-01-01','Carta Identità'),
-(2,'2025-11-20','2025-12-24','2025-12-26','Richiesta colazione','Giulia Verdi','2025-12-10',234567,'2018-05-10','Passaporto'),
-(3,'2025-11-22','2025-12-23','2025-12-28','Animali ammessi','Luca Bianchi','2025-12-15',345678,'2019-09-20','Carta Identità');
+INSERT INTO Prenotazione(DataPrenotazione ,  DataArrivoCliente ,  DataPartenzaCliente , NoteAggiuntive , Intestatario , dataScadenza , numeroDocumento , DataRilascio ,Tipo)VALUES
+('2025-11-15','2025-12-20','2025-12-25','Nessuna','Mario Rossi','2025-12-01',123456,'2020-01-01','Carta Identità'),
+('2025-11-20','2025-12-24','2025-12-26','Richiesta colazione','Giulia Verdi','2025-12-10',234567,'2018-05-10','Passaporto'),
+('2025-11-22','2025-12-23','2025-12-28','Animali ammessi','Luca Bianchi','2025-12-15',345678,'2019-09-20','Carta Identità');
 
 -- Inserimento associazioni
 INSERT INTO Associato_a VALUES

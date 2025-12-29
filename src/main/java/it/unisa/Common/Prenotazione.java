@@ -343,7 +343,7 @@ public class Prenotazione implements Cloneable {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Prenotazione that = (Prenotazione) obj;
-        return Objects.equals(codicePrenotazione, that.codicePrenotazione) && Objects.equals(dataCreazionePrenotazione, that.dataCreazionePrenotazione) && Objects.equals(dataInizio, that.dataInizio) && Objects.equals(dataFine, that.dataFine) && Objects.equals(trattamento, that.trattamento) && Objects.equals(tipoDocumento, that.tipoDocumento) && Objects.equals(dataRilascio, that.dataRilascio) && Objects.equals(dataScadenza, that.dataScadenza) && Objects.equals(intestatario, that.intestatario) && Objects.equals(noteAggiuntive, that.noteAggiuntive) && Objects.equals(listaCamere, that.listaCamere) && Objects.equals(listaServizi, that.listaServizi) && Objects.equals(listaClienti, that.listaClienti);
+        return Objects.equals(codicePrenotazione, that.codicePrenotazione) && Objects.equals(dataCreazionePrenotazione, that.dataCreazionePrenotazione) && Objects.equals(dataInizio, that.dataInizio) && Objects.equals(dataFine, that.dataFine) && Objects.equals(trattamento, that.trattamento) && Objects.equals(tipoDocumento, that.tipoDocumento) && Objects.equals(dataRilascio, that.dataRilascio) && Objects.equals(dataScadenza, that.dataScadenza) && Objects.equals(intestatario, that.intestatario) && Objects.equals(noteAggiuntive, that.noteAggiuntive) && Objects.equals(listaCamere, that.listaCamere) && Objects.equals(listaServizi, that.listaServizi) && Objects.equals(listaClienti, that.listaClienti) && numeroDocumento == that.numeroDocumento;
     }
 
     /**

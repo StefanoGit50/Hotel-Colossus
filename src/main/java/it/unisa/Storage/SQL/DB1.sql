@@ -32,7 +32,7 @@ create table Camera(
 );
 
 create table Prenotazione(
-	IDPrenotazione int not null,
+	IDPrenotazione int not null auto_increment,
     DataPrenotazione date not null,
     DataArrivoCliente date not null,
     DataPartenzaCliente date not null,

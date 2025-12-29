@@ -25,6 +25,8 @@ public class Trattamento implements Cloneable {
      */
     private double prezzoAcquisto;
 
+    private final static double EPSILON = 1e10;
+
     /**
      * Costruttore per creare una nuova istanza di {@code Trattamento}.
      *
@@ -84,7 +86,7 @@ public class Trattamento implements Cloneable {
     }
 
     /**
-     *
+     * Setta il prezzo al momento del acquisto del cliente
      * @param prezzoAcquisto il parametro
      */
     public void setPrezzoAcquisto(double prezzoAcquisto) {
@@ -103,7 +105,7 @@ public class Trattamento implements Cloneable {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Trattamento trattamento = (Trattamento) obj;
-        return Double.compare(trattamento.prezzo, prezzo) == 0 && Objects.equals(nome, trattamento.nome);
+        return Double.compare(trattamento.prezzo, prezzo) == 0 && Objects.equals(nome, trattamento.nome) && Math.abs(prezzoAcquisto - trattamento.prezzoAcquisto) < EPSILON;
     }
 
     /**
