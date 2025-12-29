@@ -11,10 +11,15 @@ import java.util.Collection;
 import java.util.List;
 
 public class ClienteDAO implements FrontDeskStorage<Cliente> {
-    public void doSave(Cliente o) throws SQLException {
+    public void doSave(Cliente o) throws SQLException,CodiceFiscaleNotSupportedException{
             Connection connection = ConnectionStorage.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO CLIENTE(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-            preparedStatement.setString(1,o.get);
+            if(o.getCf().length() == 16){
+                preparedStatement.setString(1,o.getCf());
+            }else{
+                throw new CodiceFiscaleNotSupportedException();
+            }
+            preparedStatement.setString(2,o.se);
     }
 
     @Override

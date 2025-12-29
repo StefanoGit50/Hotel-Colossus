@@ -28,7 +28,7 @@ public class ConnectionStorage{
         String port = "3306";
         String db = "hotelcolossus";
         String username = "root";
-        String password = "";
+        String password = "1uno2due";
 
         newConnection = DriverManager.getConnection("jdbc:mysql://"+ ip+":"+ port+"/"+db+"?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", username, password);
         return newConnection;
