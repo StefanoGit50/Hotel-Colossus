@@ -16,6 +16,23 @@ public class Cliente implements Cloneable {
     private String nome;
 
     /**
+     * Il codice fiscale del cliente
+     */
+
+    private String cf;
+
+    /**
+     *  email del cliente
+     */
+
+    private String email;
+
+    /**
+     *  Il metodo di pagamento di cui ha scelto il cliente
+     */
+    private String metodoDiPagamento;
+
+    /**
      * Il cognome del cliente.
      */
     private String cognome;
@@ -69,7 +86,6 @@ public class Cliente implements Cloneable {
      * Data di nascita del cliente.
      */
     private LocalDate dataNascita;
-
     /**
      * La nazionalità del cliente.
      */
@@ -89,9 +105,10 @@ public class Cliente implements Cloneable {
      * @param numeroTelefono Il numero di telefono.
      * @param sesso Il sesso del cliente.
      * @param dataNascita La data di nascita del cliente.
+     * @param cf il codice fiscale del cliente
+     * @param email l'email del cliente
      */
-    public Cliente(String nome, String cognome, String cittadinanza, String provincia, String comune,
-                   String via, int numeroCivico, int CAP, String numeroTelefono, String sesso, LocalDate dataNascita) {
+    public Cliente(String nome, String cognome, String cittadinanza, String provincia, String comune, String via, int numeroCivico, int CAP, String numeroTelefono, String sesso, LocalDate dataNascita ,String cf , String email,String metodoDiPagamento) {
         this.nome = nome;
         this.cognome = cognome;
         this.cittadinanza = cittadinanza;
@@ -104,6 +121,9 @@ public class Cliente implements Cloneable {
         this.isBlacklisted = false;
         this.sesso = sesso;
         this.dataNascita = dataNascita;
+        this.cf = cf;
+        this.email = email;
+        this.metodoDiPagamento = metodoDiPagamento;
     }
 
     /**
@@ -339,6 +359,63 @@ public class Cliente implements Cloneable {
     public void setNazionalita(String nazionalita) {
         this.nazionalità = nazionalita;
     }
+    /**
+     * Imposta il codice fiscale del cliente
+     *
+     * @param cf il nuovo codice fiscale
+     */
+    public void setCf(String cf){
+        this.cf = cf;
+    }
+
+    /**
+     * Mostra il codice fiscale del cliente
+     *
+     * @return cf il codice fiscale del cliente
+     */
+    public String getCf() {
+        return cf;
+    }
+
+    /**
+     * Setta l'email del cliente
+     *
+     * @param email l'email nuova del cliente
+     */
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
+     * Mostra l'email di un cliente
+     *
+     * @return email l'email del cliente
+     */
+
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * Mostra i metodoDiPagamento
+     *
+     * @return metodoDiPagamento il metodo di pagamento scelto dal cliente
+     */
+
+    public String getMetodoDiPagamento() {
+        return metodoDiPagamento;
+    }
+
+    /**
+     * Setta il metodo di pagamento del cliente
+     *
+     * @param metodoDiPagamento il metodo di pagamento del cliente
+     */
+
+    public void setMetodoDiPagamento(String metodoDiPagamento) {
+        this.metodoDiPagamento = metodoDiPagamento;
+    }
 
     /**
      * Indica se un altro oggetto è "uguale a" questo cliente.
@@ -347,6 +424,7 @@ public class Cliente implements Cloneable {
      * @param obj L'oggetto da confrontare.
      * @return {@code true} se i due oggetti Cliente sono uguali, {@code false} altrimenti.
      */
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -357,9 +435,10 @@ public class Cliente implements Cloneable {
                 && Objects.equals(cittadinanza, cliente.cittadinanza) && Objects.equals(provincia, cliente.provincia)
                 && Objects.equals(comune, cliente.comune) && Objects.equals(via, cliente.via)
                 && Objects.equals(numeroTelefono, cliente.numeroTelefono) && Objects.equals(sesso, cliente.sesso)
-                && Objects.equals(dataNascita, cliente.dataNascita) && Objects.equals(nazionalità, cliente.nazionalità);
+                && Objects.equals(dataNascita, cliente.dataNascita) && Objects.equals(nazionalità, cliente.nazionalità) &&
+                Objects.equals(metodoDiPagamento,cliente.metodoDiPagamento) && Objects.equals(email , cliente.email) &&
+                Objects.equals(cf,cliente.cf);
     }
-
     /**
      * Crea e restituisce una copia dell'oggetto (clone).
      * Poiché la classe contiene solo tipi primitivi e stringhe (immutabili),
@@ -369,7 +448,7 @@ public class Cliente implements Cloneable {
      * @throws CloneNotSupportedException Se l'oggetto non implementa l'interfaccia {@code Cloneable}.
      */
     @Override
-    public Cliente clone() throws CloneNotSupportedException {
+    public Cliente clone() throws CloneNotSupportedException{
         return (Cliente) super.clone(); // LocalDate immutabile
     }
 }
