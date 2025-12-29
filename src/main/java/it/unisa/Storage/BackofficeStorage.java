@@ -1,4 +1,5 @@
 package it.unisa.Storage;
+
 import java.sql.SQLException;
 import java.util.Collection;
 
