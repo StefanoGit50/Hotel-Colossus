@@ -15,10 +15,14 @@ public class ConnectionStorage{
         } catch (ClassNotFoundException e) {
             System.out.println("DB driver not found:"+ e.getMessage());
         }
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            shutdown();
+        }));
     }
 
     private static synchronized Connection createDBConnection() throws SQLException {
-        java.sql.Connection newConnection;
+        Connection newConnection;
         String ip = "localhost";
         String port = "3306";
         String db = "hotelcolossus";
@@ -34,16 +38,16 @@ public class ConnectionStorage{
         Connection connection;
 
         if (!freeDbConnections.isEmpty()) {
-            connection =  freeDbConnections.get(0);
-            freeDbConnections.remove(0);
+            connection =  freeDbConnections.get(0); // restituisce la prima connessione disponibile
+            freeDbConnections.remove(0); // fa in modo che il prossimo thread non possa usare la stessa connessione del thread attuale
+                try {
+                    if (connection.isValid(4))
+                        connection = getConnection(); // richiama se stesso fin quando non trova una connessione valida
+                } catch (SQLException e) {
+                    connection.close();
+                    connection = getConnection(); // richiama se stesso fin quando non trova una connessione valida
+                }
 
-            try {
-                if (connection.isClosed())
-                    connection = getConnection();
-            } catch (SQLException e) {
-                connection.close();
-                connection = getConnection();
-            }
         } else {
             connection = createDBConnection();
         }
@@ -51,7 +55,23 @@ public class ConnectionStorage{
         return connection;
     }
 
-    public static synchronized void releaseConnection(java.sql.Connection connection) throws SQLException {
+    public static synchronized void releaseConnection(Connection connection) throws SQLException {
         if(connection != null) freeDbConnections.add(connection);
     }
+    public static synchronized void shutdown() {
+        System.out.println("Chiusura connessioni...");
+        for (Connection conn : freeDbConnections) {
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        freeDbConnections.clear();
+        System.out.println("✓ Connessioni chiuse");
+    }
+
+
 }

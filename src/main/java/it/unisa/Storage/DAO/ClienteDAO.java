@@ -1,7 +1,6 @@
 package it.unisa.Storage.DAO;
 
 import it.unisa.Common.Cliente;
-import it.unisa.Storage.BackoffiseStorage;
 import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.FrontDeskStorage;
 
