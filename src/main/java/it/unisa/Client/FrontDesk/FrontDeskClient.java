@@ -1,8 +1,8 @@
 package it.unisa.Client.FrontDesk;
 
+import it.unisa.Common.Camera;
 import it.unisa.interfacce.GovernanteInterface;
 import it.unisa.interfacce.FrontDeskInterface;
-import it.unisa.Server.gestioneCamere.Stanza;
 import it.unisa.Server.gestioneClienti.Cliente;
 import it.unisa.Server.gestionePrenotazioni.Prenotazione;
 
@@ -43,15 +43,15 @@ public class FrontDeskClient
                     {
                         System.out.println("Inserisci numero camera: ");
                         Scanner sc2 = new Scanner(System.in);
-                        Stanza s = new Stanza(sc2.nextInt());
+                        Camera camera = new Camera(sc2.nextInt());
                         
                         System.out.println("Inserisci nome cliente: ");
                         Scanner sc3 = new Scanner(System.in);
                         Cliente c = new Cliente(sc3.nextLine());
                         
-                        String id = c.getNome() + "" + s.getNumero();
+                        String id = c.getNome() + "" + camera.getNumeroCamera();
                         
-                        frontDeskInterface.effettuaPrenotazione(id, c, s);
+                        frontDeskInterface.effettuaPrenotazione(id, c, camera);
                         
                         break;
                     }
@@ -59,13 +59,13 @@ public class FrontDeskClient
                     {
                         System.out.println("Inserisci numero camera: ");
                         Scanner sc2 = new Scanner(System.in);
-                        Stanza s = new Stanza(sc2.nextInt());
+                        Camera s = new Camera(sc2.nextInt());
                         
                         System.out.println("Inserisci nome cliente: ");
                         Scanner sc3 = new Scanner(System.in);
                         Cliente c = new Cliente(sc3.nextLine());
                         
-                        String id = c.getNome() + "" + s.getNumero();
+                        String id = c.getNome() + "" + s.getNumeroCamera();
                         
                         frontDeskInterface.cancellaPrenotazione(new Prenotazione(id, c, s));
                         
@@ -77,7 +77,7 @@ public class FrontDeskClient
                         
                         for(Prenotazione p: prenotazioni)
                         {
-                            System.out.println("Id: " + p.getId() + "   \n\tNumero stanza: " + p.getStanza().getNumero() + "\n\tNome cliente: " + p.getCliente().getNome());
+                            System.out.println("Id: " + p.getId() + "   \n\tNumero stanza: " + p.getStanza().getNumeroCamera() + "\n\tNome cliente: " + p.getCliente().getNome());
                         }
                         break;
                     }

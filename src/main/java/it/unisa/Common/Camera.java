@@ -2,6 +2,7 @@ package it.unisa.Common;
 
 import it.unisa.Server.persistent.util.Stato;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -9,8 +10,12 @@ import java.util.Objects;
  * Ogni camera è identificata da un numero univoco e possiede una tipologia, uno stato
  * corrente e una capacità massima di persone.
  */
+<<<<<<< Updated upstream
 public class Camera implements Cloneable{
     private final static double EPSILON = 1e10;
+=======
+public class Camera implements Cloneable, Serializable {
+>>>>>>> Stashed changes
     /**
      * Numero di camera, univoco per ogni camera all'interno dell'hotel.
      */
@@ -60,6 +65,19 @@ public class Camera implements Cloneable{
         this.prezzoCamera = prezzoCamera;
         this.piano = piano;
         this.noteCamera = noteCamera;
+    }
+
+    /**
+     * Costruttore per creare una nuova istanza di {@code Camera} senza parametri.
+     */
+    public Camera(){}
+
+    /**
+     * Costruttore per creare una nuova istanza di {@code Camera} con il solo parametro del numero camera.
+     *  @param numeroCamera Il nuovo numero di camera da assegnare.
+     */
+    public Camera(int numeroCamera){
+        this.numeroCamera = numeroCamera;
     }
 
     /**
