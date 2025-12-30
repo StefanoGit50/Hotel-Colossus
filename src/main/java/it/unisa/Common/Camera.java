@@ -10,10 +10,19 @@ import java.util.Objects;
  * corrente e una capacità massima di persone.
  */
 public class Camera implements Cloneable{
+    private final static double EPSILON = 1e10;
     /**
      * Numero di camera, univoco per ogni camera all'interno dell'hotel.
      */
-    private int numeroCamera;
+     private int numeroCamera;
+    /**
+     * Il prezzo della camera
+     */
+    private double prezzoCamera;
+    /**
+     * Il piano della camera
+     */
+    private int piano;
     /**
      * Tipologia di camera (es. Singola, Doppia, Suite).
      */
@@ -26,8 +35,11 @@ public class Camera implements Cloneable{
     /**
      * Numero massimo di clienti che possono soggiornare nella camera.
      */
-    private int capacità;
+    private int numeroMaxOccupanti;
 
+    /**
+     * Le note della camera (ad esempio check-in ore 14 , il cliente è celiaco , ecc.)
+     */
     private String noteCamera;
 
     /**
@@ -36,12 +48,18 @@ public class Camera implements Cloneable{
      * @param tipologia La tipologia della camera (es. Singola, Doppia).
      * @param statoCamera Lo stato iniziale della camera (es. Libera).
      * @param capacità Il numero massimo di persone che può ospitare.
+     * @param prezzoCamera il prezzo della camera in quel momento
+     * @param piano il piano di cui si trova la camera
+     * @param noteCamera le informazioni aggiunti
      */
-    public Camera(int numeroCamera, String tipologia, Stato statoCamera, int capacità) {
+    public Camera(int numeroCamera, String tipologia, Stato statoCamera, int capacità , double prezzoCamera , int piano , String noteCamera ) {
         this.numeroCamera = numeroCamera;
         this.tipologia = tipologia;
         this.statoCamera = statoCamera;
-        this.capacità = capacità;
+        this.numeroMaxOccupanti = capacità;
+        this.prezzoCamera = prezzoCamera;
+        this.piano = piano;
+        this.noteCamera = noteCamera;
     }
 
     /**
@@ -97,7 +115,7 @@ public class Camera implements Cloneable{
      * @return La capacità massima della camera.
      */
     public int getCapacità() {
-        return capacità;
+        return numeroMaxOccupanti;
     }
 
     /**
@@ -105,13 +123,60 @@ public class Camera implements Cloneable{
      * @param capacità La nuova capacità massima della camera.
      */
     public void setCapacità(int capacità) {
-        this.capacità = capacità;
+        this.numeroMaxOccupanti = capacità;
     }
 
-    public void setNoteCamera(String noteCamera){ this.noteCamera = noteCamera;}
+    /**
+     * Imposta una nota alla camera
+     * @param noteCamera
+     */
+    public void setNoteCamera(String noteCamera){
+        this.noteCamera = noteCamera;
+    }
 
-    public String getNoteCamera(){ return this.noteCamera;}
+    /**
+     * restituisce le note della camera
+     * @return notecamera
+     */
+    public String getNoteCamera(){
+        return this.noteCamera;
+    }
 
+    /**
+     * Restituisce il prezzo della camera
+     * @return prezzoCamera
+     */
+
+    public double getPrezzoCamera() {
+        return prezzoCamera;
+    }
+
+    /**
+     * Imposta il prezzo della camera
+     * @param prezzoCamera il nuovo prezzo della camera
+     */
+
+    public void setPrezzoCamera(double prezzoCamera) {
+        this.prezzoCamera = prezzoCamera;
+    }
+
+    /**
+     * Imposta il piano della camera
+     * @param piano il nuovo piano della camera
+     */
+
+    public void setPiano(int piano) {
+        this.piano = piano;
+    }
+
+    /**
+     * Restituisce il piano della camera
+     * @return piano
+     */
+
+    public int getPiano() {
+        return piano;
+    }
 
     /**
      * @param obj   L'oggetto da confrontare.
@@ -121,7 +186,9 @@ public class Camera implements Cloneable{
     public boolean equals(Object obj) {
         if (obj == null || getClass() != obj.getClass()) return false;
         Camera camera = (Camera) obj;
-        return numeroCamera == camera.numeroCamera && capacità == camera.capacità && Objects.equals(tipologia, camera.tipologia) && statoCamera == camera.statoCamera;
+        return numeroCamera == camera.numeroCamera && numeroMaxOccupanti == camera.numeroMaxOccupanti &&
+                Objects.equals(tipologia, camera.tipologia) && statoCamera == camera.statoCamera && Math.abs(prezzoCamera - camera.prezzoCamera) < EPSILON
+                && piano == camera.piano && Objects.equals(noteCamera,camera.noteCamera);
     }
 
     /**
