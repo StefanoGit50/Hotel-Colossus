@@ -1,5 +1,9 @@
 package it.unisa.Server.gestioneCamere;
 
+import it.unisa.Common.Camera;
+import it.unisa.Server.ObserverCamereInterface;
+import it.unisa.Server.ObserverInterface;
+import it.unisa.Server.persistent.obj.catalogues.CatalogoCamerePublisher;
 import it.unisa.interfacce.GovernanteInterface;
 
 import java.rmi.Naming;
@@ -16,67 +20,42 @@ public class Governante extends UnicastRemoteObject implements GovernanteInterfa
     private static final long serialVersionUID = -34234234L;
     static Logger logger = Logger.getLogger("global");
     private static final int RMI_PORT = 1099;
+    private List<ObserverInterface> obsList= new ArrayList<>();
+
 
     private static List<Stanza> stanze = new ArrayList<>();
 
-    public Governante() throws RemoteException {}
-
-    @Override
-    public Stanza getStanza(int numero)
-    {
-        for(Stanza s: stanze)
-        {
-            if(s.getNumero() == numero)
-                return s;
-        }
-        return new Stanza();
+    public Governante() throws RemoteException {
+        super();
     }
 
     @Override
-    public List<Stanza> getStanze()
-    {
-        return stanze;
+    public List<Camera> getListCamere(){
+        List<Camera> camere = new ArrayList<>();
+        return camere;
     }
 
     @Override
-    public void setOccupataGlobale(Stanza s)
-    {
-        for(Stanza s1: getStanze())
-        {
-            if(s.getNumero() == s1.getNumero())
-                if(s1.getStatoGlobale().equals("libera"))
-                    s1.setStatoGlobale("occupata");
-        }
-    }
+    public boolean aggiornaStatoCamera(Camera c) {
 
-    @Override
-    public void setLiberaGlobale(Stanza s)
-    {
-        for(Stanza s1: getStanze())
-        {
-            if(s.getStatoGlobale().equals("occupata"))
-                s.setStatoGlobale("libera");
-        }
-    }
 
-    @Override
-    public void setOccupataPulizie(Stanza s)
-    {
-        for(Stanza s1: getStanze())
-        {
-            if(s.getStatoPulizie().equals("libera"))
-                s.setStatoPulizie("occupata");
-        }
-    }
+        ObserverCamereInterface h = new ObserverCamereInterface() {
+            @Override
+            public void attach(CatalogoCamerePublisher observer) {
+                observers.add(observer);
+            }
 
-    @Override
-    public void setLiberaPulizie(Stanza s)
-    {
-        for(Stanza s1: getStanze())
-        {
-            if(s.getStatoPulizie().equals("occupata"))
-                s.setStatoPulizie("libera");
-        }
+            @Override
+            public void detach(CatalogoCamerePublisher observer) {
+                observers.remove(observer);
+            }
+
+            @Override
+            public void notifyObservers() {
+                obsList
+            }
+        };
+        return false;
     }
 
     public static void main(String[] args) throws RemoteException

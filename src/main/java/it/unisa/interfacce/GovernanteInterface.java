@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface GovernanteInterface extends Remote {
     List<Camera> getListCamere();
-    boolean aggiornaStatoCamera(Camera C);
+    boolean aggiornaStatoCamera(Camera c);
 }
