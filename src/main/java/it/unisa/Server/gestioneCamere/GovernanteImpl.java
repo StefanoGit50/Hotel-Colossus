@@ -1,5 +1,7 @@
 package it.unisa.Server.gestioneCamere;
 
+import it.unisa.Common.Camera;
+import it.unisa.Server.persistent.util.Stato;
 import it.unisa.interfacce.GovernanteInterface;
 
 import java.rmi.Naming;
@@ -17,76 +19,46 @@ public class Governante extends UnicastRemoteObject implements GovernanteInterfa
     static Logger logger = Logger.getLogger("global");
     private static final int RMI_PORT = 1099;
 
-    private static List<Stanza> stanze = new ArrayList<>();
+    private static List<Camera> camere = new ArrayList<>();
 
     public Governante() throws RemoteException {}
 
     @Override
-    public Stanza getStanza(int numero)
+    public Camera getCamera(int numero)
     {
-        for(Stanza s: stanze)
+        for(Camera c: camere)
         {
-            if(s.getNumero() == numero)
-                return s;
+            if(c.getNumeroCamera() == numero)
+                return c;
         }
-        return new Stanza();
+        return new Camera();
     }
 
     @Override
-    public List<Stanza> getStanze()
+    public void setStatoInPulizia(Camera c)
     {
-        return stanze;
+        c.setStatoCamera(Stato.InPulizia);
     }
 
     @Override
-    public void setOccupataGlobale(Stanza s)
+    public void setStatoOutOfOrder(Camera c)
     {
-        for(Stanza s1: getStanze())
-        {
-            if(s.getNumero() == s1.getNumero())
-                if(s1.getStatoGlobale().equals("libera"))
-                    s1.setStatoGlobale("occupata");
-        }
+        c.setStatoCamera(Stato.OutOfOrder);
     }
 
     @Override
-    public void setLiberaGlobale(Stanza s)
-    {
-        for(Stanza s1: getStanze())
-        {
-            if(s.getStatoGlobale().equals("occupata"))
-                s.setStatoGlobale("libera");
-        }
+    public List<Camera> getListCamere() {
+        return camere;
     }
 
-    @Override
-    public void setOccupataPulizie(Stanza s)
-    {
-        for(Stanza s1: getStanze())
-        {
-            if(s.getStatoPulizie().equals("libera"))
-                s.setStatoPulizie("occupata");
-        }
-    }
-
-    @Override
-    public void setLiberaPulizie(Stanza s)
-    {
-        for(Stanza s1: getStanze())
-        {
-            if(s.getStatoPulizie().equals("occupata"))
-                s.setStatoPulizie("libera");
-        }
-    }
-
-    public static void main(String[] args) throws RemoteException
+    static void main(String[] args) throws RemoteException
     {
         logger.info("Ottengo le camere...");
 
         for(int i=101; i<600; i++)
         {
-            stanze.add(new Stanza(i));
-            IO.println(stanze.toString());
+            camere.add(new Camera(i));
+            IO.println(camere.toString());
         }
 
         logger.info("Camere ottenute!");
