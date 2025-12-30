@@ -1,4 +1,4 @@
-package it.unisa.Storage.DAO;
+package it.unisa.Storage.DAO.Eccezioni.Cliente;
 
 public class CodiceFiscaleNotSupportedException extends RuntimeException{
     public CodiceFiscaleNotSupportedException(){}
