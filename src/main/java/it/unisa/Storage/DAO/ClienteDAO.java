@@ -15,7 +15,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class ClienteDAO implements FrontDeskStorage<Cliente> {
+public class ClienteDAO implements FrontDeskStorage<Cliente>
+{
     public void doSave(Cliente o) throws SQLException{
             Connection connection = ConnectionStorage.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO CLIENTE(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
@@ -38,6 +39,30 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
 
             preparedStatement.close();
             connection.close();
+    }
+
+    public static void doSaveStatic(Cliente o) throws SQLException{
+        Connection connection = ConnectionStorage.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO CLIENTE(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        preparedStatement.setString(1,o.getCf());
+        preparedStatement.setString(2,o.getNome());
+        preparedStatement.setString(3,o.getCognome());
+        preparedStatement.setInt(4,o.getCAP());
+        preparedStatement.setString(5,o.getComune());
+        preparedStatement.setInt(6,o.getNumeroCivico());
+        preparedStatement.setString(7,o.getProvincia());
+        preparedStatement.setString(8,o.getVia());
+        preparedStatement.setString(9,o.getEmail());
+        preparedStatement.setString(10,o.getSesso());
+        preparedStatement.setInt(11,o.getNumeroTelefono());
+        preparedStatement.setString(12,o.getMetodoDiPagamento());
+        preparedStatement.setString(13,o.getCittadinanza());
+        preparedStatement.setBoolean(14,o.isBlacklisted());
+
+        preparedStatement.executeUpdate();
+
+        preparedStatement.close();
+        connection.close();
     }
 
     @Override
