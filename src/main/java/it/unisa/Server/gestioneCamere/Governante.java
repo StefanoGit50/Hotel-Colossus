@@ -3,6 +3,7 @@ package it.unisa.Server.gestioneCamere;
 import it.unisa.Common.Camera;
 import it.unisa.Server.ObserverCamereInterface;
 import it.unisa.Server.ObserverInterface;
+import it.unisa.Server.SubjectCamereInterface;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoCamerePublisher;
 import it.unisa.interfacce.GovernanteInterface;
 
@@ -15,15 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class Governante extends UnicastRemoteObject implements GovernanteInterface
-{
+public class Governante extends UnicastRemoteObject implements GovernanteInterface{
     private static final long serialVersionUID = -34234234L;
     static Logger logger = Logger.getLogger("global");
     private static final int RMI_PORT = 1099;
-    private List<ObserverInterface> obsList= new ArrayList<>();
+    private List observersList= new ArrayList<>();
 
+    private Camera camera;
 
-    private static List<Stanza> stanze = new ArrayList<>();
 
     public Governante() throws RemoteException {
         super();
@@ -37,25 +37,12 @@ public class Governante extends UnicastRemoteObject implements GovernanteInterfa
 
     @Override
     public boolean aggiornaStatoCamera(Camera c) {
-
-
-        ObserverCamereInterface h = new ObserverCamereInterface() {
-            @Override
-            public void attach(CatalogoCamerePublisher observer) {
-                observers.add(observer);
-            }
-
-            @Override
-            public void detach(CatalogoCamerePublisher observer) {
-                observers.remove(observer);
-            }
-
-            @Override
-            public void notifyObservers() {
-                obsList
-            }
-        };
         return false;
+    }
+
+    @Override
+    public Camera update(Camera camera) throws RemoteException {
+        return camera;
     }
 
     public static void main(String[] args) throws RemoteException
@@ -64,8 +51,8 @@ public class Governante extends UnicastRemoteObject implements GovernanteInterfa
 
         for(int i=101; i<600; i++)
         {
-            stanze.add(new Stanza(i));
-            IO.println(stanze.toString());
+          //  stanze.add(new Stanza(i));
+           // IO.println(stanze.toString());
         }
 
         logger.info("Camere ottenute!");
@@ -104,5 +91,6 @@ public class Governante extends UnicastRemoteObject implements GovernanteInterfa
         }
 
     }
+
 
 }

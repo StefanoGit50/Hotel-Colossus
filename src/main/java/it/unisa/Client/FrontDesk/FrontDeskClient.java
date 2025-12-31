@@ -2,7 +2,6 @@ package it.unisa.Client.FrontDesk;
 
 import it.unisa.interfacce.GovernanteInterface;
 import it.unisa.interfacce.FrontDeskInterface;
-import it.unisa.Server.gestioneCamere.Stanza;
 import it.unisa.Server.gestioneClienti.Cliente;
 import it.unisa.Server.gestionePrenotazioni.Prenotazione;
 

@@ -1,18 +1,25 @@
 package it.unisa.Server.persistent.obj.catalogues;
 
 import it.unisa.Common.Camera;
+import it.unisa.Server.ObserverCamereInterface;
+import it.unisa.Server.SubjectCamereInterface;
 import it.unisa.Server.persistent.util.Util;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Gestisce il catalogo delle camere dell'hotel.
  * Questa classe è responsabile per la conservazione e l'accesso sicuro
  * (tramite deep copy) all'elenco delle camere disponibili.
  */
-public class CatalogoCamerePublisher {
+public class CatalogoCamerePublisher implements SubjectCamereInterface {
+
+    private List<ObserverCamereInterface> observers = new ArrayList<>();
+
     /**
-     * Lista interna contenente tutti gli oggetti {@link persistent.obj.Camera} del catalogo.
+     * Lista interna contenente tutti gli oggetti {@link it.unisa.Common.Camera} del catalogo.
      * La lista viene gestita tramite deep copy per garantire l'incapsulamento.
      */
     private ArrayList<Camera> listaCamere;
@@ -51,5 +58,27 @@ public class CatalogoCamerePublisher {
                 return c.clone();
         }
         return null;
+    }
+
+
+    @Override
+    public void attach(ObserverCamereInterface observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void detach(ObserverCamereInterface observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers(Camera camera) throws RemoteException {  // notifico agli observer che una camera è stata cambiata
+        for (Camera c : listaCamere) {
+            if (c.getNumeroCamera() == camera.getNumeroCamera() && c.getStatoCamera() != camera.getStatoCamera())
+                c.setStatoCamera(camera.getStatoCamera());
+        }
+        for (ObserverCamereInterface observer : observers) {
+            observer.update(camera);
+        }
     }
 }

@@ -1,9 +1,9 @@
 package it.unisa.Server.gestionePrenotazioni;
 
+import it.unisa.Common.Camera;
 import it.unisa.Server.gestioneClienti.Cliente;
 import it.unisa.interfacce.GovernanteInterface;
 import it.unisa.interfacce.FrontDeskInterface;
-import it.unisa.Server.gestioneCamere.Stanza;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
@@ -14,8 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
-{
+public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface {
     static Logger logger = Logger.getLogger("global");
     private static final int RMI_PORT = 1099;
 
@@ -23,6 +22,12 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
 
     public FrontDesk() throws RemoteException {
         super();
+    }
+
+    // manda al client la camera ricevuta dall'update.
+    @Override
+    public Camera update(Camera camera) throws RemoteException {
+        return camera;
     }
 
     @Override
@@ -127,4 +132,6 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
             e.printStackTrace();
         }
     }
+
+
 }

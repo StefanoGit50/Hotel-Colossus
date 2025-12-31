@@ -1,10 +1,9 @@
 package it.unisa.Server;
 
 import it.unisa.Common.Camera;
-import it.unisa.Server.persistent.obj.catalogues.CatalogoCamerePublisher;
+
+import java.rmi.RemoteException;
 
 public interface ObserverCamereInterface {
-    void attach(CatalogoCamerePublisher observer);
-    void detach(CatalogoCamerePublisher observer);
-    void notifyObservers();
+    Camera update(Camera camera) throws RemoteException;
 }

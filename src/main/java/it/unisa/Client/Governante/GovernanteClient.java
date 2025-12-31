@@ -1,7 +1,6 @@
 package it.unisa.Client.Governante;
 
 //import it.unisa.Server.gestioneCamere.Stanza;
-import it.unisa.Server.gestioneCamere.Stanza;
 import it.unisa.interfacce.GovernanteInterface;
 //import it.unisa.Server.gestioneCamere.Stanza;
 
