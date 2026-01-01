@@ -8,6 +8,8 @@ import it.unisa.Server.persistent.util.Util;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Gestisce il catalogo delle camere dell'hotel.
@@ -16,13 +18,13 @@ import java.util.List;
  */
 public class CatalogoCamerePublisher implements SubjectCamereInterface {
 
-    private List<ObserverCamereInterface> observers = new ArrayList<>();
+    private static List<ObserverCamereInterface> observers = new ArrayList<>();
 
     /**
      * Lista interna contenente tutti gli oggetti {@link it.unisa.Common.Camera} del catalogo.
      * La lista viene gestita tramite deep copy per garantire l'incapsulamento.
      */
-    private ArrayList<Camera> listaCamere;
+    private static ArrayList<Camera> camereList = new ArrayList<>();
 
     /**
      * Costruttore per inizializzare il catalogo con una lista di camere.
@@ -30,9 +32,11 @@ public class CatalogoCamerePublisher implements SubjectCamereInterface {
      *
      * @param listaCamere L'ArrayList di oggetti Camera da copiare nel catalogo.
      */
-    public CatalogoCamerePublisher(ArrayList<Camera> listaCamere) {
-        this.listaCamere = Util.deepCopyArrayList(listaCamere);
+    public  CatalogoCamerePublisher(ArrayList<Camera> listaCamere) {
+        this.camereList = Util.deepCopyArrayList(listaCamere);
     }
+
+    public CatalogoCamerePublisher() {};
 
     /**
      * Restituisce una deep copy dell'elenco completo delle camere.
@@ -40,8 +44,8 @@ public class CatalogoCamerePublisher implements SubjectCamereInterface {
      *
      * @return Una nuova ArrayList contenente copie (cloni) di tutti gli oggetti Camera.
      */
-    public ArrayList<Camera> getListaCamere() {
-        return Util.deepCopyArrayList(listaCamere);
+    public  ArrayList<Camera> getListaCamere() {
+        return Util.deepCopyArrayList(camereList);
     }
 
     /**
@@ -51,8 +55,8 @@ public class CatalogoCamerePublisher implements SubjectCamereInterface {
      * @return Una deep copy dell'oggetto Camera trovato, o {@code null} se non esiste nessuna camera con quel numero.
      * @throws CloneNotSupportedException Se l'oggetto Camera non supporta la clonazione.
      */
-    public Camera getCamera(int numeroCamera) throws CloneNotSupportedException{
-        for (Camera c : listaCamere) {
+    public  Camera getCamera(int numeroCamera) throws CloneNotSupportedException{
+        for (Camera c : camereList) {
             if (c.getNumeroCamera() == numeroCamera)
                 // Restituiamo una copia per rispettare l'incapsulamento
                 return c.clone();
@@ -60,7 +64,24 @@ public class CatalogoCamerePublisher implements SubjectCamereInterface {
         return null;
     }
 
+    public  boolean aggiornaStatoCamera(Camera c) throws RemoteException {
 
+        if(camereList.contains(c)){
+            for(Camera cam : camereList){
+                if(cam.getNumeroCamera()==c.getNumeroCamera() && !cam.getStatoCamera().equals(c.getStatoCamera())){
+                    cam.setStatoCamera(c.getStatoCamera());
+                    notifyObservers(c);
+                    return true;
+                }
+            }
+        }
+        //lo stato della camera non è modificabile se è equivalente a quello attuale oppure se la camera non è presente nella lista globale
+        Logger.getLogger("global").log(Level.INFO, "Stato camera"+c.getStatoCamera()+ "non modificabile");
+        return false;
+    }
+
+
+    // metodi per fare l'iscrizione la disiscrizione al publisher e la notifica agli observer quando ce un update
     @Override
     public void attach(ObserverCamereInterface observer) {
         observers.add(observer);
@@ -69,14 +90,10 @@ public class CatalogoCamerePublisher implements SubjectCamereInterface {
     @Override
     public void detach(ObserverCamereInterface observer) {
         observers.remove(observer);
+
     }
 
-    @Override
     public void notifyObservers(Camera camera) throws RemoteException {  // notifico agli observer che una camera è stata cambiata
-        for (Camera c : listaCamere) {
-            if (c.getNumeroCamera() == camera.getNumeroCamera() && c.getStatoCamera() != camera.getStatoCamera())
-                c.setStatoCamera(camera.getStatoCamera());
-        }
         for (ObserverCamereInterface observer : observers) {
             observer.update(camera);
         }

@@ -2,8 +2,6 @@ package it.unisa.Server.gestioneCamere;
 
 import it.unisa.Common.Camera;
 import it.unisa.Server.ObserverCamereInterface;
-import it.unisa.Server.ObserverInterface;
-import it.unisa.Server.SubjectCamereInterface;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoCamerePublisher;
 import it.unisa.interfacce.GovernanteInterface;
 
@@ -16,11 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class Governante extends UnicastRemoteObject implements GovernanteInterface{
+public class Governante extends UnicastRemoteObject implements GovernanteInterface, ObserverCamereInterface{
     private static final long serialVersionUID = -34234234L;
     static Logger logger = Logger.getLogger("global");
     private static final int RMI_PORT = 1099;
-    private List observersList= new ArrayList<>();
+
 
     private Camera camera;
 
@@ -36,10 +34,12 @@ public class Governante extends UnicastRemoteObject implements GovernanteInterfa
     }
 
     @Override
-    public boolean aggiornaStatoCamera(Camera c) {
-        return false;
+    public boolean aggiornaStatoCamera(Camera c) throws RemoteException {
+        CatalogoCamerePublisher camList = new CatalogoCamerePublisher();
+        return camList.aggiornaStatoCamera(c);
     }
 
+    //ritorna la camera che il front desk ha cambiato
     @Override
     public Camera update(Camera camera) throws RemoteException {
         return camera;

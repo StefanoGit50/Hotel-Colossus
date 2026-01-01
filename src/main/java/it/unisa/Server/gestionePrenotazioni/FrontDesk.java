@@ -2,6 +2,7 @@ package it.unisa.Server.gestionePrenotazioni;
 
 import it.unisa.Common.Camera;
 import it.unisa.Server.gestioneClienti.Cliente;
+import it.unisa.Server.persistent.obj.catalogues.CatalogoCamerePublisher;
 import it.unisa.interfacce.GovernanteInterface;
 import it.unisa.interfacce.FrontDeskInterface;
 
@@ -24,23 +25,30 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         super();
     }
 
-    // manda al client la camera ricevuta dall'update.
+
+    @Override
+    public boolean aggiornaStatoCamera(Camera c) throws RemoteException {
+        CatalogoCamerePublisher camList = new CatalogoCamerePublisher();
+        return camList.aggiornaStatoCamera(c);
+    }
+
+    // manda al client la camera ricevuta dall'update e il client dovrà aggiornare la sua lista da mostrare.
     @Override
     public Camera update(Camera camera) throws RemoteException {
         return camera;
     }
 
     @Override
-    public void effettuaPrenotazione(String id, Cliente cliente, Stanza stanza) throws RemoteException
+    public void effettuaPrenotazione(String id, Cliente cliente, Camera stanza) throws RemoteException
     {
-        if(stanza.getStatoGlobale().equals("libera"))
+        if(Camera.getStatoGlobale().equals("libera"))
         {
             Prenotazione p = new Prenotazione(id, cliente, stanza);
             prenotazioni.add(p);
 
             try{
                 GovernanteInterface gs = (GovernanteInterface) Naming.lookup("rmi://localhost/GestoreCamere");
-                //gs.setOccupataGlobale(stanza);
+                //gs.setOccupataGlobale(Canera);
                 logger.info("Prenotazione effettuata per stanza " + stanza.getNumero());
             } catch(Exception e)
             {
@@ -95,6 +103,7 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         System.err.println("Prenotazione non trovata");
         return null;
     }
+
 
     public static void main(String[] args)
     {
