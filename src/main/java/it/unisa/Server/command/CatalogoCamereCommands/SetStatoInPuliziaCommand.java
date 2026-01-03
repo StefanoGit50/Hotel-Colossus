@@ -1,7 +1,7 @@
-package it.unisa.Server.Command.CatalogoCamereCommands;
+package it.unisa.Server.command.CatalogoCamereCommands;
 
 import it.unisa.Common.*;
-import it.unisa.Server.Command.Command;
+import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoCamerePublisher;
 import it.unisa.Server.persistent.util.Stato;
 

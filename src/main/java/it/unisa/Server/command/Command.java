@@ -1,4 +1,4 @@
-package it.unisa.Server.Command;
+package it.unisa.Server.command;
 
 /**
  * Interfaccia Command - usata nel design pattern: Command.

@@ -1,7 +1,7 @@
-package it.unisa.Server.Command.CatalogoPrenotazioniCommands;
+package it.unisa.Server.command.CatalogoPrenotazioniCommands;
 
 import it.unisa.Common.Prenotazione;
-import it.unisa.Server.Command.Command;
+import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioniPublisher;
 
 import java.util.ArrayList;

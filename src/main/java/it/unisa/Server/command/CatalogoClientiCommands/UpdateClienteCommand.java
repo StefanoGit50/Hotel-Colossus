@@ -1,7 +1,7 @@
-package it.unisa.Server.Command.CatalogoClientiCommands;
+package it.unisa.Server.command.CatalogoClientiCommands;
 
 import it.unisa.Common.Cliente;
-import it.unisa.Server.Command.Command;
+import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClientiPublisher;
 
 import java.util.ArrayList;
