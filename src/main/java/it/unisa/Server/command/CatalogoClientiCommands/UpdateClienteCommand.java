@@ -5,6 +5,7 @@ import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClientiPublisher;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Comando per modificare i dati di registrazione di un cliente (eccetto il codice fiscale, il quale viene
@@ -55,14 +56,21 @@ public class UpdateClienteCommand implements Command {
             ArrayList<Cliente> lc = catalogue.getListaClienti(), lcb = catalogue.getListaClientiBannati();
 
             // Ricerca in entrambe le liste (clienti bannati e non)
-            for (Cliente cli : lc) {
+            Iterator<Cliente> it = lc.iterator(); // Evita di modificare l'array metre lo si itera
+            Cliente cli;
+            while (it.hasNext()) {
+                cli = it.next();
+
                 if(cli.getCf().equals(c.getCf())) {
                     clienteNonModificato = cli;
                     lc.remove(cli); // rimuovi il cliente 'non modificato' dalla lista dei clienti
                     lc.add(c); // aggiungi il cliente 'modificato' alla lista dei clienti
                 }
             }
-            for (Cliente cli : lcb) {
+            it = lcb.iterator();
+            while (it.hasNext()) {
+                cli = it.next();
+
                 if(cli.getCf().equals(c.getCf())) {
                     clienteNonModificato = cli;
                     lcb.remove(cli); // rimuovi il cliente 'non modificato' dalla lista dei clienti
@@ -84,13 +92,20 @@ public class UpdateClienteCommand implements Command {
             ArrayList<Cliente> lc = catalogue.getListaClienti(), lcb = catalogue.getListaClientiBannati();
 
             // Ricerca in entrambe le liste (clienti bannati e non)
-            for (Cliente cli : lc) {
+            Iterator<Cliente> it = lc.iterator(); // Evita di modificare l'array metre lo si itera
+            Cliente cli;
+            while (it.hasNext()) {
+                cli = it.next();
+
                 if(cli.getCf().equals(c.getCf())) {
                     lc.remove(cli); // rimuovi il cliente 'non modificato' dalla lista dei clienti
                     lc.add(clienteNonModificato); // aggiungi il cliente 'modificato' alla lista dei clienti
                 }
             }
-            for (Cliente cli : lcb) {
+            it = lcb.iterator();
+            while (it.hasNext()) {
+                cli = it.next();
+
                 if(cli.getCf().equals(c.getCf())) {
                     lcb.remove(cli); // rimuovi il cliente 'non modificato' dalla lista dei clienti
                     lcb.add(clienteNonModificato); // aggiungi il cliente 'modificato' alla lista dei clienti

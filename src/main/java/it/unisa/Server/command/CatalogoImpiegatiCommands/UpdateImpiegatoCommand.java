@@ -5,6 +5,7 @@ import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoImpiegatiPublisher;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Comando per modificare i dati di registrazione di un impiegato (eccetto il codice fiscale, il quale viene
@@ -47,14 +48,17 @@ public class UpdateImpiegatoCommand implements Command {
         this.impiegato = impiegato;
     }
 
-
     @Override
     public void execute() {
         try {
             Impiegato p = catalogue.getImpiegato(impiegato.getCodiceFiscale());
             ArrayList<Impiegato> li = catalogue.getListaImpiegati();
 
-            for (Impiegato imp : li) {
+            Iterator<Impiegato> it = li.iterator(); // Evita di modificare l'array metre lo si itera
+            Impiegato imp;
+            while (it.hasNext()) {
+                imp = it.next();
+
                 impiegatoNonModificato = imp;
                 li.remove(imp); // rimuovi l'impiegato 'non modificato' dalla lista dei impiegati
                 li.add(p); // aggiungi l'impiegato 'modificato' alla lista dei impiegati
@@ -72,8 +76,11 @@ public class UpdateImpiegatoCommand implements Command {
             Impiegato c = catalogue.getImpiegato(impiegato.getCodiceFiscale());
             ArrayList<Impiegato> li = catalogue.getListaImpiegati();
 
-            // Ricerca in entrambe le liste (impiegati bannati e non)
-            for (Impiegato imp : li) {
+            Iterator<Impiegato> it = li.iterator(); // Evita di modificare l'array metre lo si itera
+            Impiegato imp;
+            while (it.hasNext()) {
+                imp = it.next();
+
                 if(imp.getCodiceFiscale().equals(c.getCodiceFiscale())) {
                     li.remove(imp); // rimuovi l'impiegato 'non modificato' dalla lista dei impiegati
                     li.add(impiegatoNonModificato); // aggiungi l'impiegato 'modificato' alla lista dei impiegati

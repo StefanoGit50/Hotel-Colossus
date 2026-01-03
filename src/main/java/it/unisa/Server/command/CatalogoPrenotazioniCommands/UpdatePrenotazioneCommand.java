@@ -5,6 +5,7 @@ import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioniPublisher;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Comando per modificare i dati di una prenotazione (eccetto il codice identificativo, il quale viene
@@ -54,8 +55,11 @@ public class UpdatePrenotazioneCommand implements Command {
             Prenotazione p = catalogue.getPrenotazione(prenotazione.getCodicePrenotazione());
             ArrayList<Prenotazione> lp = catalogue.getListaPrenotazioni();
 
-            // Ricerca in entrambe le liste (prenotazioni bannati e non)
-            for (Prenotazione pren : lp) {
+            Iterator<Prenotazione> it = lp.iterator(); // Evita di modificare l'array metre lo si itera
+            Prenotazione pren;
+            while (it.hasNext()) {
+                pren = it.next();
+
                 if(pren.getCodicePrenotazione() ==  p.getCodicePrenotazione()) {
                     prenotazioneNonModificata = pren;
                     lp.remove(pren); // rimuovi la prenotazione 'non modificata' dalla lista delle prenotazioni
@@ -73,17 +77,20 @@ public class UpdatePrenotazioneCommand implements Command {
     public void undo() {
         try {
             Prenotazione p = catalogue.getPrenotazione(prenotazione.getCodicePrenotazione());
-            ArrayList<Prenotazione> lc = catalogue.getListaPrenotazioni();
+            ArrayList<Prenotazione> lp = catalogue.getListaPrenotazioni();
 
-            // Ricerca in entrambe le liste (prenotazioni bannati e non)
-            for (Prenotazione pren : lc) {
+            Iterator<Prenotazione> it = lp.iterator(); // Evita di modificare l'array metre lo si itera
+            Prenotazione pren;
+            while (it.hasNext()) {
+                pren = it.next();
+
                 if(pren.getCodicePrenotazione() == p.getCodicePrenotazione()) {
-                    lc.remove(pren); // rimuovi il prenotazione 'non modificato' dalla lista dei prenotazioni
-                    lc.add(prenotazioneNonModificata); // aggiungi il prenotazione 'modificato' alla lista dei prenotazioni
+                    lp.remove(pren); // rimuovi il prenotazione 'non modificato' dalla lista dei prenotazioni
+                    lp.add(prenotazioneNonModificata); // aggiungi il prenotazione 'modificato' alla lista dei prenotazioni
                 }
             }
 
-            catalogue.setListaPrenotazioni(lc);
+            catalogue.setListaPrenotazioni(lp);
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }

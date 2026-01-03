@@ -1,8 +1,11 @@
 package it.unisa.Server.persistent.obj.catalogues;
 
+import it.unisa.Common.Cliente;
 import it.unisa.Common.Impiegato;
 import it.unisa.Common.Impiegato;
+import it.unisa.Server.persistent.util.Ruolo;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -57,7 +60,62 @@ public class CatalogoImpiegatiPublisher {
         }
         return null;
     }
-    
+
+    /**
+     * Esegue una ricerca flessibile all'interno del catalogo impiegati basandosi su vari criteri.
+     * La ricerca prende almeno un parametro in input mentre gli altri possono essere nulli.
+     * Un impiegato viene selezionato solo se rispetta tutti i parametri non nulli della ricerca.
+     *
+     * @param nome Il nome dell'impiegato da cercare (può essere {@code null}).
+     * @param cognome Il cognome dell'impiegato da cercare (può essere {@code null}).
+     * @param sesso La nazionalità (o cittadinanza) dell'impiegato (può essere {@code null}).
+     * @param ruolo {@code Ruolo} Ruolo dell'impiegato (può essere {@code null}).
+     * @return Una deep copy dell'ArrayList contenente tutti gli impiegati che corrispondono ai criteri di ricerca.
+     * @throws CloneNotSupportedException Se il metodo clone non è supportato dalla classe {@code Impiegato}
+     */
+    public ArrayList<Impiegato> cercaimpiegati(String nome, String cognome, String sesso, Ruolo ruolo)
+            throws CloneNotSupportedException{
+        ArrayList<Impiegato> risultati = new ArrayList<>();
+
+        // Flags per verificare se almeno un parametro è stato fornito
+        boolean[] params = new boolean[4];
+        params[0] = nome != null && !nome.isEmpty();
+        params[1] = cognome != null && !cognome.isEmpty();
+        params[2] = sesso != null  && !sesso.isEmpty();
+        params[3] = ruolo != null;
+
+        // Tutti i parametri sono nulli
+        if( !params[0] && !params[1] && !params[2] && !params[3] ) {return null;}
+
+        for (Impiegato impiegato : listaImpiegati) {
+
+            if (params[0]) { // Se la flag è vera allora il parametro è presente ed è usato come criterio per la ricerca
+                if (!Objects.equals(impiegato.getNome(), nome)) { // Il criterio non è rispettato
+                    continue; // L'oggetto Impiegato non viene aggiunto
+                }
+            }
+            if (params[1]) {
+                if (!Objects.equals(impiegato.getCognome(), cognome)) {
+                    continue;
+                }
+            }
+            if (params[2]) {
+                if (!Objects.equals(impiegato.getSesso(), sesso)) {
+                    continue;
+                }
+            }
+            if (params[3]) {
+                if (!impiegato.getRuolo().equals(ruolo)) {
+                    continue;
+                }
+            }
+
+            risultati.add(impiegato.clone());
+        }
+
+        return risultati;
+    }
+
     // Metodi della classe Object
 
     @Override

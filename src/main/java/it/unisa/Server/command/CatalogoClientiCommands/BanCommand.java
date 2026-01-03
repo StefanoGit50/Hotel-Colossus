@@ -5,6 +5,7 @@ import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClientiPublisher;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Comando per poter bannare un cliente.
@@ -55,7 +56,11 @@ public class BanCommand implements Command {
             Cliente c = catalogue.getCliente(CFCliente);
             ArrayList<Cliente> lc = catalogue.getListaClienti(), lcb = catalogue.getListaClientiBannati();
 
-            for (Cliente cli : lc) {
+            Iterator<Cliente> it = lc.iterator(); // Evita di modificare l'array metre lo si itera
+            Cliente cli;
+            while (it.hasNext()) {
+                cli = it.next();
+
                 if(cli.equals(c)) {
                     cli.setBlacklisted(true); // ban
                     lc.remove(cli); // rimuovi il cliente dalla lista dei clienti (non bannati)
@@ -80,7 +85,12 @@ public class BanCommand implements Command {
             Cliente c = catalogue.getCliente(CFCliente);
             ArrayList<Cliente> lc = catalogue.getListaClienti(), lcb = catalogue.getListaClientiBannati();
 
-            for (Cliente cli : lcb) {
+
+            Iterator<Cliente> it = lcb.iterator(); // Evita di modificare l'array metre lo si itera
+            Cliente cli;
+            while (it.hasNext()) {
+                cli = it.next();
+
                 if(cli.equals(c)) {
                     cli.setBlacklisted(false); // annulla il ban
                     lcb.remove(cli); // rimuovi il cliente dalla lista dei clienti bannati

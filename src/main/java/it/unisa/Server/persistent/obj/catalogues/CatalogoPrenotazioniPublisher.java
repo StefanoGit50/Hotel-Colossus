@@ -40,7 +40,7 @@ public class CatalogoPrenotazioniPublisher {
      * @return Una deep copy dell'ArrayList contenente tutte le prenotazioni che corrispondono ai criteri di ricerca.
      * @throws CloneNotSupportedException Se il metodo clone non è supportato dalla classe {@code Prenotazione}
      */
-    public ArrayList<Prenotazione> cercaClienti(String nominativoCliente, int numeroCamera,
+    public ArrayList<Prenotazione> cercaPrenotazioni(String nominativoCliente, int numeroCamera,
                                            LocalDate dataInizio, LocalDate dataFine, boolean sort) throws CloneNotSupportedException{
         ArrayList<Prenotazione> risultati = new ArrayList<>();
 
