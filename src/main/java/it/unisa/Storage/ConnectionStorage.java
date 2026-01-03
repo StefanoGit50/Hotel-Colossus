@@ -9,12 +9,14 @@ import java.util.logging.Logger;
 
 public class ConnectionStorage{
     private static List<Connection> freeDbConnections;
+    private static final Logger log = Logger.getLogger(ConnectionStorage.class.getName());
+
     static {
         freeDbConnections = new LinkedList<>();
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            System.out.println("DB driver not found:"+ e.getMessage());
+            log.warning("DB driver not found:"+ e.getMessage());
         }
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -39,20 +41,21 @@ public class ConnectionStorage{
         Connection connection;
 
         if (!freeDbConnections.isEmpty()) {
-            connection =  freeDbConnections.get(0); // restituisce la prima connessione disponibile
-            freeDbConnections.remove(0); // fa in modo che il prossimo thread non possa usare la stessa connessione del thread attuale
+            connection =  freeDbConnections.getFirst(); // restituisce la prima connessione disponibile
+            freeDbConnections.removeFirst(); // fa in modo che il prossimo thread non possa usare la stessa connessione del thread attuale
                 try {
-                    if (connection.isValid(4))
-                        connection = getConnection(); // richiama se stesso fin quando non trova una connessione valida
+                    if (connection.isClosed()|| !connection.isValid(4)) {
+                        connection.close();
+                        return getConnection(); // richiama se stesso fin quando non trova una connessione valida
+                    }
                 } catch (SQLException e) {
                     connection.close();
-                    connection = getConnection(); // richiama se stesso fin quando non trova una connessione valida
+                    return getConnection(); // richiama se stesso fin quando non trova una connessione valida
                 }
 
         } else {
             connection = createDBConnection();
         }
-
         return connection;
     }
 
@@ -62,14 +65,15 @@ public class ConnectionStorage{
         }else {
             try{
                 connection.close();
+                log.info("🗑️ Pool pieno, connessione chiusa");
             }catch (SQLException e){
-                e.printStackTrace();
+                log.warning("⚠️ Errore chiusura connessione: " + e.getMessage());
             }
         }
     }
 
     public static synchronized void shutdown() {
-        Logger.getLogger("Chiusura connessioni...");
+        log.info("Chiusura connessioni...");
         for (Connection conn : freeDbConnections) {
             try {
                 if (conn != null && !conn.isClosed()) {
@@ -80,6 +84,6 @@ public class ConnectionStorage{
             }
         }
         freeDbConnections.clear();
-        Logger.getLogger("✓ Connessioni chiuse");
+        log.info("✓ Connessioni chiuse");
     }
 }
