@@ -28,7 +28,11 @@ public class CatalogoCamerePublisher implements SubjectCamereInterface, Serializ
      */
     private static ArrayList<Camera> camereList = new ArrayList<>();
 
+    private static Camera lastModified;
 
+    public static Camera getLastModified() {
+        return lastModified;
+    }
 
     /**
      * Costruttore per inizializzare il catalogo con una lista di camere.
@@ -87,7 +91,8 @@ public class CatalogoCamerePublisher implements SubjectCamereInterface, Serializ
             for(Camera cam : camereList){
                 if(cam.getNumeroCamera()==c.getNumeroCamera() && !cam.getStatoCamera().equals(c.getStatoCamera())){
                     cam.setStatoCamera(c.getStatoCamera());
-                    notifyObservers(c);
+                    lastModified = cam;
+                    notifyObservers();
                     return true;
                 }
             }
@@ -110,9 +115,9 @@ public class CatalogoCamerePublisher implements SubjectCamereInterface, Serializ
     }
 
     @Override
-    public void notifyObservers(Camera camera) throws RemoteException {  // notifico agli observer che una camera è stata cambiata
+    public void notifyObservers() throws RemoteException {  // notifico agli observer che una camera è stata cambiata
         for (ObserverCamereInterface observer : observers) {
-            observer.update(camera);
+            observer.update();
         }
     }
 }

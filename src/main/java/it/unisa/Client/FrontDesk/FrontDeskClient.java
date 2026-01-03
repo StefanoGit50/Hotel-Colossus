@@ -34,7 +34,7 @@ public class FrontDeskClient
             while(x==0)
             {
                 System.out.println("Benvenuto nel Menu front desk! \nScegli un opzione:");
-                System.out.println("1. Effettua prenotazione\n2. Rimuovi prenotazione\n3. Ottieni lista prenotazioni \n4. modifica stato camera \n0. Esci");
+                System.out.println("1. Effettua prenotazione\n2. Rimuovi prenotazione\n3. Ottieni lista prenotazioni \n4. modifica stato camera \n5. Visualizza lista attuale delle camere \n0. Esci");
                 
                 Scanner sc = new Scanner(System.in);
                 int scelta = sc.nextInt();
@@ -85,27 +85,37 @@ public class FrontDeskClient
                     }
                     case 4:
                     {
-                        System.out.println("Inserisci numero camera da modificare: ");
                         List<Camera> camList= frontDeskInterface.getCamere();
                         IO.println(camList.toString());
+                        System.out.println("Inserisci numero camera da modificare: ");
                         Scanner sc2 = new Scanner(System.in);
                         int n=sc2.nextInt();
 
-                        if (camList.isEmpty()){
-                            System.out.println("Inserisci numero camera esistente");
-                            break;
-                        }
-                        else{
+                        boolean flag=false;
 
-                            for(Camera c: camList){
-                                if(c.getNumeroCamera()== n){
-                                    c.setStatoCamera(Stato.Occupata);
-                                    boolean b = frontDeskInterface.aggiornaStatoCamera(c);
-                                    IO.println("Camera result : "+b);
-                                    frontDeskInterface.up
-                                }
+                        for(Camera c: camList){
+                            if(c.getNumeroCamera()== n){
+                                c.setStatoCamera(Stato.Occupata);
+                                boolean b = frontDeskInterface.aggiornaStatoCamera(c);
+                                IO.println("Camera result : "+b);
+                                flag=true;
                             }
                         }
+
+                        if(!flag){
+                            IO.println("Camera non trovata inserire una camera nella lista");
+                            break;
+                        }
+                        Camera c= frontDeskInterface.update();
+                        IO.println("Camera mandata dal server = " +c.toString());
+                        //aggiorna gui da qui
+
+                        break;
+                    }
+
+                    case 5:{
+                        List<Camera> camList= frontDeskInterface.getCamere();
+                        IO.println(camList.toString());
                         break;
                     }
                     case 0:

@@ -41,8 +41,8 @@ public class Governante extends UnicastRemoteObject implements GovernanteInterfa
 
     //ritorna la camera che il front desk ha cambiato
     @Override
-    public Camera update(Camera camera) throws RemoteException {
-        return camera;
+    public Camera update() throws RemoteException {
+        return CatalogoCamerePublisher.getLastModified();
     }
 
     public static void main(String[] args) throws RemoteException

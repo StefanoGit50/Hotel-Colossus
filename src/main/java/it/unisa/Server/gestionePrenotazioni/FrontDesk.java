@@ -19,7 +19,8 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     static Logger logger = Logger.getLogger("global");
     private static final int RMI_PORT = 1099;
 
-    List<Prenotazione> prenotazioni = new ArrayList<>();
+    private List<Prenotazione> prenotazioni = new ArrayList<>();
+    private CatalogoCamerePublisher camList = new CatalogoCamerePublisher();
 
     public FrontDesk() throws RemoteException {
         super();
@@ -32,15 +33,14 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
 
     @Override
     public boolean aggiornaStatoCamera(Camera c) throws RemoteException {
-        CatalogoCamerePublisher camList = new CatalogoCamerePublisher();
         Logger.getLogger("camera passata = "+c.getNumeroCamera()+ c.getStatoCamera());
         return camList.aggiornaStatoCamera(c);
     }
 
     // manda al client la camera ricevuta dall'update e il client dovrà aggiornare la sua lista da mostrare.
     @Override
-    public Camera update(Camera camera) throws RemoteException {
-        return camera;
+    public Camera update() throws RemoteException {
+        return CatalogoCamerePublisher.getLastModified();
     }
 
     @Override
