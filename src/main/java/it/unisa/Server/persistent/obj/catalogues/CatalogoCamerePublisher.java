@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 public class CatalogoCamerePublisher {
     /**
-     * Lista interna contenente tutti gli oggetti {@link persistent.obj.Camera} del catalogo.
+     * Lista interna contenente tutti gli oggetti {@link Camera} del catalogo.
      * La lista viene gestita tramite deep copy per garantire l'incapsulamento.
      */
     private ArrayList<Camera> listaCamere;
@@ -28,6 +28,11 @@ public class CatalogoCamerePublisher {
     }
 
     /**
+     * Costruttore vuoto per il catalogo delle camere.
+     */
+    public CatalogoCamerePublisher() { }
+
+    /**
      * Restituisce una deep copy dell'elenco completo delle camere.
      * Questo impedisce modifiche esterne alla lista interna del catalogo.
      *
@@ -35,6 +40,15 @@ public class CatalogoCamerePublisher {
      */
     public ArrayList<Camera> getListaCamere() {
         return Util.deepCopyArrayList(listaCamere);
+    }
+
+
+    /**
+     * Imposta una deep copy come lista di camere del catalogo.
+     * @param listaCamere {@code ArrayList<Camera>} da inserire come nuova lista.
+     */
+    public void setListaCamere(ArrayList<Camera> listaCamere) {
+        this.listaCamere = Util.deepCopyArrayList(listaCamere);
     }
 
     /**
@@ -47,7 +61,6 @@ public class CatalogoCamerePublisher {
     public Camera getCamera(int numeroCamera) throws CloneNotSupportedException{
         for (Camera c : listaCamere) {
             if (c.getNumeroCamera() == numeroCamera)
-                // Restituiamo una copia per rispettare l'incapsulamento
                 return c.clone();
         }
         return null;

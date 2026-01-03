@@ -1,4 +1,4 @@
-package it.unisa.Server.Command.GovernanteCommands;
+package it.unisa.Server.Command.CatalogoCamereCommands;
 
 import it.unisa.Common.*;
 import it.unisa.Server.Command.Command;

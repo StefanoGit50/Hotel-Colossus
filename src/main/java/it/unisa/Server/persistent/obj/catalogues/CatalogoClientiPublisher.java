@@ -1,6 +1,7 @@
 package it.unisa.Server.persistent.obj.catalogues;
 
 import it.unisa.Common.Cliente;
+import it.unisa.Common.Cliente;
 import it.unisa.Server.persistent.util.Util;
 
 import java.time.LocalDate;
@@ -12,7 +13,7 @@ import java.util.Objects;
  * La classe mantiene una lista di tutti i clienti e una lista separata per i clienti
  * inseriti nella blacklist (bannati). Garantisce l'incapsulamento.
  */
-public class CatalogoClientiPublisher implements Cloneable {
+public class CatalogoClientiPublisher {
 
     /**
      * Lista interna contenente tutti gli oggetti {@link Cliente}.
@@ -42,6 +43,11 @@ public class CatalogoClientiPublisher implements Cloneable {
     }
 
     /**
+     * Costruttore vuoto
+     */
+    public CatalogoClientiPublisher() {}
+
+    /**
      * Restituisce una deep copy dell'elenco completo dei clienti.
      *
      * @return Un nuovo ArrayList contenente copie (cloni) di tutti gli oggetti Cliente.
@@ -59,6 +65,26 @@ public class CatalogoClientiPublisher implements Cloneable {
         return Util.deepCopyArrayList(listaClientiBannati);
     }
 
+
+    /**
+     * Imposta una deep copy della lista clienti.
+     * @param listaClienti {@code ArrayList<Cliente>} da impostare.
+     */
+    public void setListaClienti(ArrayList<Cliente> listaClienti) {
+        this.listaClienti = listaClienti;
+    }
+
+    /**
+     * Imposta una deep copy della lista clienti bannati.
+     * @param listaClientiBannati {@code ArrayList<Cliente>} da impostare.
+     */
+    public void setListaClientiBannati(ArrayList<Cliente> listaClientiBannati) {
+        this.listaClientiBannati = listaClientiBannati;
+    }
+
+    //
+    //  METODI INTERFACCIA PUBLICA
+    //
 
     /**
      * Esegue una ricerca flessibile all'interno del catalogo clienti basandosi su vari criteri.
@@ -85,19 +111,8 @@ public class CatalogoClientiPublisher implements Cloneable {
         params[3] = dataNascita != null;
         params[4] = sesso != null;
 
-        // ///////////////////////////////////////////////////////////////////////
-        // Controllo: tutti i parametri sono nulli
-        boolean flag = false;
-        for (boolean b : params) {
-            if (b) {
-                flag = true;
-            }
-        }
-        // Se tutti i parametri sono nulli, restituisci lista vuota
-        if (!flag) {
-            return null;
-        }
-        // ////////////////////////////////////////////////////////////////////////
+        // Tutti i parametri sono nulli
+        if(!(params[0] && params[1] && params[2] && params[3] && params[4])){return null;}
 
         for (Cliente cliente : listaClienti) {
 
@@ -133,56 +148,23 @@ public class CatalogoClientiPublisher implements Cloneable {
     }
 
     /**
-     * Chiamare questo metodo ha l'effetto di bannare il cliente passato come parametro.
-     * "Bannare" un cliente significa impostare l'attributo {@code isBanned} a {@code true}
-     * e rimuove il cliente dalla lista {@code listaClienti} e lo aggiunge alla lista
-     * {@code listaClientiBannati}.
-     * @param cliente Cliente da bannare.
+     * Cerca una camera specifica tramite il suo numero e ne restituisce una copia.
+     *
+     * @param CFCliente Il codice fiscale del cliente da cercare da cercare.
+     * @return Una deep copy dell'oggetto Cliente trovato, o {@code null} se non esiste nessuna camera con quel numero.
+     * @throws CloneNotSupportedException Se l'oggetto Cliente non supporta la clonazione.
      */
-    public void ban(Cliente cliente) {
-        // Cliente già presente nella lista dei clienti bannati
-        if(listaClientiBannati.contains(cliente)) {
-            return; // cliente già bannato
-        } else {
-            // Cliente non presente nella lista bannati AND presente nella lista clienti
-            if(listaClienti.contains(cliente)) {
-                listaClienti.remove(cliente);
-                cliente.setBlacklisted(true);
-                listaClientiBannati.add(cliente);
-            } else {
-                return; // Cliente non registrato
-            }
+    public Cliente getCliente(String CFCliente) throws CloneNotSupportedException{
+        for (Cliente c : listaClienti) {
+            if (c.getCf().equals(CFCliente))
+                return c.clone();
         }
-    }
-
-    /**
-     * Chiamare questo metodo ha l'effetto di unbannare il cliente passato come parametro.
-     * "Unbannare" un cliente significa impostare l'attributo {@code isBanned} a {@code false}
-     * e rimuove il cliente dalla lista {@code listaClientiBannati} e lo aggiunge alla lista
-     * {@code listaClienti}.
-     * @param cliente Cliente a cui rimuovere il ban.
-     */
-    public void unBan(Cliente cliente) {
-        // Cliente già presente nella lista dei clienti (non bannati)
-        if(listaClienti.contains(cliente)) {
-            return; // cliente non bannato
-        } else {
-            // Cliente non presente nella lista dei clienti AND presente nella lista clienti bannati
-            if(listaClientiBannati.contains(cliente)) {
-                listaClientiBannati.remove(cliente);
-                cliente.setBlacklisted(false);
-                listaClienti.add(cliente);
-            } else {
-                return; // Cliente non registrato
-            }
+        for (Cliente c : listaClientiBannati) {
+            if (c.getCf().equals(CFCliente))
+                return c.clone();
         }
+        return null;
     }
-
-    public void aggiornaDatiCliente(Cliente cliente) {
-        if(listaClienti.contains(cliente)) {
-            listaClienti.remove(cliente);
-            listaClienti.add(cliente);
-        }
-    }
-
 }
+
+

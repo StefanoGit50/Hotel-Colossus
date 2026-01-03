@@ -1,4 +1,4 @@
-package it.unisa.Server.Command.FrontdeskCommands;
+package it.unisa.Server.Command.CatalogoClientiCommands;
 
 import it.unisa.Common.Cliente;
 import it.unisa.Server.Command.Command;
