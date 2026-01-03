@@ -1,6 +1,5 @@
 package it.unisa.Server.persistent.obj.catalogues;
 import it.unisa.Common.Camera;
-import it.unisa.Common.Cliente;
 import it.unisa.Common.Prenotazione;
 
 import java.time.LocalDate;
@@ -92,6 +91,8 @@ public class CatalogoPrenotazioniPublisher {
         return risultati;
     }
 
+    //  Getters / Setters
+
     /**
      * Restituisce la lista di tutte le prenotazioni nel catalogo.
      */
@@ -127,7 +128,5 @@ public class CatalogoPrenotazioniPublisher {
         }
         return null;
     }
-    // --- Getter e Setter ---
-
 
 }
