@@ -112,7 +112,7 @@ public class CatalogoClientiPublisher {
         params[4] = sesso != null;
 
         // Tutti i parametri sono nulli
-        if(!(params[0] && params[1] && params[2] && params[3] && params[4])){return null;}
+        if( !params[0] && !params[1] && !params[2] && !params[3] && !params[4] ){return null;}
 
         for (Cliente cliente : listaClienti) {
 
@@ -132,7 +132,7 @@ public class CatalogoClientiPublisher {
                 }
             }
             if (params[3]) {
-                if (!Objects.equals(cliente.getDataNascita(), dataNascita)) {
+                if (cliente.getDataNascita().isAfter(dataNascita) || cliente.getDataNascita().isEqual(dataNascita)) {
                     continue;
                 }
             }

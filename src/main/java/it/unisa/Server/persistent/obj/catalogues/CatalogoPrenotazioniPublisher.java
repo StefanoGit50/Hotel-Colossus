@@ -1,7 +1,11 @@
 package it.unisa.Server.persistent.obj.catalogues;
+import it.unisa.Common.Camera;
+import it.unisa.Common.Cliente;
 import it.unisa.Common.Prenotazione;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Gestisce l'elenco complessivo delle prenotazioni, permettendo la registrazione,
@@ -24,12 +28,68 @@ public class CatalogoPrenotazioniPublisher {
     public CatalogoPrenotazioniPublisher() {}
 
     /**
-     * Cerca prenotazioni in base a criteri specifici.
-     * @return Una lista di prenotazioni filtrate.
+     * Esegue una ricerca flessibile all'interno del catalogo delle prenotazioni basandosi su vari criteri.
+     * La ricerca prende almeno un parametro in input mentre gli altri possono essere nulli.
+     * Una prenotazione viene selezionato solo se rispetta tutti i parametri non nulli della ricerca.
+     *
+     * @param nominativoCliente Nome del cliente che ha registrato la prenotazione.
+     * @param numeroCamera Numero (una delle/a) camera registrata con la prenotazione.
+     * @param dataInizio Data prevista per il check-in.
+     * @param dataFine Data prevista per il check-out.
+     * @param sort Parametro per indicare l'ordine rispetto la data (ASC=true or DESC=false). Per ASC si intende dalla
+     *             data meno imminente a quella più imminente rispetto la data odierna metre il contrario vale per DESC.
+     * @return Una deep copy dell'ArrayList contenente tutte le prenotazioni che corrispondono ai criteri di ricerca.
+     * @throws CloneNotSupportedException Se il metodo clone non è supportato dalla classe {@code Prenotazione}
      */
-    public ArrayList<Prenotazione> cercaPrenotazioni(Object datiPrenotazioni) {
-        // Logica prenotazione
-        return null;
+    public ArrayList<Prenotazione> cercaClienti(String nominativoCliente, int numeroCamera,
+                                           LocalDate dataInizio, LocalDate dataFine, boolean sort) throws CloneNotSupportedException{
+        ArrayList<Prenotazione> risultati = new ArrayList<>();
+
+        // Flags per verificare se almeno un parametro è stato fornito
+        boolean[] params = new boolean[4];
+        params[0] = nominativoCliente != null;
+        params[1] = numeroCamera >= 0;
+        params[2] = dataInizio != null;
+        params[3] = dataFine != null;
+
+        // Tutti i parametri sono nulli
+        if( !params[0] && !params[1] && !params[2] && !params[3] ){return null;}
+
+        for (Prenotazione prenotazione : listaPrenotazioni) {
+
+            if (params[0]) { // Se la flag è vera allora il parametro è presente ed è usato come criterio per la ricerca
+                if (!Objects.equals(prenotazione.getIntestatario(), nominativoCliente)) { // Il criterio non è rispettato
+                    continue; // L'oggetto cliente non viene aggiunto
+                }
+            }
+            if (params[1]) {
+                boolean flag = false;
+                for (Camera c : prenotazione.getListaCamere()) {
+                    if (Objects.equals(c.getNumeroCamera(), numeroCamera)) {
+                        flag = true;
+                    }
+                }
+                if (!flag) {
+                    continue;
+                }
+            }
+            if (params[2] && params[3]) {
+                if ( !(prenotazione.getDataInizio().isAfter(dataInizio) && prenotazione.getDataFine().isBefore(dataFine)) ) {
+                    continue;
+                }
+            }
+
+            risultati.add(prenotazione.clone());
+        }
+
+        if (sort) {
+            // ASC
+            risultati.sort((p1, p2) -> p1.getDataInizio().compareTo(p2.getDataInizio()));
+        } else {
+            // DESC
+            risultati.sort((p1, p2) -> p2.getDataInizio().compareTo(p1.getDataInizio()));
+        }
+        return risultati;
     }
 
     /**
