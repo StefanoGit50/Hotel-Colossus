@@ -2,6 +2,7 @@ package it.unisa.Common;
 
 import it.unisa.Server.persistent.util.Stato;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -9,7 +10,7 @@ import java.util.Objects;
  * Ogni camera è identificata da un numero univoco e possiede una tipologia, uno stato
  * corrente e una capacità massima di persone.
  */
-public class Camera implements Cloneable{
+public class Camera implements Cloneable , Serializable {
     /**
      * Numero di camera, univoco per ogni camera all'interno dell'hotel.
      */
@@ -37,9 +38,9 @@ public class Camera implements Cloneable{
      * @param statoCamera Lo stato iniziale della camera (es. Libera).
      * @param capacità Il numero massimo di persone che può ospitare.
      */
-    public Camera(int numeroCamera, String tipologia, Stato statoCamera, int capacità) {
+    public Camera(int numeroCamera, Stato statoCamera, int capacità) {
         this.numeroCamera = numeroCamera;
-        this.tipologia = tipologia;
+       // this.tipologia = tipologia;
         this.statoCamera = statoCamera;
         this.capacità = capacità;
     }
@@ -132,4 +133,9 @@ public class Camera implements Cloneable{
     public Camera clone() throws CloneNotSupportedException {
         return (Camera) super.clone();
     }
+    @Override
+    public String toString() {
+        return getClass().getName()+"[numero camera:"+this.numeroCamera+", Tipologia: "+this.tipologia+", stato camera:"+this.statoCamera+", capacità :"+this.capacità+", notecamera: "+this.noteCamera+"]\n";
+    }
+
 }

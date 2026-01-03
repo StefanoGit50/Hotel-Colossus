@@ -3,8 +3,10 @@ package it.unisa.Server.persistent.obj.catalogues;
 import it.unisa.Common.Camera;
 import it.unisa.Server.ObserverCamereInterface;
 import it.unisa.Server.SubjectCamereInterface;
+import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Server.persistent.util.Util;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +18,7 @@ import java.util.logging.Logger;
  * Questa classe è responsabile per la conservazione e l'accesso sicuro
  * (tramite deep copy) all'elenco delle camere disponibili.
  */
-public class CatalogoCamerePublisher implements SubjectCamereInterface {
+public class CatalogoCamerePublisher implements SubjectCamereInterface, Serializable {
 
     private static List<ObserverCamereInterface> observers = new ArrayList<>();
 
@@ -26,6 +28,8 @@ public class CatalogoCamerePublisher implements SubjectCamereInterface {
      */
     private static ArrayList<Camera> camereList = new ArrayList<>();
 
+
+
     /**
      * Costruttore per inizializzare il catalogo con una lista di camere.
      * Viene eseguita una deep copy della lista fornita per isolare lo stato interno.
@@ -34,9 +38,21 @@ public class CatalogoCamerePublisher implements SubjectCamereInterface {
      */
     public  CatalogoCamerePublisher(ArrayList<Camera> listaCamere) {
         this.camereList = Util.deepCopyArrayList(listaCamere);
+
     }
 
-    public CatalogoCamerePublisher() {};
+    public CatalogoCamerePublisher(){}
+
+   static {
+       camereList.add(new Camera(112, Stato.Libera, 2));
+       camereList.add(new Camera(113, Stato.Libera, 3));
+       camereList.add(new Camera(114, Stato.Libera, 4));
+       camereList.add(new Camera(115, Stato.Libera, 5));
+       camereList.add(new Camera(116, Stato.Libera, 6));
+       camereList.add(new Camera(117, Stato.Libera, 7));
+       camereList.add(new Camera(118, Stato.Libera, 8));
+       camereList.add(new Camera(119, Stato.Libera, 9));
+   }
 
     /**
      * Restituisce una deep copy dell'elenco completo delle camere.
@@ -44,8 +60,8 @@ public class CatalogoCamerePublisher implements SubjectCamereInterface {
      *
      * @return Una nuova ArrayList contenente copie (cloni) di tutti gli oggetti Camera.
      */
-    public  ArrayList<Camera> getListaCamere() {
-        return Util.deepCopyArrayList(camereList);
+    public static ArrayList<Camera> getListaCamere() {
+        return camereList;
     }
 
     /**
@@ -55,7 +71,9 @@ public class CatalogoCamerePublisher implements SubjectCamereInterface {
      * @return Una deep copy dell'oggetto Camera trovato, o {@code null} se non esiste nessuna camera con quel numero.
      * @throws CloneNotSupportedException Se l'oggetto Camera non supporta la clonazione.
      */
-    public  Camera getCamera(int numeroCamera) throws CloneNotSupportedException{
+
+
+    public Camera getCamera(int numeroCamera) throws CloneNotSupportedException{
         for (Camera c : camereList) {
             if (c.getNumeroCamera() == numeroCamera)
                 // Restituiamo una copia per rispettare l'incapsulamento
@@ -64,9 +82,8 @@ public class CatalogoCamerePublisher implements SubjectCamereInterface {
         return null;
     }
 
-    public  boolean aggiornaStatoCamera(Camera c) throws RemoteException {
+    public boolean aggiornaStatoCamera(Camera c) throws RemoteException {
 
-        if(camereList.contains(c)){
             for(Camera cam : camereList){
                 if(cam.getNumeroCamera()==c.getNumeroCamera() && !cam.getStatoCamera().equals(c.getStatoCamera())){
                     cam.setStatoCamera(c.getStatoCamera());
@@ -74,7 +91,6 @@ public class CatalogoCamerePublisher implements SubjectCamereInterface {
                     return true;
                 }
             }
-        }
         //lo stato della camera non è modificabile se è equivalente a quello attuale oppure se la camera non è presente nella lista globale
         Logger.getLogger("global").log(Level.INFO, "Stato camera"+c.getStatoCamera()+ "non modificabile");
         return false;
@@ -93,6 +109,7 @@ public class CatalogoCamerePublisher implements SubjectCamereInterface {
 
     }
 
+    @Override
     public void notifyObservers(Camera camera) throws RemoteException {  // notifico agli observer che una camera è stata cambiata
         for (ObserverCamereInterface observer : observers) {
             observer.update(camera);

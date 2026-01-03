@@ -16,7 +16,7 @@ public class Util {
      * @return Un nuovo ArrayList contenente copie (cloni) degli elementi.
      */
     public static <T extends Cloneable> ArrayList<T> deepCopyArrayList(ArrayList<T> daCopiare) {
-        if (daCopiare == null) return new ArrayList<>();
+        if (daCopiare == null) return null;
 
         ArrayList<T> copia = new ArrayList<>(daCopiare.size());
         try {

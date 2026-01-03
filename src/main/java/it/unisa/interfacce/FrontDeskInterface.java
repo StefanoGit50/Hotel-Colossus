@@ -16,4 +16,5 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
     void cancellaPrenotazione(Prenotazione p) throws RemoteException;
     Prenotazione getPrenotazione(String id) throws RemoteException;
     boolean aggiornaStatoCamera(Camera c) throws RemoteException;
+    List<Camera> getCamere() throws RemoteException;
 }

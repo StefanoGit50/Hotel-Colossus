@@ -25,10 +25,15 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         super();
     }
 
+    @Override
+    public List<Camera> getCamere(){
+       return CatalogoCamerePublisher.getListaCamere();
+    }
 
     @Override
     public boolean aggiornaStatoCamera(Camera c) throws RemoteException {
         CatalogoCamerePublisher camList = new CatalogoCamerePublisher();
+        Logger.getLogger("camera passata = "+c.getNumeroCamera()+ c.getStatoCamera());
         return camList.aggiornaStatoCamera(c);
     }
 
@@ -41,25 +46,25 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     @Override
     public void effettuaPrenotazione(String id, Cliente cliente, Camera stanza) throws RemoteException
     {
-        if(Camera.getStatoGlobale().equals("libera"))
+        //if(Camera.getStatoGlobale().equals("libera"))
         {
-            Prenotazione p = new Prenotazione(id, cliente, stanza);
-            prenotazioni.add(p);
+            //Prenotazione p = new Prenotazione(id, cliente, stanza);
+            //prenotazioni.add(p);
 
             try{
                 GovernanteInterface gs = (GovernanteInterface) Naming.lookup("rmi://localhost/GestoreCamere");
                 //gs.setOccupataGlobale(Canera);
-                logger.info("Prenotazione effettuata per stanza " + stanza.getNumero());
+          //      logger.info("Prenotazione effettuata per stanza " + stanza.getNumero());
             } catch(Exception e)
             {
                 logger.severe("Errore nel contattare GestoreCamere: " + e.getMessage());
                 e.printStackTrace();
             }
         }
-        else
+       // else
         {
-            logger.warning("Stanza " + stanza.getNumero() + " occupata!");
-            System.err.println("Stanza " + stanza.getNumero() + " occupata!");
+      //      logger.warning("Stanza " + stanza.getNumero() + " occupata!");
+       //     System.err.println("Stanza " + stanza.getNumero() + " occupata!");
         }
     }
 
@@ -111,14 +116,14 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         {
             // IMPORTANTE: Avvia l'RMI registry programmaticamente
             logger.info("Avvio RMI Registry sulla porta " + RMI_PORT + "...");
-            Registry registry;
+
             try {
                 // Prova a creare un nuovo registry
-                registry = LocateRegistry.createRegistry(RMI_PORT);
+                LocateRegistry.createRegistry(RMI_PORT);
                 logger.info("✓ RMI Registry creato con successo!");
             } catch (RemoteException e) {
                 // Se esiste già, ottieni il riferimento
-                registry = LocateRegistry.getRegistry(RMI_PORT);
+                LocateRegistry.getRegistry(RMI_PORT);
                 logger.info("✓ Connesso a RMI Registry esistente");
             }
 
