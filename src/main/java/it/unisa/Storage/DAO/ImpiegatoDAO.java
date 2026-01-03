@@ -1,13 +1,13 @@
 package it.unisa.Storage.DAO;
 
 import it.unisa.Common.Impiegato;
+import it.unisa.Server.persistent.util.Ruolo;
 import it.unisa.Storage.BackofficeStorage;
 import it.unisa.Storage.ConnectionStorage;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Objects;
 
 public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
 {
@@ -78,23 +78,32 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
                     String cittadinanza = (String) resultSet.getObject(8);
                     String emailAzienda = (String) resultSet.getObject(9);
                     String sesso = (String) resultSet.getObject(10);
-                    String ruolo = (String) resultSet.getObject(11);
-                    String via = (String) resultSet.getObject(12);
-                    String provincia = (String) resultSet.getObject(13);
-                    String comune = (String) resultSet.getObject(14);
-                    Integer civico = (Integer) resultSet.getObject(15);
-                    String numeroDocumento = (String) resultSet.getObject(16);
-                    Date dataScadenza = (Date) resultSet.getObject(17);
+                    Ruolo ruolo = (Ruolo) resultSet.getObject(11);
+                    Date  dataRilascio = (Date) resultSet.getObject(12);
+                    LocalDate localDate = dataRilascio.toLocalDate();
+                    String tipoDocumento = (String) resultSet.getObject(13);
+                    String via = (String) resultSet.getObject(14);
+                    String provincia = (String) resultSet.getObject(15);
+                    String comune = (String) resultSet.getObject(16);
+                    Integer civico = (Integer) resultSet.getObject(17);
+                    String numeroDocumento = (String) resultSet.getObject(18);
+                    Date dataScadenza = (Date) resultSet.getObject(19);
                     LocalDate date1 = dataScadenza.toLocalDate();
 
                     impiegato = new Impiegato();
                     impiegato.setCodiceFiscale(cf);
-                    impiegato.setStipendio(stipedio);
                     impiegato.setNome(nome);
                     impiegato.setCognome(cognome);
                     impiegato.setCAP(Integer.getInteger(cap));
+                    impiegato.setDataAssunzione(date);
+                    impiegato.setTelefono(telefono);
                     impiegato.setCittadinanza(cittadinanza);
-                    impiegato.setComune(comune);
+                    impiegato.setEmailAziendale(emailAzienda);
+                    impiegato.setSesso(sesso);
+                    impiegato.setRuolo(ruolo);
+                    impiegato.setDataRilascio(localDate);
+                    impiegato.setTipoDocumento(tipoDocumento);
+                    impiegato.set
                 }else{
                     impiegato = null;
                 }
@@ -110,8 +119,7 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
     }
 
     @Override
-    public Collection<Impiegato> doRetriveAll(String order) throws SQLException
-    {
+    public Collection<Impiegato> doRetriveAll(String order) throws SQLException{
 
     }
 }
