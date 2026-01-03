@@ -4,13 +4,12 @@ import it.unisa.Common.Cliente;
 import it.unisa.Server.Command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClientiPublisher;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
- * Comando per registrare un cliente (ovvero aggiungerlo alla lista dei clienti).
+ * Comando per eliminare un cliente (ovvero rimuoverlo dalla lista dei clienti).
  */
-public class AddClienteCommand implements Command {
+public class RemoveClienteCommand implements Command {
 
     private CatalogoClientiPublisher catalogue;
     private Cliente cliente;
@@ -18,9 +17,9 @@ public class AddClienteCommand implements Command {
     /**
      * Costruttore del comando.
      * @param catalogue Catalogo dei clienti per poter completare il comando.
-     * @param cliente   Cliente da registrare.
+     * @param cliente   Cliente da eliminare.
      */
-    public AddClienteCommand(CatalogoClientiPublisher catalogue, Cliente cliente) {
+    public RemoveClienteCommand(CatalogoClientiPublisher catalogue, Cliente cliente) {
         this.catalogue = catalogue;
         this.cliente = cliente;
     }
@@ -28,7 +27,7 @@ public class AddClienteCommand implements Command {
     /**
      * Costruttore vuoto.
      */
-    public AddClienteCommand() {
+    public RemoveClienteCommand() {
     }
 
     public CatalogoClientiPublisher getCatalogue() {
@@ -49,15 +48,29 @@ public class AddClienteCommand implements Command {
 
     @Override
     public void execute() {
-        ArrayList<Cliente> lc = catalogue.getListaClienti();
-        lc.add(cliente);
-        catalogue.setListaClienti(lc);
+        ArrayList<Cliente> lc;
+        if(cliente.isBlacklisted()) {
+            lc = catalogue.getListaClientiBannati();
+            lc.remove(cliente);
+            catalogue.setListaClienti(lc);
+        } else {
+            lc = catalogue.getListaClienti();
+            lc.remove(cliente);
+            catalogue.setListaClienti(lc);
+        }
     }
 
     @Override
     public void undo() {
-        ArrayList<Cliente> lc = catalogue.getListaClienti();
-        lc.remove(cliente);
-        catalogue.setListaClienti(lc);
+        ArrayList<Cliente> lc;
+        if(cliente.isBlacklisted()) {
+            lc = catalogue.getListaClientiBannati();
+            lc.add(cliente);
+            catalogue.setListaClienti(lc);
+        } else {
+            lc = catalogue.getListaClienti();
+            lc.add(cliente);
+            catalogue.setListaClienti(lc);
+        }
     }
 }
