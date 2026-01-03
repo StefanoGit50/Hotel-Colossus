@@ -2,81 +2,72 @@ package it.unisa.Server.persistent.obj.catalogues;
 import it.unisa.Common.Prenotazione;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Gestisce l'elenco complessivo delle prenotazioni, permettendo la registrazione,
  * la ricerca e la rimozione delle stesse.
  */
 public class CatalogoPrenotazioniPublisher {
-    private List<Prenotazione> listaPrenotazioni;
+    private ArrayList<Prenotazione> listaPrenotazioni;
 
     /**
      * Costruttore della classe CatalogoPrenotazioniPublisher.
      * @param listaPrenotazioni Lista di prenotazioni di tipo {@link Prenotazione} del catalogo.
      */
-    public CatalogoPrenotazioniPublisher(List<Prenotazione> listaPrenotazioni) {
+    public CatalogoPrenotazioniPublisher(ArrayList<Prenotazione> listaPrenotazioni) {
         this.listaPrenotazioni = listaPrenotazioni;
     }
 
     /**
-     * Registra una nuova prenotazione nel sistema.
-     * @param datiPrenotazione I dati necessari per la creazione.
+     * Costruttore vuoto.
      */
-    public void registraPrenotazione(Object datiPrenotazione) {
-        // Logica di creazione e aggiunta alla lista
-    }
-
-    /**
-     * Aggiorna i dati di una prenotazione esistente.
-     */
-    public void aggiornaDatiPrenotazione(Prenotazione prenotazione) {
-        // Logica di aggiornamento
-    }
-
-    /**
-     * Rimuove una prenotazione dal catalogo.
-     */
-    public void eliminaPrenotazione(Prenotazione prenotazione) {
-        this.listaPrenotazioni.remove(prenotazione);
-    }
-
-    /**
-     * Avvia la procedura di checkout per una specifica prenotazione.
-     */
-    //public void effettuaCheckout(Prenotazione prenotazione) {
-    //    prenotazione.checkout();
-    //}
+    public CatalogoPrenotazioniPublisher() {}
 
     /**
      * Cerca prenotazioni in base a criteri specifici.
      * @return Una lista di prenotazioni filtrate.
      */
-    public List<Prenotazione> cercaPrenotazioni(Object datiPrenotazioni) {
-        return new ArrayList<>(this.listaPrenotazioni);
+    public ArrayList<Prenotazione> cercaPrenotazioni(Object datiPrenotazioni) {
+        // Logica prenotazione
+        return null;
     }
-
-
-    /**
-     * Recupera lo storico delle prenotazioni effettuate da un cliente specifico.
-     */
-    public List<Prenotazione> getStoricoPrenotazioni(Object cliente) {
-        return new ArrayList<>();
-    }
-
-    // --- Getter e Setter ---
 
     /**
      * Restituisce la lista di tutte le prenotazioni nel catalogo.
      */
-    public List<Prenotazione> getListaPrenotazioni() {
+    public ArrayList<Prenotazione> getListaPrenotazioni() {
         return listaPrenotazioni;
     }
 
     /**
      * Imposta o sostituisce l'intera lista delle prenotazioni.
      */
-    public void setListaPrenotazioni(List<Prenotazione> listaPrenotazioni) {
+    public void setListaPrenotazioni(ArrayList<Prenotazione> listaPrenotazioni) {
         this.listaPrenotazioni = listaPrenotazioni;
     }
+
+    /**
+     * Recupera lo storico delle prenotazioni effettuate da un cliente specifico.
+     */
+    public ArrayList<Prenotazione> getStoricoPrenotazioni(Object cliente) {
+        return new ArrayList<>();
+    }
+
+    /**
+     * Cerca una prenotazione specifica tramite il suo numero identificativo e ne restituisce una copia.
+     *
+     * @param codicePrenotazione Il numero identificativo della prenotazione da cercare.
+     * @return Una deep copy dell'oggetto Prenotazione trovata, o {@code null} se non esiste nessuna prenotazione con quel numero.
+     * @throws CloneNotSupportedException Se l'oggetto Prenotazione non supporta la clonazione.
+     */
+    public Prenotazione getPrenotazione(int codicePrenotazione) throws CloneNotSupportedException{
+        for (Prenotazione p : listaPrenotazioni) {
+            if (p.getCodicePrenotazione() == codicePrenotazione)
+                return p.clone();
+        }
+        return null;
+    }
+    // --- Getter e Setter ---
+
+
 }

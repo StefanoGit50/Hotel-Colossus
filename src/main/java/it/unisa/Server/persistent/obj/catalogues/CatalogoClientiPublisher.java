@@ -148,10 +148,10 @@ public class CatalogoClientiPublisher {
     }
 
     /**
-     * Cerca una camera specifica tramite il suo numero e ne restituisce una copia.
+     * Cerca un cliente specifica tramite il suo codice fiscale e ne restituisce una copia.
      *
      * @param CFCliente Il codice fiscale del cliente da cercare da cercare.
-     * @return Una deep copy dell'oggetto Cliente trovato, o {@code null} se non esiste nessuna camera con quel numero.
+     * @return Una deep copy dell'oggetto Cliente trovato, o {@code null} se non esiste nessun cliente con quel CF.
      * @throws CloneNotSupportedException Se l'oggetto Cliente non supporta la clonazione.
      */
     public Cliente getCliente(String CFCliente) throws CloneNotSupportedException{

@@ -48,15 +48,21 @@ public class RemoveClienteCommand implements Command {
 
     @Override
     public void execute() {
-        ArrayList<Cliente> lc;
-        if(cliente.isBlacklisted()) {
-            lc = catalogue.getListaClientiBannati();
-            lc.remove(cliente);
-            catalogue.setListaClienti(lc);
-        } else {
-            lc = catalogue.getListaClienti();
-            lc.remove(cliente);
-            catalogue.setListaClienti(lc);
+        try {
+            // Riprendi il cliente come lo è attualmente nel catalogo
+            Cliente c = catalogue.getCliente(cliente.getCf());
+            ArrayList<Cliente> lc;
+            if(c.isBlacklisted()) {
+                lc = catalogue.getListaClientiBannati();
+                lc.remove(c);
+                catalogue.setListaClienti(lc);
+            } else {
+                lc = catalogue.getListaClienti();
+                lc.remove(c);
+                catalogue.setListaClienti(lc);
+            }
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
         }
     }
 

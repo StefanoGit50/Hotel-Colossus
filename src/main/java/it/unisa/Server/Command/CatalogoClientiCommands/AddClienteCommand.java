@@ -56,8 +56,13 @@ public class AddClienteCommand implements Command {
 
     @Override
     public void undo() {
-        ArrayList<Cliente> lc = catalogue.getListaClienti();
-        lc.remove(cliente);
-        catalogue.setListaClienti(lc);
+        try {
+            Cliente c = catalogue.getCliente(cliente.getCf());
+            ArrayList<Cliente> lc = catalogue.getListaClienti();
+            lc.remove(c);
+            catalogue.setListaClienti(lc);
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
     }
 }
