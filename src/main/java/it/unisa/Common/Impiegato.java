@@ -158,6 +158,28 @@ public class Impiegato extends Utente implements Cloneable {
         this.dataScadenza = dataScadenza;
     }
 
+    public Impiegato(){
+
+        this.nome = "";
+        this.cognome = "";
+        this.sesso = "";
+        this.tipoDocumento = "";
+        this.numeroDocumento = "";
+        this.CAP = 0;
+        this.via = "";
+        this.provincia = "";
+        this.comune = "";
+        this.numeroCivico = 0;
+        this.codiceFiscale = "";
+        this.telefono = "";
+        this.ruolo = Ruolo.FrontDesk;
+        this.stipendio = 0;
+        this.dataAssunzione = null;
+        this.dataRilascio = null;
+        this.emailAziendale = "";
+        this.cittadinanza = "";
+        this.dataScadenza = null;
+    }
     // --- Getter e Setter ---
 
     public String getNome() {

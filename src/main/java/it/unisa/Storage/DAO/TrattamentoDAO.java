@@ -21,7 +21,7 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
     @Override
     public void doSave(Trattamento trattamento) throws SQLException
     {
-        String query = "INSERT INTO Trattamento (Nome, Prezzo, PrezzoAcquisto, IDPrenotazione) VALUES (?, ?, ?, ?) ";
+        String query = "INSERT INTO Trattamento(Nome, Prezzo, PrezzoAcquisto, IDPrenotazione) VALUES (?, ?, ?, ?) ";
 
         try (PreparedStatement stmt = connection.prepareStatement(query))
         {

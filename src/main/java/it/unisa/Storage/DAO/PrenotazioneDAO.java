@@ -17,7 +17,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>
     public void doSave(Prenotazione p) throws SQLException
     {
         Connection connection = ConnectionStorage.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Prenotazione (IDPrenotazione, DataPrenotazione, DataArrivoCliente, " +
+        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO prenotazione(IDPrenotazione, DataPrenotazione, DataArrivoCliente, " +
                 "DataPartenzaCliente, NoteAggiuntive, Intestatario, dataScadenza, " +
                 "numeroDocumento, DataRilascio, Tipo) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " );
@@ -40,7 +40,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>
         {
             String query = "UPDATE Trattamento SET IDPrenotazione = ?, PrezzoAcquisto = ? WHERE Nome = ?";
 
-            try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            try (PreparedStatement stmt = connection.prepareStatement(query)){
                 stmt.setInt(1, p.getCodicePrenotazione());
                 stmt.setDouble(2, p.getTrattamento().getPrezzoAcquisto());
                 stmt.setString(3, p.getTrattamento().getNome());

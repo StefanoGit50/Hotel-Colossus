@@ -1,7 +1,8 @@
+-- Inserimento clienti
 INSERT INTO Cliente VALUES
-('RSSMRA85M01H501X','Mario','Rossi',00100,'Roma',12,'RM','Via Roma','mario.rossi@email.com','M','345678901','Carta di credito','Italiana',FALSE),
-('VRDLGI90F45F205Y','Giulia','Verdi',20100,'Milano',7,'MI','Corso Milano','giulia.verdi@email.com','F','345678902','Paypal','Italiana',FALSE),
-('BNCLRD75D23B123Z','Luca','Bianchi',80100,'Napoli',15,'NA','Via Napoli','luca.bianchi@email.com','M','345678903','Contanti','Italiana',FALSE);
+('RSSMRA85M01H501X','Mario','Rossi','00100','Roma',12,'RM','Via Roma','mario.rossi@email.com','M','345678901','Carta di credito','Italiana',FALSE),
+('VRDLGI90F45F205Y','Giulia','Verdi','20100','Milano',7,'MI','Corso Milano','giulia.verdi@email.com','F','345678902','Paypal','Italiana',FALSE),
+('BNCLRD75D23B123Z','Luca','Bianchi','80100','Napoli',15,'NA','Via Napoli','luca.bianchi@email.com','M','345678903','Contanti','Italiana',FALSE);
 
 -- Inserimento camere
 INSERT INTO Camera VALUES

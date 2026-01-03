@@ -29,6 +29,10 @@ public class Utente implements Cloneable {
         this.hashedPassword = hashedPassword;
     }
 
+    public Utente(){
+        username = "";
+        hashedPassword = "";
+    }
     /**
      * Restituisce il nome utente.
      *

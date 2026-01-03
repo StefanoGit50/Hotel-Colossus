@@ -11,15 +11,14 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
 {
     private Connection connection;
 
-    public ServizioDAO(Connection connection)
-    {
+    public ServizioDAO(Connection connection){
         this.connection = connection;
     }
 
     @Override
-    public void doSave(Servizio servizio) throws SQLException
+    public synchronized void doSave(Servizio servizio) throws SQLException
     {
-        String query = "INSERT INTO Servizio (Nome, Prezzo, IDPrenotazione) VALUES (?, ?, ?) ";
+        String query = "INSERT INTO Servizio(Nome, Prezzo, IDPrenotazione) VALUES (?, ?, ?) ";
 
         try (PreparedStatement stmt = connection.prepareStatement(query))
         {
@@ -32,7 +31,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
     }
 
     @Override
-    public void doDelete(Servizio servizio) throws SQLException
+    public synchronized void doDelete(Servizio servizio) throws SQLException
     {
         String query = "DELETE FROM Servizio WHERE Nome = ?";
 
@@ -44,7 +43,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
     }
 
     @Override
-    public Servizio doRetriveByKey(Object nome) throws SQLException
+    public synchronized Servizio doRetriveByKey(Object nome) throws SQLException
     {
         String query = "SELECT * FROM Servizio WHERE Nome = ?";
 
@@ -66,7 +65,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
     }
 
     @Override
-    public Collection<Servizio> doRetriveAll(String order) throws SQLException
+    public synchronized Collection<Servizio> doRetriveAll(String order) throws SQLException
     {
         String query = "SELECT * FROM Servizio WHERE IDPrenotazione IS NULL";
         if (order != null && !order.trim().isEmpty())
