@@ -2,7 +2,7 @@ package it.unisa.Server.command.CatalogoClientiCommands;
 
 import it.unisa.Common.Cliente;
 import it.unisa.Server.command.Command;
-import it.unisa.Server.persistent.obj.catalogues.CatalogoClientiPublisher;
+import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,7 +12,7 @@ import java.util.Iterator;
  */
 public class BanCommand implements Command {
 
-    private CatalogoClientiPublisher catalogue;
+    private CatalogoClienti catalogue;
     private String CFCliente;
 
     /**
@@ -20,7 +20,7 @@ public class BanCommand implements Command {
      * @param catalogue Catalogo dei clienti.
      * @param CFCliente Codice fiscale del cliente a cui si vuole rimuovere il ban.
      */
-    public BanCommand(CatalogoClientiPublisher catalogue, String CFCliente) {
+    public BanCommand(CatalogoClienti catalogue, String CFCliente) {
         this.catalogue = catalogue;
         this.CFCliente = CFCliente;
     }
@@ -31,11 +31,11 @@ public class BanCommand implements Command {
     public BanCommand() {
     }
 
-    public CatalogoClientiPublisher getCatalogue() {
+    public CatalogoClienti getCatalogue() {
         return catalogue;
     }
 
-    public void setCatalogue(CatalogoClientiPublisher catalogue) {
+    public void setCatalogue(CatalogoClienti catalogue) {
         this.catalogue = catalogue;
     }
 

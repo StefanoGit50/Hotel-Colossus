@@ -2,7 +2,7 @@ package it.unisa.Server.command.CatalogoPrenotazioniCommands;
 
 import it.unisa.Common.Prenotazione;
 import it.unisa.Server.command.Command;
-import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioniPublisher;
+import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
 
 import java.util.ArrayList;
 
@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class AddPrenotazioneCommand implements Command {
 
-    private CatalogoPrenotazioniPublisher catalogue;
+    private CatalogoPrenotazioni catalogue;
     private Prenotazione prenotazione;
 
     /**
@@ -19,7 +19,7 @@ public class AddPrenotazioneCommand implements Command {
      * @param catalogue     Catalogo delle prenotazioni, necessario per completare il comando.
      * @param prenotazione  Oggetto {@code Prenotazione} da registrare.
      */
-    public AddPrenotazioneCommand(CatalogoPrenotazioniPublisher catalogue, Prenotazione prenotazione) {
+    public AddPrenotazioneCommand(CatalogoPrenotazioni catalogue, Prenotazione prenotazione) {
         this.catalogue = catalogue;
         this.prenotazione = prenotazione;
     }
@@ -30,11 +30,11 @@ public class AddPrenotazioneCommand implements Command {
     public AddPrenotazioneCommand() {
     }
 
-    public CatalogoPrenotazioniPublisher getCatalogue() {
+    public CatalogoPrenotazioni getCatalogue() {
         return catalogue;
     }
 
-    public void setCatalogue(CatalogoPrenotazioniPublisher catalogue) {
+    public void setCatalogue(CatalogoPrenotazioni catalogue) {
         this.catalogue = catalogue;
     }
 

@@ -2,7 +2,7 @@ package it.unisa.Server.command.CatalogoCamereCommands;
 
 import it.unisa.Common.*;
 import it.unisa.Server.command.Command;
-import it.unisa.Server.persistent.obj.catalogues.CatalogoCamerePublisher;
+import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
 import it.unisa.Server.persistent.util.Stato;
 
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 public class SetStatoInPuliziaCommand implements Command {
 
-    private CatalogoCamerePublisher catalogue;
+    private CatalogoCamere catalogue;
     private int numeroCamera;
     private Stato statoPrecedente;
 
@@ -21,7 +21,7 @@ public class SetStatoInPuliziaCommand implements Command {
      * @param catalogue     Catalogo delle camere usato per completare il comando.
      * @param numeroCamera  Numero della camera a cui si deve modificare lo stato.
      */
-    public SetStatoInPuliziaCommand(CatalogoCamerePublisher catalogue, int numeroCamera) {
+    public SetStatoInPuliziaCommand(CatalogoCamere catalogue, int numeroCamera) {
         this.catalogue = catalogue;
         this.numeroCamera = numeroCamera;
         this.statoPrecedente = null;
@@ -33,11 +33,11 @@ public class SetStatoInPuliziaCommand implements Command {
     public SetStatoInPuliziaCommand() {}
 
 
-    public CatalogoCamerePublisher getCatalogue() {
+    public CatalogoCamere getCatalogue() {
         return catalogue;
     }
 
-    public void setCatalogue(CatalogoCamerePublisher catalogue) {
+    public void setCatalogue(CatalogoCamere catalogue) {
         this.catalogue = catalogue;
     }
 

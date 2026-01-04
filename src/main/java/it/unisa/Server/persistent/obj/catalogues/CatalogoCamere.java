@@ -3,6 +3,7 @@ package it.unisa.Server.persistent.obj.catalogues;
 import it.unisa.Common.Camera;
 import it.unisa.Server.persistent.util.Util;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -10,7 +11,7 @@ import java.util.ArrayList;
  * Questa classe è responsabile per la conservazione e l'accesso sicuro
  * (tramite deep copy) all'elenco delle camere disponibili.
  */
-public class CatalogoCamerePublisher {
+public class CatalogoCamere implements Serializable {
     /**
      * Lista interna contenente tutti gli oggetti {@link Camera} del catalogo.
      * La lista viene gestita tramite deep copy per garantire l'incapsulamento.
@@ -23,14 +24,14 @@ public class CatalogoCamerePublisher {
      *
      * @param listaCamere L'ArrayList di oggetti Camera da copiare nel catalogo.
      */
-    public CatalogoCamerePublisher(ArrayList<Camera> listaCamere) {
+    public CatalogoCamere(ArrayList<Camera> listaCamere) {
         this.listaCamere = Util.deepCopyArrayList(listaCamere);
     }
 
     /**
      * Costruttore vuoto per il catalogo delle camere.
      */
-    public CatalogoCamerePublisher() { }
+    public CatalogoCamere() { }
 
     /**
      * Restituisce una deep copy dell'elenco completo delle camere.

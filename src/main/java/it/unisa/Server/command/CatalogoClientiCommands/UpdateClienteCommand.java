@@ -2,7 +2,7 @@ package it.unisa.Server.command.CatalogoClientiCommands;
 
 import it.unisa.Common.Cliente;
 import it.unisa.Server.command.Command;
-import it.unisa.Server.persistent.obj.catalogues.CatalogoClientiPublisher;
+import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -13,7 +13,7 @@ import java.util.Iterator;
  */
 public class UpdateClienteCommand implements Command {
 
-    private CatalogoClientiPublisher catalogue;
+    private CatalogoClienti catalogue;
     private Cliente cliente;
     private Cliente clienteNonModificato;
     /**
@@ -21,7 +21,7 @@ public class UpdateClienteCommand implements Command {
      * @param catalogue Catalogo dei clienti per poter completare il comando.
      * @param cliente   Cliente da modificare.
      */
-    public UpdateClienteCommand(CatalogoClientiPublisher catalogue, Cliente cliente) {
+    public UpdateClienteCommand(CatalogoClienti catalogue, Cliente cliente) {
         this.catalogue = catalogue;
         this.cliente = cliente;
     }
@@ -32,11 +32,11 @@ public class UpdateClienteCommand implements Command {
     public UpdateClienteCommand() {
     }
 
-    public CatalogoClientiPublisher getCatalogue() {
+    public CatalogoClienti getCatalogue() {
         return catalogue;
     }
 
-    public void setCatalogue(CatalogoClientiPublisher catalogue) {
+    public void setCatalogue(CatalogoClienti catalogue) {
         this.catalogue = catalogue;
     }
 

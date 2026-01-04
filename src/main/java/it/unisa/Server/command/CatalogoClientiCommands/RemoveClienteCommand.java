@@ -2,7 +2,7 @@ package it.unisa.Server.command.CatalogoClientiCommands;
 
 import it.unisa.Common.Cliente;
 import it.unisa.Server.command.Command;
-import it.unisa.Server.persistent.obj.catalogues.CatalogoClientiPublisher;
+import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
 
 import java.util.ArrayList;
 
@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class RemoveClienteCommand implements Command {
 
-    private CatalogoClientiPublisher catalogue;
+    private CatalogoClienti catalogue;
     private Cliente cliente;
 
     /**
@@ -19,7 +19,7 @@ public class RemoveClienteCommand implements Command {
      * @param catalogue Catalogo dei clienti per poter completare il comando.
      * @param cliente   Cliente da eliminare.
      */
-    public RemoveClienteCommand(CatalogoClientiPublisher catalogue, Cliente cliente) {
+    public RemoveClienteCommand(CatalogoClienti catalogue, Cliente cliente) {
         this.catalogue = catalogue;
         this.cliente = cliente;
     }
@@ -30,11 +30,11 @@ public class RemoveClienteCommand implements Command {
     public RemoveClienteCommand() {
     }
 
-    public CatalogoClientiPublisher getCatalogue() {
+    public CatalogoClienti getCatalogue() {
         return catalogue;
     }
 
-    public void setCatalogue(CatalogoClientiPublisher catalogue) {
+    public void setCatalogue(CatalogoClienti catalogue) {
         this.catalogue = catalogue;
     }
 

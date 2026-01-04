@@ -2,16 +2,17 @@ package it.unisa.Server.command.CatalogoClientiCommands;
 
 import it.unisa.Common.Cliente;
 import it.unisa.Server.command.Command;
-import it.unisa.Server.persistent.obj.catalogues.CatalogoClientiPublisher;
+import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Comando per registrare un cliente (ovvero aggiungerlo alla lista dei clienti).
  */
 public class AddClienteCommand implements Command {
 
-    private CatalogoClientiPublisher catalogue;
+    private CatalogoClienti catalogue;
     private Cliente cliente;
 
     /**
@@ -19,9 +20,10 @@ public class AddClienteCommand implements Command {
      * @param catalogue Catalogo dei clienti per poter completare il comando.
      * @param cliente   Cliente da registrare.
      */
-    public AddClienteCommand(CatalogoClientiPublisher catalogue, Cliente cliente) {
+    public AddClienteCommand(CatalogoClienti catalogue, Cliente cliente) {
         this.catalogue = catalogue;
         this.cliente = cliente;
+        Collection<Cliente> c = new  ArrayList<>();
     }
 
     /**
@@ -30,11 +32,11 @@ public class AddClienteCommand implements Command {
     public AddClienteCommand() {
     }
 
-    public CatalogoClientiPublisher getCatalogue() {
+    public CatalogoClienti getCatalogue() {
         return catalogue;
     }
 
-    public void setCatalogue(CatalogoClientiPublisher catalogue) {
+    public void setCatalogue(CatalogoClienti catalogue) {
         this.catalogue = catalogue;
     }
 

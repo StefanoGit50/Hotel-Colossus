@@ -2,7 +2,7 @@ package it.unisa.Server.command.CatalogoCamereCommands;
 
 import it.unisa.Common.Camera;
 import it.unisa.Server.command.Command;
-import it.unisa.Server.persistent.obj.catalogues.CatalogoCamerePublisher;
+import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
 import it.unisa.Server.persistent.util.Stato;
 
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 public class SetStatoOutOfOrderCommand implements Command {
 
-    private CatalogoCamerePublisher catalogue;
+    private CatalogoCamere catalogue;
     private int numeroCamera;
     private Stato statoPrecedente;
 
@@ -22,7 +22,7 @@ public class SetStatoOutOfOrderCommand implements Command {
      * @param catalogue     Catalogo delle camere usato per completare il comando.
      * @param numeroCamera  Numero della camera a cui si deve modificare lo stato.
      */
-    public SetStatoOutOfOrderCommand(int numeroCamera, CatalogoCamerePublisher catalogue) {
+    public SetStatoOutOfOrderCommand(int numeroCamera, CatalogoCamere catalogue) {
         this.numeroCamera = numeroCamera;
         this.catalogue = catalogue;
     }
@@ -33,11 +33,11 @@ public class SetStatoOutOfOrderCommand implements Command {
     public SetStatoOutOfOrderCommand() {
     }
 
-    public CatalogoCamerePublisher getCatalogue() {
+    public CatalogoCamere getCatalogue() {
         return catalogue;
     }
 
-    public void setCatalogue(CatalogoCamerePublisher catalogue) {
+    public void setCatalogue(CatalogoCamere catalogue) {
         this.catalogue = catalogue;
     }
 

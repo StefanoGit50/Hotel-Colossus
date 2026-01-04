@@ -1,5 +1,6 @@
 package it.unisa.Common;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -8,7 +9,7 @@ import java.util.Objects;
  * Questa classe può essere utilizzata per definire voci di costo in un contesto
  * alberghiero (es. Mezza pensione, Pensione completa etc.).
  */
-public class Trattamento implements Cloneable {
+public class Trattamento implements Cloneable, Serializable {
 
     /**
      * Il nome identificativo del trattamento (es. "Mezza pensione").

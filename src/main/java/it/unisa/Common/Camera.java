@@ -2,6 +2,7 @@ package it.unisa.Common;
 
 import it.unisa.Server.persistent.util.Stato;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -9,7 +10,7 @@ import java.util.Objects;
  * Ogni camera è identificata da un numero univoco e possiede una tipologia, uno stato
  * corrente e una capacità massima di persone.
  */
-public class Camera implements Cloneable{
+public class Camera implements Cloneable, Serializable {
     private final static double EPSILON = 1e10;
     /**
      * Numero di camera, univoco per ogni camera all'interno dell'hotel.

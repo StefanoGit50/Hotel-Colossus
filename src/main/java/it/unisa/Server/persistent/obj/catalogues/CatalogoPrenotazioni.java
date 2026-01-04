@@ -2,6 +2,7 @@ package it.unisa.Server.persistent.obj.catalogues;
 import it.unisa.Common.Camera;
 import it.unisa.Common.Prenotazione;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -10,21 +11,21 @@ import java.util.Objects;
  * Gestisce l'elenco complessivo delle prenotazioni, permettendo la registrazione,
  * la ricerca e la rimozione delle stesse.
  */
-public class CatalogoPrenotazioniPublisher {
+public class CatalogoPrenotazioni implements Serializable {
     private ArrayList<Prenotazione> listaPrenotazioni;
 
     /**
-     * Costruttore della classe CatalogoPrenotazioniPublisher.
+     * Costruttore della classe CatalogoPrenotazioni.
      * @param listaPrenotazioni Lista di prenotazioni di tipo {@link Prenotazione} del catalogo.
      */
-    public CatalogoPrenotazioniPublisher(ArrayList<Prenotazione> listaPrenotazioni) {
+    public CatalogoPrenotazioni(ArrayList<Prenotazione> listaPrenotazioni) {
         this.listaPrenotazioni = listaPrenotazioni;
     }
 
     /**
      * Costruttore vuoto.
      */
-    public CatalogoPrenotazioniPublisher() {}
+    public CatalogoPrenotazioni() {}
 
     /**
      * Esegue una ricerca flessibile all'interno del catalogo delle prenotazioni basandosi su vari criteri.
