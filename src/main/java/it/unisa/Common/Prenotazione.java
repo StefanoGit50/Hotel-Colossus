@@ -2,6 +2,7 @@ package it.unisa.Common;
 
 import it.unisa.Server.persistent.util.Util;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -11,7 +12,7 @@ import java.util.Objects;
  * Contiene i dettagli della prenotazione, le date di validità, i documenti
  * associati e le liste degli elementi chiave (Camere, Servizi, Clienti).
  */
-public class Prenotazione implements Cloneable {
+public class Prenotazione implements Cloneable, Serializable {
 
     /**
      * Codice univoco della prenotazione.

@@ -10,7 +10,7 @@ import java.util.Objects;
  * Ogni camera è identificata da un numero univoco e possiede una tipologia, uno stato
  * corrente e una capacità massima di persone.
  */
-public class Camera implements Cloneable , Serializable {
+public class Camera implements Cloneable, Serializable {
     /**
      * Numero di camera, univoco per ogni camera all'interno dell'hotel.
      */

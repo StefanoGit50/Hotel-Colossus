@@ -2,6 +2,7 @@ package it.unisa.Common;
 
 import it.unisa.Server.persistent.util.Ruolo;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -9,7 +10,7 @@ import java.util.Objects;
  * Rappresenta un Impiegato dell'hotel, che eredita le funzionalità di {@code Utente}.
  * Contiene i dati anagrafici, i dettagli lavorativi e le informazioni di contatto dell'impiegato.
  */
-public class Impiegato extends Utente implements Cloneable {
+public class Impiegato extends Utente implements Cloneable, Serializable {
 
     /**
      * Nome dell'impiegato.

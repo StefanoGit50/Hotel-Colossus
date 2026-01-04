@@ -1,5 +1,6 @@
 package it.unisa.Common;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -8,7 +9,7 @@ import java.util.Objects;
  * Memorizza i dati anagrafici, l'indirizzo e le informazioni di contatto
  * del cliente, oltre a un flag per indicare se è inserito nella blacklist.
  */
-public class Cliente implements Cloneable {
+public class Cliente implements Cloneable, Serializable {
 
     /**
      * Il nome del cliente.
