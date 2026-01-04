@@ -40,7 +40,7 @@ public class GovernanteClient
                     {
                         System.out.println("Inserisci 1 per visualizzare le camere: ");
                         Scanner sc2 = new Scanner(System.in);
-                        List<Stanza> stanza = governanteInterface.getStanze();
+                        //List<Stanza> stanza = governanteInterface.getStanze();
 
                         break;
                     }

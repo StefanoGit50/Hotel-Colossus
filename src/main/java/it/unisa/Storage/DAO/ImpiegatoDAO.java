@@ -7,6 +7,7 @@ import it.unisa.Storage.ConnectionStorage;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
@@ -103,7 +104,12 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
                     impiegato.setRuolo(ruolo);
                     impiegato.setDataRilascio(localDate);
                     impiegato.setTipoDocumento(tipoDocumento);
-                    impiegato.set
+                    impiegato.setVia(via);
+                    impiegato.setProvincia(provincia);
+                    impiegato.setComune(comune);
+                    impiegato.setNumeroCivico(civico);
+                    impiegato.setNumeroDocumento(numeroDocumento);
+                    impiegato.setDataScadenza(date1);
                 }else{
                     impiegato = null;
                 }
@@ -120,6 +126,71 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
 
     @Override
     public Collection<Impiegato> doRetriveAll(String order) throws SQLException{
+        if(order != null){
+            Connection connection = ConnectionStorage.getConnection();
+            ArrayList<Impiegato> impiegatoes = new ArrayList<>();
+            try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM impiegato"); ResultSet resultSet = preparedStatement.executeQuery()){
+                while(resultSet.next()){
+                    Impiegato impiegato = new Impiegato();
+                    String cf = (String) resultSet.getObject(1);
+                    Double stipedio = (Double) resultSet.getObject(2);
+                    String nome = (String) resultSet.getObject(3);
+                    String cognome = (String) resultSet.getObject(4);
+                    String cap = (String) resultSet.getObject(5);
+                    Date dataAssunzione = (Date) resultSet.getObject(6);
+                    LocalDate date = dataAssunzione.toLocalDate();
+                    String telefono = (String) resultSet.getObject(7);
+                    String cittadinanza = (String) resultSet.getObject(8);
+                    String emailAzienda = (String) resultSet.getObject(9);
+                    String sesso = (String) resultSet.getObject(10);
+                    Ruolo ruolo = (Ruolo) resultSet.getObject(11);
+                    Date  dataRilascio = (Date) resultSet.getObject(12);
+                    LocalDate localDate = dataRilascio.toLocalDate();
+                    String tipoDocumento = (String) resultSet.getObject(13);
+                    String via = (String) resultSet.getObject(14);
+                    String provincia = (String) resultSet.getObject(15);
+                    String comune = (String) resultSet.getObject(16);
+                    Integer civico = (Integer) resultSet.getObject(17);
+                    String numeroDocumento = (String) resultSet.getObject(18);
+                    Date dataScadenza = (Date) resultSet.getObject(19);
+                    LocalDate date1 = dataScadenza.toLocalDate();
 
+                    impiegato = new Impiegato();
+                    impiegato.setCodiceFiscale(cf);
+                    impiegato.setNome(nome);
+                    impiegato.setCognome(cognome);
+                    impiegato.setCAP(Integer.getInteger(cap));
+                    impiegato.setDataAssunzione(date);
+                    impiegato.setTelefono(telefono);
+                    impiegato.setCittadinanza(cittadinanza);
+                    impiegato.setEmailAziendale(emailAzienda);
+                    impiegato.setSesso(sesso);
+                    impiegato.setRuolo(ruolo);
+                    impiegato.setDataRilascio(localDate);
+                    impiegato.setTipoDocumento(tipoDocumento);
+                    impiegato.setVia(via);
+                    impiegato.setProvincia(provincia);
+                    impiegato.setComune(comune);
+                    impiegato.setNumeroCivico(civico);
+                    impiegato.setNumeroDocumento(numeroDocumento);
+                    impiegato.setDataScadenza(date1);
+
+                    try{
+                        impiegatoes.add(impiegato.clone());
+                    }catch(CloneNotSupportedException cloneNotSupportedException){
+                        cloneNotSupportedException.getCause();
+                        cloneNotSupportedException.getLocalizedMessage();
+                        cloneNotSupportedException.getMessage();
+                    }
+                }
+            }finally {
+                if(connection != null){
+                    ConnectionStorage.releaseConnection(connection);
+                }
+            }
+            return impiegatoes;
+        }else{
+            throw new NullPointerException();
+        }
     }
 }

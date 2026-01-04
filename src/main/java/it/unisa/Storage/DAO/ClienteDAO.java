@@ -2,14 +2,10 @@ package it.unisa.Storage.DAO;
 
 import it.unisa.Common.Cliente;
 import it.unisa.Storage.ConnectionStorage;
-import it.unisa.Storage.DAO.Eccezioni.*;
 import it.unisa.Storage.FrontDeskStorage;
 
 import java.net.ConnectException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,8 +14,10 @@ import java.util.List;
 public class ClienteDAO implements FrontDeskStorage<Cliente>
 {
     public synchronized void doSave(Cliente o) throws SQLException{
-            Connection connection = ConnectionStorage.getConnection();
-            try(PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO CLIENTE VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)")){
+        Connection connection = null;
+        try{
+                connection = ConnectionStorage.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO CLIENTE VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
                 preparedStatement.setString(1,o.getCf());
                 preparedStatement.setString(2,o.getNome());
                 preparedStatement.setString(3,o.getCognome());
@@ -30,10 +28,12 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
                 preparedStatement.setString(8,o.getVia());
                 preparedStatement.setString(9,o.getEmail());
                 preparedStatement.setString(10,o.getSesso());
-                preparedStatement.setInt(11,o.getNumeroTelefono());
+                preparedStatement.setString(11,o.getNumeroTelefono());
                 preparedStatement.setString(12,o.getMetodoDiPagamento());
                 preparedStatement.setString(13,o.getCittadinanza());
-                preparedStatement.setBoolean(14,o.isBlacklisted());
+                Date date = Date.valueOf(o.getDataNascita());
+                preparedStatement.setDate(14,date);
+                preparedStatement.setBoolean(15,o.isBlacklisted());
                 preparedStatement.executeUpdate();
             }finally {
                 if(connection != null){
@@ -55,7 +55,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
             preparedStatement.setString(8,o.getVia());
             preparedStatement.setString(9,o.getEmail());
             preparedStatement.setString(10,o.getSesso());
-            preparedStatement.setInt(11,o.getNumeroTelefono());
+            preparedStatement.setString(11,o.getNumeroTelefono());
             preparedStatement.setString(12,o.getMetodoDiPagamento());
             preparedStatement.setString(13,o.getCittadinanza());
             preparedStatement.setBoolean(14,o.isBlacklisted());
@@ -72,8 +72,8 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
         if(oggetto instanceof String){
             String cf = (String) oggetto;
             Connection connection = ConnectionStorage.getConnection();
-            String cf1,nome,cognome,comune,provincia,via,email,sesso,metodoDiPagamento,cittadinazione;
-            Integer cap , civico , telefono;
+            String cf1,nome,cognome,comune,provincia,via,email,sesso,metodoDiPagamento,cittadinazione,telefono;
+            Integer cap , civico;
             LocalDate date;
             Boolean isBackListed;
             try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Cliente WHERE CF = ?") ; ResultSet resultSet =  preparedStatement.getResultSet()){
@@ -89,7 +89,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
                 via = (String) resultSet.getObject(8);
                 email = (String) resultSet.getObject(9);
                 sesso = (String) resultSet.getObject(10);
-                telefono = (Integer) resultSet.getObject(11);
+                telefono = (String) resultSet.getObject(11);
                 metodoDiPagamento = (String) resultSet.getObject(12);
                 cittadinazione = (String) resultSet.getObject(13);
                 date = (LocalDate) resultSet.getObject(14);
@@ -150,7 +150,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
                 String via = (String) resultSet.getObject(8);
                 String email = (String) resultSet.getObject(9);
                 String sesso = (String) resultSet.getObject(10);
-                Integer telefono = (Integer) resultSet.getObject(11);
+                String telefono = (String) resultSet.getObject(11);
                 String metodoDiPagamento = (String) resultSet.getObject(12);
                 String cittadinazione = (String) resultSet.getObject(13);
                 LocalDate date = (LocalDate) resultSet.getObject(14);

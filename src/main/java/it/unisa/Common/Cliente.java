@@ -70,7 +70,7 @@ public class Cliente implements Cloneable {
     /**
      * Il numero di telefono per i contatti.
      */
-    private int numeroTelefono;
+    private String numeroTelefono;
 
     /**
      * Flag che indica se il cliente è inserito nella blacklist.
@@ -108,7 +108,7 @@ public class Cliente implements Cloneable {
      * @param cf il codice fiscale del cliente
      * @param email l'email del cliente
      */
-    public Cliente(String nome, String cognome, String cittadinanza, String provincia, String comune, String via, int numeroCivico, int CAP, int numeroTelefono, String sesso, LocalDate dataNascita ,String cf , String email,String metodoDiPagamento) {
+    public Cliente(String nome, String cognome, String cittadinanza, String provincia, String comune, String via, int numeroCivico, int CAP, String numeroTelefono, String sesso, LocalDate dataNascita ,String cf , String email,String metodoDiPagamento) {
         this.nome = nome;
         this.cognome = cognome;
         this.cittadinanza = cittadinanza;
@@ -275,7 +275,7 @@ public class Cliente implements Cloneable {
      *
      * @return Il numero di telefono.
      */
-    public int getNumeroTelefono() {
+    public String getNumeroTelefono() {
         return numeroTelefono;
     }
 
@@ -284,7 +284,7 @@ public class Cliente implements Cloneable {
      *
      * @param numeroTelefono Il nuovo numero di telefono.
      */
-    public void setNumeroTelefono(int numeroTelefono) {
+    public void setNumeroTelefono(String numeroTelefono) {
         this.numeroTelefono = numeroTelefono;
     }
 

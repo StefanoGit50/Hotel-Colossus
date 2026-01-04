@@ -35,7 +35,7 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
 
             try{
                 GovernanteInterface gs = (GovernanteInterface) Naming.lookup("rmi://localhost/GestoreCamere");
-                gs.setOccupataGlobale(stanza);
+                //gs.setOccupataGlobale(stanza);
                 logger.info("Prenotazione effettuata per stanza " + stanza.getNumero());
             } catch(Exception e)
             {
@@ -89,6 +89,11 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         logger.warning("Prenotazione " + id + " non trovata");
         System.err.println("Prenotazione non trovata");
         return null;
+    }
+
+    @Override
+    public boolean aggiungiCliente(Cliente c) {
+        return false;
     }
 
     public static void main(String[] args)

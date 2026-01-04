@@ -1,6 +1,7 @@
 package it.unisa.Storage.DAO;
 
 import it.unisa.Common.Trattamento;
+import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.FrontDeskStorage;
 
 import java.sql.*;
@@ -10,17 +11,10 @@ import java.util.Collection;
 
 public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
 {
-
-    private Connection connection;
-
-    public TrattamentoDAO(Connection connection)
-    {
-        this.connection = connection;
-    }
-
     @Override
     public void doSave(Trattamento trattamento) throws SQLException
     {
+        Connection connection = ConnectionStorage.getConnection();
         String query = "INSERT INTO Trattamento(Nome, Prezzo, PrezzoAcquisto, IDPrenotazione) VALUES (?, ?, ?, ?) ";
 
         try (PreparedStatement stmt = connection.prepareStatement(query))
@@ -31,24 +25,33 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
             stmt.setNull(4, Types.INTEGER); // gestito altrove
 
             stmt.executeUpdate();
+        }finally {
+            if(connection != null){
+                ConnectionStorage.releaseConnection(connection);
+            }
         }
     }
-
     @Override
     public void doDelete(Trattamento trattamento) throws SQLException
     {
+        Connection connection = ConnectionStorage.getConnection();
         String query = "DELETE FROM Trattamento WHERE Nome = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(query))
         {
             stmt.setString(1, trattamento.getNome());
             stmt.executeUpdate();
+        }finally {
+            if(connection != null){
+                ConnectionStorage.releaseConnection(connection);
+            }
         }
     }
 
     @Override
     public Trattamento doRetriveByKey(Object nome) throws SQLException
     {
+        Connection connection = ConnectionStorage.getConnection();
         String query = "SELECT * FROM Trattamento WHERE Nome = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(query))
@@ -66,6 +69,10 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
                     );
                 }
             }
+        }finally {
+            if(connection != null){
+                ConnectionStorage.releaseConnection(connection);
+            }
         }
         return null;
     }
@@ -73,6 +80,7 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
     @Override
     public Collection<Trattamento> doRetriveAll(String order) throws SQLException
     {
+        Connection connection = ConnectionStorage.getConnection();
         String query = "SELECT * FROM Trattamento WHERE IDPrenotazione IS NULL";
         if (order != null && !order.trim().isEmpty())
         {
@@ -93,8 +101,11 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
 
                 trattamenti.add(t);
             }
+        }finally {
+            if(connection != null){
+                ConnectionStorage.releaseConnection(connection);
+            }
         }
-
         return trattamenti;
     }
 }

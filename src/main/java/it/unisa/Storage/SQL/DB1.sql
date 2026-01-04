@@ -13,9 +13,10 @@ create table Cliente(
     via varchar(50) not null,
     Email varchar(100) not null,
     Sesso varchar(40) not null,
-    telefono char(9) not null,
+    telefono char(15) not null,
     MetodoDiPagamento varchar(50) not null,
     Cittadinanza varchar(50) not null,
+    DataDiNascita date not null,
     IsBackListed boolean not null,
 	primary key(CF)
 );
@@ -88,7 +89,7 @@ create table Impiegato(
     Cognome varchar(50) not null,
     Cap char(5) not null,
     DataAssunzione date not null,
-    Telefono char(9) not null,
+    Telefono char(15) not null,
     Cittadinanza varchar(50) not null,
     EmailAziendale varchar(100) not null,
     Sesso varchar(20) not null,
