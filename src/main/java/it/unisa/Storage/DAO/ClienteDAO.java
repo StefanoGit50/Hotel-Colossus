@@ -5,7 +5,6 @@ import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.DAO.Eccezioni.*;
 import it.unisa.Storage.FrontDeskStorage;
 
-import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,12 +12,11 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class ClienteDAO implements FrontDeskStorage<Cliente>
 {
     public synchronized void doSave(Cliente o) throws SQLException{
-            Connection connection = ConnectionStorage.getConnection();
+        Connection connection = ConnectionStorage.getConnection();
             try(PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO CLIENTE VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)")){
                 preparedStatement.setString(1,o.getCf());
                 preparedStatement.setString(2,o.getNome());
@@ -76,7 +74,8 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
             Integer cap , civico , telefono;
             LocalDate date;
             Boolean isBackListed;
-            try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Cliente WHERE CF = ?") ; ResultSet resultSet =  preparedStatement.getResultSet()){
+            try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Cliente WHERE CF = ?");
+                ResultSet resultSet =  preparedStatement.getResultSet())  {
                 preparedStatement.setString(1,cf);
                 preparedStatement.executeQuery();
                 cf1 = (String) resultSet.getObject(1);

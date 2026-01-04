@@ -61,9 +61,9 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
     public Impiegato doRetriveByKey(Object index) throws SQLException{
         if(index instanceof String){
             String f = (String) index;
-           Connection connection = ConnectionStorage.getConnection();
+            Connection connection = ConnectionStorage.getConnection();
             Impiegato impiegato;
-           try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM impiegato WHERE CF = ?")){
+            try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM impiegato WHERE CF = ?")){
                 preparedStatement.setString(1,f);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 if(resultSet.next()){

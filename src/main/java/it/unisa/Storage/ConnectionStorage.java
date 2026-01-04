@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class ConnectionStorage{
+public class    ConnectionStorage{
     private static List<Connection> freeDbConnections;
     private static final Logger log = Logger.getLogger(ConnectionStorage.class.getName());
 
