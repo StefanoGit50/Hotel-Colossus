@@ -180,6 +180,7 @@ public class Impiegato extends Utente implements Cloneable {
         this.cittadinanza = "";
         this.dataScadenza = null;
     }
+
     // --- Getter e Setter ---
 
     public String getNome() {
