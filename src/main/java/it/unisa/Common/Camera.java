@@ -150,7 +150,7 @@ public class Camera implements Cloneable, Serializable {
 
     @Override
     public String toString(){
-        return getClass().getName() + "[ numeroCamera = " + numeroCamera + ", prezzoCamera = " + prezzoCamera + ", piano = " + piano + ", tipologia = " + tipologia + ", statoCamera = " + statoCamera.name() + ", numeroMaxOccupanti = " + numeroMaxOccupanti + ", noteCamera = " + noteCamera + "]";
+        return getClass().getName() + "[ numeroCamera = " + numeroCamera + ", prezzoCamera = " + prezzoCamera + ", statoCamera = " + statoCamera.name() + ", numeroMaxOccupanti = " + numeroMaxOccupanti + ", noteCamera = " + noteCamera + "]";
     }
 
     /**
