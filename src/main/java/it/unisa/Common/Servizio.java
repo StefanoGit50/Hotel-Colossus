@@ -1,5 +1,6 @@
 package it.unisa.Common;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -8,7 +9,7 @@ import java.util.Objects;
  * Questa classe può essere utilizzata per definire voci di costo in un contesto
  * alberghiero (es. Tassa Soggiorno, Minibar, Penale, etc.).
  */
-public class Servizio implements Cloneable {
+public class Servizio implements Cloneable, Serializable {
 
     /**
      * Il nome identificativo del servizio (es. "Tassa Soggiorno", "Minibar").

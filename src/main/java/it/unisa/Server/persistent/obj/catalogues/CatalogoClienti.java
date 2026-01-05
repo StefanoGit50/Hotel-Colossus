@@ -3,6 +3,7 @@ package it.unisa.Server.persistent.obj.catalogues;
 import it.unisa.Common.Cliente;
 import it.unisa.Server.persistent.util.Util;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -12,7 +13,7 @@ import java.util.Objects;
  * La classe mantiene una lista di tutti i clienti e una lista separata per i clienti
  * inseriti nella blacklist (bannati). Garantisce l'incapsulamento.
  */
-public class CatalogoClientiPublisher {
+public class CatalogoClienti implements Serializable {
 
     /**
      * Lista interna contenente tutti gli oggetti {@link Cliente}.
@@ -30,7 +31,7 @@ public class CatalogoClientiPublisher {
      *
      * @param listaClienti L'ArrayList di clienti da copiare nel catalogo.
      */
-    public CatalogoClientiPublisher(ArrayList<Cliente> listaClienti) {
+    public CatalogoClienti(ArrayList<Cliente> listaClienti) {
         this.listaClienti = Util.deepCopyArrayList(listaClienti);
         ArrayList<Cliente> listaClientiBannati = new ArrayList<>();
         for (Cliente cliente : listaClienti) {
@@ -44,7 +45,7 @@ public class CatalogoClientiPublisher {
     /**
      * Costruttore vuoto
      */
-    public CatalogoClientiPublisher() {}
+    public CatalogoClienti() {}
 
     /**
      * Restituisce una deep copy dell'elenco completo dei clienti.

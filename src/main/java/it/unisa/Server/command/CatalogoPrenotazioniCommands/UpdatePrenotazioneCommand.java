@@ -2,7 +2,7 @@ package it.unisa.Server.command.CatalogoPrenotazioniCommands;
 
 import it.unisa.Common.Prenotazione;
 import it.unisa.Server.command.Command;
-import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioniPublisher;
+import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -13,7 +13,7 @@ import java.util.Iterator;
  */
 public class UpdatePrenotazioneCommand implements Command {
 
-    private CatalogoPrenotazioniPublisher catalogue;
+    private CatalogoPrenotazioni catalogue;
     private Prenotazione prenotazione;
     private Prenotazione prenotazioneNonModificata;
     /**
@@ -21,7 +21,7 @@ public class UpdatePrenotazioneCommand implements Command {
      * @param catalogue     Catalogo delle prenotazioni per poter completare il comando.
      * @param prenotazione  Prenotazione da modificare.
      */
-    public UpdatePrenotazioneCommand(CatalogoPrenotazioniPublisher catalogue, Prenotazione prenotazione) {
+    public UpdatePrenotazioneCommand(CatalogoPrenotazioni catalogue, Prenotazione prenotazione) {
         this.catalogue = catalogue;
         this.prenotazione = prenotazione;
     }
@@ -32,11 +32,11 @@ public class UpdatePrenotazioneCommand implements Command {
     public UpdatePrenotazioneCommand() {
     }
 
-    public CatalogoPrenotazioniPublisher getCatalogue() {
+    public CatalogoPrenotazioni getCatalogue() {
         return catalogue;
     }
 
-    public void setCatalogue(CatalogoPrenotazioniPublisher catalogue) {
+    public void setCatalogue(CatalogoPrenotazioni catalogue) {
         this.catalogue = catalogue;
     }
 

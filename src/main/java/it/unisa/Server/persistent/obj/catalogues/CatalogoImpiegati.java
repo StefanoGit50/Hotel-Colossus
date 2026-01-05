@@ -1,18 +1,16 @@
 package it.unisa.Server.persistent.obj.catalogues;
 
-import it.unisa.Common.Cliente;
-import it.unisa.Common.Impiegato;
 import it.unisa.Common.Impiegato;
 import it.unisa.Server.persistent.util.Ruolo;
 
-import java.time.LocalDate;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
 /**
  * Il catalogo degli impiegati permette di modificare, accedere e cercare gli impiegati presenti nel sistema.
  */
-public class CatalogoImpiegatiPublisher {
+public class CatalogoImpiegati implements Serializable {
 
     /**
      * Lista di tutti gli impiegati del sistema.
@@ -24,14 +22,14 @@ public class CatalogoImpiegatiPublisher {
      * Costruttore del catalogo.
      * @param listaImpiegati    {@code ArrayList<Impiegato>} usata come lista del catalogo.
      */
-    public CatalogoImpiegatiPublisher(ArrayList<Impiegato> listaImpiegati) {
+    public CatalogoImpiegati(ArrayList<Impiegato> listaImpiegati) {
         this.listaImpiegati = listaImpiegati;
     }
 
     /**
      * Costruttore vuoto.
      */
-    public CatalogoImpiegatiPublisher() {
+    public CatalogoImpiegati() {
     }
 
     // Getters - Setters
@@ -120,7 +118,7 @@ public class CatalogoImpiegatiPublisher {
 
     @Override
     public String toString() {
-        return "CatalogoImpiegatiPublisher{" +
+        return "CatalogoImpiegati{" +
                 "listaImpiegati=" + listaImpiegati +
                 '}';
     }
@@ -128,7 +126,7 @@ public class CatalogoImpiegatiPublisher {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        CatalogoImpiegatiPublisher that = (CatalogoImpiegatiPublisher) o;
+        CatalogoImpiegati that = (CatalogoImpiegati) o;
         return Objects.equals(listaImpiegati, that.listaImpiegati);
     }
 }

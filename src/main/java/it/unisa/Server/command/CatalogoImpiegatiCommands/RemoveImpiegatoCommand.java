@@ -2,7 +2,7 @@ package it.unisa.Server.command.CatalogoImpiegatiCommands;
 
 import it.unisa.Common.Impiegato;
 import it.unisa.Server.command.Command;
-import it.unisa.Server.persistent.obj.catalogues.CatalogoImpiegatiPublisher;
+import it.unisa.Server.persistent.obj.catalogues.CatalogoImpiegati;
 
 import java.util.ArrayList;
 
@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class RemoveImpiegatoCommand implements Command {
 
-    private CatalogoImpiegatiPublisher catalogue;
+    private CatalogoImpiegati catalogue;
     private Impiegato impiegato;
 
     /**
@@ -19,7 +19,7 @@ public class RemoveImpiegatoCommand implements Command {
      * @param catalogue Catalogo dei impiegati per poter completare il comando.
      * @param impiegato   Impiegato da eliminare.
      */
-    public RemoveImpiegatoCommand(CatalogoImpiegatiPublisher catalogue, Impiegato impiegato) {
+    public RemoveImpiegatoCommand(CatalogoImpiegati catalogue, Impiegato impiegato) {
         this.catalogue = catalogue;
         this.impiegato = impiegato;
     }
@@ -30,11 +30,11 @@ public class RemoveImpiegatoCommand implements Command {
     public RemoveImpiegatoCommand() {
     }
 
-    public CatalogoImpiegatiPublisher getCatalogue() {
+    public CatalogoImpiegati getCatalogue() {
         return catalogue;
     }
 
-    public void setCatalogue(CatalogoImpiegatiPublisher catalogue) {
+    public void setCatalogue(CatalogoImpiegati catalogue) {
         this.catalogue = catalogue;
     }
 
