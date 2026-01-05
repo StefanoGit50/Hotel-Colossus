@@ -2,6 +2,7 @@ package it.unisa.Common;
 
 import it.unisa.Server.persistent.util.Ruolo;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -9,7 +10,7 @@ import java.util.Objects;
  * Rappresenta un Impiegato dell'hotel, che eredita le funzionalità di {@code Utente}.
  * Contiene i dati anagrafici, i dettagli lavorativi e le informazioni di contatto dell'impiegato.
  */
-public class Impiegato extends Utente implements Cloneable {
+public class Impiegato extends Utente implements Cloneable, Serializable {
 
     /**
      * Nome dell'impiegato.
@@ -156,6 +157,29 @@ public class Impiegato extends Utente implements Cloneable {
         this.emailAziendale = emailAziendale;
         this.cittadinanza = cittadinanza;
         this.dataScadenza = dataScadenza;
+    }
+
+    public Impiegato(){
+
+        this.nome = "";
+        this.cognome = "";
+        this.sesso = "";
+        this.tipoDocumento = "";
+        this.numeroDocumento = "";
+        this.CAP = 0;
+        this.via = "";
+        this.provincia = "";
+        this.comune = "";
+        this.numeroCivico = 0;
+        this.codiceFiscale = "";
+        this.telefono = "";
+        this.ruolo = Ruolo.FrontDesk;
+        this.stipendio = 0;
+        this.dataAssunzione = null;
+        this.dataRilascio = null;
+        this.emailAziendale = "";
+        this.cittadinanza = "";
+        this.dataScadenza = null;
     }
 
     // --- Getter e Setter ---
@@ -312,6 +336,32 @@ public class Impiegato extends Utente implements Cloneable {
     }
 
     // --- Metodi Standard di Object ---
+
+
+    @Override
+    public String toString() {
+        return "Impiegato{" +
+                "nome='" + nome + '\'' +
+                ", cognome='" + cognome + '\'' +
+                ", sesso='" + sesso + '\'' +
+                ", tipoDocumento='" + tipoDocumento + '\'' +
+                ", numeroDocumento='" + numeroDocumento + '\'' +
+                ", CAP=" + CAP +
+                ", via='" + via + '\'' +
+                ", provincia='" + provincia + '\'' +
+                ", comune='" + comune + '\'' +
+                ", numeroCivico=" + numeroCivico +
+                ", codiceFiscale='" + codiceFiscale + '\'' +
+                ", telefono='" + telefono + '\'' +
+                ", ruolo=" + ruolo +
+                ", stipendio=" + stipendio +
+                ", dataAssunzione=" + dataAssunzione +
+                ", dataScadenza=" + dataScadenza +
+                ", dataRilascio=" + dataRilascio +
+                ", emailAziendale='" + emailAziendale + '\'' +
+                ", cittadinanza='" + cittadinanza + '\'' +
+                '}';
+    }
 
     /**
      * Indica se un altro oggetto è "uguale a" questo impiegato.

@@ -10,12 +10,9 @@ import java.util.Objects;
  * Ogni camera è identificata da un numero univoco e possiede una tipologia, uno stato
  * corrente e una capacità massima di persone.
  */
-<<<<<<< Updated upstream
-public class Camera implements Cloneable{
-    private final static double EPSILON = 1e10;
-=======
 public class Camera implements Cloneable, Serializable {
->>>>>>> Stashed changes
+    private final static double EPSILON = 1e10;
+ 
     /**
      * Numero di camera, univoco per ogni camera all'interno dell'hotel.
      */
@@ -24,14 +21,6 @@ public class Camera implements Cloneable, Serializable {
      * Il prezzo della camera
      */
     private double prezzoCamera;
-    /**
-     * Il piano della camera
-     */
-    private int piano;
-    /**
-     * Tipologia di camera (es. Singola, Doppia, Suite).
-     */
-    private String tipologia;
     /**
      * Stato corrente della camera (es. Libera, Occupata, In Manutenzione),
      * utilizzando l'enumerazione {@link Stato}.
@@ -50,20 +39,16 @@ public class Camera implements Cloneable, Serializable {
     /**
      * Costruttore per creare una nuova istanza di {@code Camera}.
      * @param numeroCamera Il numero identificativo univoco della camera.
-     * @param tipologia La tipologia della camera (es. Singola, Doppia).
      * @param statoCamera Lo stato iniziale della camera (es. Libera).
      * @param capacità Il numero massimo di persone che può ospitare.
      * @param prezzoCamera il prezzo della camera in quel momento
-     * @param piano il piano di cui si trova la camera
      * @param noteCamera le informazioni aggiunti
      */
-    public Camera(int numeroCamera, String tipologia, Stato statoCamera, int capacità , double prezzoCamera , int piano , String noteCamera ) {
+    public Camera(int numeroCamera, Stato statoCamera, int capacità , double prezzoCamera , String noteCamera ) {
         this.numeroCamera = numeroCamera;
-        this.tipologia = tipologia;
         this.statoCamera = statoCamera;
         this.numeroMaxOccupanti = capacità;
         this.prezzoCamera = prezzoCamera;
-        this.piano = piano;
         this.noteCamera = noteCamera;
     }
 
@@ -94,22 +79,6 @@ public class Camera implements Cloneable, Serializable {
      */
     public void setNumeroCamera(int numeroCamera) {
         this.numeroCamera = numeroCamera;
-    }
-
-    /**
-     * Restituisce la tipologia della camera.
-     * @return La tipologia della camera.
-     */
-    public String getTipologia() {
-        return tipologia;
-    }
-
-    /**
-     * Imposta una nuova tipologia per la camera.
-     * @param tipologia La nuova tipologia della camera.
-     */
-    public void setTipologia(String tipologia) {
-        this.tipologia = tipologia;
     }
 
     /**
@@ -178,35 +147,25 @@ public class Camera implements Cloneable, Serializable {
         this.prezzoCamera = prezzoCamera;
     }
 
-    /**
-     * Imposta il piano della camera
-     * @param piano il nuovo piano della camera
-     */
 
-    public void setPiano(int piano) {
-        this.piano = piano;
-    }
-
-    /**
-     * Restituisce il piano della camera
-     * @return piano
-     */
-
-    public int getPiano() {
-        return piano;
+    @Override
+    public String toString(){
+        return getClass().getName() + "[ numeroCamera = " + numeroCamera + ", prezzoCamera = " + prezzoCamera + ", statoCamera = " + statoCamera.name() + ", numeroMaxOccupanti = " + numeroMaxOccupanti + ", noteCamera = " + noteCamera + "]";
     }
 
     /**
      * @param obj   L'oggetto da confrontare.
      * @return {@code true} se l'oggetto obj è un'istanza di Camera, {@code false} altrimenti.
      */
+
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null || getClass() != obj.getClass()) return false;
         Camera camera = (Camera) obj;
         return numeroCamera == camera.numeroCamera && numeroMaxOccupanti == camera.numeroMaxOccupanti &&
-                Objects.equals(tipologia, camera.tipologia) && statoCamera == camera.statoCamera && Math.abs(prezzoCamera - camera.prezzoCamera) < EPSILON
-                && piano == camera.piano && Objects.equals(noteCamera,camera.noteCamera);
+                statoCamera == camera.statoCamera && Math.abs(prezzoCamera - camera.prezzoCamera) < EPSILON &&
+                Objects.equals(noteCamera,camera.noteCamera);
     }
 
     /**

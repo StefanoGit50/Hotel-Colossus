@@ -10,10 +10,10 @@ import java.util.List;
 
 public interface FrontDeskInterface extends Remote
 {
-    public void effettuaPrenotazione(String id, Cliente cliente, Camera camera) throws RemoteException;
-    public List<Prenotazione> getPrenotazioni() throws RemoteException;
-    public void cancellaPrenotazione(Prenotazione p) throws RemoteException;
-    public Prenotazione getPrenotazione(String id) throws RemoteException;
-
+    void effettuaPrenotazione(String id, Cliente cliente, Stanza stanza) throws RemoteException;
+    List<Prenotazione> getPrenotazioni() throws RemoteException;
+    void cancellaPrenotazione(Prenotazione p) throws RemoteException;
+    Prenotazione getPrenotazione(String id) throws RemoteException;
+    boolean aggiungiCliente(Cliente c);
 
 }

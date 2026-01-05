@@ -1,12 +1,13 @@
 package it.unisa.Common;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * Rappresenta un Utente generico del sistema.
  * Contiene le credenziali di accesso di base.
  */
-public class Utente implements Cloneable {
+public class Utente implements Cloneable, Serializable {
 
     /**
      * Nome utente univoco utilizzato per l'accesso.
@@ -29,6 +30,10 @@ public class Utente implements Cloneable {
         this.hashedPassword = hashedPassword;
     }
 
+    public Utente(){
+        username = "";
+        hashedPassword = "";
+    }
     /**
      * Restituisce il nome utente.
      *
@@ -63,6 +68,15 @@ public class Utente implements Cloneable {
      */
     public void setNewHashedPassword(String newHashedPassword) {
         this.hashedPassword = newHashedPassword;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Utente{" +
+                "username='" + username + '\'' +
+                ", hashedPassword='" + hashedPassword + '\'' +
+                '}';
     }
 
     /**

@@ -11,38 +11,36 @@ INSERT INTO Camera VALUES
 (201,4,'Suite con jacuzzi','Disponibile',2,'Suite',300.0);
 
 -- Inserimento prenotazioni
-INSERT INTO Prenotazione 
-(DataPrenotazione, DataArrivoCliente, DataPartenzaCliente, NoteAggiuntive, Intestatario, dataScadenza, numeroDocumento, DataRilascio, Tipo)
-VALUES
+INSERT INTO Prenotazione(DataPrenotazione ,  DataArrivoCliente ,  DataPartenzaCliente , NoteAggiuntive , Intestatario , dataScadenza , numeroDocumento , DataRilascio ,Tipo)VALUES
 ('2025-11-15','2025-12-20','2025-12-25','Nessuna','Mario Rossi','2025-12-01',123456,'2020-01-01','Carta Identità'),
 ('2025-11-20','2025-12-24','2025-12-26','Richiesta colazione','Giulia Verdi','2025-12-10',234567,'2018-05-10','Passaporto'),
 ('2025-11-22','2025-12-23','2025-12-28','Animali ammessi','Luca Bianchi','2025-12-15',345678,'2019-09-20','Carta Identità');
 
 -- Inserimento associazioni
-INSERT INTO Associato_a(CF,NumeroCamera,PrezzoAcquisto)VALUES
-('RSSMRA85M01H501X',101,120.0),
-('VRDLGI90F45F205Y',102,150.0),
-('BNCLRD75D23B123Z',201,300.0);
+INSERT INTO Associato_a VALUES
+('RSSMRA85M01H501X',101,1,120.0),
+('VRDLGI90F45F205Y',102,2,150.0),
+('BNCLRD75D23B123Z',201,3,300.0);
 
 -- Inserimento ricevute fiscali
-INSERT INTO RicevutaFiscale(IDPrenotazione,DataEmissione,PrezzoTrattamento,PrezzoServizio,PrezzoCamera)VALUES
-(1,'2025-12-01',50.0,10.0,120.0),
-(2,'2025-12-02',70.0,15.0,150.0),
-(3,'2025-12-03',100.0,50.0,null);
+INSERT INTO RicevutaFiscale VALUES
+(1,1,600.0,'2025-12-01'),
+(2,2,300.0,'2025-12-02'),
+(3,3,1500.0,'2025-12-03');
 
 -- Inserimento servizi
-INSERT INTO Servizio (nome,Prezzo)VALUES
-('WiFi',10.0),
-('Colazione',15.0),
-('Spa',50.0);
+INSERT INTO Servizio VALUES
+('WiFi',10.0,1),
+('Colazione',15.0,2),
+('Spa',50.0,3);
 
 -- Inserimento trattamenti
-INSERT INTO Trattamento(nome,Prezzo,PrezzoAcquisto)VALUES
-('Massaggio',50.0,50.0),
-('Trattamento viso',70.0,70.0),
-('Percorso benessere',100.0,100.0);
+INSERT INTO Trattamento VALUES
+('Massaggio',50.0,1,50.0),
+('Trattamento viso',70.0,2,70.0),
+('Percorso benessere',100.0,3,100.0);
 
 -- Inserimento impiegati
 INSERT INTO Impiegato VALUES
-('PLLMRA85M01H501A','Marco','Pallini','00100','2020-01-15','345678910','Italiana','marco.pallini@hotel.com','M','Receptionist','2015-05-10','Carta Identità','Via Roma','RM','Roma',10,111111,'2025-12-31','PLLMRA85M01H501A'),
-('FRNGNN90F45F205B','Anna','Ferragni','20100','2019-06-20','345678911','Italiana','anna.ferragni@hotel.com','F','Cameriera','2010-03-15','Passaporto','Corso Milano','MI','Milano',5,222222,'2025-11-30','FRNGNN90F45F205B');
+('PLLMRA85M01H501A',1200,'Marco','Pallini','00100','2020-01-15','345678910','Italiana','marco.pallini@hotel.com','M','Receptionist','2015-05-10','Carta Identità','Via Roma','RM','Roma',10,111111,'2025-12-31','PLLMRA85M01H501A'),
+('FRNGNN90F45F205B',1300,'Anna','Ferragni','20100','2019-06-20','345678911','Italiana','anna.ferragni@hotel.com','F','Cameriera','2010-03-15','Passaporto','Corso Milano','MI','Milano',5,222222,'2025-11-30','FRNGNN90F45F205B');

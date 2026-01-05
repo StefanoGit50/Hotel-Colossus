@@ -2,6 +2,7 @@ package it.unisa.Server.persistent.util;
 
 import it.unisa.Common.Camera;
 import it.unisa.Common.Cliente;
+import it.unisa.Common.Impiegato;
 import it.unisa.Common.Servizio;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class Util {
      * @return Un nuovo ArrayList contenente copie (cloni) degli elementi.
      */
     public static <T extends Cloneable> ArrayList<T> deepCopyArrayList(ArrayList<T> daCopiare) {
-        if (daCopiare == null) return new ArrayList<>();
+        if (daCopiare == null || daCopiare.isEmpty()) return new ArrayList<>();
 
         ArrayList<T> copia = new ArrayList<>(daCopiare.size());
         try {
@@ -28,6 +29,8 @@ public class Util {
                     copia.add((T) ((Servizio) elemento).clone());
                 } else if (elemento instanceof Cliente) {
                     copia.add((T) ((Cliente) elemento).clone());
+                } else if (elemento instanceof Impiegato) {
+                    copia.add((T) ((Impiegato) elemento).clone());
                 }
             }
         } catch (CloneNotSupportedException e) {

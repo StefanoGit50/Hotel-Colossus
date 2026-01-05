@@ -1,5 +1,6 @@
 package it.unisa.Common;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -8,7 +9,7 @@ import java.util.Objects;
  * Memorizza i dati anagrafici, l'indirizzo e le informazioni di contatto
  * del cliente, oltre a un flag per indicare se è inserito nella blacklist.
  */
-public class Cliente implements Cloneable {
+public class Cliente implements Cloneable, Serializable {
 
     /**
      * Il nome del cliente.
@@ -415,6 +416,29 @@ public class Cliente implements Cloneable {
 
     public void setMetodoDiPagamento(String metodoDiPagamento) {
         this.metodoDiPagamento = metodoDiPagamento;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                "nome='" + nome + '\'' +
+                ", cf='" + cf + '\'' +
+                ", email='" + email + '\'' +
+                ", metodoDiPagamento='" + metodoDiPagamento + '\'' +
+                ", cognome='" + cognome + '\'' +
+                ", cittadinanza='" + cittadinanza + '\'' +
+                ", provincia='" + provincia + '\'' +
+                ", comune='" + comune + '\'' +
+                ", via='" + via + '\'' +
+                ", numeroCivico=" + numeroCivico +
+                ", CAP=" + CAP +
+                ", numeroTelefono='" + numeroTelefono + '\'' +
+                ", isBlacklisted=" + isBlacklisted +
+                ", sesso='" + sesso + '\'' +
+                ", dataNascita=" + dataNascita +
+                ", nazionalità='" + nazionalità + '\'' +
+                '}';
     }
 
     /**
