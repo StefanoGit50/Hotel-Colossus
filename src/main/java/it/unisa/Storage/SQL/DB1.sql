@@ -25,7 +25,7 @@ create table Camera(
 	NumeroCamera int not null,
 	NumeroMaxOcc int not null,
 	NoteCamera varchar(1000) not null,
-	Stato varchar(20) not null,
+	Stato enum('OutOfOrder','InPulizia','Occupata','Prenotata','Libera') not null,
     Piano int not null,
     TipologiaCamera varchar(100) not null,
     Prezzo double not null,
@@ -47,13 +47,14 @@ create table Prenotazione(
 );
 
 create table Associato_a(
-	CF char(16) null,
-    NumeroCamera int null,
-    IDPrenotazione int null,
+	CF char(16) not null,
+    NumeroCamera int not null,
+    IDPrenotazione int not null,
     PrezzoAcquisto double not null,
 	foreign key(CF) references Cliente(CF) on delete cascade on update cascade,
     foreign key(NumeroCamera) references Camera(NumeroCamera) on delete cascade on update cascade,
-    foreign key(IDPrenotazione) references Prenotazione(IDPrenotazione) on delete cascade on update cascade
+    foreign key(IDPrenotazione) references Prenotazione(IDPrenotazione) on delete cascade on update cascade,
+    primary key(CF,NumeroCamera , IDPrenotazione)
 );
 
 create table RicevutaFiscale(
@@ -68,7 +69,7 @@ create table RicevutaFiscale(
 create table Servizio(
 	Nome varchar(50) not null,
     Prezzo double not null,
-    IDPrenotazione int null,
+    IDPrenotazione int null DEFAULT null,
     primary key(Nome),
 	foreign key(IDPrenotazione) references Prenotazione(IDPrenotazione) on delete cascade on update cascade
 );
@@ -76,7 +77,7 @@ create table Servizio(
 create table Trattamento(
 	Nome varchar(50) not null,
 	Prezzo double not null,
-	IDPrenotazione int null,
+	IDPrenotazione int null default null,
 	PrezzoAcquisto double not null,
     primary key(Nome),
     foreign key(IDPrenotazione) references Prenotazione(IDPrenotazione) on delete cascade on update cascade 
@@ -93,7 +94,7 @@ create table Impiegato(
     Cittadinanza varchar(50) not null,
     EmailAziendale varchar(100) not null,
     Sesso varchar(20) not null,
-    Ruolo varchar(50) not null,
+    Ruolo enum('FrontDesk','Manager','Governante') not null,
     DataRilascio date not null,
     TipoDocumento varchar(50) not null,
     Via varchar(40) not null,
@@ -102,7 +103,7 @@ create table Impiegato(
     Civico int not null,
     NumeroDocumento char(9) not null,
     DataScadenza date not null,
-    CF1 char(16) not null,
+    CF1 char(16) null DEFAULT null,
     primary key(CF),
    foreign key(CF1) references Impiegato(CF) on delete cascade on update cascade
 );

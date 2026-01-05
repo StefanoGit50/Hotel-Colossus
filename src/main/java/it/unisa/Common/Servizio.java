@@ -67,6 +67,15 @@ public class Servizio implements Cloneable {
         this.prezzo = prezzo;
     }
 
+
+    @Override
+    public String toString() {
+        return "Servizio{" +
+                "nome='" + nome + '\'' +
+                ", prezzo=" + prezzo +
+                '}';
+    }
+
     /**
      * Indica se un altro oggetto è "uguale a" questo servizio.
      * Due servizi sono considerati uguali se hanno lo stesso nome e lo stesso prezzo.

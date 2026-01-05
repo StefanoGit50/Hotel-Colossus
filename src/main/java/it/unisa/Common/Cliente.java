@@ -417,6 +417,29 @@ public class Cliente implements Cloneable {
         this.metodoDiPagamento = metodoDiPagamento;
     }
 
+
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                "nome='" + nome + '\'' +
+                ", cf='" + cf + '\'' +
+                ", email='" + email + '\'' +
+                ", metodoDiPagamento='" + metodoDiPagamento + '\'' +
+                ", cognome='" + cognome + '\'' +
+                ", cittadinanza='" + cittadinanza + '\'' +
+                ", provincia='" + provincia + '\'' +
+                ", comune='" + comune + '\'' +
+                ", via='" + via + '\'' +
+                ", numeroCivico=" + numeroCivico +
+                ", CAP=" + CAP +
+                ", numeroTelefono='" + numeroTelefono + '\'' +
+                ", isBlacklisted=" + isBlacklisted +
+                ", sesso='" + sesso + '\'' +
+                ", dataNascita=" + dataNascita +
+                ", nazionalità='" + nazionalità + '\'' +
+                '}';
+    }
+
     /**
      * Indica se un altro oggetto è "uguale a" questo cliente.
      * Il confronto è basato su tutti i campi del cliente.
@@ -424,7 +447,6 @@ public class Cliente implements Cloneable {
      * @param obj L'oggetto da confrontare.
      * @return {@code true} se i due oggetti Cliente sono uguali, {@code false} altrimenti.
      */
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;

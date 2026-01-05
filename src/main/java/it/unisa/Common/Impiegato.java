@@ -336,6 +336,32 @@ public class Impiegato extends Utente implements Cloneable {
 
     // --- Metodi Standard di Object ---
 
+
+    @Override
+    public String toString() {
+        return "Impiegato{" +
+                "nome='" + nome + '\'' +
+                ", cognome='" + cognome + '\'' +
+                ", sesso='" + sesso + '\'' +
+                ", tipoDocumento='" + tipoDocumento + '\'' +
+                ", numeroDocumento='" + numeroDocumento + '\'' +
+                ", CAP=" + CAP +
+                ", via='" + via + '\'' +
+                ", provincia='" + provincia + '\'' +
+                ", comune='" + comune + '\'' +
+                ", numeroCivico=" + numeroCivico +
+                ", codiceFiscale='" + codiceFiscale + '\'' +
+                ", telefono='" + telefono + '\'' +
+                ", ruolo=" + ruolo +
+                ", stipendio=" + stipendio +
+                ", dataAssunzione=" + dataAssunzione +
+                ", dataScadenza=" + dataScadenza +
+                ", dataRilascio=" + dataRilascio +
+                ", emailAziendale='" + emailAziendale + '\'' +
+                ", cittadinanza='" + cittadinanza + '\'' +
+                '}';
+    }
+
     /**
      * Indica se un altro oggetto è "uguale a" questo impiegato.
      * Il confronto è basato sull'uguaglianza della superclasse {@code Utente}

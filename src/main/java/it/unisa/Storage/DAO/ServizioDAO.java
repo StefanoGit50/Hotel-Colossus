@@ -50,26 +50,30 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
     @Override
     public synchronized Servizio doRetriveByKey(Object nome) throws SQLException
     {
-        Connection connection = ConnectionStorage.getConnection();
-        String query = "SELECT * FROM Servizio WHERE Nome = ?";
+        if(nome instanceof String){
+            Connection connection = ConnectionStorage.getConnection();
+            String query = "SELECT * FROM Servizio WHERE Nome = ?";
 
-        try (PreparedStatement stmt = connection.prepareStatement(query))
-        {
-            stmt.setString(1, (String) nome);
-
-            try (ResultSet rs = stmt.executeQuery())
+            try (PreparedStatement stmt = connection.prepareStatement(query))
             {
-                if (rs.next())
+                stmt.setString(1, (String) nome);
+
+                try (ResultSet rs = stmt.executeQuery())
                 {
-                    return new Servizio(
-                            rs.getString("Nome"),
-                            rs.getDouble("Prezzo"));
+                    if (rs.next())
+                    {
+                        return new Servizio(
+                                rs.getString("Nome"),
+                                rs.getDouble("Prezzo"));
+                    }
+                }
+            }finally {
+                if(connection != null){
+                    ConnectionStorage.releaseConnection(connection);
                 }
             }
-        }finally {
-            if(connection != null){
-                ConnectionStorage.releaseConnection(connection);
-            }
+        }else{
+            throw new SQLException();
         }
         return null;
     }
@@ -78,10 +82,11 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
     public synchronized Collection<Servizio> doRetriveAll(String order) throws SQLException
     {
         Connection connection = ConnectionStorage.getConnection();
-        String query = "SELECT * FROM Servizio WHERE IDPrenotazione IS NULL";
-        if (order != null && !order.trim().isEmpty())
-        {
-            query += " ORDER BY " + order;
+        String query = "SELECT * FROM Servizio ";
+        if(order.equalsIgnoreCase("decrescente")){
+            query += " ORDER BY Nome DESC " ;
+        }else{
+            query += " ORDER BY Nome ASC" ;
         }
 
         Collection<Servizio> servizi = new ArrayList<>();
@@ -90,6 +95,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
         {
             while (rs.next())
             {
+
                 Servizio s = new Servizio(
                         rs.getString("Nome"),
                         rs.getDouble("Prezzo"));

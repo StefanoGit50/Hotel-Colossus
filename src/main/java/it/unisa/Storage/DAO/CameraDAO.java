@@ -34,17 +34,25 @@ public class CameraDAO implements FrontDeskStorage<Camera>{
     @Override
     public synchronized Camera doRetriveByKey(Object oggetto) throws SQLException {
             if(oggetto instanceof Integer){
+                Integer integer = (Integer) oggetto;
                 Connection connection = ConnectionStorage.getConnection();
-             try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Camera WHERE NumeroCamera = ?")){
+                try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Camera WHERE NumeroCamera = ?")){
+                 preparedStatement.setInt(1,integer);
                 ResultSet resultSet = preparedStatement.executeQuery();
-
-                Integer numeroCamera = (Integer) resultSet.getObject(1);
-                Integer numeroMaxOcc = (Integer) resultSet.getObject(2);
-                String noteCamera = (String) resultSet.getObject(3);
-                Stato stato = (Stato) resultSet.getObject(4);
-                Integer piano = (Integer) resultSet.getObject(5);
-                String TipologiaCamera = (String) resultSet.getObject(6);
-                Double prezzo = (Double) resultSet.getObject(7);
+                    Integer numeroCamera = null,numeroMaxOcc = null,piano = null;
+                    String noteCamera = null, TipologiaCamera = null;
+                    Stato stato = null;
+                    Double prezzo = null;
+                    if(resultSet.next()){
+                    numeroCamera = (Integer) resultSet.getObject(1);
+                    numeroMaxOcc = (Integer) resultSet.getObject(2);
+                    noteCamera = (String) resultSet.getObject(3);
+                    String c = resultSet.getString(4);
+                    stato =  Stato.valueOf(c);
+                    piano = (Integer) resultSet.getObject(5);
+                    TipologiaCamera = (String) resultSet.getObject(6);
+                    prezzo = (Double) resultSet.getObject(7);
+                }
 
                 return new Camera(numeroCamera , TipologiaCamera , stato , numeroMaxOcc , prezzo , piano , noteCamera);
             }finally{
@@ -91,14 +99,15 @@ public class CameraDAO implements FrontDeskStorage<Camera>{
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while(resultSet.next()){
-                Integer numeroCamera = (Integer) resultSet.getObject(1);
-                Integer numeroMacOcc = (Integer) resultSet.getObject(2);
+               Integer numeroCamera = (Integer) resultSet.getObject(1);
+               Integer numeroMaxOcc = (Integer) resultSet.getObject(2);
                 String noteCamera = (String) resultSet.getObject(3);
-                Stato stato = (Stato) resultSet.getObject(4);
-                Integer piano = (Integer) resultSet.getObject(5);
-                String tipologiaCamera = (String) resultSet.getObject(6);
-                Double prezzo = (Double) resultSet.getObject(7);
-                cameras.add(new Camera(numeroCamera,tipologiaCamera,stato, numeroMacOcc ,prezzo,piano,noteCamera));
+                String c = resultSet.getString(4);
+               Stato stato =  Stato.valueOf(c);
+               Integer piano = (Integer) resultSet.getObject(5);
+               String tipologiaCamera = (String) resultSet.getObject(6);
+               Double prezzo = (Double) resultSet.getObject(7);
+               cameras.add(new Camera(numeroCamera,tipologiaCamera,stato, numeroMaxOcc ,prezzo,piano,noteCamera));
             }
             resultSet.close();
         }finally{

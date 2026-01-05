@@ -69,6 +69,15 @@ public class Utente implements Cloneable {
         this.hashedPassword = newHashedPassword;
     }
 
+
+    @Override
+    public String toString() {
+        return "Utente{" +
+                "username='" + username + '\'' +
+                ", hashedPassword='" + hashedPassword + '\'' +
+                '}';
+    }
+
     /**
      * Indica se un altro oggetto è "uguale a" questo utente.
      * Il confronto è basato sul nome utente e sulla password hash-ata.

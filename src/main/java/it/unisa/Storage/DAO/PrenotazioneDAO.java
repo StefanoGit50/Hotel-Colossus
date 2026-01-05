@@ -17,21 +17,20 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>
     public void doSave(Prenotazione p) throws SQLException
     {
         Connection connection = ConnectionStorage.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO prenotazione(IDPrenotazione, DataPrenotazione, DataArrivoCliente, " +
+        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO prenotazione(DataPrenotazione, DataArrivoCliente, " +
                 "DataPartenzaCliente, NoteAggiuntive, Intestatario, dataScadenza, " +
                 "numeroDocumento, DataRilascio, Tipo) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " );
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) " );
 
-        preparedStatement.setInt(1, p.getCodicePrenotazione());
-        preparedStatement.setDate(2, Date.valueOf(p.getDataCreazionePrenotazione()));
-        preparedStatement.setDate(3, Date.valueOf(p.getDataInizio()));
-        preparedStatement.setDate(4, Date.valueOf(p.getDataFine()));
-        preparedStatement.setString(5, p.getNoteAggiuntive());
-        preparedStatement.setString(6, p.getIntestatario());
-        preparedStatement.setDate(7, Date.valueOf(p.getDataScadenza()));
-        preparedStatement.setInt(8, p.getNumeroDocumento());
-        preparedStatement.setDate(9, Date.valueOf(p.getDataRilascio()));
-        preparedStatement.setString(10, p.getTipoDocumento());
+        preparedStatement.setDate(1, Date.valueOf(p.getDataCreazionePrenotazione()));
+        preparedStatement.setDate(2, Date.valueOf(p.getDataInizio()));
+        preparedStatement.setDate(3, Date.valueOf(p.getDataFine()));
+        preparedStatement.setString(4, p.getNoteAggiuntive());
+        preparedStatement.setString(5, p.getIntestatario());
+        preparedStatement.setDate(6, Date.valueOf(p.getDataScadenza()));
+        preparedStatement.setInt(7, p.getNumeroDocumento());
+        preparedStatement.setDate(8, Date.valueOf(p.getDataRilascio()));
+        preparedStatement.setString(9, p.getTipoDocumento());
 
         preparedStatement.executeUpdate();
 
@@ -59,18 +58,18 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>
                 stmt.executeUpdate();
             }
         }
-
+        ClienteDAO clienteDAO = new ClienteDAO();
         // Salva le associazioni clienti-camere
         for (Cliente cliente : p.getListaClienti()) {
-            ClienteDAO.doSaveStatic(cliente);
+            clienteDAO.doSave(cliente);
         }
 
         for (Camera camera : p.getListaCamere()) {
             for (Cliente cliente : p.getListaClienti()) {
                 String query = "INSERT INTO Associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto) " +
                         "VALUES (?, ?, ?, ?)";
-
-                try (PreparedStatement stmt = connection.prepareStatement(query)) {
+                System.out.println(cliente);
+                try(PreparedStatement stmt = connection.prepareStatement(query)){
                     stmt.setString(1, cliente.getCf());
                     stmt.setInt(2, camera.getNumeroCamera());
                     stmt.setInt(3, p.getCodicePrenotazione());
@@ -100,6 +99,10 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>
     @Override
     public Prenotazione doRetriveByKey(Object codicePrenotazione) throws SQLException
     {
+        if(!(codicePrenotazione instanceof Integer)){
+            return null;
+        }
+
         Connection connection = ConnectionStorage.getConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Prenotazione WHERE IDPrenotazione = ?"))
@@ -204,7 +207,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>
                                         rs4.getInt("Cap"),
                                         rs4.getString("telefono"),
                                         rs4.getString("Sesso"),
-                                        rs4.getDate("DataNascita") != null ? rs4.getDate("DataNascita").toLocalDate() : null,
+                                        rs4.getDate("DataDiNascita") != null ? rs4.getDate("DataDiNascita").toLocalDate() : null,
                                         rs4.getString("CF"),
                                         rs4.getString("Email"),
                                         rs4.getString("MetodoDiPagamento")
@@ -346,7 +349,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>
                                     rs4.getInt("Cap"),
                                     rs4.getString("telefono"),
                                     rs4.getString("Sesso"),
-                                    rs4.getDate("DataNascita") != null ? rs4.getDate("DataNascita").toLocalDate() : null,
+                                    rs4.getDate("DataDiNascita") != null ? rs4.getDate("DataDiNascita").toLocalDate() : null,
                                     rs4.getString("CF"),
                                     rs4.getString("Email"),
                                     rs4.getString("MetodoDiPagamento")

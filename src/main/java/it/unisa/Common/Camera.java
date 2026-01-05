@@ -178,10 +178,17 @@ public class Camera implements Cloneable{
         return piano;
     }
 
+    @Override
+    public String toString(){
+        return getClass().getName() + "[ numeroCamera = " + numeroCamera + ", prezzoCamera = " + prezzoCamera + ", piano = " + piano + ", tipologia = " + tipologia + ", statoCamera = " + statoCamera.name() + ", numeroMaxOccupanti = " + numeroMaxOccupanti + ", noteCamera = " + noteCamera + "]";
+    }
+
     /**
      * @param obj   L'oggetto da confrontare.
      * @return {@code true} se l'oggetto obj è un'istanza di Camera, {@code false} altrimenti.
      */
+
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null || getClass() != obj.getClass()) return false;

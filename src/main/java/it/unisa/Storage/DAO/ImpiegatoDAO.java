@@ -15,7 +15,7 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
     @Override
     public void doSave(Impiegato impiegato) throws SQLException {
         Connection connection = ConnectionStorage.getConnection();
-        try(PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Impiegato VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")){
+        try(PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Impiegato(CF, Stipedio, Nome, Cognome, Cap, DataAssunzione, Telefono, Cittadinanza, EmailAziendale, Sesso, Ruolo, DataRilascio, TipoDocumento, Via, Provincia, Comune, Civico, NumeroDocumento, DataScadenza) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")){
             preparedStatement.setString(1,impiegato.getCodiceFiscale());
             preparedStatement.setDouble(2,impiegato.getStipendio());
             preparedStatement.setString(3,impiegato.getNome());
@@ -35,7 +35,6 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
             preparedStatement.setInt(17,impiegato.getNumeroCivico());
             preparedStatement.setString(18,impiegato.getNumeroDocumento());
             preparedStatement.setDate(19,Date.valueOf(impiegato.getDataScadenza()));
-            preparedStatement.setString(20, null);
             preparedStatement.executeUpdate();
         }finally{
             if(connection != null){
@@ -79,7 +78,8 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
                     String cittadinanza = (String) resultSet.getObject(8);
                     String emailAzienda = (String) resultSet.getObject(9);
                     String sesso = (String) resultSet.getObject(10);
-                    Ruolo ruolo = (Ruolo) resultSet.getObject(11);
+                    String c =  resultSet.getString(11);
+                    Ruolo ruolo = Ruolo.valueOf(c);
                     Date  dataRilascio = (Date) resultSet.getObject(12);
                     LocalDate localDate = dataRilascio.toLocalDate();
                     String tipoDocumento = (String) resultSet.getObject(13);
@@ -95,7 +95,7 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
                     impiegato.setCodiceFiscale(cf);
                     impiegato.setNome(nome);
                     impiegato.setCognome(cognome);
-                    impiegato.setCAP(Integer.getInteger(cap));
+                    impiegato.setCAP(Integer.parseInt(cap));
                     impiegato.setDataAssunzione(date);
                     impiegato.setTelefono(telefono);
                     impiegato.setCittadinanza(cittadinanza);
@@ -131,7 +131,7 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
             ArrayList<Impiegato> impiegatoes = new ArrayList<>();
             try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM impiegato"); ResultSet resultSet = preparedStatement.executeQuery()){
                 while(resultSet.next()){
-                    Impiegato impiegato = new Impiegato();
+                    Impiegato impiegato;
                     String cf = (String) resultSet.getObject(1);
                     Double stipedio = (Double) resultSet.getObject(2);
                     String nome = (String) resultSet.getObject(3);
@@ -143,7 +143,8 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
                     String cittadinanza = (String) resultSet.getObject(8);
                     String emailAzienda = (String) resultSet.getObject(9);
                     String sesso = (String) resultSet.getObject(10);
-                    Ruolo ruolo = (Ruolo) resultSet.getObject(11);
+                    String c =  resultSet.getString(11);
+                    Ruolo ruolo = Ruolo.valueOf(c);
                     Date  dataRilascio = (Date) resultSet.getObject(12);
                     LocalDate localDate = dataRilascio.toLocalDate();
                     String tipoDocumento = (String) resultSet.getObject(13);
@@ -159,7 +160,7 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
                     impiegato.setCodiceFiscale(cf);
                     impiegato.setNome(nome);
                     impiegato.setCognome(cognome);
-                    impiegato.setCAP(Integer.getInteger(cap));
+                    impiegato.setCAP(Integer.parseInt(cap));
                     impiegato.setDataAssunzione(date);
                     impiegato.setTelefono(telefono);
                     impiegato.setCittadinanza(cittadinanza);

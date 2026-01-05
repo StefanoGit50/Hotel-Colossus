@@ -331,6 +331,26 @@ public class Prenotazione implements Cloneable {
 
     // --- Metodi Standard di Object ---
 
+    @Override
+    public String toString() {
+        return "Prenotazione{" +
+                "codicePrenotazione=" + codicePrenotazione +
+                ", dataCreazionePrenotazione=" + dataCreazionePrenotazione +
+                ", dataInizio=" + dataInizio +
+                ", dataFine=" + dataFine +
+                ", trattamento=" + trattamento +
+                ", tipoDocumento='" + tipoDocumento + '\'' +
+                ", dataRilascio=" + dataRilascio +
+                ", dataScadenza=" + dataScadenza +
+                ", intestatario='" + intestatario + '\'' +
+                ", noteAggiuntive='" + noteAggiuntive + '\'' +
+                ", numeroDocumento=" + numeroDocumento +
+                ", listaCamere=" + listaCamere +
+                ", listaServizi=" + listaServizi +
+                ", listaClienti=" + listaClienti +
+                '}';
+    }
+
     /**
      * Indica se un altro oggetto è "uguale a" questa prenotazione.
      * Il confronto è basato sul codice di prenotazione e su tutti gli attributi.

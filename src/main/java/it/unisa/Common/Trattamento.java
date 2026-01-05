@@ -93,6 +93,16 @@ public class Trattamento implements Cloneable {
         this.prezzoAcquisto = prezzoAcquisto;
     }
 
+
+    @Override
+    public String toString() {
+        return "Trattamento{" +
+                "nome='" + nome + '\'' +
+                ", prezzo=" + prezzo +
+                ", prezzoAcquisto=" + prezzoAcquisto +
+                '}';
+    }
+
     /**
      * Indica se un altro oggetto è "uguale a" questo trattamento.
      * Due servizi sono considerati uguali se hanno lo stesso nome e lo stesso prezzo.

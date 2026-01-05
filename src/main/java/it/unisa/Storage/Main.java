@@ -1,6 +1,8 @@
 package it.unisa.Storage;
 
+import com.mysql.cj.protocol.a.SqlDateValueEncoder;
 import it.unisa.Common.*;
+import it.unisa.Server.persistent.util.Ruolo;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.DAO.*;
 
@@ -40,13 +42,11 @@ public class Main{
         try{
             cameraDAO.doSave(camera1);
         }catch(SQLException sqlException){
-            sqlException.getMessage();
-            sqlException.getErrorCode();
-            sqlException.getCause();
+            sqlException.printStackTrace();
         }
 
         Camera camera2 = new Camera(
-                102,                    // numeroCamera
+                103,                    // numeroCamera
                 "Singola",               // tipologia
                 Stato.Libera,           // statoCamera
                 1,                      // capacità (numeroMaxOccupanti)
@@ -57,9 +57,7 @@ public class Main{
         try{
             cameraDAO.doSave(camera2);
         }catch(SQLException sqlException){
-            sqlException.getMessage();
-            sqlException.getErrorCode();
-            sqlException.getCause();
+            sqlException.printStackTrace();
         }
 
         Cliente c1 = new Cliente(
@@ -74,7 +72,7 @@ public class Main{
                  "333123456728934",
                 "M",
                 LocalDate.of(1990, 5, 12),
-                "RSSMRA90E12H703X",
+                "RSSMGA90E12H703X",
                 "mario.rossi@email.it",
                 "Carta di credito"
         );
@@ -133,14 +131,13 @@ public class Main{
                 clienti,
                 123456789                           // Numero documento
         );
+
         TrattamentoDAO trattamentoDAO = new TrattamentoDAO();
 
         try{
             trattamentoDAO.doSave(pensioneCompleta);
         }catch (SQLException sqlException){
-            sqlException.getMessage();
-            sqlException.getErrorCode();
-            sqlException.getCause();
+            sqlException.printStackTrace();
         }
 
         ServizioDAO servizioDAO = new ServizioDAO();
@@ -154,26 +151,212 @@ public class Main{
             sqlException.getCause();
         }
 
-        try{
-            ClienteDAO clienteDAO = new ClienteDAO();
-            clienteDAO.doSave(c1);
-            clienteDAO.doSave(c2);
-        }catch (SQLException sqlException){
-            sqlException.printStackTrace();
-        }
-
-
-
         PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO();
         try{
             prenotazioneDAO.doSave(prenotazione);
         }catch (SQLException sqlException){
-            sqlException.getMessage();
-            sqlException.getErrorCode();
-            sqlException.getCause();
+            sqlException.printStackTrace();
         }
 
+        ImpiegatoDAO impiegatoDAO = new ImpiegatoDAO();
+        try{
+            impiegatoDAO.doSave( new Impiegato(
+                    "mrossi",
+                    "hashedPwd123",
+                    "Mario",
+                    "Rossi",
+                    "M",
+                    "Carta d'identità",
+                    "AA1234567",
+                    84084,
+                    "Via Roma",
+                    "SA",
+                    "Fisciano",
+                    10,
+                    "AASMRA90A01H703X",
+                    "3331234567",
+                    Ruolo.FrontDesk,
+                    1500.00,
+                    LocalDate.of(2022, 3, 1),
+                    LocalDate.of(2020, 2, 15),
+                    "mario.rossi@hotel.it",
+                    "Italiana",
+                    LocalDate.of(2030, 2, 15)
+            ));
+            impiegatoDAO.doSave(new Impiegato(
+                    "lbianchi",
+                    "hashedPwd456",
+                    "Luca",
+                    "Bianchi",
+                    "M",
+                    "Passaporto",
+                    "YA9876543",
+                    80100,
+                    "Via Toledo",
+                    "NA",
+                    "Napoli",
+                    25,
+                    "BNCLCU85C10F839Y",
+                    "3399876543",
+                    Ruolo.Manager,
+                    2500.00,
+                    LocalDate.of(2019, 6, 10),
+                    LocalDate.of(2018, 5, 20),
+                    "luca.bianchi@hotel.it",
+                    "Italiana",
+                    LocalDate.of(2028, 5, 20)
+            ));
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+        Camera camera3 = null;
+        try{
+          camera3 = cameraDAO.doRetriveByKey(101);
+        }catch (SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+        System.out.println(camera3);
+        Servizio servizio = null;
+        try{
+            servizio = servizioDAO.doRetriveByKey("SPA");
+        }catch (SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+        System.out.println(servizio);
+        Trattamento trattamento = null;
 
+        try{
+            trattamento = trattamentoDAO.doRetriveByKey("Pensione Completa");
+        }catch (SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+        System.out.println(trattamento);
+        Cliente cliente2 = null;
+        try{
+            ClienteDAO clienteDAO = new ClienteDAO();
+            cliente2 = clienteDAO.doRetriveByKey("BNCNNA92M60F839Y");
+        }catch (SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+        IO.println(cliente2);
+        Prenotazione prenotazione1 = null;
+        try{
+            prenotazione1 = prenotazioneDAO.doRetriveByKey(1);
+        }catch (SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+        Impiegato impiegato = null;
+        try{
+           impiegato = impiegatoDAO.doRetriveByKey("AASMRA90A01H703X");
+        }catch (SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+        System.out.println(impiegato);
+        IO.println(prenotazione1);
+        ClienteDAO clienteDAO = new ClienteDAO();
 
+        IO.println("DO Retrive ALLLLLLLLLLLLLLLLLLLL:");
+
+        try{
+            ArrayList<Cliente> clientes = new ArrayList<>(clienteDAO.doRetriveAll("decrescente"));
+            System.out.println(clientes);
+        }catch (SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+
+        try{
+            ArrayList<Impiegato> impiegatoes = new ArrayList<>(impiegatoDAO.doRetriveAll("decrescente"));
+            System.out.println(impiegatoes);
+        }catch (SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+
+        try{
+            ArrayList<Camera> cameras = new ArrayList<>(cameraDAO.doRetriveAll("decrescente"));
+            System.out.println(cameras);
+        }catch (SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+
+        try{
+            ArrayList<Prenotazione> prenotaziones = new ArrayList<>(prenotazioneDAO.doRetriveAll("IDPrenotazione"));
+            System.out.println(prenotaziones);
+        }catch (SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+
+        try{
+            ArrayList<Servizio> servizios = new ArrayList<>(servizioDAO.doRetriveAll("Nome"));
+            System.out.println(servizios);
+        }catch (SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+
+        try{
+            ArrayList<Trattamento> trattamentos = new ArrayList<>(trattamentoDAO.doRetriveAll("Nome"));
+            System.out.println(trattamentos);
+        }catch (SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+
+        try{
+            cameraDAO.doDelete(camera);
+            cameraDAO.doDelete(camera1);
+            cameraDAO.doDelete(camera3);
+        }catch (SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+
+        try{
+            clienteDAO.doDelete(c1);
+            clienteDAO.doDelete(c2);
+        }catch (SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+
+        try{
+            prenotazioneDAO.doDelete(prenotazione);
+        }catch (SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+
+        try{
+            servizioDAO.doDelete(spa);
+            servizioDAO.doDelete(colazione);
+        }catch(SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+
+        try{
+            trattamentoDAO.doDelete(pensioneCompleta);
+        }catch (SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+
+        try{
+            impiegatoDAO.doDelete(new Impiegato("lbianchi",
+                    "hashedPwd456",
+                    "Luca",
+                    "Bianchi",
+                    "M",
+                    "Passaporto",
+                    "YA9876543",
+                    80100,
+                    "Via Toledo",
+                    "NA",
+                    "Napoli",
+                    25,
+                    "BNCLCU85C10F839Y",
+                    "3399876543",
+                    Ruolo.Manager,
+                    2500.00,
+                    LocalDate.of(2019, 6, 10),
+                    LocalDate.of(2018, 5, 20),
+                    "luca.bianchi@hotel.it",
+                    "Italiana",
+                    LocalDate.of(2028, 5, 20)));
+        }catch (SQLException sqlException){
+            sqlException.printStackTrace();
+        }
     }
 }

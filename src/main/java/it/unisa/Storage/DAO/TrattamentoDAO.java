@@ -51,29 +51,32 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
     @Override
     public Trattamento doRetriveByKey(Object nome) throws SQLException
     {
-        Connection connection = ConnectionStorage.getConnection();
-        String query = "SELECT * FROM Trattamento WHERE Nome = ?";
+        if(nome instanceof String){
+            Connection connection = ConnectionStorage.getConnection();
+            String query = "SELECT * FROM Trattamento WHERE Nome = ?";
 
-        try (PreparedStatement stmt = connection.prepareStatement(query))
-        {
-            stmt.setString(1, (String) nome);
-
-            try (ResultSet rs = stmt.executeQuery())
+            try (PreparedStatement stmt = connection.prepareStatement(query))
             {
-                if (rs.next())
+                stmt.setString(1, (String) nome);
+
+                try (ResultSet rs = stmt.executeQuery())
                 {
-                    return new Trattamento(
-                            rs.getString("Nome"),
-                            rs.getDouble("Prezzo"),
-                            rs.getDouble("PrezzoAcquisto")
-                    );
+                    if (rs.next())
+                    {
+                        return new Trattamento(
+                                rs.getString("Nome"),
+                                rs.getDouble("Prezzo"),
+                                rs.getDouble("PrezzoAcquisto")
+                        );
+                    }
+                }
+            }finally{
+                if(connection != null){
+                    ConnectionStorage.releaseConnection(connection);
                 }
             }
-        }finally {
-            if(connection != null){
-                ConnectionStorage.releaseConnection(connection);
-            }
         }
+
         return null;
     }
 
@@ -81,10 +84,12 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
     public Collection<Trattamento> doRetriveAll(String order) throws SQLException
     {
         Connection connection = ConnectionStorage.getConnection();
-        String query = "SELECT * FROM Trattamento WHERE IDPrenotazione IS NULL";
-        if (order != null && !order.trim().isEmpty())
+        String query = "SELECT * FROM Trattamento";
+        if (order.equalsIgnoreCase("decrescente"))
         {
-            query += " ORDER BY " + order;
+            query += " ORDER BY Nome DESC ";
+        }else{
+            query += " ORDER BY Nome ASC";
         }
 
         Collection<Trattamento> trattamenti = new ArrayList<>();
