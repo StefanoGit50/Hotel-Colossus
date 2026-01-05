@@ -22,7 +22,13 @@ public class RicevutaFiscale implements Serializable, Cloneable {
     /** Data in cui il documento fiscale è stato emesso. */
     private LocalDate dataEmissione;
 
-
+    /**
+     * Inizializza una nuova ricevuta con i dati identificativi e il totale.
+     * @param IDRicevutaFiscale l'identificativo univoco della ricevuta.
+     * @param IDPrenotazione l'identificativo della prenotazione associata.
+     * @param totale l'importo complessivo del documento.
+     * @param dataEmissione la data di emissione della ricevuta.
+     */
     public RicevutaFiscale(int IDRicevutaFiscale, int IDPrenotazione, double totale, LocalDate dataEmissione) {
         this.IDRicevutaFiscale = IDRicevutaFiscale;
         this.IDPrenotazione = IDPrenotazione;
@@ -30,6 +36,9 @@ public class RicevutaFiscale implements Serializable, Cloneable {
         this.dataEmissione = dataEmissione;
     }
 
+    /**
+     * Costruttore vuoto.
+     */
     public RicevutaFiscale() {};
 
     /**
@@ -74,10 +83,16 @@ public class RicevutaFiscale implements Serializable, Cloneable {
         this.dataEmissione = dataEmissione;
     }
 
+    /**
+     * @return l'id univoco della prenotazione.
+     */
     public int getIDPrenotazione() {
         return IDPrenotazione;
     }
 
+    /**
+     * @param IDPrenotazione l'id univoco della prenotazione.
+     */
     public void setIDPrenotazione(int IDPrenotazione) {
         this.IDPrenotazione = IDPrenotazione;
     }
