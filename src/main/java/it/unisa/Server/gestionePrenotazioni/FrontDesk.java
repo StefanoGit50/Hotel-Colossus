@@ -2,7 +2,8 @@ package it.unisa.Server.gestionePrenotazioni;
 
 import it.unisa.Common.Camera;
 import it.unisa.Server.gestioneClienti.Cliente;
-import it.unisa.Server.persistent.util.Stato;
+
+import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
 import it.unisa.interfacce.GovernanteInterface;
 import it.unisa.interfacce.FrontDeskInterface;
 
@@ -15,39 +16,59 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
-{
+public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface {
     static Logger logger = Logger.getLogger("global");
     private static final int RMI_PORT = 1099;
 
-    List<Prenotazione> prenotazioni = new ArrayList<>();
+    private List<Prenotazione> prenotazioni = new ArrayList<>();
+    private CatalogoCamere camList = new CatalogoCamere();
 
     public FrontDesk() throws RemoteException {
         super();
     }
 
+
+    public List<Camera> getCamere(){
+       return CatalogoCamere.getListaCamere();
+    }
+
     @Override
-    public void effettuaPrenotazione(String id, Cliente cliente, Camera camera) throws RemoteException
+    public boolean aggiornaStatoCamera(Camera c) throws RemoteException {
+        Logger.getLogger("camera passata = "+c.getNumeroCamera()+ c.getStatoCamera());
+        return camList.aggiornaStatoCamera(c);
+    }
+
+    // manda al client la camera ricevuta dall'update e il client dovrà aggiornare la sua lista da mostrare.
+    @Override
+    public Camera update() throws RemoteException {
+        return CatalogoCamere.getLastModified();
+    }
+
+    @Override
+    public void effettuaPrenotazione(String id, Cliente cliente, Camera stanza) throws RemoteException
     {
-        if(camera.getStatoCamera() == Stato.Libera)
+        //if(Camera.getStatoGlobale().equals("libera"))
         {
-            Prenotazione p = new Prenotazione(id, cliente, camera);
-            prenotazioni.add(p);
+            //Prenotazione p = new Prenotazione(id, cliente, stanza);
+            //prenotazioni.add(p);
 
             try{
                 GovernanteInterface gs = (GovernanteInterface) Naming.lookup("rmi://localhost/GestoreCamere");
-                //gs.setOccupataGlobale(stanza);
-               //logger.info("Prenotazione effettuata per stanza " + stanza.getNumero());
+                //gs.setOccupataGlobale(Canera);
+          //      logger.info("Prenotazione effettuata per stanza " + stanza.getNumero());
+
             } catch(Exception e)
             {
                 logger.severe("Errore nel contattare GestoreCamere: " + e.getMessage());
                 e.printStackTrace();
             }
         }
-        else
+       // TODO: DA MODIFICARE else
         {
-            logger.warning("Stanza " + camera.getNumeroCamera() + " occupata!");
-            System.err.println("Stanza " + camera.getNumeroCamera() + " occupata!");
+
+      //      logger.warning("Stanza " + stanza.getNumero() + " occupata!");
+       //     System.err.println("Stanza " + stanza.getNumero() + " occupata!");
+
         }
     }
 
@@ -92,10 +113,8 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         return null;
     }
 
-    @Override
-    public boolean aggiungiCliente(Cliente c) {
-        return false;
-    }
+
+
 
     public static void main(String[] args)
     {
@@ -103,14 +122,14 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         {
             // IMPORTANTE: Avvia l'RMI registry programmaticamente
             logger.info("Avvio RMI Registry sulla porta " + RMI_PORT + "...");
-            Registry registry;
+
             try {
                 // Prova a creare un nuovo registry
-                registry = LocateRegistry.createRegistry(RMI_PORT);
+                LocateRegistry.createRegistry(RMI_PORT);
                 logger.info("✓ RMI Registry creato con successo!");
             } catch (RemoteException e) {
                 // Se esiste già, ottieni il riferimento
-                registry = LocateRegistry.getRegistry(RMI_PORT);
+                LocateRegistry.getRegistry(RMI_PORT);
                 logger.info("✓ Connesso a RMI Registry esistente");
             }
 
@@ -133,4 +152,6 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
             e.printStackTrace();
         }
     }
+
+
 }

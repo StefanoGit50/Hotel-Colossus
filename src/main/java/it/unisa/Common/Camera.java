@@ -11,8 +11,10 @@ import java.util.Objects;
  * corrente e una capacità massima di persone.
  */
 public class Camera implements Cloneable, Serializable {
+
     private final static double EPSILON = 1e10;
  
+
     /**
      * Numero di camera, univoco per ogni camera all'interno dell'hotel.
      */
@@ -177,4 +179,6 @@ public class Camera implements Cloneable, Serializable {
     public Camera clone() throws CloneNotSupportedException {
         return (Camera) super.clone();
     }
+
 }
+

@@ -1,7 +1,7 @@
 package it.unisa.Client.Governante;
 
 import it.unisa.Common.Camera;
-import it.unisa.Server.persistent.util.Stato;
+
 import it.unisa.interfacce.GovernanteInterface;
 import java.rmi.Naming;
 import java.util.List;
@@ -13,8 +13,7 @@ import java.util.logging.Logger;
  * Permette di modificare lo stato delle camere e visualizzare la lista delle stanze.
  */
 
-public class GovernanteClient 
-{
+public class GovernanteClient {
     static Logger logger = Logger.getLogger("global");
 
     /**
@@ -58,11 +57,16 @@ public class GovernanteClient
                 {
                     case 1:
                     {
+
                         List<Camera> camere = governanteInterface.getListCamere();
+                       System.out.println("Inserisci 1 per visualizzare le camere: ");
+                        Scanner sc2 = new Scanner(System.in);
+
+
 
                         for(Camera c: camere)
                         {
-                            System.out.println("Stanza: " + governanteInterface.getCamera(c.getNumeroCamera()).getNumeroCamera() + "   \n\tStato: " + governanteInterface.getCamera(c.getNumeroCamera()).getStatoCamera());
+                          //  System.out.println("Stanza: " + governanteInterface.getCamera(c.getNumeroCamera()).getNumeroCamera() + "   \n\tStato: " + governanteInterface.getCamera(c.getNumeroCamera()).getStatoCamera());
                         }
                         break;
                     }
@@ -70,28 +74,28 @@ public class GovernanteClient
                     {
                         System.out.println("Inserisci numero camera da rendendere libera: ");
                         Scanner sc2 = new Scanner(System.in);
-                        governanteInterface.setStatoLibera(governanteInterface.getCamera(sc2.nextInt()));
+                      //  TODO: governanteInterface.setStatoLibera(governanteInterface.getCamera(sc2.nextInt()));
                         break;
                     }
                     case 3:
                     {
                         System.out.println("Inserisci numero camera da rendere out of order: ");
                         Scanner sc2 = new Scanner(System.in);
-                        governanteInterface.setStatoOutOfOrder(governanteInterface.getCamera(sc2.nextInt()));
+                        //TODO: governanteInterface.setStatoOutOfOrder(governanteInterface.getCamera(sc2.nextInt()));
                         break;
                     }
                     case 4:
                     {
                         System.out.println("Inserisci numero camera da rendere in servizio: ");
                         Scanner sc2 = new Scanner(System.in);
-                        governanteInterface.setStatoInServizio(governanteInterface.getCamera(sc2.nextInt()));
+                        //TODO: governanteInterface.setStatoInServizio(governanteInterface.getCamera(sc2.nextInt()));
                         break;
                     }
                     case 5:
                     {
                         System.out.println("Inserisci numero camera da pulire: ");
                         Scanner sc2 = new Scanner(System.in);
-                        governanteInterface.setStatoInPulizia(governanteInterface.getCamera(sc2.nextInt()));
+                        // TODO: governanteInterface.setStatoInPulizia(governanteInterface.getCamera(sc2.nextInt()));
                         break;
                     }
                     case 0:

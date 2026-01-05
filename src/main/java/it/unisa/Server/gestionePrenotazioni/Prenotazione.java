@@ -13,10 +13,13 @@ public class Prenotazione implements Serializable
     private Cliente cliente;
     private Camera camera;
 
+
     public Prenotazione() {
     }
 
+
     public Prenotazione(String id, Cliente cliente, Camera camera) {
+
         this.id = id;
         this.cliente = cliente;
         this.camera = camera;
@@ -32,7 +35,7 @@ public class Prenotazione implements Serializable
         return cliente;
     }
 
-    public Camera getStanza() {
+    public Camera getCamera() {
         return camera;
     }
     

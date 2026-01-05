@@ -1,6 +1,9 @@
 package it.unisa.Client.FrontDesk;
 
 import it.unisa.Common.Camera;
+
+import it.unisa.Server.gestionePrenotazioni.FrontDesk;
+import it.unisa.Server.persistent.util.Stato;
 import it.unisa.interfacce.GovernanteInterface;
 import it.unisa.interfacce.FrontDeskInterface;
 import it.unisa.Server.gestioneClienti.Cliente;
@@ -11,8 +14,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
-public class FrontDeskClient 
-{
+public class FrontDeskClient {
     static Logger logger = Logger.getLogger("global");
     
     public static void main(String[] args)
@@ -22,17 +24,17 @@ public class FrontDeskClient
             logger.info("Sto cercando gli oggetti remoti GestionePrenotazioni e Gestionecamere...");
             
             FrontDeskInterface frontDeskInterface = (FrontDeskInterface) Naming.lookup("rmi://localhost/GestionePrenotazioni");
-            logger.info("Trovato GestionePrenotazioni! ...");
+            logger.info("Trovato GestionePrenotazioni! RMI REGISTRY ...");
             
-            GovernanteInterface governanteInterface = (GovernanteInterface) Naming.lookup("rmi://localhost/GestoreCamere");
-            logger.info("Trovato GestioneCamere! ...");
+           // GovernanteInterface governanteInterface = (GovernanteInterface) Naming.lookup("rmi://localhost/GestoreCamere");
+            //logger.info("Trovato GestioneCamere! ...");
             
             int x=0;
             
             while(x==0)
             {
                 System.out.println("Benvenuto nel Menu front desk! \nScegli un opzione:");
-                System.out.println("1. Effettua prenotazione\n2. Rimuovi prenotazione\n3. Ottieni lista prenotazioni\n0. Esci");
+                System.out.println("1. Effettua prenotazione\n2. Rimuovi prenotazione\n3. Ottieni lista prenotazioni \n4. modifica stato camera \n5. Visualizza lista attuale delle camere \n0. Esci");
                 
                 Scanner sc = new Scanner(System.in);
                 int scelta = sc.nextInt();
@@ -43,15 +45,16 @@ public class FrontDeskClient
                     {
                         System.out.println("Inserisci numero camera: ");
                         Scanner sc2 = new Scanner(System.in);
-                        Camera camera = new Camera(sc2.nextInt());
+
+                        //Camera s = new Camera(sc2.nextInt());
                         
                         System.out.println("Inserisci nome cliente: ");
                         Scanner sc3 = new Scanner(System.in);
                         Cliente c = new Cliente(sc3.nextLine());
+
+                        //String id = c.getNome() + "" + s.getNumero();
                         
-                        String id = c.getNome() + "" + camera.getNumeroCamera();
-                        
-                        frontDeskInterface.effettuaPrenotazione(id, c, camera);
+                        //frontDeskInterface.effettuaPrenotazione(id, c, s);
                         
                         break;
                     }
@@ -59,15 +62,15 @@ public class FrontDeskClient
                     {
                         System.out.println("Inserisci numero camera: ");
                         Scanner sc2 = new Scanner(System.in);
-                        Camera s = new Camera(sc2.nextInt());
-                        
+                      //  Stanza s = new Stanza(sc2.nextInt());
+
                         System.out.println("Inserisci nome cliente: ");
                         Scanner sc3 = new Scanner(System.in);
                         Cliente c = new Cliente(sc3.nextLine());
+
+                       // String id = c.getNome() + "" + s.getNumero();
                         
-                        String id = c.getNome() + "" + s.getNumeroCamera();
-                        
-                        frontDeskInterface.cancellaPrenotazione(new Prenotazione(id, c, s));
+                        //frontDeskInterface.cancellaPrenotazione(new Prenotazione(id, c, s));
                         
                         break;
                     }
@@ -77,8 +80,44 @@ public class FrontDeskClient
                         
                         for(Prenotazione p: prenotazioni)
                         {
-                            System.out.println("Id: " + p.getId() + "   \n\tNumero stanza: " + p.getStanza().getNumeroCamera() + "\n\tNome cliente: " + p.getCliente().getNome());
+              //   System.out.println("Id: " + p.getId() + "   \n\tNumero stanza: " + p.getStanza().getNumero() + "\n\tNome cliente: " + p.getCliente().getNome());
+
                         }
+                        break;
+                    }
+                    case 4:
+                    {
+                        List<Camera> camList= frontDeskInterface.getCamere();
+                        IO.println(camList.toString());
+                        System.out.println("Inserisci numero camera da modificare: ");
+                        Scanner sc2 = new Scanner(System.in);
+                        int n=sc2.nextInt();
+
+                        boolean flag=false;
+
+                        for(Camera c: camList){
+                            if(c.getNumeroCamera()== n){
+                                c.setStatoCamera(Stato.Occupata);
+                                boolean b = frontDeskInterface.aggiornaStatoCamera(c);
+                                IO.println("Camera result : "+b);
+                                flag=true;
+                            }
+                        }
+
+                        if(!flag){
+                            IO.println("Camera non trovata inserire una camera nella lista");
+                            break;
+                        }
+                        Camera c= frontDeskInterface.update();
+                        IO.println("Camera mandata dal server = " +c.toString());
+                        //aggiorna gui da qui
+
+                        break;
+                    }
+
+                    case 5:{
+                        List<Camera> camList= frontDeskInterface.getCamere();
+                        IO.println(camList.toString());
                         break;
                     }
                     case 0:

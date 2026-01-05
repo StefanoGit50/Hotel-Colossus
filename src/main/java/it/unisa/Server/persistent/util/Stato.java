@@ -10,6 +10,5 @@ public enum Stato implements Serializable {
     InPulizia,
     InServizio,
     Occupata,
-    Prenotata,
     Libera
 }
