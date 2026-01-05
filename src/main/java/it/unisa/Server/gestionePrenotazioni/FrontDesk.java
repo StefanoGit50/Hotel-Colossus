@@ -1,9 +1,10 @@
 package it.unisa.Server.gestionePrenotazioni;
 
+import it.unisa.Common.Camera;
 import it.unisa.Server.gestioneClienti.Cliente;
+import it.unisa.Server.persistent.util.Stato;
 import it.unisa.interfacce.GovernanteInterface;
 import it.unisa.interfacce.FrontDeskInterface;
-import it.unisa.Server.gestioneCamere.Stanza;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
@@ -26,11 +27,11 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     }
 
     @Override
-    public void effettuaPrenotazione(String id, Cliente cliente, Stanza stanza) throws RemoteException
+    public void effettuaPrenotazione(String id, Cliente cliente, Camera camera) throws RemoteException
     {
-        if(stanza.getStatoGlobale().equals("libera"))
+        if(camera.getStatoCamera() == Stato.Libera)
         {
-            Prenotazione p = new Prenotazione(id, cliente, stanza);
+            Prenotazione p = new Prenotazione(id, cliente, camera);
             prenotazioni.add(p);
 
             try{
@@ -45,8 +46,8 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         }
         else
         {
-            logger.warning("Stanza " + stanza.getNumero() + " occupata!");
-            System.err.println("Stanza " + stanza.getNumero() + " occupata!");
+            logger.warning("Stanza " + camera.getNumeroCamera() + " occupata!");
+            System.err.println("Stanza " + camera.getNumeroCamera() + " occupata!");
         }
     }
 

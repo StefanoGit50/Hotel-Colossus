@@ -12,6 +12,7 @@ import java.util.Objects;
  */
 public class Camera implements Cloneable, Serializable {
     private final static double EPSILON = 1e10;
+ 
     /**
      * Numero di camera, univoco per ogni camera all'interno dell'hotel.
      */
@@ -61,6 +62,19 @@ public class Camera implements Cloneable, Serializable {
         this.prezzoCamera = prezzoCamera;
         this.piano = piano;
         this.noteCamera = noteCamera;
+    }
+
+    /**
+     * Costruttore per creare una nuova istanza di {@code Camera} senza parametri.
+     */
+    public Camera(){}
+
+    /**
+     * Costruttore per creare una nuova istanza di {@code Camera} con il solo parametro del numero camera.
+     *  @param numeroCamera Il nuovo numero di camera da assegnare.
+     */
+    public Camera(int numeroCamera){
+        this.numeroCamera = numeroCamera;
     }
 
     /**
@@ -161,23 +175,6 @@ public class Camera implements Cloneable, Serializable {
         this.prezzoCamera = prezzoCamera;
     }
 
-    /**
-     * Imposta il piano della camera
-     * @param piano il nuovo piano della camera
-     */
-
-    public void setPiano(int piano) {
-        this.piano = piano;
-    }
-
-    /**
-     * Restituisce il piano della camera
-     * @return piano
-     */
-
-    public int getPiano() {
-        return piano;
-    }
 
     @Override
     public String toString(){

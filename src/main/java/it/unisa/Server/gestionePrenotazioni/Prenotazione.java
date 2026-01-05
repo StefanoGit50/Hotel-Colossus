@@ -1,6 +1,6 @@
 package it.unisa.Server.gestionePrenotazioni;
 
-import it.unisa.Server.gestioneCamere.Stanza;
+import it.unisa.Common.Camera;
 import it.unisa.Server.gestioneClienti.Cliente;
 
 import java.io.Serializable;
@@ -11,15 +11,15 @@ public class Prenotazione implements Serializable
     
     private String id;
     private Cliente cliente;
-    private Stanza stanza;
+    private Camera camera;
 
     public Prenotazione() {
     }
 
-    public Prenotazione(String id, Cliente cliente, Stanza stanza) {
+    public Prenotazione(String id, Cliente cliente, Camera camera) {
         this.id = id;
         this.cliente = cliente;
-        this.stanza = stanza;
+        this.camera = camera;
     }
     
     // GETTERS
@@ -32,8 +32,8 @@ public class Prenotazione implements Serializable
         return cliente;
     }
 
-    public Stanza getStanza() {
-        return stanza;
+    public Camera getStanza() {
+        return camera;
     }
     
     // SETTERS
@@ -46,8 +46,8 @@ public class Prenotazione implements Serializable
         this.cliente = cliente;
     }
 
-    public void setStanza(Stanza stanza) {
-        this.stanza = stanza;
+    public void setCamera(Camera camera) {
+        this.camera = camera;
     }
 
 }

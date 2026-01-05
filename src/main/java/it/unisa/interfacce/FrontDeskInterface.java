@@ -1,6 +1,6 @@
 package it.unisa.interfacce;
 
-import it.unisa.Server.gestioneCamere.Stanza;
+import it.unisa.Common.Camera;
 import it.unisa.Server.gestioneClienti.Cliente;
 import it.unisa.Server.gestionePrenotazioni.Prenotazione;
 

@@ -448,6 +448,7 @@ public class Cliente implements Cloneable, Serializable {
      * @param obj L'oggetto da confrontare.
      * @return {@code true} se i due oggetti Cliente sono uguali, {@code false} altrimenti.
      */
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
