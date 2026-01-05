@@ -15,6 +15,7 @@ import java.util.Collection;
 
 public class CameraDAO implements FrontDeskStorage<Camera>{
     @Override
+
     public synchronized void doDelete(Camera o) throws SQLException {
         if(o != null){
             Connection connection = ConnectionStorage.getConnection();
@@ -49,12 +50,10 @@ public class CameraDAO implements FrontDeskStorage<Camera>{
                     noteCamera = (String) resultSet.getObject(3);
                     String c = resultSet.getString(4);
                     stato =  Stato.valueOf(c);
-                    piano = (Integer) resultSet.getObject(5);
-                    TipologiaCamera = (String) resultSet.getObject(6);
-                    prezzo = (Double) resultSet.getObject(7);
+                    prezzo = (Double) resultSet.getObject(5);
                 }
 
-                return new Camera(numeroCamera , TipologiaCamera , stato , numeroMaxOcc , prezzo , piano , noteCamera);
+                return new Camera(numeroCamera , stato , numeroMaxOcc , prezzo , noteCamera);
             }finally{
                  if(connection != null){
                      ConnectionStorage.releaseConnection(connection);
@@ -68,14 +67,12 @@ public class CameraDAO implements FrontDeskStorage<Camera>{
     @Override
     public synchronized void doSave(Camera o) throws SQLException {
         Connection connection = ConnectionStorage.getConnection();
-        try(PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO CAMERA VALUES (?,?,?,?,?,?,?)")){
+        try(PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO CAMERA VALUES (?,?,?,?,?)")){
             preparedStatement.setInt(1,o.getNumeroCamera());
             preparedStatement.setInt(2,o.getCapacità());
             preparedStatement.setString(3,o.getNoteCamera());
             preparedStatement.setString(4,o.getStatoCamera().name());
-            preparedStatement.setInt(5,o.getPiano());
-            preparedStatement.setString(6,o.getTipologia());
-            preparedStatement.setDouble(7,o.getPrezzoCamera());
+            preparedStatement.setDouble(5,o.getPrezzoCamera());
             preparedStatement.executeUpdate();
         }finally{
             if(connection != null){
@@ -104,10 +101,8 @@ public class CameraDAO implements FrontDeskStorage<Camera>{
                 String noteCamera = (String) resultSet.getObject(3);
                 String c = resultSet.getString(4);
                Stato stato =  Stato.valueOf(c);
-               Integer piano = (Integer) resultSet.getObject(5);
-               String tipologiaCamera = (String) resultSet.getObject(6);
-               Double prezzo = (Double) resultSet.getObject(7);
-               cameras.add(new Camera(numeroCamera,tipologiaCamera,stato, numeroMaxOcc ,prezzo,piano,noteCamera));
+               Double prezzo = (Double) resultSet.getObject(5);
+               cameras.add(new Camera(numeroCamera,stato, numeroMaxOcc ,prezzo,noteCamera));
             }
             resultSet.close();
         }finally{

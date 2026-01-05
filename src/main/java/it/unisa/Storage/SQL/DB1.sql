@@ -26,8 +26,6 @@ create table Camera(
 	NumeroMaxOcc int not null,
 	NoteCamera varchar(1000) not null,
 	Stato enum('OutOfOrder','InPulizia','Occupata','Prenotata','Libera') not null,
-    Piano int not null,
-    TipologiaCamera varchar(100) not null,
     Prezzo double not null,
     primary key(NumeroCamera)
 );

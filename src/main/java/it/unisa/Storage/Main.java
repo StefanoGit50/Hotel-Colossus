@@ -15,12 +15,10 @@ public class Main{
     public static void main(String[] args){
         CameraDAO cameraDAO = new CameraDAO();
         Camera camera = new Camera(
-                101,                    // numeroCamera
-                "Doppia",               // tipologia
+                101,       // numeroCamera
                 Stato.Libera,           // statoCamera
                 2,                      // capacità (numeroMaxOccupanti)
                 95.50,                  // prezzoCamera
-                1,                      // piano
                 "Check-in dalle 14:00"  // noteCamera
         );
         try{
@@ -32,11 +30,9 @@ public class Main{
         }
         Camera camera1 = new Camera(
                 102,                    // numeroCamera
-                "Tripla",               // tipologia
                 Stato.Libera,           // statoCamera
                 3,                      // capacità (numeroMaxOccupanti)
                 100.50,                  // prezzoCamera
-                3,                      // piano
                 "Check-in dalle 14:00"  // noteCamera
         );
         try{
@@ -47,11 +43,9 @@ public class Main{
 
         Camera camera2 = new Camera(
                 103,                    // numeroCamera
-                "Singola",               // tipologia
                 Stato.Libera,           // statoCamera
                 1,                      // capacità (numeroMaxOccupanti)
                 60.4,                  // prezzoCamera
-                4,                      // piano
                 "Check-in dalle 14:00"  // noteCamera
         );
         try{

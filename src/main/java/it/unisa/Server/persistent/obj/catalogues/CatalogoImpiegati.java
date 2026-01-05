@@ -15,15 +15,15 @@ public class CatalogoImpiegati implements Serializable {
     /**
      * Lista di tutti gli impiegati del sistema.
      */
-    private ArrayList<Impiegato> listaImpiegati;
+    private static ArrayList<Impiegato> listaImpiegati;
 
 
     /**
      * Costruttore del catalogo.
-     * @param listaImpiegati    {@code ArrayList<Impiegato>} usata come lista del catalogo.
+     * @param listaImpiegati1 {@code ArrayList<Impiegato>} usata come lista del catalogo.
      */
-    public CatalogoImpiegati(ArrayList<Impiegato> listaImpiegati) {
-        this.listaImpiegati = listaImpiegati;
+    public CatalogoImpiegati(ArrayList<Impiegato> listaImpiegati1) {
+        listaImpiegati = listaImpiegati1;
     }
 
     /**
@@ -34,13 +34,11 @@ public class CatalogoImpiegati implements Serializable {
 
     // Getters - Setters
 
-    public ArrayList<Impiegato> getListaImpiegati() {
+    public synchronized static ArrayList<Impiegato> getListaImpiegati() {
         return listaImpiegati;
     }
 
-    public void setListaImpiegati(ArrayList<Impiegato> listaImpiegati) {
-        this.listaImpiegati = listaImpiegati;
-    }
+    public synchronized static void setListaImpiegati(ArrayList<Impiegato> listaImpiegati1) {listaImpiegati = listaImpiegati1;}
 
     // Metodi interfaccia publica
 

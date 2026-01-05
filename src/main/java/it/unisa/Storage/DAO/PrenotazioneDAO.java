@@ -173,11 +173,9 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>
                             {
                                 camere.add(new Camera(
                                         rs3.getInt("NumeroCamera"),
-                                        rs3.getString("TipologiaCamera"),
                                         Stato.valueOf(rs3.getString("Stato")),
                                         rs3.getInt("NumeroMaxOcc"),
                                         rs3.getDouble("Prezzo"),
-                                        rs3.getInt("Piano"),
                                         rs3.getString("NoteCamera")
                                 ));
                             }
@@ -315,11 +313,9 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>
                         {
                             camere.add(new Camera(
                                     rs3.getInt("NumeroCamera"),
-                                    rs3.getString("TipologiaCamera"),
                                     Stato.valueOf(rs3.getString("Stato")),
                                     rs3.getInt("NumeroMaxOcc"),
                                     rs3.getDouble("Prezzo"),
-                                    rs3.getInt("Piano"),
                                     rs3.getString("NoteCamera")
                             ));
                         }

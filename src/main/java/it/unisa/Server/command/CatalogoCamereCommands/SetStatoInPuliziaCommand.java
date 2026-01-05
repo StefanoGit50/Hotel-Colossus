@@ -65,7 +65,7 @@ public class SetStatoInPuliziaCommand implements Command {
                     cam.setStatoCamera(Stato.InPulizia);
             }
 
-            catalogue.setListaCamere(lc);
+            //catalogue.setListaCamere(lc);
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
@@ -83,7 +83,7 @@ public class SetStatoInPuliziaCommand implements Command {
                     cam.setStatoCamera(statoPrecedente);
             }
 
-            catalogue.setListaCamere(lc);
+            //catalogue.setListaCamere(lc);
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }

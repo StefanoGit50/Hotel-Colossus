@@ -11,45 +11,35 @@ import java.util.ArrayList;
  * Questa classe è responsabile per la conservazione e l'accesso sicuro
  * (tramite deep copy) all'elenco delle camere disponibili.
  */
-public class CatalogoCamere implements Serializable {
+public class CatalogoCamere implements Serializable{
     /**
      * Lista interna contenente tutti gli oggetti {@link Camera} del catalogo.
      * La lista viene gestita tramite deep copy per garantire l'incapsulamento.
      */
-    private ArrayList<Camera> listaCamere;
-
-    /**
-     * Costruttore per inizializzare il catalogo con una lista di camere.
-     * Viene eseguita una deep copy della lista fornita per isolare lo stato interno.
-     *
-     * @param listaCamere L'ArrayList di oggetti Camera da copiare nel catalogo.
-     */
-    public CatalogoCamere(ArrayList<Camera> listaCamere) {
-        this.listaCamere = Util.deepCopyArrayList(listaCamere);
-    }
-
-    /**
-     * Costruttore vuoto per il catalogo delle camere.
-     */
-    public CatalogoCamere() { }
-
+    private static ArrayList<Camera> listaCamere = new ArrayList<>();
     /**
      * Restituisce una deep copy dell'elenco completo delle camere.
      * Questo impedisce modifiche esterne alla lista interna del catalogo.
      *
      * @return Una nuova ArrayList contenente copie (cloni) di tutti gli oggetti Camera.
      */
-    public ArrayList<Camera> getListaCamere() {
-        return Util.deepCopyArrayList(listaCamere);
+    public synchronized static ArrayList<Camera> getListaCamere() {
+        return listaCamere;
     }
 
+    public synchronized static void setListaCamere(ArrayList<Camera> camere){
 
-    /**
-     * Imposta una deep copy come lista di camere del catalogo.
-     * @param listaCamere {@code ArrayList<Camera>} da inserire come nuova lista.
-     */
-    public void setListaCamere(ArrayList<Camera> listaCamere) {
-        this.listaCamere = Util.deepCopyArrayList(listaCamere);
+        while (!listaCamere.isEmpty()) {
+            listaCamere.removeFirst();
+        }
+
+        try{
+            for(Camera camera: camere){
+                listaCamere.add(camera.clone());
+            }
+        }catch (CloneNotSupportedException cloneNotSupportedException){
+            cloneNotSupportedException.printStackTrace();
+        }
     }
 
     /**

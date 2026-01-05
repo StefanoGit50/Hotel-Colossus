@@ -38,11 +38,12 @@ public class Camera implements Cloneable, Serializable {
 
     /**
      * Costruttore per creare una nuova istanza di {@code Camera}.
-     * @param numeroCamera Il numero identificativo univoco della camera.
-     * @param statoCamera Lo stato iniziale della camera (es. Libera).
-     * @param capacità Il numero massimo di persone che può ospitare.
-     * @param prezzoCamera il prezzo della camera in quel momento
-     * @param noteCamera le informazioni aggiunti
+     *
+     * @param numeroCamera    Il numero identificativo univoco della camera.
+     * @param statoCamera     Lo stato iniziale della camera (es. Libera).
+     * @param capacità        Il numero massimo di persone che può ospitare.
+     * @param prezzoCamera    il prezzo della camera in quel momento
+     * @param noteCamera      le informazioni aggiunti
      */
     public Camera(int numeroCamera, Stato statoCamera, int capacità , double prezzoCamera , String noteCamera ) {
         this.numeroCamera = numeroCamera;

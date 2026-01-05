@@ -18,42 +18,22 @@ public class CatalogoClienti implements Serializable {
     /**
      * Lista interna contenente tutti gli oggetti {@link Cliente}.
      */
-    private ArrayList<Cliente> listaClienti;
+    private static ArrayList<Cliente> listaClienti = new ArrayList<>();
 
     /**
      * Lista interna contenente gli oggetti {@link Cliente} bannati.
      */
-    private ArrayList<Cliente> listaClientiBannati;
+    private static ArrayList<Cliente> listaClientiBannati = new ArrayList<>();
 
-    /**
-     * Costruttore per creare un nuovo catalogo clienti.
-     * Viene eseguita una deep copy delle liste fornite.
-     *
-     * @param listaClienti L'ArrayList di clienti da copiare nel catalogo.
-     */
-    public CatalogoClienti(ArrayList<Cliente> listaClienti) {
-        this.listaClienti = Util.deepCopyArrayList(listaClienti);
-        ArrayList<Cliente> listaClientiBannati = new ArrayList<>();
-        for (Cliente cliente : listaClienti) {
-            if (cliente.isBlacklisted()) {
-                listaClientiBannati.add(cliente);
-            }
-        }
-        this.listaClientiBannati = Util.deepCopyArrayList(listaClientiBannati);
-    }
 
-    /**
-     * Costruttore vuoto
-     */
-    public CatalogoClienti() {}
 
     /**
      * Restituisce una deep copy dell'elenco completo dei clienti.
      *
      * @return Un nuovo ArrayList contenente copie (cloni) di tutti gli oggetti Cliente.
      */
-    public ArrayList<Cliente> getListaClienti() {
-        return Util.deepCopyArrayList(listaClienti);
+    public synchronized static ArrayList<Cliente> getListaClienti() {
+        return listaClienti;
     }
 
     /**
@@ -61,25 +41,35 @@ public class CatalogoClienti implements Serializable {
      *
      * @return Uno nuovo ArrayList contenente copie (cloni) dei clienti bannati.
      */
-    public ArrayList<Cliente> getListaClientiBannati() {
-        return Util.deepCopyArrayList(listaClientiBannati);
+    public synchronized static ArrayList<Cliente> getListaClientiBannati() {
+        return listaClientiBannati;
     }
 
 
     /**
      * Imposta una deep copy della lista clienti.
-     * @param listaClienti {@code ArrayList<Cliente>} da impostare.
+     * @param listaClienti1 {@code ArrayList<Cliente>} da impostare.
      */
-    public void setListaClienti(ArrayList<Cliente> listaClienti) {
-        this.listaClienti = listaClienti;
+    public synchronized static void setListaClienti(ArrayList<Cliente> listaClienti1){
+        while(!listaClienti.isEmpty()){
+            listaClienti.removeFirst();
+        }
+
+        for(Cliente cliente: listaClienti1){
+            try{
+                listaClienti.add(cliente.clone());
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
      * Imposta una deep copy della lista clienti bannati.
-     * @param listaClientiBannati {@code ArrayList<Cliente>} da impostare.
+     * @param listaClientiBannati1 {@code ArrayList<Cliente>} da impostare.
      */
-    public void setListaClientiBannati(ArrayList<Cliente> listaClientiBannati) {
-        this.listaClientiBannati = listaClientiBannati;
+    public synchronized static void setListaClientiBannati(ArrayList<Cliente> listaClientiBannati1) {
+        listaClientiBannati = listaClientiBannati1;
     }
 
     //

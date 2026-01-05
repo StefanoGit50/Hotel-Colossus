@@ -70,7 +70,7 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale> {
         ResultSet rs;
         RicevutaFiscale ricevuta = null;
 
-        String selectSQL = "select * FROM" + RicevutaFiscaleDAO.TABLE_NAME +
+        String selectSQL = "select * FROM " + RicevutaFiscaleDAO.TABLE_NAME +
                 " where IDRicevutaFiscale = ? AND  IDPrenotazione = ?";
 
         try {

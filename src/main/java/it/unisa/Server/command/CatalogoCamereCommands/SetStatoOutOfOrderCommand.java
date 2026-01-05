@@ -66,7 +66,7 @@ public class SetStatoOutOfOrderCommand implements Command {
                     cam.setStatoCamera(Stato.OutOfOrder);
             }
 
-            catalogue.setListaCamere(lc);
+           // catalogue.setListaCamere(lc);
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
@@ -84,7 +84,7 @@ public class SetStatoOutOfOrderCommand implements Command {
                     cam.setStatoCamera(statoPrecedente);
             }
 
-            catalogue.setListaCamere(lc);
+            //catalogue.setListaCamere(lc);
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
