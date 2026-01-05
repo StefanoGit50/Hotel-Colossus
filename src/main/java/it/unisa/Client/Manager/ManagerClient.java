@@ -43,7 +43,7 @@ public class ManagerClient {
                         {
                             System.out.println("Inserisci numero camera: ");
                             Scanner sc2 = new Scanner(System.in);
-                            Camera camera = new Camera(sc2.nextInt());
+                          //  Camera camera = new Camera(sc2.nextInt());
 
                             System.out.println("Inserisci nome cliente: ");
                             Scanner sc3 = new Scanner(System.in);
@@ -51,7 +51,7 @@ public class ManagerClient {
 
                           //  String id = c.getNome() + "" + camera.getNumeroCamera();
 
-                            frontDeskInterface.effettuaPrenotazione(id, c, camera);
+                            //frontDeskInterface.effettuaPrenotazione(id, c, camera);
 
                             break;
                         }
@@ -59,7 +59,7 @@ public class ManagerClient {
                         {
                             System.out.println("Inserisci numero camera: ");
                             Scanner sc2 = new Scanner(System.in);
-                            Camera s = new Camera(sc2.nextInt());
+                           // Camera s = new Camera(sc2.nextInt());
 
                             System.out.println("Inserisci nome cliente: ");
                             Scanner sc3 = new Scanner(System.in);
@@ -67,7 +67,7 @@ public class ManagerClient {
 
                             //String id = c.getNome() + "" + s.getNumeroCamera();
 
-                            frontDeskInterface.cancellaPrenotazione(new Prenotazione(id, c, s));
+                          //  frontDeskInterface.cancellaPrenotazione(new Prenotazione(id, c, s));
 
                             break;
                         }
@@ -98,4 +98,4 @@ public class ManagerClient {
         }
     }
 
-}
+
