@@ -77,7 +77,7 @@ public class ManagerClient {
 
                             for(Prenotazione p: prenotazioni)
                             {
-                                System.out.println("Id: " + p.getId() + "   \n\tNumero stanza: " + p.getStanza().getNumeroCamera() + "\n\tNome cliente: " + p.getCliente().getNome());
+                          //      System.out.println("Id: " + p.getId() + "   \n\tNumero stanza: " + p.getStanza().getNumeroCamera() + "\n\tNome cliente: " + p.getCliente().getNome());
                             }
                             break;
                         }
