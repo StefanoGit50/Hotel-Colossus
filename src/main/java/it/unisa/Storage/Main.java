@@ -93,8 +93,7 @@ public class Main{
 
         Trattamento pensioneCompleta = new Trattamento(
                 "Pensione Completa",
-                60.00,
-                55.00
+                60.00
         );
 
         ArrayList<Cliente> clienti = new ArrayList<>();

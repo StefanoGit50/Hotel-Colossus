@@ -1,8 +1,8 @@
 package it.unisa.Client.Manager;
 
 import it.unisa.Common.Camera;
+import it.unisa.Common.Prenotazione;
 import it.unisa.Server.gestioneClienti.Cliente;
-import it.unisa.Server.gestionePrenotazioni.Prenotazione;
 import it.unisa.interfacce.FrontDeskInterface;
 import it.unisa.interfacce.GovernanteInterface;
 

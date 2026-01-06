@@ -10,18 +10,17 @@ public class Cliente  implements Serializable
     
     public Cliente() {}
     
-    public Cliente(String nome)
-    {
+    public Cliente(String nome){
         this.nome = nome;
     }
     
     // GETTERS AND SETTERS
 
-    public String getNome() {
+    public String getNome(){
         return nome;
     }
 
-    public void setNome(String nome) {
+    public void setNome(String nome){
         this.nome = nome;
     }
     

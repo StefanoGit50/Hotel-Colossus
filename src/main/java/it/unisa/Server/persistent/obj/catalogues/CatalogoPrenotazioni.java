@@ -12,20 +12,7 @@ import java.util.Objects;
  * la ricerca e la rimozione delle stesse.
  */
 public class CatalogoPrenotazioni implements Serializable {
-    private static ArrayList<Prenotazione> listaPrenotazioni;
-
-    /**
-     * Costruttore della classe CatalogoPrenotazioni.
-     * @param listaPrenotazioni1 Lista di prenotazioni di tipo {@link Prenotazione} del catalogo.
-     */
-
-    /**
-     * Costruttore vuoto.
-     */
-    public CatalogoPrenotazioni() {
-        listaPrenotazioni = new ArrayList<>();
-    }
-
+    private static ArrayList<Prenotazione> listaPrenotazioni = new ArrayList<>();
     /**
      * Esegue una ricerca flessibile all'interno del catalogo delle prenotazioni basandosi su vari criteri.
      * La ricerca prende almeno un parametro in input mentre gli altri possono essere nulli.
@@ -104,7 +91,17 @@ public class CatalogoPrenotazioni implements Serializable {
      * Imposta o sostituisce l'intera lista delle prenotazioni.
      */
     public synchronized static void setListaPrenotazioni(ArrayList<Prenotazione> listaPrenotazioni1) {
-        listaPrenotazioni = listaPrenotazioni1;
+        while(!listaPrenotazioni.isEmpty()){
+            listaPrenotazioni.removeFirst();
+        }
+
+        for(Prenotazione prenotazione: listaPrenotazioni1){
+            try{
+                listaPrenotazioni.add(prenotazione.clone());
+            }catch(CloneNotSupportedException cloneNotSupportedException){
+                cloneNotSupportedException.printStackTrace();
+            }
+        }
     }
 
     /**

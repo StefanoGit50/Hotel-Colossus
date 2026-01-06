@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class CameraDAO implements FrontDeskStorage<Camera>{
-    @Override
 
+    @Override
     public synchronized void doDelete(Camera o) throws SQLException {
         if(o != null){
             Connection connection = ConnectionStorage.getConnection();

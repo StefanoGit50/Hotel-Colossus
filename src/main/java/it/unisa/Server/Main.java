@@ -1,12 +1,20 @@
 package it.unisa.Server;
 
+import com.mysql.cj.protocol.a.SqlDateValueEncoder;
 import it.unisa.Common.Camera;
 import it.unisa.Common.Cliente;
+import it.unisa.Common.Impiegato;
+import it.unisa.Common.Prenotazione;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
+import it.unisa.Server.persistent.obj.catalogues.CatalogoImpiegati;
+import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
 import it.unisa.Storage.DAO.CameraDAO;
 import it.unisa.Storage.DAO.ClienteDAO;
+import it.unisa.Storage.DAO.ImpiegatoDAO;
+import it.unisa.Storage.DAO.PrenotazioneDAO;
 
+import javax.xml.catalog.CatalogResolver;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -39,8 +47,7 @@ public class Main {
 
         ClienteDAO clienteDAO = new ClienteDAO();
         try{
-            ArrayList<Cliente> clientes = new ArrayList<>();
-            clientes =(ArrayList<Cliente>) clienteDAO.doRetriveAll("decrescente");
+            ArrayList<Cliente> clientes =(ArrayList<Cliente>) clienteDAO.doRetriveAll("decrescente");
             CatalogoClienti.setListaClienti(clientes);
             System.out.println(clientes);
             System.out.println(CatalogoClienti.getListaClienti());
@@ -58,5 +65,43 @@ public class Main {
             sqlException.printStackTrace();
         }
 
+        ImpiegatoDAO impiegatoDAO = new ImpiegatoDAO();
+        try{
+            ArrayList<Impiegato> impiegatoes = (ArrayList<Impiegato>) impiegatoDAO.doRetriveAll("decrescente");
+            CatalogoImpiegati.setListaImpiegati(impiegatoes);
+            System.out.println(impiegatoes);
+            System.out.println(CatalogoImpiegati.getListaImpiegati());
+        }catch(SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+
+        try{
+            impiegatoDAO.doDelete(CatalogoImpiegati.getListaImpiegati().getFirst());
+            ArrayList<Impiegato> impiegatoes = (ArrayList<Impiegato>) impiegatoDAO.doRetriveAll("descrescente");
+            CatalogoImpiegati.setListaImpiegati(impiegatoes);
+            System.out.println(impiegatoes);
+            System.out.println(CatalogoImpiegati.getListaImpiegati());
+        }catch(SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+        PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO();
+        try{
+            ArrayList<Prenotazione> prenotaziones = (ArrayList<Prenotazione>) prenotazioneDAO.doRetriveAll("IDPrenotazione");
+            CatalogoPrenotazioni.setListaPrenotazioni(prenotaziones);
+            System.out.println(prenotaziones);
+            System.out.println(CatalogoPrenotazioni.getListaPrenotazioni());
+        }catch (SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+
+        try{
+           prenotazioneDAO.doDelete(CatalogoPrenotazioni.getListaPrenotazioni().getFirst());
+           ArrayList<Prenotazione> prenotaziones = (ArrayList<Prenotazione>) prenotazioneDAO.doRetriveAll("IDPrenotazione");
+           CatalogoPrenotazioni.setListaPrenotazioni(prenotaziones);
+           System.out.println(prenotaziones);
+           System.out.println(CatalogoPrenotazioni.getListaPrenotazioni());
+        }catch(SQLException sqlException){
+            sqlException.printStackTrace();
+        }
     }
 }

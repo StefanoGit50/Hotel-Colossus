@@ -37,12 +37,11 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>
         // Salva il trattamento associato
         if (p.getTrattamento() != null)
         {
-            String query = "UPDATE Trattamento SET IDPrenotazione = ?, PrezzoAcquisto = ? WHERE Nome = ?";
+            String query = "UPDATE Trattamento SET IDPrenotazione = ? WHERE Nome = ?";
 
             try (PreparedStatement stmt = connection.prepareStatement(query)){
                 stmt.setInt(1, p.getCodicePrenotazione());
-                stmt.setDouble(2, p.getTrattamento().getPrezzoAcquisto());
-                stmt.setString(3, p.getTrattamento().getNome());
+                stmt.setString(2, p.getTrattamento().getNome());
                 stmt.executeUpdate();
             }
         }
@@ -129,8 +128,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>
                             {
                                 trattamento = new Trattamento(
                                         rs1.getString("Nome"),
-                                        rs1.getDouble("Prezzo"),
-                                        rs1.getDouble("PrezzoAcquisto")
+                                        rs1.getDouble("Prezzo")
                                 );
                             }
                         }
@@ -269,8 +267,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>
                         {
                             trattamento = new Trattamento(
                                     rs1.getString("Nome"),
-                                    rs1.getDouble("Prezzo"),
-                                    rs1.getDouble("PrezzoAcquisto")
+                                    rs1.getDouble("Prezzo")
                             );
                         }
                     }
