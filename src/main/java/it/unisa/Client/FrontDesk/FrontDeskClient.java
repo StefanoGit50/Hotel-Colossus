@@ -14,7 +14,8 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
-public class FrontDeskClient {
+public class FrontDeskClient
+{
     static Logger logger = Logger.getLogger("global");
     
     public static void main(String[] args)
