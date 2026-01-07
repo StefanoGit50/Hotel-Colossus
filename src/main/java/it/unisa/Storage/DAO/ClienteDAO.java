@@ -202,7 +202,6 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
                 preparedStatement.setDate(13, Date.valueOf(o.getDataNascita()));
                 preparedStatement.setBoolean(14, o.isBlacklisted());
                 preparedStatement.setString(15, o.getCf());
-
                 preparedStatement.executeUpdate();
             }
             finally
@@ -217,6 +216,11 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
         {
             throw new NullPointerException();
         }
+    }
+
+    @Override
+    public Cliente doRetriveByAttribute(String attribute, String value) throws SQLException {
+        return null;
     }
 
 

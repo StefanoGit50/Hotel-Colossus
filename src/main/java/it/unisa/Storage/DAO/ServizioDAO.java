@@ -155,4 +155,31 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
             throw new SQLException();
         }
     }
+
+    @Override
+    public Servizio doRetriveByAttribute(String attribute, String value) throws SQLException {
+        if(attribute != null && !attribute.isEmpty() && value != null && !value.isEmpty()){
+            Connection connection = ConnectionStorage.getConnection();
+            try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM servizio WHERE " + attribute + " = ?")){
+
+                preparedStatement.setString(1,value);
+                ResultSet resultSet = preparedStatement.getResultSet();
+
+                    if(!resultSet.next()){
+                        return null;
+                    }
+
+                String nome = resultSet.getString(1);
+                Double prezzo = resultSet.getDouble(2);
+
+                return new Servizio(nome , prezzo);
+            }finally{
+                if(connection != null){
+                    ConnectionStorage.releaseConnection(connection);
+                }
+            }
+        }else{
+            throw new RuntimeException();
+        }
+    }
 }

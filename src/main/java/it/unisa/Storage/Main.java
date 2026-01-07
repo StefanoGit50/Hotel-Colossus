@@ -352,5 +352,34 @@ public class Main{
             sqlException.printStackTrace();
         }
     }*/
-}
+        CameraDAO cameraDAO = new CameraDAO();
+        ArrayList<Camera> cameras;
+        ArrayList<Servizio> servizios = null;
+        ArrayList<Cliente> clientes = null;
+        try {
+            cameras = (ArrayList<Camera>) cameraDAO.doRetriveAll("decrescente");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        ServizioDAO servizioDAO = new ServizioDAO();
+        try{
+            servizios = (ArrayList<Servizio>) servizioDAO.doRetriveAll("decrescente");
+        }catch(SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+        ClienteDAO clienteDAO = new ClienteDAO();
+        try{
+            clientes = (ArrayList<Cliente>) clienteDAO.doRetriveAll("decrescente");
+        }catch(SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+
+        TrattamentoDAO trattamentoDAO = new TrattamentoDAO();
+        try {
+            Trattamento trattamento = trattamentoDAO.doRetriveByAttribute("Nome","Mezza Pensione");
+            System.out.println(t)
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

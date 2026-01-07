@@ -2,8 +2,9 @@ package it.unisa.Server.gestionePrenotazioni;
 
 import it.unisa.Common.Camera;
 import it.unisa.Common.Prenotazione;
-import it.unisa.Server.gestioneClienti.Cliente;
+import it.unisa.Common.Trattamento;
 
+import it.unisa.Server.gestioneClienti.Cliente;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
 import it.unisa.Storage.DAO.PrenotazioneDAO;
 import it.unisa.Storage.FrontDeskStorage;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface {
+public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface{
     static Logger logger = Logger.getLogger("global");
     private static final int RMI_PORT = 1099;
 
@@ -50,8 +51,8 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     }
 
     @Override
-    public void effettuaPrenotazione(String id, Cliente cliente, Camera stanza) throws RemoteException, SQLException {
-        prenotazioni.add(new Prenotazione(Integer.parseInt(id), LocalDate.now() , LocalDate.now()));
+    public void effettuaPrenotazione(String id, Cliente cliente, Camera camera) throws RemoteException, SQLException{
+        //prenotazioni.add(new Prenotazione(Integer.parseInt(id), LocalDate.of(2011 , 12 , 30) , LocalDate.of(2022 , 11 , 20) , LocalDate.of(2033,12,30),new Trattamento("all inclusive",70),"Patente" , LocalDate.of(2030 , 11 , 30) ,cliente. , "Mario" , "" , ));
         FrontDeskStorage<Prenotazione> prenotazioneFrontDeskStorage = new PrenotazioneDAO();
 
         while(!prenotazioni.isEmpty()){

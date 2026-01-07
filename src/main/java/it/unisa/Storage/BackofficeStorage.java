@@ -13,4 +13,5 @@ public interface BackofficeStorage<T>
     T doRetriveByKey(Object index) throws SQLException;
     Collection<T> doRetriveAll(String order) throws SQLException;
     void doUpdate(T o) throws SQLException;
+    T doRetriveByAttribute(String attribute , String value) throws SQLException;
 }

@@ -128,8 +128,7 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
      *   L'eventuale IDPrenotazione associato rimane invariato
      */
     @Override
-    public synchronized void doUpdate(Trattamento trattamento) throws SQLException
-    {
+    public synchronized void doUpdate(Trattamento trattamento) throws SQLException{
         if(trattamento != null)
         {
             Connection connection = ConnectionStorage.getConnection();
@@ -153,6 +152,30 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
         else
         {
             throw new SQLException();
+        }
+    }
+    @Override
+    public Trattamento doRetriveByAttribute(String attribute, String value) throws SQLException {
+        if(attribute != null && value != null && !attribute.isEmpty() && !value.isEmpty()){
+            Connection connection = ConnectionStorage.getConnection();
+            try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM trattamento WHERE "  + attribute + " = ?")){
+                preparedStatement.setString(1,value);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                if(!resultSet.next()){
+                    return null;
+                }
+                String nome = resultSet.getString(1);
+                Double prezzo = resultSet.getDouble(2);
+                resultSet.close();
+                return new Trattamento(nome,prezzo);
+            }finally{
+                if(connection != null){
+                    ConnectionStorage.releaseConnection(connection);
+                }
+            }
+
+        }else{
+            throw new RuntimeException();
         }
     }
 }
