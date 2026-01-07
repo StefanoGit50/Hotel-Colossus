@@ -87,7 +87,7 @@ public class Main {
         PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO();
         try{
             ArrayList<Prenotazione> prenotaziones = (ArrayList<Prenotazione>) prenotazioneDAO.doRetriveAll("IDPrenotazione");
-            CatalogoPrenotazioni.setListaPrenotazioni(prenotaziones);
+            CatalogoPrenotazioni.addPrenotazioni(prenotaziones);
             System.out.println(prenotaziones);
             System.out.println(CatalogoPrenotazioni.getListaPrenotazioni());
         }catch (SQLException sqlException){
@@ -97,7 +97,7 @@ public class Main {
         try{
            prenotazioneDAO.doDelete(CatalogoPrenotazioni.getListaPrenotazioni().getFirst());
            ArrayList<Prenotazione> prenotaziones = (ArrayList<Prenotazione>) prenotazioneDAO.doRetriveAll("IDPrenotazione");
-           CatalogoPrenotazioni.setListaPrenotazioni(prenotaziones);
+           CatalogoPrenotazioni.addPrenotazioni(prenotaziones);
            System.out.println(prenotaziones);
            System.out.println(CatalogoPrenotazioni.getListaPrenotazioni());
         }catch(SQLException sqlException){
