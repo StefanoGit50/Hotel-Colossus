@@ -110,4 +110,49 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
 
         return servizi;
     }
+
+    /**
+     * Aggiorna il prezzo di un servizio esistente nel database.
+     *
+     * @param servizio Il servizio con il prezzo aggiornato da persistere.
+     * @throws SQLException Se il parametro è null o si verifica un errore durante l'accesso al database.
+     *
+     * Precondizioni:
+     *   servizio != null
+     *   servizio.getNome() deve corrispondere a un servizio esistente nel database
+     *   servizio.getPrezzo() deve essere maggiore o uguale a 0
+     *
+     * Postcondizioni:
+     *   Il prezzo del servizio nel database viene aggiornato con il nuovo valore
+     *   Il Nome (chiave primaria) rimane invariato
+     *   L'eventuale IDPrenotazione associato rimane invariato
+     */
+    @Override
+    public synchronized void doUpdate(Servizio servizio) throws SQLException
+    {
+        if(servizio != null)
+        {
+            Connection connection = ConnectionStorage.getConnection();
+            String query = "UPDATE Servizio SET Prezzo = ? WHERE Nome = ?";
+
+            try (PreparedStatement stmt = connection.prepareStatement(query))
+            {
+                stmt.setDouble(1, servizio.getPrezzo());
+                stmt.setString(2, servizio.getNome());
+
+                stmt.executeUpdate();
+            }
+            finally
+            {
+                if(connection != null)
+                {
+                    ConnectionStorage.releaseConnection(connection);
+                }
+            }
+        }
+        else
+        {
+            throw new SQLException();
+        }
+    }
 }

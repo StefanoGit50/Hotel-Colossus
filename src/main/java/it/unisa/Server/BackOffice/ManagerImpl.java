@@ -219,7 +219,17 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
     @Override
     public void modificaDatiImpiegato(Impiegato E)
     {
-        // da implementare
+        try
+        {
+            ImpiegatoDAO impiegatoDAO = new ImpiegatoDAO();
+
+            impiegatoDAO.doUpdate(E);
+        }
+        catch (SQLException e)
+        {
+            System.out.println(e);
+            e.printStackTrace();
+        }
     }
 
     @Override

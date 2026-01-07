@@ -8,14 +8,15 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale> {
+public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
+{
 
     private static final String TABLE_NAME = "RicevutaFiscale";
 
     private static final String[] attributes = {"IDRicevutaFiscale", "IDPrenotazione", "Totale", "DataEmissione"};
 
     @Override
-    public void doSave(RicevutaFiscale o) throws SQLException {
+    public synchronized void doSave(RicevutaFiscale o) throws SQLException {
         Connection conn = ConnectionStorage.getConnection();
         PreparedStatement ps = null;
         String insertSQL = "insert into " + RicevutaFiscaleDAO.TABLE_NAME +
@@ -37,7 +38,7 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale> {
     }
 
     @Override
-    public void doDelete(RicevutaFiscale o) throws SQLException {
+    public synchronized void doDelete(RicevutaFiscale o) throws SQLException {
         Connection conn = ConnectionStorage.getConnection();
         PreparedStatement ps = null;
         String deleteSQL = "delete from " + RicevutaFiscaleDAO.TABLE_NAME +
@@ -64,7 +65,7 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale> {
         return null;
     }
 
-    public RicevutaFiscale doRetriveByKey(ArrayList<Integer> keys) throws SQLException {
+    public synchronized RicevutaFiscale doRetriveByKey(ArrayList<Integer> keys) throws SQLException {
         Connection conn = ConnectionStorage.getConnection();
         PreparedStatement ps = null;
         ResultSet rs;
@@ -96,7 +97,7 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale> {
         return ricevuta;
     }
 
-    public Collection<RicevutaFiscale> doRetriveAll(String order) throws SQLException {
+    public synchronized Collection<RicevutaFiscale> doRetriveAll(String order) throws SQLException {
         Connection conn = ConnectionStorage.getConnection();
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -131,6 +132,40 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale> {
         }
 
         return results;
+    }
+
+    @Override
+    public synchronized void doUpdate(RicevutaFiscale o) throws SQLException
+    {
+        if(o != null)
+        {
+            Connection conn = ConnectionStorage.getConnection();
+            PreparedStatement ps = null;
+            String updateSQL = "UPDATE " + RicevutaFiscaleDAO.TABLE_NAME +
+                    " SET Totale = ?, DataEmissione = ? " +
+                    "WHERE IDRicevutaFiscale = ? AND IDPrenotazione = ?";
+
+            try
+            {
+                ps = conn.prepareStatement(updateSQL);
+                ps.setDouble(1, o.getTotale());
+                ps.setDate(2, Date.valueOf(o.getDataEmissione()));
+                ps.setInt(3, o.getIDRicevutaFiscale());
+                ps.setInt(4, o.getIDPrenotazione());
+
+                ps.executeUpdate();
+            }
+            finally
+            {
+                if (ps != null)
+                    ps.close();
+                ConnectionStorage.releaseConnection(conn);
+            }
+        }
+        else
+        {
+            throw new SQLException();
+        }
     }
     
 }
