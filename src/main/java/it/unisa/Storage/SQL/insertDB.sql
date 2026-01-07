@@ -59,10 +59,10 @@ INSERT INTO Servizio (
 
 
 INSERT INTO Trattamento (
-    Nome, Prezzo, IDPrenotazione, PrezzoAcquisto
+    Nome, Prezzo, IDPrenotazione
 ) VALUES
-      ('Mezza Pensione',30.00,1,30.00),
-      ('Pensione Completa',50.00,2,50.00),
-      ('All Inclusive',70.00,3,70.00),
-      ('Bed & Breakfast',15.00,4,15.00);
+      ('Mezza Pensione',30.00,1),
+      ('Pensione Completa',50.00,2),
+      ('All Inclusive',70.00,3),
+      ('Bed & Breakfast',15.00,4);
 

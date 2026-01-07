@@ -1,9 +1,12 @@
 package it.unisa.Server.gestionePrenotazioni;
 
 import it.unisa.Common.Camera;
+import it.unisa.Common.Prenotazione;
 import it.unisa.Server.gestioneClienti.Cliente;
 
 import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
+import it.unisa.Storage.DAO.PrenotazioneDAO;
+import it.unisa.Storage.FrontDeskStorage;
 import it.unisa.interfacce.GovernanteInterface;
 import it.unisa.interfacce.FrontDeskInterface;
 
@@ -12,6 +15,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -45,32 +50,16 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     }
 
     @Override
-    public void effettuaPrenotazione(String id, Cliente cliente, Camera stanza) throws RemoteException
-    {
-        //if(Camera.getStatoGlobale().equals("libera"))
-        {
-            //Prenotazione p = new Prenotazione(id, cliente, stanza);
-            //prenotazioni.add(p);
+    public void effettuaPrenotazione(String id, Cliente cliente, Camera stanza) throws RemoteException, SQLException {
+        prenotazioni.add(new Prenotazione(Integer.parseInt(id), LocalDate.now() , LocalDate.now()));
+        FrontDeskStorage<Prenotazione> prenotazioneFrontDeskStorage = new PrenotazioneDAO();
 
-            try{
-                GovernanteInterface gs = (GovernanteInterface) Naming.lookup("rmi://localhost/GestoreCamere");
-                //gs.setOccupataGlobale(Canera);
-          //      logger.info("Prenotazione effettuata per stanza " + stanza.getNumero());
-
-            } catch(Exception e)
-            {
-                logger.severe("Errore nel contattare GestoreCamere: " + e.getMessage());
-                e.printStackTrace();
-            }
-        }
-       // TODO: DA MODIFICARE else
-        {
-
-      //      logger.warning("Stanza " + stanza.getNumero() + " occupata!");
-       //     System.err.println("Stanza " + stanza.getNumero() + " occupata!");
-
+        while(!prenotazioni.isEmpty()){
+            prenotazioneFrontDeskStorage.doSave(prenotazioni.getFirst());
+            prenotazioni.removeFirst();
         }
     }
+
 
     @Override
     public List<Prenotazione> getPrenotazioni() throws RemoteException
@@ -84,16 +73,16 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         boolean trovata = false;
         for(Prenotazione p2: prenotazioni)
         {
-            if(p2.getId().equals(p.getId()))
+            if(p2.getCodicePrenotazione() == p.getCodicePrenotazione())
             {
                 prenotazioni.remove(p2);
-                logger.info("Prenotazione " + p.getId() + " cancellata");
+                logger.info("Prenotazione " + p.getCodicePrenotazione() + " cancellata");
                 trovata = true;
                 return;
             }
         }
         if(!trovata) {
-            logger.warning("Prenotazione " + p.getId() + " non trovata");
+            logger.warning("Prenotazione " + p.getCodicePrenotazione() + " non trovata");
             System.err.println("Prenotazione non trovata");
         }
     }
@@ -103,7 +92,7 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     {
         for(Prenotazione p2: prenotazioni)
         {
-            if(p2.getId().equals(id))
+            if(p2.getCodicePrenotazione() == Integer.getInteger(id))
             {
                 return p2;
             }

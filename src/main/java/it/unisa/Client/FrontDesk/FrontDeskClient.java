@@ -2,19 +2,24 @@ package it.unisa.Client.FrontDesk;
 
 import it.unisa.Common.Camera;
 
+import it.unisa.Common.Prenotazione;
 import it.unisa.Server.gestionePrenotazioni.FrontDesk;
 import it.unisa.Server.persistent.util.Stato;
+import it.unisa.Storage.DAO.CameraDAO;
+import it.unisa.Storage.FrontDeskStorage;
 import it.unisa.interfacce.GovernanteInterface;
 import it.unisa.interfacce.FrontDeskInterface;
 import it.unisa.Server.gestioneClienti.Cliente;
-import it.unisa.Server.gestionePrenotazioni.Prenotazione;
+
 
 import java.rmi.Naming;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
-public class FrontDeskClient {
+public class FrontDeskClient
+{
     static Logger logger = Logger.getLogger("global");
     
     public static void main(String[] args)
@@ -27,8 +32,8 @@ public class FrontDeskClient {
             logger.info("Trovato GestionePrenotazioni! RMI REGISTRY ...");
             
            // GovernanteInterface governanteInterface = (GovernanteInterface) Naming.lookup("rmi://localhost/GestoreCamere");
-            //logger.info("Trovato GestioneCamere! ...");
-            
+           // logger.info("Trovato GestioneCamere! ...");
+
             int x=0;
             
             while(x==0)
@@ -115,17 +120,29 @@ public class FrontDeskClient {
                         break;
                     }
 
-                    case 5:{
+                    case 5:
+                    {
                         List<Camera> camList= frontDeskInterface.getCamere();
                         IO.println(camList.toString());
                         break;
                     }
-                    case 0:
+                    case 6:{
+                        CameraDAO cameraDAO = new CameraDAO();
+                        ArrayList<Camera> cameras = (ArrayList<Camera>) frontDeskInterface.getCamere();
+                        IO.println("Questo è l'oggetto" + cameras.getFirst());
+                        IO.println("Sto salvando nel DB ...");
+                        cameraDAO.doSave(cameras.getFirst());
+                        IO.println("Salvataggio effettuato");
+                        break;
+                    }
+                    case 7:{
+                        frontDeskInterface.effettuaPrenotazione("7" , new Cliente("Stefano") , new Camera(4 ,Stato.Libera,4, 200.0 , ""));
+
+                    }
+                    case 0:{
                         x++;
                         break;
-                        
-                    default:
-                    {
+                    } default: {
                         System.err.println("Scelta errata!");
                     }
                 }

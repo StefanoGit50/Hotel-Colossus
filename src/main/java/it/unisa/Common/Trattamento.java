@@ -24,7 +24,6 @@ public class Trattamento implements Cloneable, Serializable {
     /**
      * Il prezzo del trattamento all'acquisto
      */
-    private double prezzoAcquisto;
 
     private final static double EPSILON = 1e10;
 
@@ -33,9 +32,8 @@ public class Trattamento implements Cloneable, Serializable {
      *
      * @param nome Il nome del trattamento.
      * @param prezzo Il prezzo del trattamento.
-     * @param prezzoAcquisto il prezzo del trattamento all'acquisto
      */
-    public Trattamento(String nome, double prezzo ){
+    public Trattamento(String nome, double prezzo){
         this.nome = nome;
         this.prezzo = prezzo;
     }
@@ -76,30 +74,11 @@ public class Trattamento implements Cloneable, Serializable {
         this.prezzo = prezzo;
     }
 
-    /**
-     * Ritorna il prezzo di Acquisto fatto al mom
-     * @return prezzoAcquisto
-     */
-
-    public double getPrezzoAcquisto() {
-        return prezzoAcquisto;
-    }
-
-    /**
-     * Setta il prezzo al momento del acquisto del cliente
-     * @param prezzoAcquisto il parametro
-     */
-    public void setPrezzoAcquisto(double prezzoAcquisto) {
-        this.prezzoAcquisto = prezzoAcquisto;
-    }
-
-
     @Override
     public String toString() {
         return "Trattamento{" +
                 "nome='" + nome + '\'' +
                 ", prezzo=" + prezzo +
-                ", prezzoAcquisto=" + prezzoAcquisto +
                 '}';
     }
 
@@ -115,7 +94,7 @@ public class Trattamento implements Cloneable, Serializable {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Trattamento trattamento = (Trattamento) obj;
-        return Double.compare(trattamento.prezzo, prezzo) == 0 && Objects.equals(nome, trattamento.nome) && Math.abs(prezzoAcquisto - trattamento.prezzoAcquisto) < EPSILON;
+        return Math.abs(trattamento.prezzo - prezzo) < EPSILON && Objects.equals(nome, trattamento.nome);
     }
 
     /**

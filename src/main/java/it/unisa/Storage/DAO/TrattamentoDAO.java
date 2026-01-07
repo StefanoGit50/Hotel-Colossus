@@ -8,21 +8,19 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
-
 public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
 {
     @Override
     public void doSave(Trattamento trattamento) throws SQLException
     {
         Connection connection = ConnectionStorage.getConnection();
-        String query = "INSERT INTO Trattamento(Nome, Prezzo, PrezzoAcquisto, IDPrenotazione) VALUES (?, ?, ?, ?) ";
+        String query = "INSERT INTO Trattamento(Nome, Prezzo, IDPrenotazione) VALUES (?,?,?) ";
 
         try (PreparedStatement stmt = connection.prepareStatement(query))
         {
             stmt.setString(1, trattamento.getNome());
             stmt.setDouble(2, trattamento.getPrezzo());
-            stmt.setDouble(3, trattamento.getPrezzoAcquisto());
-            stmt.setNull(4, Types.INTEGER); // gestito altrove
+            stmt.setNull(3, Types.INTEGER); // gestito altrove
 
             stmt.executeUpdate();
         }finally {
@@ -66,7 +64,6 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
                         return new Trattamento(
                                 rs.getString("Nome"),
                                 rs.getDouble("Prezzo")
-
                         );
                     }
                 }

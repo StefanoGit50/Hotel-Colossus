@@ -15,22 +15,7 @@ public class CatalogoImpiegati implements Serializable {
     /**
      * Lista di tutti gli impiegati del sistema.
      */
-    private static ArrayList<Impiegato> listaImpiegati;
-
-
-    /**
-     * Costruttore del catalogo.
-     * @param listaImpiegati1 {@code ArrayList<Impiegato>} usata come lista del catalogo.
-     */
-    public CatalogoImpiegati(ArrayList<Impiegato> listaImpiegati1) {
-        listaImpiegati = listaImpiegati1;
-    }
-
-    /**
-     * Costruttore vuoto.
-     */
-    public CatalogoImpiegati() {
-    }
+    private static ArrayList<Impiegato> listaImpiegati = new ArrayList<>();
 
     // Getters - Setters
 
@@ -38,7 +23,21 @@ public class CatalogoImpiegati implements Serializable {
         return listaImpiegati;
     }
 
-    public synchronized static void setListaImpiegati(ArrayList<Impiegato> listaImpiegati1) {listaImpiegati = listaImpiegati1;}
+    public synchronized static void setListaImpiegati(ArrayList<Impiegato> listaImpiegati1) {
+        while(!listaImpiegati.isEmpty()){
+            listaImpiegati.removeFirst();
+        }
+
+        for(Impiegato impiegato : listaImpiegati1){
+            try{
+                listaImpiegati.add(impiegato.clone());
+            }catch(CloneNotSupportedException cloneNotSupportedException){
+                cloneNotSupportedException.printStackTrace();
+            }
+
+        }
+
+    }
 
     // Metodi interfaccia publica
 

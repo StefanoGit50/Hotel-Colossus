@@ -76,7 +76,6 @@ create table Trattamento(
 	Nome varchar(50) not null,
 	Prezzo double not null,
 	IDPrenotazione int null default null,
-	PrezzoAcquisto double not null,
     primary key(Nome),
     foreign key(IDPrenotazione) references Prenotazione(IDPrenotazione) on delete cascade on update cascade 
 );
