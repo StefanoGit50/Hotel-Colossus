@@ -50,7 +50,7 @@ public class AddPrenotazioneCommand implements Command {
     public void execute() {
         ArrayList<Prenotazione> lp = catalogue.getListaPrenotazioni();
         lp.add(prenotazione);
-        catalogue.setListaPrenotazioni(lp);
+        catalogue.addPrenotazioni(lp);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class AddPrenotazioneCommand implements Command {
             Prenotazione p = catalogue.getPrenotazione(prenotazione.getCodicePrenotazione());
             ArrayList<Prenotazione> lp = catalogue.getListaPrenotazioni();
             lp.remove(p);
-            catalogue.setListaPrenotazioni(lp);
+            catalogue.addPrenotazioni(lp);
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }

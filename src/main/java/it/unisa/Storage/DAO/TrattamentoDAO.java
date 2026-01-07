@@ -65,8 +65,8 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
                     {
                         return new Trattamento(
                                 rs.getString("Nome"),
-                                rs.getDouble("Prezzo"),
-                                rs.getDouble("PrezzoAcquisto")
+                                rs.getDouble("Prezzo")
+
                         );
                     }
                 }
@@ -100,8 +100,7 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
             {
                 Trattamento t = new Trattamento(
                         rs.getString("Nome"),
-                        rs.getDouble("Prezzo"),
-                        rs.getDouble("PrezzoAcquisto")
+                        rs.getDouble("Prezzo")
                 );
 
                 trattamenti.add(t);

@@ -12,7 +12,7 @@ import java.util.Objects;
  * la ricerca e la rimozione delle stesse.
  */
 public class CatalogoPrenotazioni implements Serializable {
-    private static ArrayList<Prenotazione> listaPrenotazioni;
+    private static ArrayList<Prenotazione> listaPrenotazioni = new ArrayList<>();
 
     /**
      * Costruttore della classe CatalogoPrenotazioni.
@@ -103,8 +103,14 @@ public class CatalogoPrenotazioni implements Serializable {
     /**
      * Imposta o sostituisce l'intera lista delle prenotazioni.
      */
-    public synchronized static void setListaPrenotazioni(ArrayList<Prenotazione> listaPrenotazioni1) {
-        listaPrenotazioni = listaPrenotazioni1;
+    public synchronized static void addPrenotazioni(ArrayList<Prenotazione> listaPrenotazioni1) {
+        try {
+            for (Prenotazione p : listaPrenotazioni1) {
+                listaPrenotazioni.add(p.clone());
+            }
+        } catch (CloneNotSupportedException cloneNotSupportedException) {
+            cloneNotSupportedException.printStackTrace();
+        }
     }
 
     /**

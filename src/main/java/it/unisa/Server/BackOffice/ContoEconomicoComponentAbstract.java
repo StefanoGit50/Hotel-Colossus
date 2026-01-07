@@ -10,7 +10,7 @@ public abstract class ContoEconomicoComponentAbstract {
     protected List<ContoEconomicoComponentAbstract> figli = new ArrayList<>();
 
 
-    public String getNomevoce(){
+    public String getNomeComponente(){
         return nomevoce;
     }
     public double getPrezzo() {

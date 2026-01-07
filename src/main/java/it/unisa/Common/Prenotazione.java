@@ -84,6 +84,7 @@ public class Prenotazione implements Cloneable, Serializable {
      */
     private ArrayList<Cliente> listaClienti;
 
+    private StatoPrenotazione statoPrenotazione;
 
     /**
      * Costruttore completo per creare una nuova istanza di {@code Prenotazione}.
@@ -122,6 +123,15 @@ public class Prenotazione implements Cloneable, Serializable {
         this.listaServizi = Util.deepCopyArrayList(listaServizi);
         this.listaClienti = Util.deepCopyArrayList(listaClienti);
         this.numeroDocumento = numeroDocumento;
+        this.statoPrenotazione = StatoPrenotazione.IN_CORSO;
+    }
+
+
+    public StatoPrenotazione getStatoPrenotazione(){
+        return this.statoPrenotazione;
+    }
+    public  void setStatoPrenotazione(StatoPrenotazione st){
+        this.statoPrenotazione = st;
     }
      /**
      * Aggiunge un cliente alla lista dei clienti.

@@ -35,10 +35,9 @@ public class Trattamento implements Cloneable, Serializable {
      * @param prezzo Il prezzo del trattamento.
      * @param prezzoAcquisto il prezzo del trattamento all'acquisto
      */
-    public Trattamento(String nome, double prezzo , double prezzoAcquisto){
+    public Trattamento(String nome, double prezzo ){
         this.nome = nome;
         this.prezzo = prezzo;
-        this.prezzoAcquisto = prezzoAcquisto;
     }
 
     /**

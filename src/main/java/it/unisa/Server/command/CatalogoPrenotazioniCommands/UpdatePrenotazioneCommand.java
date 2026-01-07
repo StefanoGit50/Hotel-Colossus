@@ -67,7 +67,7 @@ public class UpdatePrenotazioneCommand implements Command {
                 }
             }
 
-            catalogue.setListaPrenotazioni(lp);
+            catalogue.addPrenotazioni(lp);
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
@@ -90,7 +90,7 @@ public class UpdatePrenotazioneCommand implements Command {
                 }
             }
 
-            catalogue.setListaPrenotazioni(lp);
+            catalogue.addPrenotazioni(lp);
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }

@@ -129,8 +129,8 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>
                             {
                                 trattamento = new Trattamento(
                                         rs1.getString("Nome"),
-                                        rs1.getDouble("Prezzo"),
-                                        rs1.getDouble("PrezzoAcquisto")
+                                        rs1.getDouble("Prezzo")
+
                                 );
                             }
                         }
@@ -269,8 +269,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>
                         {
                             trattamento = new Trattamento(
                                     rs1.getString("Nome"),
-                                    rs1.getDouble("Prezzo"),
-                                    rs1.getDouble("PrezzoAcquisto")
+                                    rs1.getDouble("Prezzo")
                             );
                         }
                     }

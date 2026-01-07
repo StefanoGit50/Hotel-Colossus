@@ -18,7 +18,7 @@ public class Main {
             ArrayList<Camera> cameras = CatalogoCamere.getListaCamere();
             ArrayList<Camera> cameras1 = new ArrayList<>();
             cameras1 = (ArrayList<Camera>) cameraDAO.doRetriveAll("decrescente");
-            CatalogoCamere.setListaCamere(cameras1);
+            CatalogoCamere.addCamere(cameras1);
             System.out.println(cameras);
             System.out.println(CatalogoCamere.getListaCamere());
         }catch(SQLException sqlException){
@@ -30,7 +30,7 @@ public class Main {
             cameraDAO.doDelete(CatalogoCamere.getListaCamere().getFirst());
             ArrayList<Camera> cameras = new ArrayList<>();
             cameras = (ArrayList<Camera>) cameraDAO.doRetriveAll("decrescente");
-            CatalogoCamere.setListaCamere(cameras);
+            CatalogoCamere.addCamere(cameras);
             System.out.println(cameras);
             System.out.println(CatalogoCamere.getListaCamere());
         }catch (SQLException sqlException){

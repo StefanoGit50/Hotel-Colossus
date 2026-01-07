@@ -35,7 +35,7 @@ public class ContoEconomicoComposite extends ContoEconomicoComponentAbstract {
     @Override
     public void stampaAlbero(String indent, boolean ultimo) {
         System.out.println(indent +
-                (ultimo ? "└── " : "├── ") + getNomevoce() + " = " + getImportoTotale());
+                (ultimo ? "└── " : "├── ") + getNomeComponente() + " = " + getImportoTotale());
 
         String nuovoPrefisso = indent + (ultimo ? "    " : "│   ");
 

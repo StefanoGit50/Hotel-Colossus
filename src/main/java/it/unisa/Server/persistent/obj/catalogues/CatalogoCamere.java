@@ -70,11 +70,7 @@ public class CatalogoCamere implements SubjectCamereInterface, Serializable {
         return camereList;
     }
 
-    public synchronized static void setListaCamere(ArrayList<Camera> camere) {
-
-        while (!camereList.isEmpty()) {
-            camereList.removeFirst();
-        }
+    public synchronized static void addCamere(ArrayList<Camera> camere) {
 
         try {
             for (Camera camera : camere) {

@@ -24,7 +24,7 @@ public class ContoEconomicoLeaf extends ContoEconomicoComponentAbstract {
     @Override
     public void stampaAlbero(String indent, boolean ultimo) {
 
-        System.out.println(indent + getNomevoce() + " (Totale: " + getImportoTotale() + ")");
+        System.out.println(indent + getNomeComponente() + " (Totale: " + getImportoTotale() + ")");
     }
 
 

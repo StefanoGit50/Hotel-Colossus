@@ -13,7 +13,7 @@ import java.util.Arrays;
 
 public class Main{
     public static void main(String[] args){
-        CameraDAO cameraDAO = new CameraDAO();
+     /*   CameraDAO cameraDAO = new CameraDAO();
         Camera camera = new Camera(
                 101,       // numeroCamera
                 Stato.Libera,           // statoCamera
@@ -91,7 +91,7 @@ public class Main{
         Servizio spa = new Servizio("SPA", 30.00);
         Servizio colazione = new Servizio("Colazione", 10.00);
 
-        Trattamento pensioneCompleta = new Trattamento(
+        /*Trattamento pensioneCompleta = new Trattamento(
                 "Pensione Completa",
                 60.00,
                 55.00
@@ -114,7 +114,7 @@ public class Main{
                 LocalDate.now(),                    // DataPrenotazione
                 LocalDate.of(2026, 2, 10),           // DataArrivo
                 LocalDate.of(2026, 2, 15),           // DataPartenza
-                pensioneCompleta,                   // Trattamento
+              //  pensioneCompleta,                   // Trattamento
                 "Carta d'identità",                 // Tipo documento
                 LocalDate.of(2030, 12, 31),          // Data rilascio
                 LocalDate.of(2030, 12, 31),          // Data scadenza
@@ -129,7 +129,7 @@ public class Main{
         TrattamentoDAO trattamentoDAO = new TrattamentoDAO();
 
         try{
-            trattamentoDAO.doSave(pensioneCompleta);
+          //  trattamentoDAO.doSave(pensioneCompleta);
         }catch (SQLException sqlException){
             sqlException.printStackTrace();
         }
@@ -322,7 +322,7 @@ public class Main{
         }
 
         try{
-            trattamentoDAO.doDelete(pensioneCompleta);
+           // trattamentoDAO.doDelete(pensioneCompleta);
         }catch (SQLException sqlException){
             sqlException.printStackTrace();
         }
@@ -352,5 +352,6 @@ public class Main{
         }catch (SQLException sqlException){
             sqlException.printStackTrace();
         }
-    }
+    }*/
+}
 }
