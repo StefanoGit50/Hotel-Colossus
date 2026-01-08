@@ -163,4 +163,70 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
         return clientes;
     }
 
+
+    /**
+     * Aggiorna i dati di un cliente esistente nel database.
+     *
+     * @param o Il cliente con i dati aggiornati da persistere.
+     * @throws SQLException Se si verifica un errore durante l'accesso al database.
+     * @throws NullPointerException Se il parametro o è null.
+     *
+     * Precondizioni:
+     * o != null
+     * Tutti i campi obbligatori di o devono essere valorizzati correttamente
+     *
+     * Postcondizioni:
+     * Il record del cliente nel database viene aggiornato con i nuovi valori
+     * Il CF (chiave primaria) rimane invariato
+     * La connessione al database viene rilasciata correttamente
+     */
+    @Override
+    public synchronized void doUpdate(Cliente o) throws SQLException
+    {
+        if(o != null)
+        {
+            Connection connection = ConnectionStorage.getConnection();
+            try(PreparedStatement preparedStatement = connection.prepareStatement(
+                    "UPDATE Cliente SET nome = ?, cognome = ?, Cap = ?, comune = ?, " +
+                            "civico = ?, provincia = ?, via = ?, Email = ?, Sesso = ?, " +
+                            "telefono = ?, MetodoDiPagamento = ?, Cittadinanza = ?, " +
+                            "DataDiNascita = ?, IsBackListed = ? WHERE CF = ?")){
+
+                preparedStatement.setString(1, o.getNome());
+                preparedStatement.setString(2, o.getCognome());
+                preparedStatement.setInt(3, o.getCAP());
+                preparedStatement.setString(4, o.getComune());
+                preparedStatement.setInt(5, o.getNumeroCivico());
+                preparedStatement.setString(6, o.getProvincia());
+                preparedStatement.setString(7, o.getVia());
+                preparedStatement.setString(8, o.getEmail());
+                preparedStatement.setString(9, o.getSesso());
+                preparedStatement.setString(10, o.getNumeroTelefono());
+                preparedStatement.setString(11, o.getMetodoDiPagamento());
+                preparedStatement.setString(12, o.getCittadinanza());
+                preparedStatement.setDate(13, Date.valueOf(o.getDataNascita()));
+                preparedStatement.setBoolean(14, o.isBlacklisted());
+                preparedStatement.setString(15, o.getCf());
+                preparedStatement.executeUpdate();
+            }
+            finally
+            {
+                if(connection != null)
+                {
+                    ConnectionStorage.releaseConnection(connection);
+                }
+            }
+        }
+        else
+        {
+            throw new NullPointerException();
+        }
+    }
+
+    @Override
+    public Cliente doRetriveByAttribute(String attribute, String value) throws SQLException {
+        return null;
+    }
+
+
 }

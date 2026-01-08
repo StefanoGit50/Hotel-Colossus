@@ -14,7 +14,7 @@ import java.util.NoSuchElementException;
 public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
 {
     @Override
-    public void doSave(Impiegato impiegato) throws SQLException {
+    public synchronized void doSave(Impiegato impiegato) throws SQLException {
         Connection connection = ConnectionStorage.getConnection();
         try(PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Impiegato(CF, Stipedio, Nome, Cognome, Cap, DataAssunzione, Telefono, Cittadinanza, EmailAziendale, Sesso, Ruolo, DataRilascio, TipoDocumento, Via, Provincia, Comune, Civico, NumeroDocumento, DataScadenza) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")){
             preparedStatement.setString(1,impiegato.getCodiceFiscale());
@@ -45,7 +45,7 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
     }
 
     @Override
-    public void doDelete(Impiegato impiegato) throws SQLException
+    public synchronized void doDelete(Impiegato impiegato) throws SQLException
     {
         Connection connection = ConnectionStorage.getConnection();
         try(PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM impiegato WHERE CF = ?")){
@@ -59,7 +59,7 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
     }
 
     @Override
-    public Impiegato doRetriveByKey(Object index) throws SQLException{
+    public synchronized Impiegato doRetriveByKey(Object index) throws SQLException{
         if(index instanceof String){
             String f = (String) index;
             Connection connection = ConnectionStorage.getConnection();
@@ -127,7 +127,7 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
     }
 
     @Override
-    public Collection<Impiegato> doRetriveAll(String order) throws SQLException{
+    public synchronized Collection<Impiegato> doRetriveAll(String order) throws SQLException{
         if(order != null){
             Connection connection = ConnectionStorage.getConnection();
             ArrayList<Impiegato> impiegatoes = new ArrayList<>();
@@ -194,6 +194,116 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
             return impiegatoes;
         }else{
             throw new NullPointerException();
+        }
+    }
+
+
+    /**
+     * Aggiorna i dati di un impiegato esistente nel database.
+     *
+     * @param impiegato L'impiegato con i dati aggiornati da persistere.
+     * @throws SQLException Se si verifica un errore durante l'accesso al database.
+     * @throws NullPointerException Se il parametro impiegato è null.
+     *
+     * Precondizioni:
+     * impiegato != null
+     * impiegato.getCodiceFiscale() deve corrispondere a un impiegato esistente nel database
+     * impiegato.getRuolo() deve essere un valore valido dell'enum Ruolo
+     * impiegato.getStipendio() deve essere maggiore o uguale a 0
+     * Tutte le date (DataAssunzione, DataRilascio, DataScadenza) devono essere valorizzate
+     *
+     * Postcondizioni:
+     * Il record dell'impiegato nel database viene aggiornato con i nuovi valori
+     * Il CF (chiave primaria) rimane invariato
+     */
+    @Override
+    public synchronized void doUpdate(Impiegato impiegato) throws SQLException
+    {
+        if(impiegato != null)
+        {
+            Connection connection = ConnectionStorage.getConnection();
+            try(PreparedStatement preparedStatement = connection.prepareStatement(
+                    "UPDATE Impiegato SET Stipedio = ?, Nome = ?, Cognome = ?, Cap = ?, " +
+                            "DataAssunzione = ?, Telefono = ?, Cittadinanza = ?, EmailAziendale = ?, " +
+                            "Sesso = ?, Ruolo = ?, DataRilascio = ?, TipoDocumento = ?, Via = ?, " +
+                            "Provincia = ?, Comune = ?, Civico = ?, NumeroDocumento = ?, " +
+                            "DataScadenza = ? WHERE CF = ?")){
+
+                preparedStatement.setDouble(1, impiegato.getStipendio());
+                preparedStatement.setString(2, impiegato.getNome());
+                preparedStatement.setString(3, impiegato.getCognome());
+                preparedStatement.setString(4, "" + impiegato.getCAP());
+                preparedStatement.setDate(5, Date.valueOf(impiegato.getDataAssunzione()));
+                preparedStatement.setString(6, impiegato.getTelefono());
+                preparedStatement.setString(7, impiegato.getCittadinanza());
+                preparedStatement.setString(8, impiegato.getEmailAziendale());
+                preparedStatement.setString(9, impiegato.getSesso());
+                preparedStatement.setString(10, "" + impiegato.getRuolo());
+                preparedStatement.setDate(11, Date.valueOf(impiegato.getDataRilascio()));
+                preparedStatement.setString(12, impiegato.getTipoDocumento());
+                preparedStatement.setString(13, impiegato.getVia());
+                preparedStatement.setString(14, impiegato.getProvincia());
+                preparedStatement.setString(15, impiegato.getComune());
+                preparedStatement.setInt(16, impiegato.getNumeroCivico());
+                preparedStatement.setString(17, impiegato.getNumeroDocumento());
+                preparedStatement.setDate(18, Date.valueOf(impiegato.getDataScadenza()));
+                preparedStatement.setString(19, impiegato.getCodiceFiscale());
+
+                preparedStatement.executeUpdate();
+            }
+            finally
+            {
+                if(connection != null)
+                {
+                    ConnectionStorage.releaseConnection(connection);
+                }
+            }
+        }
+        else
+        {
+            throw new NullPointerException();
+        }
+    }
+
+    @Override
+    public Impiegato doRetriveByAttribute(String attribute, String value) throws SQLException {
+        if(attribute != null && !attribute.isEmpty() && value != null && !value.isEmpty()){
+            Connection connection = ConnectionStorage.getConnection();
+            try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM impiegato WHERE " + attribute + " = ?")){
+                preparedStatement.setString(1,value);
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                if(!resultSet.next()){
+                    return null;
+                }
+
+                String CF = resultSet.getString("CF");
+                Double stipedio = resultSet.getDouble("Stipedio");
+                String nome = resultSet.getString("Nome");
+                String cognome = resultSet.getString("Cognome");
+                String Cap = resultSet.getString("Cap");
+                Date date = resultSet.getDate("DataAssunzione");
+                LocalDate date1 = date.toLocalDate();
+                String telefono = resultSet.getString("Telefono");
+                String cittadinanza = resultSet.getString("Cittadinanza");
+                String emailAzienda = resultSet.getString("EmailAziendale");
+                String sesso = resultSet.getString("Sesso");
+                String ruolo = resultSet.getString("Ruolo");
+                Ruolo ruolo1 = Ruolo.valueOf(ruolo);
+                Date date2 = resultSet.getDate("DataRilascio");
+                String tipoDocumeto = resultSet.getString("TipoDocumento");
+                String via = resultSet.getString("Via");
+                String provincia = resultSet.getString("Provincia");
+                String comune = resultSet.getString("Comune");
+                String civico = resultSet.getString("Civico");
+                String numeroDocumento = resultSet.getString("NumeroDocumento");
+                Date dataScadenza = resultSet.getDate("DataScadenza");
+                LocalDate localDate = dataScadenza.toLocalDate();
+            }finally{
+                    if(connection != null){
+                        ConnectionStorage.releaseConnection(connection);
+                    }
+            }
         }
     }
 }

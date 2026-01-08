@@ -121,4 +121,61 @@ public class CameraDAO implements FrontDeskStorage<Camera>{
         }
         return cameras;
     }
+
+
+    /**
+     * Aggiorna i dati di una camera esistente nel database.
+     *
+     * @param o La camera con i dati aggiornati da persistere.
+     * @throws SQLException Se si verifica un errore durante l'accesso al database.
+     * @throws NullPointerException Se il parametro o è null.
+     *
+     * Precondizioni:
+     *   o != null
+     *   o.getNumeroCamera() deve corrispondere a una camera esistente nel database
+     *   o.getStatoCamera() deve essere un valore valido dell'enum Stato
+     *   o.getCapacità() deve essere maggiore di 0
+     *   o.getPrezzoCamera() deve essere maggiore o uguale a 0
+     *
+     *
+     * Postcondizioni:
+     *   Il record della camera nel database viene aggiornato con i nuovi valori
+     *   Il NumeroCamera (chiave primaria) rimane invariato
+     */
+    @Override
+    public synchronized void doUpdate(Camera o) throws SQLException
+    {
+        if(o != null)
+        {
+            Connection connection = ConnectionStorage.getConnection();
+            try(PreparedStatement preparedStatement = connection.prepareStatement(
+                    "UPDATE Camera SET NumeroMaxOcc = ?, NoteCamera = ?, Stato = ?, " +
+                            "Prezzo = ? WHERE NumeroCamera = ?")){
+
+                preparedStatement.setInt(1, o.getCapacità());
+                preparedStatement.setString(2, o.getNoteCamera());
+                preparedStatement.setString(3, o.getStatoCamera().name());
+                preparedStatement.setDouble(4, o.getPrezzoCamera());
+                preparedStatement.setInt(5, o.getNumeroCamera());
+
+                preparedStatement.executeUpdate();
+            }
+            finally
+            {
+                if(connection != null)
+                {
+                    ConnectionStorage.releaseConnection(connection);
+                }
+            }
+        }
+        else
+        {
+            throw new NullPointerException();
+        }
+    }
+
+    @Override
+    public Camera doRetriveByAttribute(String attribute, String value) throws SQLException {
+
+    }
 }

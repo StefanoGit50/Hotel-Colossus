@@ -50,9 +50,8 @@ public class RemovePrenotazioneCommand implements Command {
     public void execute() {
         try {
             Prenotazione p = catalogue.getPrenotazione(prenotazione.getCodicePrenotazione());
-            ArrayList<Prenotazione> lp = catalogue.getListaPrenotazioni();
+            ArrayList<Prenotazione> lp = CatalogoPrenotazioni.getListaPrenotazioni();
             lp.remove(p);
-            catalogue.addPrenotazioni(lp);
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
@@ -60,8 +59,7 @@ public class RemovePrenotazioneCommand implements Command {
 
     @Override
     public void undo() {
-        ArrayList<Prenotazione> lp = catalogue.getListaPrenotazioni();
+        ArrayList<Prenotazione> lp = CatalogoPrenotazioni.getListaPrenotazioni();
         lp.add(prenotazione);
-        catalogue.addPrenotazioni(lp);
     }
 }

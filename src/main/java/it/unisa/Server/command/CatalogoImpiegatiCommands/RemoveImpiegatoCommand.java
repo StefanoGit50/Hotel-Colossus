@@ -51,9 +51,8 @@ public class RemoveImpiegatoCommand implements Command {
         try {
             // Riprendi l'impiegato per com'è attualmente nel catalogo
             Impiegato i = catalogue.getImpiegato(impiegato.getCodiceFiscale());
-            ArrayList<Impiegato> li = catalogue.getListaImpiegati();
+            ArrayList<Impiegato> li = CatalogoImpiegati.getListaImpiegati();
             li.remove(i);
-            catalogue.setListaImpiegati(li);
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
@@ -61,9 +60,7 @@ public class RemoveImpiegatoCommand implements Command {
 
     @Override
     public void undo() {
-        ArrayList<Impiegato> li;
-            li = catalogue.getListaImpiegati();
-            li.add(impiegato);
-            catalogue.setListaImpiegati(li);
+        ArrayList<Impiegato> li = CatalogoImpiegati.getListaImpiegati();
+        li.add(impiegato);
     }
 }

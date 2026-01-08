@@ -9,4 +9,6 @@ public interface GovernanteStorage<T>{
     void doDelete(T o) throws SQLException;
     T doRetriveByKey(int index) throws SQLException;
     Collection<T> doRetriveAll(String order) throws SQLException;
+    void doUpdate(T o) throws SQLException;
+    T doRetriveByAttribute(String attribute , String value);
 }

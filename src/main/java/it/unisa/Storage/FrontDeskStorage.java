@@ -1,5 +1,7 @@
 package it.unisa.Storage;
 
+import it.unisa.Common.Prenotazione;
+
 import java.sql.SQLException;
 import java.util.Collection;
 
@@ -9,4 +11,6 @@ public interface FrontDeskStorage<T>
     void doDelete(T o) throws SQLException;
     T doRetriveByKey(Object oggetto) throws SQLException;
     Collection<T> doRetriveAll(String order) throws SQLException;
+    void doUpdate(T o) throws SQLException;
+    T doRetriveByAttribute(String attribute , String value) throws SQLException;
 }

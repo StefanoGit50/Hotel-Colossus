@@ -53,13 +53,11 @@ public class RemoveClienteCommand implements Command {
             Cliente c = catalogue.getCliente(cliente.getCf());
             ArrayList<Cliente> lc;
             if(c.isBlacklisted()) {
-                lc = catalogue.getListaClientiBannati();
+                lc = CatalogoClienti.getListaClientiBannati();
                 lc.remove(c);
-                catalogue.setListaClienti(lc);
             } else {
-                lc = catalogue.getListaClienti();
+                lc = CatalogoClienti.getListaClienti();
                 lc.remove(c);
-                catalogue.setListaClienti(lc);
             }
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
@@ -70,13 +68,11 @@ public class RemoveClienteCommand implements Command {
     public void undo() {
         ArrayList<Cliente> lc;
         if(cliente.isBlacklisted()) {
-            lc = catalogue.getListaClientiBannati();
+            lc = CatalogoClienti.getListaClientiBannati();
             lc.add(cliente);
-            catalogue.setListaClienti(lc);
         } else {
-            lc = catalogue.getListaClienti();
+            lc = CatalogoClienti.getListaClienti();
             lc.add(cliente);
-            catalogue.setListaClienti(lc);
         }
     }
 }

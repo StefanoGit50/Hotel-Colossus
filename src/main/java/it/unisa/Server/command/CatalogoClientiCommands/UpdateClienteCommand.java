@@ -53,7 +53,7 @@ public class UpdateClienteCommand implements Command {
     public void execute() {
         try {
             Cliente c = catalogue.getCliente(cliente.getCf());
-            ArrayList<Cliente> lc = catalogue.getListaClienti(), lcb = catalogue.getListaClientiBannati();
+            ArrayList<Cliente> lc = CatalogoClienti.getListaClienti(), lcb = CatalogoClienti.getListaClientiBannati();
 
             // Ricerca in entrambe le liste (clienti bannati e non)
             Iterator<Cliente> it = lc.iterator(); // Evita di modificare l'array metre lo si itera
@@ -65,6 +65,7 @@ public class UpdateClienteCommand implements Command {
                     clienteNonModificato = cli;
                     lc.remove(cli); // rimuovi il cliente 'non modificato' dalla lista dei clienti
                     lc.add(c); // aggiungi il cliente 'modificato' alla lista dei clienti
+                    break;
                 }
             }
             it = lcb.iterator();
@@ -75,11 +76,10 @@ public class UpdateClienteCommand implements Command {
                     clienteNonModificato = cli;
                     lcb.remove(cli); // rimuovi il cliente 'non modificato' dalla lista dei clienti
                     lcb.add(c); // aggiungi il cliente 'modificato' alla lista dei clienti
+                    break;
                 }
             }
 
-            catalogue.setListaClienti(lc);
-            catalogue.setListaClientiBannati(lcb);
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
@@ -89,7 +89,7 @@ public class UpdateClienteCommand implements Command {
     public void undo() {
         try {
             Cliente c = catalogue.getCliente(cliente.getCf());
-            ArrayList<Cliente> lc = catalogue.getListaClienti(), lcb = catalogue.getListaClientiBannati();
+            ArrayList<Cliente> lc = CatalogoClienti.getListaClienti(), lcb = CatalogoClienti.getListaClientiBannati();
 
             // Ricerca in entrambe le liste (clienti bannati e non)
             Iterator<Cliente> it = lc.iterator(); // Evita di modificare l'array metre lo si itera
@@ -100,6 +100,7 @@ public class UpdateClienteCommand implements Command {
                 if(cli.getCf().equals(c.getCf())) {
                     lc.remove(cli); // rimuovi il cliente 'non modificato' dalla lista dei clienti
                     lc.add(clienteNonModificato); // aggiungi il cliente 'modificato' alla lista dei clienti
+                    break;
                 }
             }
             it = lcb.iterator();
@@ -109,11 +110,10 @@ public class UpdateClienteCommand implements Command {
                 if(cli.getCf().equals(c.getCf())) {
                     lcb.remove(cli); // rimuovi il cliente 'non modificato' dalla lista dei clienti
                     lcb.add(clienteNonModificato); // aggiungi il cliente 'modificato' alla lista dei clienti
+                    break;
                 }
             }
 
-            catalogue.setListaClienti(lc);
-            catalogue.setListaClientiBannati(lcb);
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
