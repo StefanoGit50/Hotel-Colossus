@@ -2,21 +2,11 @@ package it.unisa.Server.gestionePrenotazioni;
 
 import it.unisa.Server.command.*;
 import it.unisa.Common.*;
-import it.unisa.Server.command.*;
-
-import it.unisa.Common.Camera;
 import it.unisa.Common.Prenotazione;
 import it.unisa.Server.command.CatalogoClientiCommands.*;
-import it.unisa.Server.command.CatalogoImpiegatiCommands.AddImpiegatoCommand;
-import it.unisa.Server.command.CatalogoImpiegatiCommands.RemoveImpiegatoCommand;
-import it.unisa.Server.command.CatalogoImpiegatiCommands.UpdateImpiegatoCommand;
-import it.unisa.Server.command.CatalogoPrenotazioniCommands.AddPrenotazioneCommand;
-import it.unisa.Server.command.CatalogoPrenotazioniCommands.RemovePrenotazioneCommand;
-import it.unisa.Server.command.CatalogoPrenotazioniCommands.UpdatePrenotazioneCommand;
-import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
-import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
-import it.unisa.Server.persistent.obj.catalogues.CatalogoImpiegati;
-import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
+import it.unisa.Server.command.CatalogoImpiegatiCommands.*;
+import it.unisa.Server.command.CatalogoPrenotazioniCommands.*;
+import it.unisa.Server.persistent.obj.catalogues.*;
 import it.unisa.Storage.DAO.PrenotazioneDAO;
 import it.unisa.Storage.FrontDeskStorage;
 import it.unisa.interfacce.FrontDeskInterface;

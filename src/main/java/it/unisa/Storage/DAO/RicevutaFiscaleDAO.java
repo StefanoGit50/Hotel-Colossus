@@ -174,29 +174,45 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
     }
 
     @Override
-    public RicevutaFiscale doRetriveByAttribute(String attribute, String value) throws SQLException {
-        if(attribute != null && !attribute.isEmpty() && value != null && !value.isEmpty()){
-                Connection connection = ConnectionStorage.getConnection();
-                try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM hotelcolossus.ricevutafiscale WHERE " + attribute + " = ?")){
+    public Collection<RicevutaFiscale> doRetriveByAttribute(String attribute, String value) throws SQLException {
+        Connection connection;
+        PreparedStatement preparedStatement = null;
+        ArrayList<RicevutaFiscale> lista = new ArrayList<>();
+        String selectSQL;
 
-                    preparedStatement.setString(1,value);
+        if(attribute != null && !attribute.isEmpty() && value != null && !value.isEmpty()){
+            connection = ConnectionStorage.getConnection();
+            selectSQL = "SELECT * FROM hotelcolossus.ricevutafiscale WHERE " + attribute + " = ?";
+                try{
+                    preparedStatement = connection.prepareStatement(selectSQL);
+                    preparedStatement.setString(1, value);
                     ResultSet resultSet = preparedStatement.executeQuery();
 
-                    if(resultSet.next()){
-                        return null;
+                    RicevutaFiscale ricevuta;
+                    while (resultSet.next()) {
+                        ricevuta = new RicevutaFiscale();
+                        ricevuta.setIDRicevutaFiscale(resultSet.getInt("IDRicevutaFiscale"));
+                        ricevuta.setIDPrenotazione(resultSet.getInt("IDPrenotazione"));
+                        ricevuta.setTotale(resultSet.getDouble("Totale"));
+                        ricevuta.setDataEmissione(resultSet.getDate("DataEmissione").toLocalDate());
+                        lista.add(ricevuta);
                     }
-                    Date date = resultSet.getDate(4);
-                    LocalDate localDate = date.toLocalDate();
-                    RicevutaFiscale ricevutaFiscale = new RicevutaFiscale(resultSet.getInt(1),resultSet.getInt(2),resultSet.getDouble(3),localDate);
-                    return ricevutaFiscale;
+
                 }finally{
                     if(connection != null){
+                        if (preparedStatement != null) {
+                            preparedStatement.close();
+                        }
                         ConnectionStorage.releaseConnection(connection);
                     }
                 }
         }else{
             throw new RuntimeException();
         }
+
+        if(lista.isEmpty()) throw new NoSuchElementException("Nessuna ricevuta fiscale con " + attribute + " = " + value + "!");
+
+        return lista;
     }
 
 }

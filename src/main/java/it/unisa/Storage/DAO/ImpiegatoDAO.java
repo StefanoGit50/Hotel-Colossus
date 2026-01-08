@@ -1,6 +1,7 @@
 package it.unisa.Storage.DAO;
 
 import it.unisa.Common.Impiegato;
+import it.unisa.Common.RicevutaFiscale;
 import it.unisa.Server.persistent.util.Ruolo;
 import it.unisa.Storage.BackofficeStorage;
 import it.unisa.Storage.ConnectionStorage;
@@ -9,10 +10,35 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
 {
+    private static final String TABLE_NAME = "Impiegato";
+    private static final String[] whitelist = {
+            "CF",
+            "Stipedio",
+            "Nome",
+            "Cognome",
+            "Cap",
+            "DataAssunzione",
+            "Telefono",
+            "Cittadinanza",
+            "EmailAziendale",
+            "Sesso",
+            "Ruolo",
+            "DataRilascio",
+            "TipoDocumento",
+            "Via",
+            "Provincia",
+            "Comune",
+            "Civico",
+            "NumeroDocumento",
+            "DataScadenza",
+            "CF1"
+    };
+
     @Override
     public synchronized void doSave(Impiegato impiegato) throws SQLException {
         Connection connection = ConnectionStorage.getConnection();
@@ -267,7 +293,9 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
 
     @Override
     public Impiegato doRetriveByAttribute(String attribute, String value) throws SQLException {
-        if(attribute != null && !attribute.isEmpty() && value != null && !value.isEmpty()){
+
+        Impiegato impiegato = null;
+        if(attribute != null && !attribute.isEmpty() && value != null && !value.isEmpty()) {
             Connection connection = ConnectionStorage.getConnection();
             try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM impiegato WHERE " + attribute + " = ?")){
                 preparedStatement.setString(1,value);
@@ -278,32 +306,95 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
                 }
 
                 String CF = resultSet.getString("CF");
-                Double stipedio = resultSet.getDouble("Stipedio");
+                double stipendio = resultSet.getDouble("Stipedio");
                 String nome = resultSet.getString("Nome");
                 String cognome = resultSet.getString("Cognome");
-                String Cap = resultSet.getString("Cap");
-                Date date = resultSet.getDate("DataAssunzione");
-                LocalDate date1 = date.toLocalDate();
+                int Cap = resultSet.getInt("Cap");
+                LocalDate date1 = resultSet.getDate("DataAssunzione").toLocalDate();
                 String telefono = resultSet.getString("Telefono");
                 String cittadinanza = resultSet.getString("Cittadinanza");
                 String emailAzienda = resultSet.getString("EmailAziendale");
                 String sesso = resultSet.getString("Sesso");
                 String ruolo = resultSet.getString("Ruolo");
                 Ruolo ruolo1 = Ruolo.valueOf(ruolo);
-                Date date2 = resultSet.getDate("DataRilascio");
-                String tipoDocumeto = resultSet.getString("TipoDocumento");
+                LocalDate date2 = resultSet.getDate("DataRilascio").toLocalDate();
+                String tipoDocumento = resultSet.getString("TipoDocumento");
                 String via = resultSet.getString("Via");
                 String provincia = resultSet.getString("Provincia");
                 String comune = resultSet.getString("Comune");
-                String civico = resultSet.getString("Civico");
+                int civico = resultSet.getInt("Civico");
                 String numeroDocumento = resultSet.getString("NumeroDocumento");
-                Date dataScadenza = resultSet.getDate("DataScadenza");
-                LocalDate localDate = dataScadenza.toLocalDate();
+                LocalDate dataScadenza = resultSet.getDate("DataScadenza").toLocalDate();
+
+                impiegato = new Impiegato(
+                        "",       // username
+                        "",       // hashedPassword
+                        nome,           // nome
+                        cognome,        // cognome
+                        sesso,          // sesso
+                        tipoDocumento,  // tipoDocumento
+                        numeroDocumento,// numeroDocumento
+                        Cap,            // CAP (int)
+                        via,            // via
+                        provincia,      // provincia
+                        comune,         // comune
+                        civico,         // numeroCivico (int)
+                        CF,             // codiceFiscale
+                        telefono,       // telefono
+                        ruolo1,          // ruolo (Enum)
+                        stipendio,      // stipendio
+                        date1, // dataAssunzione
+                        date2,   // dataRilascio
+                        emailAzienda, // emailAziendale
+                        cittadinanza,   // cittadinanza
+                        dataScadenza    // dataScadenza
+                );
             }finally{
                     if(connection != null){
                         ConnectionStorage.releaseConnection(connection);
                     }
             }
         }
+
+        return impiegato;
+    }
+
+    @Override
+    public Collection<Impiegato> doFilter(String nome, String sesso, Ruolo ruolo, String orderBy) throws SQLException {
+        Connection conn = ConnectionStorage.getConnection();
+        PreparedStatement ps = null;
+        ResultSet rs;
+        RicevutaFiscale ricevuta = null;
+
+        String selectSQL = "select * FROM " + ImpiegatoDAO.TABLE_NAME +
+                " where IDRicevutaFiscale = ? AND  IDPrenotazione = ?";
+
+        if(orderBy != null && !orderBy.isEmpty()) {
+            if (DaoUtils.checkWhitelist(whitelist, orderBy))
+                selectSQL +=  " ORDER BY " + orderBy;
+        }
+
+        try {
+            ps = conn.prepareStatement(selectSQL);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                ricevuta = new RicevutaFiscale();
+                ricevuta.setIDRicevutaFiscale(rs.getInt("IDPrenotazione"));
+                ricevuta.setIDPrenotazione(rs.getInt("IDRicevutaFiscale"));
+                ricevuta.setTotale(rs.getDouble("Totale"));
+                ricevuta.setDataEmissione(rs.getDate("DataEmissione").toLocalDate());
+            }
+
+        } finally {
+            if (ps != null)
+                ps.close();
+            ConnectionStorage.releaseConnection(conn);
+        }
+
+        if  (ricevuta == null)
+            throw new NoSuchElementException("prenotazione non trovata");
+
+        return ricevuta;
     }
 }

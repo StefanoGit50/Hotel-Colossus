@@ -1,6 +1,7 @@
 package it.unisa.Storage;
 
 import it.unisa.Common.Prenotazione;
+import it.unisa.Server.persistent.util.Ruolo;
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -14,4 +15,5 @@ public interface BackofficeStorage<T>
     Collection<T> doRetriveAll(String order) throws SQLException;
     void doUpdate(T o) throws SQLException;
     T doRetriveByAttribute(String attribute , String value) throws SQLException;
+    Collection<T> doFilter(String nome, String sesso, Ruolo ruolo) throws  SQLException;
 }
