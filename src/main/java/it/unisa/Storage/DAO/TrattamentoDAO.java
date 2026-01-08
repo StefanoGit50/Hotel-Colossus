@@ -7,6 +7,7 @@ import it.unisa.Storage.FrontDeskStorage;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.NoSuchElementException;
 
 public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
 {
@@ -73,8 +74,7 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
                 }
             }
         }
-
-        return null;
+        throw new NoSuchElementException("Trattamento non trovato");
     }
 
     @Override

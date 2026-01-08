@@ -9,6 +9,7 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.NoSuchElementException;
 
 public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
 {
@@ -112,6 +113,7 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
                     impiegato.setDataScadenza(date1);
                 }else{
                     impiegato = null;
+                    throw new NoSuchElementException ("impiegato non trovato");
                 }
             }finally {
                 if (connection != null) {

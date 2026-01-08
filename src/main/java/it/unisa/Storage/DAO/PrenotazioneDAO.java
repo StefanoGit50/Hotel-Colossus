@@ -8,6 +8,7 @@ import it.unisa.Storage.FrontDeskStorage;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.NoSuchElementException;
 
 public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>
 {
@@ -231,7 +232,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>
                 }
             }
         }
-        return null;
+        throw new NoSuchElementException("prenotazione non trovata");
     }
 
     @Override

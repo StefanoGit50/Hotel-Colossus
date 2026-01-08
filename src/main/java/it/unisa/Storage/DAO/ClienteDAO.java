@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class ClienteDAO implements FrontDeskStorage<Cliente>
 {
@@ -91,7 +92,11 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
                 cliente.setBlacklisted(isBackListed);
             }
 
+            if( cliente == null )
+                throw new NoSuchElementException("cliente non trovato");
+
             return cliente;
+
         }else{
             throw new SQLException();
         }

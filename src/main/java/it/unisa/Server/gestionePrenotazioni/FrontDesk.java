@@ -51,7 +51,7 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
 
     @Override
     public void effettuaPrenotazione(String id, Cliente cliente, Camera stanza) throws RemoteException, SQLException {
-        prenotazioni.add(new Prenotazione(Integer.parseInt(id), LocalDate.now() , LocalDate.now()));
+       // prenotazioni.add(new Prenotazione(Integer.parseInt(id), LocalDate.now() , LocalDate.now()));
         FrontDeskStorage<Prenotazione> prenotazioneFrontDeskStorage = new PrenotazioneDAO();
 
         while(!prenotazioni.isEmpty()){

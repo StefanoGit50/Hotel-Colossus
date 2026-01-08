@@ -7,6 +7,7 @@ import it.unisa.Storage.FrontDeskStorage;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.NoSuchElementException;
 
 public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale> {
 
@@ -92,6 +93,9 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale> {
                 ps.close();
             ConnectionStorage.releaseConnection(conn);
         }
+
+        if  (ricevuta == null)
+            throw new NoSuchElementException("prenotazione non trovata");
 
         return ricevuta;
     }

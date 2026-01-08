@@ -6,6 +6,7 @@ import it.unisa.Storage.FrontDeskStorage;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.NoSuchElementException;
 
 
 public class ServizioDAO implements FrontDeskStorage<Servizio>
@@ -75,7 +76,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
         }else{
             throw new SQLException();
         }
-        return null;
+       throw new NoSuchElementException("servizio non trovato");
     }
 
     @Override
