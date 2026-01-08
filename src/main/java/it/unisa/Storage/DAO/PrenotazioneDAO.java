@@ -6,6 +6,7 @@ import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.FrontDeskStorage;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -435,5 +436,126 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
         {
             throw new NullPointerException();
         }
+    }
+
+    @Override
+    public Prenotazione doRetriveByAttribute(String attribute, String value) throws SQLException {
+        Connection connection = ConnectionStorage.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Prenotazione WHERE " + attribute + " = ?")) {
+            preparedStatement.setString(1,value);
+
+            try (ResultSet rs = preparedStatement.executeQuery()){
+                if (rs.next()){
+                    int idPrenotazione = rs.getInt("IDPrenotazione");
+
+                    // Recupera il trattamento
+                    Trattamento trattamento = null;
+                    String query = "SELECT * FROM Trattamento WHERE IDPrenotazione = ?";
+
+                    try (PreparedStatement stmt = connection.prepareStatement(query)) {
+                        stmt.setInt(1, idPrenotazione);
+
+                        try (ResultSet rs1 = stmt.executeQuery()) {
+                            if (rs1.next()) {
+                                trattamento = new Trattamento(
+                                        rs1.getString("Nome"),
+                                        rs1.getDouble("Prezzo")
+                                );
+                            }
+                        }
+                    }
+
+                    // Recupera i servizi
+                    String query2 = "SELECT * FROM Servizio WHERE IDPrenotazione = ?";
+                    Collection<Servizio> servizi = new ArrayList<>();
+
+                    try (PreparedStatement stmt = connection.prepareStatement(query2)) {
+                        stmt.setInt(1, idPrenotazione);
+
+                        try (ResultSet rs2 = stmt.executeQuery()) {
+                            while (rs2.next()) {
+                                servizi.add(new Servizio(
+                                        rs2.getString("Nome"),
+                                        rs2.getDouble("Prezzo")
+                                ));
+                            }
+                        }
+                    }
+
+                    // Recupera le camere
+                    String query3 = "SELECT DISTINCT c.* FROM Camera c " +
+                            "JOIN Associato_a a ON c.NumeroCamera = a.NumeroCamera " +
+                            "WHERE a.IDPrenotazione = ?";
+
+                    Collection<Camera> camere = new ArrayList<>();
+
+                    try (PreparedStatement stmt = connection.prepareStatement(query3)) {
+                        stmt.setInt(1, idPrenotazione);
+
+                        try (ResultSet rs3 = stmt.executeQuery()) {
+                            while (rs3.next()) {
+                                camere.add(new Camera(
+                                        rs3.getInt("NumeroCamera"),
+                                        Stato.valueOf(rs3.getString("Stato")),
+                                        rs3.getInt("NumeroMaxOcc"),
+                                        rs3.getDouble("Prezzo"),
+                                        rs3.getString("NoteCamera")
+                                ));
+                            }
+                        }
+                    }
+
+                    // Recupera i clienti
+                    String query4 = "SELECT DISTINCT cl.* FROM Cliente cl " +
+                            "JOIN Associato_a a ON cl.CF = a.CF " +
+                            "WHERE a.IDPrenotazione = ?";
+
+                    Collection<Cliente> clienti = new ArrayList<>();
+
+                    try (PreparedStatement stmt = connection.prepareStatement(query4)) {
+                        stmt.setInt(1, idPrenotazione);
+
+                        try (ResultSet rs4 = stmt.executeQuery()) {
+                            while (rs4.next()) {
+                                clienti.add(new Cliente(
+                                        rs4.getString("nome"),
+                                        rs4.getString("cognome"),
+                                        rs4.getString("Cittadinanza"),
+                                        rs4.getString("provincia"),
+                                        rs4.getString("comune"),
+                                        rs4.getString("via"),
+                                        rs4.getInt("civico"),
+                                        rs4.getInt("Cap"),
+                                        rs4.getString("telefono"),
+                                        rs4.getString("Sesso"),
+                                        rs4.getDate("DataDiNascita") != null ? rs4.getDate("DataDiNascita").toLocalDate() : null,
+                                        rs4.getString("CF"),
+                                        rs4.getString("Email"),
+                                        rs4.getString("MetodoDiPagamento")
+                                ));
+                            }
+                        }
+                    }
+
+                    return new Prenotazione(
+                            idPrenotazione,
+                            rs.getDate("DataPrenotazione").toLocalDate(),
+                            rs.getDate("DataArrivoCliente").toLocalDate(),
+                            rs.getDate("DataPartenzaCliente").toLocalDate(),
+                            trattamento,
+                            rs.getString("Tipo"),
+                            rs.getDate("DataRilascio").toLocalDate(),
+                            rs.getDate("dataScadenza").toLocalDate(),
+                            rs.getString("Intestatario"),
+                            rs.getString("NoteAggiuntive"),
+                            (ArrayList<Camera>) camere,
+                            (ArrayList<Servizio>) servizi,
+                            (ArrayList<Cliente>) clienti,
+                            rs.getInt("numeroDocumento")
+                    );
+                }
+            }
+        }
+        return null;
     }
 }

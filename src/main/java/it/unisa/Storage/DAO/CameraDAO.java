@@ -164,4 +164,9 @@ public class CameraDAO implements FrontDeskStorage<Camera>{
             throw new NullPointerException();
         }
     }
+
+    @Override
+    public Camera doRetriveByAttribute(String attribute, String value) throws SQLException {
+
+    }
 }

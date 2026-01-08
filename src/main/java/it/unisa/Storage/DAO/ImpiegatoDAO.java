@@ -262,4 +262,46 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
             throw new NullPointerException();
         }
     }
+
+    @Override
+    public Impiegato doRetriveByAttribute(String attribute, String value) throws SQLException {
+        if(attribute != null && !attribute.isEmpty() && value != null && !value.isEmpty()){
+            Connection connection = ConnectionStorage.getConnection();
+            try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM impiegato WHERE " + attribute + " = ?")){
+                preparedStatement.setString(1,value);
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                if(!resultSet.next()){
+                    return null;
+                }
+
+                String CF = resultSet.getString("CF");
+                Double stipedio = resultSet.getDouble("Stipedio");
+                String nome = resultSet.getString("Nome");
+                String cognome = resultSet.getString("Cognome");
+                String Cap = resultSet.getString("Cap");
+                Date date = resultSet.getDate("DataAssunzione");
+                LocalDate date1 = date.toLocalDate();
+                String telefono = resultSet.getString("Telefono");
+                String cittadinanza = resultSet.getString("Cittadinanza");
+                String emailAzienda = resultSet.getString("EmailAziendale");
+                String sesso = resultSet.getString("Sesso");
+                String ruolo = resultSet.getString("Ruolo");
+                Ruolo ruolo1 = Ruolo.valueOf(ruolo);
+                Date date2 = resultSet.getDate("DataRilascio");
+                String tipoDocumeto = resultSet.getString("TipoDocumento");
+                String via = resultSet.getString("Via");
+                String provincia = resultSet.getString("Provincia");
+                String comune = resultSet.getString("Comune");
+                String civico = resultSet.getString("Civico");
+                String numeroDocumento = resultSet.getString("NumeroDocumento");
+                Date dataScadenza = resultSet.getDate("DataScadenza");
+                LocalDate localDate = dataScadenza.toLocalDate();
+            }finally{
+                    if(connection != null){
+                        ConnectionStorage.releaseConnection(connection);
+                    }
+            }
+        }
+    }
 }
