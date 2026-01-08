@@ -1,19 +1,22 @@
 package it.unisa.Storage.DAO;
 
+import it.unisa.Common.Camera;
 import it.unisa.Common.Cliente;
+import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.FrontDeskStorage;
 
 import java.net.ConnectException;
+import java.rmi.RemoteException;
 import java.sql.*;
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 public class ClienteDAO implements FrontDeskStorage<Cliente>
 {
+    public static final String TABLE_NAME = "Cliente";
+
     public synchronized void doSave(Cliente o) throws SQLException{
         Connection connection = null;
         try{
@@ -224,9 +227,101 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
     }
 
     @Override
-    public Cliente doRetriveByAttribute(String attribute, String value) throws SQLException {
-        return null;
+    public synchronized Collection<Cliente> doRetriveByAttribute(String attribute, String value) throws SQLException {
+        Connection connection;
+        PreparedStatement preparedStatement = null;
+        ArrayList<Cliente> lista = new ArrayList<>();
+        String selectSQL;
+
+        if(attribute != null && !attribute.isEmpty() && value != null && !value.isEmpty()){
+            connection = ConnectionStorage.getConnection();
+            selectSQL = "SELECT * FROM "+ ClienteDAO.TABLE_NAME + " WHERE " + attribute + " = ?";
+            try{
+                preparedStatement = connection.prepareStatement(selectSQL);
+                preparedStatement.setString(1, value);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                Cliente cliente;
+                while (resultSet.next()) {
+                    cliente = new Cliente();
+                    cliente.setCf(resultSet.getString("CF"));
+                    cliente.setNome(resultSet.getString("nome"));
+                    cliente.setCognome(resultSet.getString("cognome"));
+                    cliente.setCognome(resultSet.getString("civico"));
+                    cliente.setCAP(resultSet.getInt("Cap"));
+                    cliente.setComune(resultSet.getString("Comune"));
+                    cliente.setCittadinanza(resultSet.getString("Cittadinanza"));
+                    cliente.setNumeroCivico(resultSet.getInt("civico"));
+                    cliente.setProvincia(resultSet.getString("provincia"));
+                    cliente.setVia(resultSet.getString("Via"));
+                    cliente.setEmail(resultSet.getString("Email"));
+                    cliente.setSesso(resultSet.getString("Sesso"));
+                    cliente.setNumeroTelefono(resultSet.getString("telefono"));
+                    cliente.setMetodoDiPagamento(resultSet.getString("MetodoDiPagamento"));
+                    cliente.setBlacklisted(resultSet.getBoolean("IsBackListed"));
+                    cliente.setDataNascita(resultSet.getDate("DataDiNascita").toLocalDate());
+                    lista.add(cliente);
+                }
+
+            }finally{
+                if(connection != null){
+                    if (preparedStatement != null) {
+                        preparedStatement.close();
+                    }
+                    ConnectionStorage.releaseConnection(connection);
+                }
+            }
+        }else{
+            throw new RuntimeException("Attributo e/o valore non valido/i");
+        }
+
+        if(lista.isEmpty()) throw new NoSuchElementException("Nessuna cliente con " + attribute + " = " + value + "!");
+
+        return lista;
     }
 
+    // Filtro clienti
+    /* TODO: FINIRE I METODI doFilter per le collezioni E POI FARE METODI doFilter e doRetrieveByAttribute per Prenotazione.
+    List<Cliente> doFilter(String nome, String cognome, String nazionalita, LocalDate dataNascita, String sesso, String orderBy) throws RemoteException {
+        Connection connection;
+        PreparedStatement preparedStatement = null;
+        ArrayList<Cliente> lista = new ArrayList<>();
+        String selectSQL;
 
+        // Flags per verificare se almeno un parametro è stato fornito
+        boolean[] params = new boolean[5];
+        params[0] = nome != null && !nome.isEmpty();
+        params[1] = cognome != null && !cognome.isEmpty();
+        params[2] = nazionalita != null && !nazionalita.isEmpty();
+        params[3] = dataNascita != null && dataNascita.isBefore(LocalDate.now());
+        params[4] = sesso != null && !sesso.isEmpty();
+
+        // Tutti i parametri sono nulli
+        if (!params[0] && !params[1] && !params[2] && !params[3] && !params[4]) {
+            throw new RuntimeException("Nessun parametro inserito!");
+        }
+
+        if (params[0]) { // Se la flag è vera allora il parametro è presente ed è usato come criterio per la query di ricerca
+
+        }
+        if (params[1]) {
+
+        }
+        if (params[2]) {
+
+        }
+        if (params[3]) {
+
+        }
+        if (params[4]) {
+
+        }
+
+        if (nome != null && !nome.isEmpty() && cognome != null && !cognome.isEmpty()
+                && dataNascita != null &&) {
+            connection = ConnectionStorage.getConnection();
+            selectSQL = "SELECT * FROM " + ClienteDAO.TABLE_NAME + " WHERE " + attribute + " = ?";
+
+        }
+    }
+     */
 }

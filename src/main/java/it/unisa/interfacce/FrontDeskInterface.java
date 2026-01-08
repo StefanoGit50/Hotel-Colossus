@@ -7,6 +7,8 @@ import it.unisa.Server.ObserverCamereInterface;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public interface FrontDeskInterface extends Remote, ObserverCamereInterface
@@ -37,5 +39,8 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
 
     // Comando undo
     void undoLastCommand() throws RemoteException;
+
+    // Filtro clienti
+    List<Cliente> cercaClienti(String nome, String cognome, String nazionalita, LocalDate dataNascita, String sesso, String orderBy) throws RemoteException;
 
 }

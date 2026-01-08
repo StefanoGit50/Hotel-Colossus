@@ -16,6 +16,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -220,6 +221,13 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     // COMANDO UNDO
     public void undoLastCommand() throws RemoteException {
         invoker.undoCommand();
+    }
+
+
+    // FILTRO CLIENTI
+    @Override
+    public List<Cliente> cercaClienti(String nome, String cognome, String nazionalita, LocalDate dataNascita, String sesso, String orderBy) throws RemoteException {
+
     }
 
 }

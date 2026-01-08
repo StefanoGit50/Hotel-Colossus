@@ -1,7 +1,6 @@
 package it.unisa.Storage.DAO;
 
 import it.unisa.Common.Impiegato;
-import it.unisa.Common.RicevutaFiscale;
 import it.unisa.Server.persistent.util.Ruolo;
 import it.unisa.Storage.BackofficeStorage;
 import it.unisa.Storage.ConnectionStorage;
@@ -292,109 +291,117 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
     }
 
     @Override
-    public Impiegato doRetriveByAttribute(String attribute, String value) throws SQLException {
+    public Collection<Impiegato> doRetriveByAttribute(String attribute, String value) throws SQLException {
+        Connection connection;
+        PreparedStatement preparedStatement = null;
+        ArrayList<Impiegato> lista = new ArrayList<>();
+        String selectSQL;
 
-        Impiegato impiegato = null;
         if(attribute != null && !attribute.isEmpty() && value != null && !value.isEmpty()) {
-            Connection connection = ConnectionStorage.getConnection();
-            try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM impiegato WHERE " + attribute + " = ?")){
-                preparedStatement.setString(1,value);
+            connection = ConnectionStorage.getConnection();
+            selectSQL = "SELECT * FROM " + ImpiegatoDAO.TABLE_NAME + " WHERE " + attribute + " = ?";
+            try {
+                preparedStatement = connection.prepareStatement(selectSQL);
+                preparedStatement.setString(1, value);
                 ResultSet resultSet = preparedStatement.executeQuery();
+                Impiegato impiegato;
 
-                if(!resultSet.next()){
-                    return null;
+                while (resultSet.next()) {
+                    impiegato = new Impiegato();
+                    impiegato.setUsername(resultSet.getString("username"));
+                    impiegato.setNewHashedPassword(resultSet.getString("password"));
+                    impiegato.setNome(resultSet.getString("nome"));
+                    impiegato.setCognome(resultSet.getString("cognome"));
+                    impiegato.setSesso(resultSet.getString("sesso"));
+                    impiegato.setTipoDocumento(resultSet.getString("tipoDocumento"));
+                    impiegato.setNumeroDocumento(resultSet.getString("numeroDocumento"));
+                    impiegato.setCAP(resultSet.getInt("CAP"));
+                    impiegato.setVia(resultSet.getString("via"));
+                    impiegato.setProvincia(resultSet.getString("provincia"));
+                    impiegato.setComune(resultSet.getString("comune"));
+                    impiegato.setNumeroCivico(resultSet.getInt("numeroCivico"));
+                    impiegato.setCodiceFiscale(resultSet.getString("codiceFiscale"));
+                    impiegato.setTelefono(resultSet.getString("telefono"));
+                    impiegato.setRuolo(resultSet.getObject("Ruolo", Ruolo.class));
+                    impiegato.setStipendio(resultSet.getDouble("Stipendio"));
+                    impiegato.setDataAssunzione(resultSet.getDate("DataAssunzione").toLocalDate());
+                    impiegato.setDataRilascio(resultSet.getDate("DataRilascio").toLocalDate());
+                    impiegato.setEmailAziendale(resultSet.getString("emailAziendale"));
+                    impiegato.setCittadinanza(resultSet.getString("cittadinanza"));
+                    impiegato.setDataScadenza(resultSet.getDate("DataScadenza").toLocalDate());
+                    lista.add(impiegato);
                 }
-
-                String CF = resultSet.getString("CF");
-                double stipendio = resultSet.getDouble("Stipedio");
-                String nome = resultSet.getString("Nome");
-                String cognome = resultSet.getString("Cognome");
-                int Cap = resultSet.getInt("Cap");
-                LocalDate date1 = resultSet.getDate("DataAssunzione").toLocalDate();
-                String telefono = resultSet.getString("Telefono");
-                String cittadinanza = resultSet.getString("Cittadinanza");
-                String emailAzienda = resultSet.getString("EmailAziendale");
-                String sesso = resultSet.getString("Sesso");
-                String ruolo = resultSet.getString("Ruolo");
-                Ruolo ruolo1 = Ruolo.valueOf(ruolo);
-                LocalDate date2 = resultSet.getDate("DataRilascio").toLocalDate();
-                String tipoDocumento = resultSet.getString("TipoDocumento");
-                String via = resultSet.getString("Via");
-                String provincia = resultSet.getString("Provincia");
-                String comune = resultSet.getString("Comune");
-                int civico = resultSet.getInt("Civico");
-                String numeroDocumento = resultSet.getString("NumeroDocumento");
-                LocalDate dataScadenza = resultSet.getDate("DataScadenza").toLocalDate();
-
-                impiegato = new Impiegato(
-                        "",       // username
-                        "",       // hashedPassword
-                        nome,           // nome
-                        cognome,        // cognome
-                        sesso,          // sesso
-                        tipoDocumento,  // tipoDocumento
-                        numeroDocumento,// numeroDocumento
-                        Cap,            // CAP (int)
-                        via,            // via
-                        provincia,      // provincia
-                        comune,         // comune
-                        civico,         // numeroCivico (int)
-                        CF,             // codiceFiscale
-                        telefono,       // telefono
-                        ruolo1,          // ruolo (Enum)
-                        stipendio,      // stipendio
-                        date1, // dataAssunzione
-                        date2,   // dataRilascio
-                        emailAzienda, // emailAziendale
-                        cittadinanza,   // cittadinanza
-                        dataScadenza    // dataScadenza
-                );
-            }finally{
-                    if(connection != null){
-                        ConnectionStorage.releaseConnection(connection);
+            } finally {
+                if (connection != null) {
+                    if (preparedStatement != null) {
+                        preparedStatement.close();
                     }
+                    ConnectionStorage.releaseConnection(connection);
+                }
             }
         }
 
-        return impiegato;
+        if(lista.isEmpty()) throw new NoSuchElementException("Nessun immpiegato trovato!");
+
+        return lista;
     }
 
     @Override
-    public Collection<Impiegato> doFilter(String nome, String sesso, Ruolo ruolo, String orderBy) throws SQLException {
+    public Collection<Impiegato> doFilter(String nome, String sesso, Ruolo ruolo, String orderBy) throws  SQLException {
         Connection conn = ConnectionStorage.getConnection();
         PreparedStatement ps = null;
         ResultSet rs;
-        RicevutaFiscale ricevuta = null;
+        List<Impiegato> lista = new ArrayList<>();
 
         String selectSQL = "select * FROM " + ImpiegatoDAO.TABLE_NAME +
-                " where IDRicevutaFiscale = ? AND  IDPrenotazione = ?";
+                " where nome = ? AND sesso = ? AND ruolo = ?";
 
         if(orderBy != null && !orderBy.isEmpty()) {
             if (DaoUtils.checkWhitelist(whitelist, orderBy))
-                selectSQL +=  " ORDER BY " + orderBy;
+                selectSQL +=  " ORDER BY " + orderBy + ";";
         }
 
         try {
             ps = conn.prepareStatement(selectSQL);
             rs = ps.executeQuery();
 
-            if (rs.next()) {
-                ricevuta = new RicevutaFiscale();
-                ricevuta.setIDRicevutaFiscale(rs.getInt("IDPrenotazione"));
-                ricevuta.setIDPrenotazione(rs.getInt("IDRicevutaFiscale"));
-                ricevuta.setTotale(rs.getDouble("Totale"));
-                ricevuta.setDataEmissione(rs.getDate("DataEmissione").toLocalDate());
+            while(rs.next()){
+                Impiegato impiegato;
+                impiegato = new Impiegato();
+                impiegato.setCodiceFiscale(rs.getString("CF"));
+                impiegato.setStipendio(rs.getDouble("Stipedio"));
+                impiegato.setNome(rs.getString("nome"));
+                impiegato.setCognome(rs.getString("Cognome"));
+                impiegato.setCAP(rs.getInt("Cap"));
+                impiegato.setSesso(rs.getString("sesso"));
+                impiegato.setDataAssunzione(rs.getDate("date").toLocalDate());
+                impiegato.setTelefono(rs.getString("Telefono"));
+                impiegato.setCittadinanza(rs.getString("Cittadinanza"));
+                impiegato.setEmailAziendale(rs.getString("EmailAziendale"));
+                impiegato.setRuolo(rs.getObject("Ruolo", Ruolo.class));
+                impiegato.setDataRilascio(rs.getDate("DataRilascio").toLocalDate());
+                impiegato.setComune(rs.getString("Comune"));
+                impiegato.setProvincia(rs.getString("Provincia"));
+                impiegato.setTipoDocumento(rs.getString("TipoDocumento"));
+                impiegato.setVia(rs.getString("Via"));
+                impiegato.setNumeroCivico(rs.getInt("Civico"));
+                impiegato.setNumeroDocumento(rs.getString("NumeroDocumento"));
+                impiegato.setDataScadenza(rs.getDate("DataScadenza").toLocalDate());
+
+                lista.add(impiegato);
             }
 
-        } finally {
-            if (ps != null)
-                ps.close();
-            ConnectionStorage.releaseConnection(conn);
+        }finally{
+            if(conn != null){
+                if (ps != null) {
+                    ps.close();
+                }
+                ConnectionStorage.releaseConnection(conn);
+            }
         }
 
-        if  (ricevuta == null)
-            throw new NoSuchElementException("prenotazione non trovata");
+        if(lista.isEmpty()) throw new NoSuchElementException("Nessun immpiegato {" + nome + ", " + sesso + "," + ruolo + "," + orderBy + "}!");
 
-        return ricevuta;
+        return lista;
     }
 }

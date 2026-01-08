@@ -1,6 +1,5 @@
 package it.unisa.Storage.DAO;
 
-import it.unisa.Client.FrontDesk.FrontDeskClient;
 import it.unisa.Common.Camera;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.ConnectionStorage;
@@ -12,8 +11,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.NoSuchElementException;
 
 public class CameraDAO implements FrontDeskStorage<Camera>{
+
+    public static final String TABLE_NAME = "Camera";
 
     @Override
     public synchronized void doDelete(Camera o) throws SQLException {
@@ -175,7 +177,45 @@ public class CameraDAO implements FrontDeskStorage<Camera>{
     }
 
     @Override
-    public Camera doRetriveByAttribute(String attribute, String value) throws SQLException {
+    public synchronized Collection<Camera> doRetriveByAttribute(String attribute, String value) throws SQLException {
+        Connection connection;
+        PreparedStatement preparedStatement = null;
+        ArrayList<Camera> lista = new ArrayList<>();
+        String selectSQL;
 
+        if(attribute != null && !attribute.isEmpty() && value != null && !value.isEmpty()){
+            connection = ConnectionStorage.getConnection();
+            selectSQL = "SELECT * FROM "+ CameraDAO.TABLE_NAME + " WHERE " + attribute + " = ?";
+            try{
+                preparedStatement = connection.prepareStatement(selectSQL);
+                preparedStatement.setString(1, value);
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                Camera camera;
+                while (resultSet.next()) {
+                    camera = new Camera();
+                    camera.setNumeroCamera(resultSet.getInt("NumeroCamera"));
+                    camera.setNoteCamera(resultSet.getString("NoteCamera"));
+                    camera.setStatoCamera(Stato.valueOf(resultSet.getString("Stato")));
+                    camera.setPrezzoCamera(resultSet.getDouble("PrezzoCamera"));
+                    camera.setCapacità(resultSet.getInt("NumeroMaxOcc"));
+                    lista.add(camera);
+                }
+
+            }finally{
+                if(connection != null){
+                    if (preparedStatement != null) {
+                        preparedStatement.close();
+                    }
+                    ConnectionStorage.releaseConnection(connection);
+                }
+            }
+        }else{
+            throw new RuntimeException("Attributo e/o valore non valido/i");
+        }
+
+        if(lista.isEmpty()) throw new NoSuchElementException("Nessuna camera con " + attribute + " = " + value + "!");
+
+        return lista;
     }
 }

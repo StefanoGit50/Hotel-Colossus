@@ -11,6 +11,8 @@ import java.util.NoSuchElementException;
 
 public class ServizioDAO implements FrontDeskStorage<Servizio>
 {
+    private static final String TABLE_NAME= "Servizio";
+
     @Override
     public synchronized void doSave(Servizio servizio) throws SQLException
     {
@@ -157,30 +159,45 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
         }
     }
 
+
     @Override
-    public Servizio doRetriveByAttribute(String attribute, String value) throws SQLException {
+    public synchronized Collection<Servizio> doRetriveByAttribute(String attribute, String value) throws SQLException {
+        Connection connection;
+        PreparedStatement preparedStatement = null;
+        ArrayList<Servizio> lista = new ArrayList<>();
+        String selectSQL;
+
         if(attribute != null && !attribute.isEmpty() && value != null && !value.isEmpty()){
-            Connection connection = ConnectionStorage.getConnection();
-            try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM servizio WHERE " + attribute + " = ?")){
+            connection = ConnectionStorage.getConnection();
+            selectSQL = "SELECT * FROM " + ServizioDAO.TABLE_NAME + " WHERE " + attribute + " = ?";
+            try{
+                preparedStatement = connection.prepareStatement(selectSQL);
+                preparedStatement.setString(1, value);
+                ResultSet resultSet = preparedStatement.executeQuery();
 
-                preparedStatement.setString(1,value);
-                ResultSet resultSet = preparedStatement.getResultSet();
+                Servizio servizio;
+                while (resultSet.next()) {
+                    servizio = new Servizio();
+                    servizio.setNome(resultSet.getString("Nome"));
+                    servizio.setPrezzo(resultSet.getDouble("Prezzo"));
 
-                    if(!resultSet.next()){
-                        return null;
-                    }
+                    lista.add(servizio);
+                }
 
-                String nome = resultSet.getString(1);
-                Double prezzo = resultSet.getDouble(2);
-
-                return new Servizio(nome , prezzo);
             }finally{
                 if(connection != null){
+                    if (preparedStatement != null) {
+                        preparedStatement.close();
+                    }
                     ConnectionStorage.releaseConnection(connection);
                 }
             }
         }else{
-            throw new RuntimeException();
+            throw new RuntimeException("Attributo e/o valore non valido/i");
         }
+
+        if(lista.isEmpty()) throw new NoSuchElementException("Nessun servizio con " + attribute + " = " + value + "!");
+
+        return lista;
     }
 }
