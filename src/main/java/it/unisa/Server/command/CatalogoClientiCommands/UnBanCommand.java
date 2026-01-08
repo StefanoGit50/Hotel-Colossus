@@ -53,12 +53,11 @@ public class UnBanCommand implements Command {
     public void execute() {
         try {
             Cliente c = catalogue.getCliente(CFCliente);
-            ArrayList<Cliente> lc = catalogue.getListaClienti(), lcb = catalogue.getListaClientiBannati();
+            ArrayList<Cliente> lc = CatalogoClienti.getListaClienti(), lcb = CatalogoClienti.getListaClientiBannati();
 
-            Iterator<Cliente> it = lcb.iterator(); // Evita di modificare l'array metre lo si itera
             Cliente cli;
-            while (it.hasNext()) {
-                cli = it.next();
+            for(int i = 0; i < lcb.size(); i++){
+                cli = lcb.get(i);
 
                 if(cli.equals(c)) {
                     cli.setBlacklisted(false); // annulla il ban
@@ -67,8 +66,6 @@ public class UnBanCommand implements Command {
                 }
             }
 
-            catalogue.setListaClienti(lc);
-            catalogue.setListaClientiBannati(lcb);
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
@@ -81,12 +78,11 @@ public class UnBanCommand implements Command {
     public void undo() {
         try {
             Cliente c = catalogue.getCliente(CFCliente);
-            ArrayList<Cliente> lc = catalogue.getListaClienti(), lcb = catalogue.getListaClientiBannati();
+            ArrayList<Cliente> lc = CatalogoClienti.getListaClienti(), lcb = CatalogoClienti.getListaClientiBannati();
 
-            Iterator<Cliente> it = lc.iterator(); // Evita di modificare l'array metre lo si itera
             Cliente cli;
-            while (it.hasNext()) {
-                cli = it.next();
+            for(int i = 0; i < lc.size(); i++){
+                cli = lcb.get(i);
 
                 if(cli.equals(c)) {
                     cli.setBlacklisted(true); // rimetti il ban
@@ -95,8 +91,6 @@ public class UnBanCommand implements Command {
                 }
             }
 
-            catalogue.setListaClienti(lc);
-            catalogue.setListaClientiBannati(lcb);
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }

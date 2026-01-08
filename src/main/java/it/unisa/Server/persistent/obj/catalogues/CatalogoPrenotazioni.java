@@ -12,12 +12,15 @@ import java.util.Objects;
  * la ricerca e la rimozione delle stesse.
  */
 public class CatalogoPrenotazioni implements Serializable {
-    private static ArrayList<Prenotazione> listaPrenotazioni = new ArrayList<>();
+    private static ArrayList<Prenotazione> listaPrenotazioni;
 
     /**
      * Costruttore della classe CatalogoPrenotazioni.
-     * @param listaPrenotazioni1 Lista di prenotazioni di tipo {@link Prenotazione} del catalogo.
+     * @param listaPrenotazioni Lista di prenotazioni di tipo {@link Prenotazione} del catalogo.
      */
+    public CatalogoPrenotazioni(ArrayList<Prenotazione> listaPrenotazioni) {
+        CatalogoPrenotazioni.listaPrenotazioni = listaPrenotazioni;
+    }
 
     /**
      * Costruttore vuoto.

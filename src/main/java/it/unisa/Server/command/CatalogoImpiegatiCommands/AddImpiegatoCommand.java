@@ -48,18 +48,16 @@ public class AddImpiegatoCommand implements Command {
 
     @Override
     public void execute() {
-        ArrayList<Impiegato> li = catalogue.getListaImpiegati();
+        ArrayList<Impiegato> li = CatalogoImpiegati.getListaImpiegati();
         li.add(impiegato);
-        catalogue.setListaImpiegati(li);
     }
 
     @Override
     public void undo() {
         try {
             Impiegato i = catalogue.getImpiegato(impiegato.getCodiceFiscale());
-            ArrayList<Impiegato> li = catalogue.getListaImpiegati();
+            ArrayList<Impiegato> li = CatalogoImpiegati.getListaImpiegati();
             li.remove(i);
-            catalogue.setListaImpiegati(li);
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }

@@ -53,7 +53,7 @@ public class UpdatePrenotazioneCommand implements Command {
     public void execute() {
         try {
             Prenotazione p = catalogue.getPrenotazione(prenotazione.getCodicePrenotazione());
-            ArrayList<Prenotazione> lp = catalogue.getListaPrenotazioni();
+            ArrayList<Prenotazione> lp = CatalogoPrenotazioni.getListaPrenotazioni();
 
             Iterator<Prenotazione> it = lp.iterator(); // Evita di modificare l'array metre lo si itera
             Prenotazione pren;
@@ -62,12 +62,12 @@ public class UpdatePrenotazioneCommand implements Command {
 
                 if(pren.getCodicePrenotazione() ==  p.getCodicePrenotazione()) {
                     prenotazioneNonModificata = pren;
-                    lp.remove(pren); // rimuovi la prenotazione 'non modificata' dalla lista delle prenotazioni
-                    lp.add(p); // aggiungi la prenotazione 'modificata' alla lista delle prenotazioni
+                    lp.remove(p); // rimuovi la prenotazione 'non modificata' dalla lista delle prenotazioni
+                    lp.add(prenotazione); // aggiungi la prenotazione 'modificata' alla lista delle prenotazioni
+                    break;
                 }
             }
 
-            catalogue.addPrenotazioni(lp);
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
@@ -77,7 +77,7 @@ public class UpdatePrenotazioneCommand implements Command {
     public void undo() {
         try {
             Prenotazione p = catalogue.getPrenotazione(prenotazione.getCodicePrenotazione());
-            ArrayList<Prenotazione> lp = catalogue.getListaPrenotazioni();
+            ArrayList<Prenotazione> lp = CatalogoPrenotazioni.getListaPrenotazioni();
 
             Iterator<Prenotazione> it = lp.iterator(); // Evita di modificare l'array metre lo si itera
             Prenotazione pren;
@@ -85,12 +85,12 @@ public class UpdatePrenotazioneCommand implements Command {
                 pren = it.next();
 
                 if(pren.getCodicePrenotazione() == p.getCodicePrenotazione()) {
-                    lp.remove(pren); // rimuovi il prenotazione 'non modificato' dalla lista dei prenotazioni
+                    lp.remove(p); // rimuovi il prenotazione 'non modificato' dalla lista dei prenotazioni
                     lp.add(prenotazioneNonModificata); // aggiungi il prenotazione 'modificato' alla lista dei prenotazioni
+                    break;
                 }
             }
 
-            catalogue.addPrenotazioni(lp);
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }

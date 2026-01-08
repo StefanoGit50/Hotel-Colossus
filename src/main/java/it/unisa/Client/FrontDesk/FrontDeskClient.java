@@ -136,7 +136,7 @@ public class FrontDeskClient
                         break;
                     }
                     case 7:{
-                        frontDeskInterface.effettuaPrenotazione("7" , new Cliente("Stefano") , new Camera(4 ,Stato.Libera,4, 200.0 , ""));
+                        //frontDeskInterface.effettuaPrenotazione("7" , new Cliente("Stefano") , new Camera(4 ,Stato.Libera,4, 200.0 , ""));
 
                     }
                     case 0:{

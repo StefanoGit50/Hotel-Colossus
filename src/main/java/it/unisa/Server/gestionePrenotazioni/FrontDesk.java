@@ -1,22 +1,31 @@
 package it.unisa.Server.gestionePrenotazioni;
 
+import it.unisa.Server.command.*;
+import it.unisa.Common.*;
+import it.unisa.Server.command.*;
+
 import it.unisa.Common.Camera;
 import it.unisa.Common.Prenotazione;
-import it.unisa.Server.gestioneClienti.Cliente;
-
+import it.unisa.Server.command.CatalogoClientiCommands.*;
+import it.unisa.Server.command.CatalogoImpiegatiCommands.AddImpiegatoCommand;
+import it.unisa.Server.command.CatalogoImpiegatiCommands.RemoveImpiegatoCommand;
+import it.unisa.Server.command.CatalogoImpiegatiCommands.UpdateImpiegatoCommand;
+import it.unisa.Server.command.CatalogoPrenotazioniCommands.AddPrenotazioneCommand;
+import it.unisa.Server.command.CatalogoPrenotazioniCommands.RemovePrenotazioneCommand;
+import it.unisa.Server.command.CatalogoPrenotazioniCommands.UpdatePrenotazioneCommand;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
+import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
+import it.unisa.Server.persistent.obj.catalogues.CatalogoImpiegati;
+import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
 import it.unisa.Storage.DAO.PrenotazioneDAO;
 import it.unisa.Storage.FrontDeskStorage;
-import it.unisa.interfacce.GovernanteInterface;
 import it.unisa.interfacce.FrontDeskInterface;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -31,7 +40,6 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     public FrontDesk() throws RemoteException {
         super();
     }
-
 
     public List<Camera> getCamere(){
        return CatalogoCamere.getListaCamere();
@@ -49,9 +57,9 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         return CatalogoCamere.getLastModified();
     }
 
-    @Override
+    //@Override
     public void effettuaPrenotazione(String id, Cliente cliente, Camera stanza) throws RemoteException, SQLException {
-        prenotazioni.add(new Prenotazione(Integer.parseInt(id), LocalDate.now() , LocalDate.now()));
+        //prenotazioni.add(new Prenotazione(Integer.parseInt(id), LocalDate.now() , LocalDate.now()));
         FrontDeskStorage<Prenotazione> prenotazioneFrontDeskStorage = new PrenotazioneDAO();
 
         while(!prenotazioni.isEmpty()){
@@ -142,5 +150,86 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         }
     }
 
+    /// ////////////////////////////////////////////////////////////////////////////////////
+
+    // Invoker --> mantiene l'ordine delle chiamate ai comandi
+    private Invoker invoker = new Invoker();
+    // Cataloghi
+    private CatalogoPrenotazioni catalogoPrenotazioni = new CatalogoPrenotazioni();
+    private CatalogoClienti catalogoClienti = new CatalogoClienti();
+    private CatalogoImpiegati catalogoImpiegati = new CatalogoImpiegati();
+
+
+    // COMANDI PRENOTAZIONE
+    public void addPrenotazione(Prenotazione p) throws RemoteException {
+        AddPrenotazioneCommand command = new AddPrenotazioneCommand(catalogoPrenotazioni, p);
+        invoker.executeCommand(command);
+    }
+
+    public void removePrenotazione(Prenotazione p) throws RemoteException {
+        RemovePrenotazioneCommand command = new RemovePrenotazioneCommand(catalogoPrenotazioni, p);
+        invoker.executeCommand(command);
+    }
+
+    public void updatePrenotazione(Prenotazione p) throws RemoteException {
+        UpdatePrenotazioneCommand command = new UpdatePrenotazioneCommand(catalogoPrenotazioni, p);
+        invoker.executeCommand(command);
+    }
+
+    // COMANDI CLIENTE
+    @Override
+    public void addCliente(Cliente c) throws RemoteException {
+        AddClienteCommand command = new AddClienteCommand(catalogoClienti, c);
+        invoker.executeCommand(command);
+    }
+
+    @Override
+    public void removeCliente(Cliente c) throws RemoteException {
+        RemoveClienteCommand command = new RemoveClienteCommand(catalogoClienti, c);
+        invoker.executeCommand(command);
+    }
+
+    @Override
+    public void updateCliente(Cliente c) throws RemoteException {
+        UpdateClienteCommand command = new UpdateClienteCommand(catalogoClienti, c);
+        invoker.executeCommand(command);
+    }
+
+    @Override
+    public void banCliente(Cliente c) throws RemoteException {
+        BanCommand command = new BanCommand(catalogoClienti, c.getCf());
+        invoker.executeCommand(command);
+    }
+
+    @Override
+    public void unBanCliente(Cliente c) throws RemoteException {
+        UnBanCommand command = new UnBanCommand(catalogoClienti, c.getCf());
+        invoker.executeCommand(command);
+    }
+
+    //  COMANDI IMPIEGATO
+    @Override
+    public void addImpiegato(Impiegato i) throws RemoteException {
+        AddImpiegatoCommand command = new AddImpiegatoCommand(catalogoImpiegati, i);
+        invoker.executeCommand(command);
+    }
+
+    @Override
+    public void removeImpiegato(Impiegato i) throws RemoteException {
+        RemoveImpiegatoCommand command = new RemoveImpiegatoCommand(catalogoImpiegati, i);
+        invoker.executeCommand(command);
+
+    }
+
+    @Override
+    public void updateImpiegato(Impiegato i) throws RemoteException {
+        UpdateImpiegatoCommand command = new UpdateImpiegatoCommand(catalogoImpiegati, i);
+        invoker.executeCommand(command);
+    }
+
+    // COMANDO UNDO
+    public void undoLastCommand() throws RemoteException {
+        invoker.undoCommand();
+    }
 
 }
