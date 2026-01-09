@@ -2,6 +2,7 @@ package it.unisa.Storage.DAO;
 
 import it.unisa.Common.Camera;
 import it.unisa.Common.Cliente;
+import it.unisa.Common.RicevutaFiscale;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.FrontDeskStorage;
@@ -16,6 +17,28 @@ import java.util.*;
 public class ClienteDAO implements FrontDeskStorage<Cliente>
 {
     public static final String TABLE_NAME = "Cliente";
+    private static final String[] whitelist = {
+            "CF",
+            "Stipedio",
+            "Nome",
+            "Cognome",
+            "Cap",
+            "DataAssunzione",
+            "Telefono",
+            "Cittadinanza",
+            "EmailAziendale",
+            "Sesso",
+            "Ruolo",
+            "DataRilascio",
+            "TipoDocumento",
+            "Via",
+            "Provincia",
+            "Comune",
+            "Civico",
+            "NumeroDocumento",
+            "DataScadenza",
+            "CF1"
+    };
 
     public synchronized void doSave(Cliente o) throws SQLException{
         Connection connection = null;
@@ -279,13 +302,14 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
         return lista;
     }
 
+
+    // TODO: FINIRE I METODI doFilter per le collezioni E POI FARE METODI doFilter e doRetrieveByAttribute per Prenotazione.
     // Filtro clienti
-    /* TODO: FINIRE I METODI doFilter per le collezioni E POI FARE METODI doFilter e doRetrieveByAttribute per Prenotazione.
     List<Cliente> doFilter(String nome, String cognome, String nazionalita, LocalDate dataNascita, String sesso, String orderBy) throws RemoteException {
         Connection connection;
         PreparedStatement preparedStatement = null;
         ArrayList<Cliente> lista = new ArrayList<>();
-        String selectSQL;
+        String selectSQL = "";
 
         // Flags per verificare se almeno un parametro è stato fornito
         boolean[] params = new boolean[5];
@@ -295,33 +319,90 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
         params[3] = dataNascita != null && dataNascita.isBefore(LocalDate.now());
         params[4] = sesso != null && !sesso.isEmpty();
 
-        // Tutti i parametri sono nulli
+        // Se tutti i parametri sono nulli allora lancia l'eccezione
         if (!params[0] && !params[1] && !params[2] && !params[3] && !params[4]) {
             throw new RuntimeException("Nessun parametro inserito!");
         }
 
-        if (params[0]) { // Se la flag è vera allora il parametro è presente ed è usato come criterio per la query di ricerca
-
+        // Conta il numero di parametri che sono veri
+        int count = 0;
+        for (boolean b : params) {
+            if(b) count++;
         }
-        if (params[1]) {
+        // Il numero di AND della query è pari a count - 1
 
+        selectSQL += " SELECT * FROM " + ClienteDAO.TABLE_NAME + " WHERE ";
+        for (int i = 0; i < params.length; i++) {
+            if (i == 0 && params[0]) { // Se la flag è vera allora il parametro è presente ed è usato come criterio per la query di ricerca
+                selectSQL += " nome = " + nome + " ";
+            }
+            if (i == 1 && params[1]) {
+                selectSQL += " cognome = " + cognome + " ";
+            }
+            if (i == 2 && params[2]) {
+                selectSQL += " Cittadinanza = " + nazionalita + " ";
+            }
+            if (i == 3 && params[3]) {
+                selectSQL += " DataDiNascita = " + dataNascita + " ";
+            }
+            if (i == 4 && params[4]) {
+                selectSQL += " sesso = " + sesso + " ";
+            }
+            if (count != 0) {
+                selectSQL += " AND ";
+                count--;
+            }
         }
-        if (params[2]) {
 
-        }
-        if (params[3]) {
-
-        }
-        if (params[4]) {
-
+        if(orderBy != null && !orderBy.isEmpty()) {
+            if (DaoUtils.checkWhitelist(whitelist, orderBy))
+                selectSQL +=  " ORDER BY " + orderBy + ";";
         }
 
-        if (nome != null && !nome.isEmpty() && cognome != null && !cognome.isEmpty()
-                && dataNascita != null &&) {
-            connection = ConnectionStorage.getConnection();
-            selectSQL = "SELECT * FROM " + ClienteDAO.TABLE_NAME + " WHERE " + attribute + " = ?";
+        ArrayList<Cliente> results = null;
+        Connection conn = null;
+        try {
+            conn = ConnectionStorage.getConnection();
 
+            PreparedStatement ps = null;
+            ResultSet resultSet = null;
+
+            try {
+                ps = conn.prepareStatement(selectSQL);
+                resultSet = ps.executeQuery();
+                results = new ArrayList<Cliente>();
+                Cliente cliente;
+                while (resultSet.next()) {
+                    cliente = new Cliente();
+                    cliente.setCf(resultSet.getString("CF"));
+                    cliente.setNome(resultSet.getString("nome"));
+                    cliente.setCognome(resultSet.getString("cognome"));
+                    cliente.setCAP(resultSet.getInt("Cap"));
+                    cliente.setComune(resultSet.getString("comune"));
+                    cliente.setNumeroCivico(resultSet.getInt("civico"));
+                    cliente.setProvincia(resultSet.getString("provincia"));
+                    cliente.setVia(resultSet.getString("via"));
+                    cliente.setEmail(resultSet.getString("Email"));
+                    cliente.setSesso(resultSet.getString("Sesso"));
+                    cliente.setNumeroTelefono(resultSet.getString("telefono"));
+                    cliente.setMetodoDiPagamento(resultSet.getString("MetodoDiPagamento"));
+                    cliente.setCittadinanza(resultSet.getString("Cittadinanza"));
+
+                    results.add(cliente);
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                if (ps != null)
+                    ps.close();
+                ConnectionStorage.releaseConnection(conn);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
+        return results;
     }
-     */
+
 }

@@ -223,11 +223,4 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         invoker.undoCommand();
     }
 
-
-    // FILTRO CLIENTI
-    @Override
-    public List<Cliente> cercaClienti(String nome, String cognome, String nazionalita, LocalDate dataNascita, String sesso, String orderBy) throws RemoteException {
-
-    }
-
 }

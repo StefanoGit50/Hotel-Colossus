@@ -1,10 +1,12 @@
 package it.unisa.Storage.DAO;
 
+import it.unisa.Common.Cliente;
 import it.unisa.Common.Impiegato;
 import it.unisa.Server.persistent.util.Ruolo;
 import it.unisa.Storage.BackofficeStorage;
 import it.unisa.Storage.ConnectionStorage;
 
+import java.rmi.RemoteException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,27 +17,22 @@ import java.util.NoSuchElementException;
 public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
 {
     private static final String TABLE_NAME = "Impiegato";
-    private static final String[] whitelist = {
+    String[] whitelist = {
             "CF",
-            "Stipedio",
-            "Nome",
-            "Cognome",
+            "nome",
+            "cognome",
             "Cap",
-            "DataAssunzione",
-            "Telefono",
-            "Cittadinanza",
-            "EmailAziendale",
+            "comune",
+            "civico",
+            "provincia",
+            "via",
+            "Email",
             "Sesso",
-            "Ruolo",
-            "DataRilascio",
-            "TipoDocumento",
-            "Via",
-            "Provincia",
-            "Comune",
-            "Civico",
-            "NumeroDocumento",
-            "DataScadenza",
-            "CF1"
+            "telefono",
+            "MetodoDiPagamento",
+            "Cittadinanza",
+            "DataDiNascita",
+            "IsBackListed"
     };
 
     @Override
@@ -352,9 +349,42 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
         PreparedStatement ps = null;
         ResultSet rs;
         List<Impiegato> lista = new ArrayList<>();
+        String selectSQL = "";
 
-        String selectSQL = "select * FROM " + ImpiegatoDAO.TABLE_NAME +
-                " where nome = ? AND sesso = ? AND ruolo = ?";
+        // Flags per verificare se almeno un parametro è stato fornito
+        boolean[] params = new boolean[4];
+        params[0] = nome != null && !nome.isEmpty();
+        params[1] = sesso != null && !sesso.isEmpty();
+        params[2] = ruolo != null;
+
+        // Se tutti i parametri sono nulli allora lancia l'eccezione
+        if (!params[0] && !params[1] && !params[2]) {
+            throw new RuntimeException("Nessun parametro inserito!");
+        }
+
+        // Conta il numero di parametri che sono veri
+        int count = 0;
+        for (boolean b : params) {
+            if(b) count++;
+        }
+        // Il numero di AND della query è pari a count - 1
+
+        selectSQL += " SELECT * FROM " + ImpiegatoDAO.TABLE_NAME + " WHERE ";
+        for (int i = 0; i < params.length; i++) {
+            if (i == 0 && params[0]) { // Se la flag è vera allora il parametro è presente ed è usato come criterio per la query di ricerca
+                selectSQL += " nome = " + nome + " ";
+            }
+            if (i == 1 && params[1]) {
+                selectSQL += " sesso = " + sesso + " ";
+            }
+            if (i == 2 && params[2]) {
+                selectSQL += " ruolo = " + ruolo + " ";
+            }
+            if (count != 0) {
+                selectSQL += " AND ";
+                count--;
+            }
+        }
 
         if(orderBy != null && !orderBy.isEmpty()) {
             if (DaoUtils.checkWhitelist(whitelist, orderBy))
