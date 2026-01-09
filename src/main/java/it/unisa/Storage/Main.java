@@ -373,13 +373,14 @@ public class Main{
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
         }
-
+/*
         TrattamentoDAO trattamentoDAO = new TrattamentoDAO();
         try {
             Trattamento trattamento = trattamentoDAO.doRetriveByAttribute("Nome","Mezza Pensione");
-            System.out.println(t)
+            System.out.println(trattamento);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        */
     }
 }

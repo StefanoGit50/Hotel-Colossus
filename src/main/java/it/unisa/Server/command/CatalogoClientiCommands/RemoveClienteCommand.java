@@ -3,7 +3,9 @@ package it.unisa.Server.command.CatalogoClientiCommands;
 import it.unisa.Common.Cliente;
 import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
+import it.unisa.Storage.DAO.ClienteDAO;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -59,8 +61,13 @@ public class RemoveClienteCommand implements Command {
                 lc = CatalogoClienti.getListaClienti();
                 lc.remove(c);
             }
-        } catch (CloneNotSupportedException e) {
+
+            ClienteDAO clienteDAO = new ClienteDAO();
+            clienteDAO.doDelete(c);
+        }catch (CloneNotSupportedException e) {
             e.printStackTrace();
+        }catch (SQLException sqlException){
+            sqlException.printStackTrace();
         }
     }
 
@@ -70,9 +77,21 @@ public class RemoveClienteCommand implements Command {
         if(cliente.isBlacklisted()) {
             lc = CatalogoClienti.getListaClientiBannati();
             lc.add(cliente);
+            try{
+                ClienteDAO clienteDAO = new ClienteDAO();
+                clienteDAO.doSave(cliente);
+            }catch(SQLException sqlException){
+                sqlException.printStackTrace();
+            }
         } else {
             lc = CatalogoClienti.getListaClienti();
             lc.add(cliente);
+            try{
+                ClienteDAO clienteDAO = new ClienteDAO();
+                clienteDAO.doSave(cliente);
+            }catch(SQLException sqlException){
+                sqlException.printStackTrace();
+            }
         }
     }
 }

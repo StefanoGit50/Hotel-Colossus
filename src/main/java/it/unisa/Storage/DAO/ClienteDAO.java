@@ -224,7 +224,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
     }
 
     @Override
-    public Cliente doRetriveByAttribute(String attribute, String value) throws SQLException {
+    public ArrayList<Cliente> doRetriveByAttribute(String attribute, String value) throws SQLException {
         return null;
     }
 

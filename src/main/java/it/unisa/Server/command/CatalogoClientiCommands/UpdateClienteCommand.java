@@ -1,9 +1,12 @@
 package it.unisa.Server.command.CatalogoClientiCommands;
 
+import com.mysql.cj.xdevapi.Client;
 import it.unisa.Common.Cliente;
 import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
+import it.unisa.Storage.DAO.ClienteDAO;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -76,6 +79,12 @@ public class UpdateClienteCommand implements Command {
                     clienteNonModificato = cli;
                     lcb.remove(cli); // rimuovi il cliente 'non modificato' dalla lista dei clienti
                     lcb.add(c); // aggiungi il cliente 'modificato' alla lista dei clienti
+                    try{
+                        ClienteDAO clienteDAO = new ClienteDAO();
+                        clienteDAO.doUpdate(c);
+                    }catch (SQLException sqlException){
+                        sqlException.printStackTrace();
+                    }
                     break;
                 }
             }
@@ -100,6 +109,12 @@ public class UpdateClienteCommand implements Command {
                 if(cli.getCf().equals(c.getCf())) {
                     lc.remove(cli); // rimuovi il cliente 'non modificato' dalla lista dei clienti
                     lc.add(clienteNonModificato); // aggiungi il cliente 'modificato' alla lista dei clienti
+                    try{
+                        ClienteDAO clienteDAO = new ClienteDAO();
+                        clienteDAO.doUpdate(clienteNonModificato);
+                    }catch (SQLException sqlException){
+                        sqlException.printStackTrace();
+                    }
                     break;
                 }
             }
@@ -110,6 +125,12 @@ public class UpdateClienteCommand implements Command {
                 if(cli.getCf().equals(c.getCf())) {
                     lcb.remove(cli); // rimuovi il cliente 'non modificato' dalla lista dei clienti
                     lcb.add(clienteNonModificato); // aggiungi il cliente 'modificato' alla lista dei clienti
+                    try{
+                        ClienteDAO clienteDAO = new ClienteDAO();
+                        clienteDAO.doUpdate(clienteNonModificato);
+                    }catch (SQLException sqlException){
+                        sqlException.printStackTrace();
+                    }
                     break;
                 }
             }

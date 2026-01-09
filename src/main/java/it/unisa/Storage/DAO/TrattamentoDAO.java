@@ -155,7 +155,7 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
         }
     }
     @Override
-    public Trattamento doRetriveByAttribute(String attribute, String value) throws SQLException {
+    public ArrayList<Trattamento> doRetriveByAttribute(String attribute, String value) throws SQLException {
         if(attribute != null && value != null && !attribute.isEmpty() && !value.isEmpty()){
             Connection connection = ConnectionStorage.getConnection();
             try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM trattamento WHERE "  + attribute + " = ?")){
@@ -164,10 +164,14 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
                 if(!resultSet.next()){
                     return null;
                 }
-                String nome = resultSet.getString(1);
-                Double prezzo = resultSet.getDouble(2);
+                ArrayList<Trattamento> trattamentos = new ArrayList<>();
+                while(resultSet.next()){
+                    String nome = resultSet.getString(1);
+                    Double prezzo = resultSet.getDouble(2);
+                    trattamentos.add(new Trattamento(nome,prezzo));
+                }
                 resultSet.close();
-                return new Trattamento(nome,prezzo);
+                return trattamentos;
             }finally{
                 if(connection != null){
                     ConnectionStorage.releaseConnection(connection);

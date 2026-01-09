@@ -440,7 +440,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
     }
 
     @Override
-    public Prenotazione doRetriveByAttribute(String attribute, String value) throws SQLException {
+    public ArrayList<Prenotazione> doRetriveByAttribute(String attribute, String value) throws SQLException {
         Connection connection = ConnectionStorage.getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Prenotazione WHERE " + attribute + " = ?")) {
             preparedStatement.setString(1,value);

@@ -31,7 +31,6 @@ public class Invoker {
         stackOperazioni.push(c);
         c.execute();
     }
-
     /**
      * Annulla l'ultimo comando eseguito.
      */

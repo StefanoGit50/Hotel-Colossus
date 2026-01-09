@@ -158,7 +158,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
     }
 
     @Override
-    public Servizio doRetriveByAttribute(String attribute, String value) throws SQLException {
+    public ArrayList<Servizio> doRetriveByAttribute(String attribute, String value) throws SQLException {
         if(attribute != null && !attribute.isEmpty() && value != null && !value.isEmpty()){
             Connection connection = ConnectionStorage.getConnection();
             try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM servizio WHERE " + attribute + " = ?")){
@@ -169,11 +169,14 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
                     if(!resultSet.next()){
                         return null;
                     }
+               ArrayList<Servizio> servizios = new ArrayList<>();
+                while(resultSet.next()){
+                    String nome = resultSet.getString(1);
+                    Double prezzo = resultSet.getDouble(2);
+                servizios.add(new Servizio(nome , prezzo));
+                }
 
-                String nome = resultSet.getString(1);
-                Double prezzo = resultSet.getDouble(2);
-
-                return new Servizio(nome , prezzo);
+                return servizios;
             }finally{
                 if(connection != null){
                     ConnectionStorage.releaseConnection(connection);

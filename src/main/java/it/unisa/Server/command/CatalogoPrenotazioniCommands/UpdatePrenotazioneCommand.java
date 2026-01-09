@@ -3,7 +3,10 @@ package it.unisa.Server.command.CatalogoPrenotazioniCommands;
 import it.unisa.Common.Prenotazione;
 import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
+import it.unisa.Storage.DAO.PrenotazioneDAO;
+import it.unisa.Storage.FrontDeskStorage;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -64,12 +67,15 @@ public class UpdatePrenotazioneCommand implements Command {
                     prenotazioneNonModificata = pren;
                     lp.remove(p); // rimuovi la prenotazione 'non modificata' dalla lista delle prenotazioni
                     lp.add(prenotazione); // aggiungi la prenotazione 'modificata' alla lista delle prenotazioni
+                    FrontDeskStorage<Prenotazione> prenotazioneFrontDeskStorage = new PrenotazioneDAO();
+                    prenotazioneFrontDeskStorage.doUpdate(prenotazione);
                     break;
                 }
             }
-
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
+        }catch (SQLException sqlException){
+
         }
     }
 

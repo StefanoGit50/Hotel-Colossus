@@ -3,7 +3,9 @@ package it.unisa.Server.command.CatalogoClientiCommands;
 import it.unisa.Common.Cliente;
 import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
+import it.unisa.Storage.DAO.ClienteDAO;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -52,6 +54,12 @@ public class AddClienteCommand implements Command {
     public void execute() {
         ArrayList<Cliente> lc = CatalogoClienti.getListaClienti();
         lc.add(cliente);
+        try{
+            ClienteDAO clienteDAO = new ClienteDAO();
+            clienteDAO.doSave(cliente);
+        }catch(SQLException sqlException){
+            sqlException.printStackTrace();
+        }
     }
 
     @Override
@@ -60,6 +68,14 @@ public class AddClienteCommand implements Command {
             Cliente c = catalogue.getCliente(cliente.getCf());
             ArrayList<Cliente> lc = CatalogoClienti.getListaClienti();
             lc.remove(c);
+
+            try{
+                ClienteDAO clienteDAO = new ClienteDAO();
+                clienteDAO.doDelete(cliente);
+            }catch (SQLException sqlException){
+                sqlException.printStackTrace();
+            }
+
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }

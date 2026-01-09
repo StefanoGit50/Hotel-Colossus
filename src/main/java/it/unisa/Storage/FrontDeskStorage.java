@@ -1,6 +1,7 @@
 package it.unisa.Storage;
 
 import it.unisa.Common.Prenotazione;
+import it.unisa.Storage.DAO.CameraDAO;
 
 import java.sql.SQLException;
 import java.util.Collection;

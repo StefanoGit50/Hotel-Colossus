@@ -3,7 +3,10 @@ package it.unisa.Server.command.CatalogoImpiegatiCommands;
 import it.unisa.Common.Impiegato;
 import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoImpiegati;
+import it.unisa.Storage.BackofficeStorage;
+import it.unisa.Storage.DAO.ImpiegatoDAO;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -53,7 +56,9 @@ public class RemoveImpiegatoCommand implements Command {
             Impiegato i = catalogue.getImpiegato(impiegato.getCodiceFiscale());
             ArrayList<Impiegato> li = CatalogoImpiegati.getListaImpiegati();
             li.remove(i);
-        } catch (CloneNotSupportedException e) {
+            BackofficeStorage<Impiegato> backofficeStorage = new ImpiegatoDAO();
+            backofficeStorage.doDelete(i);
+        } catch (CloneNotSupportedException | SQLException e) {
             e.printStackTrace();
         }
     }
@@ -62,5 +67,11 @@ public class RemoveImpiegatoCommand implements Command {
     public void undo() {
         ArrayList<Impiegato> li = CatalogoImpiegati.getListaImpiegati();
         li.add(impiegato);
+        try{
+            BackofficeStorage<Impiegato> impiegatoBackofficeStorage = new ImpiegatoDAO();
+            impiegatoBackofficeStorage.doSave(impiegato);
+        }catch(SQLException sqlException){
+            sqlException.printStackTrace();
+        }
     }
 }

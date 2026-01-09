@@ -3,7 +3,11 @@ package it.unisa.Client.FrontDesk;
 import it.unisa.Common.Camera;
 
 import it.unisa.Common.Prenotazione;
+import it.unisa.Server.command.CatalogoClientiCommands.AddClienteCommand;
+import it.unisa.Server.command.CatalogoClientiCommands.BanCommand;
+import it.unisa.Server.command.CatalogoClientiCommands.UnBanCommand;
 import it.unisa.Server.gestionePrenotazioni.FrontDesk;
+import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.DAO.CameraDAO;
 import it.unisa.Storage.FrontDeskStorage;
@@ -13,6 +17,7 @@ import it.unisa.Server.gestioneClienti.Cliente;
 
 
 import java.rmi.Naming;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -137,7 +142,11 @@ public class FrontDeskClient
                     }
                     case 7:{
                         //frontDeskInterface.effettuaPrenotazione("7" , new Cliente("Stefano") , new Camera(4 ,Stato.Libera,4, 200.0 , ""));
-
+                        AddClienteCommand addClienteCommand = new AddClienteCommand(new CatalogoClienti() , new it.unisa.Common.Cliente("Francesco" , "Moretto" , "Italiano" , "Salerno" , "Capezzano" , "corso armando diaz " , 10 , 84054 , "324677894018" , "Maschio" , LocalDate.of(2016,12,30) , "MRTFCS16T30H703C" ,"" ,"Cartaceo"));
+                        addClienteCommand.execute();
+                        //BanCommand banCommand = new BanCommand(new CatalogoClienti() , "MRTFCS16T30H703C");
+                        UnBanCommand unBanCommand = new UnBanCommand(new CatalogoClienti() , "MRTFCS16T30H703C");
+                        unBanCommand.execute();
                     }
                     case 0:{
                         x++;

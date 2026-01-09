@@ -6,6 +6,7 @@ import it.unisa.Server.persistent.util.Ruolo;
 import it.unisa.Storage.BackofficeStorage;
 import it.unisa.Storage.ConnectionStorage;
 
+import javax.sql.rowset.RowSetWarning;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -292,7 +293,7 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
     }
 
     @Override
-    public Impiegato doRetriveByAttribute(String attribute, String value) throws SQLException {
+    public ArrayList<Impiegato> doRetriveByAttribute(String attribute, String value) throws SQLException {
 
         Impiegato impiegato = null;
         if(attribute != null && !attribute.isEmpty() && value != null && !value.isEmpty()) {
@@ -304,59 +305,68 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
                 if(!resultSet.next()){
                     return null;
                 }
-
-                String CF = resultSet.getString("CF");
-                double stipendio = resultSet.getDouble("Stipedio");
-                String nome = resultSet.getString("Nome");
-                String cognome = resultSet.getString("Cognome");
-                int Cap = resultSet.getInt("Cap");
-                LocalDate date1 = resultSet.getDate("DataAssunzione").toLocalDate();
-                String telefono = resultSet.getString("Telefono");
-                String cittadinanza = resultSet.getString("Cittadinanza");
-                String emailAzienda = resultSet.getString("EmailAziendale");
-                String sesso = resultSet.getString("Sesso");
-                String ruolo = resultSet.getString("Ruolo");
-                Ruolo ruolo1 = Ruolo.valueOf(ruolo);
-                LocalDate date2 = resultSet.getDate("DataRilascio").toLocalDate();
-                String tipoDocumento = resultSet.getString("TipoDocumento");
-                String via = resultSet.getString("Via");
-                String provincia = resultSet.getString("Provincia");
-                String comune = resultSet.getString("Comune");
-                int civico = resultSet.getInt("Civico");
-                String numeroDocumento = resultSet.getString("NumeroDocumento");
-                LocalDate dataScadenza = resultSet.getDate("DataScadenza").toLocalDate();
-
-                impiegato = new Impiegato(
-                        "",       // username
-                        "",       // hashedPassword
-                        nome,           // nome
-                        cognome,        // cognome
-                        sesso,          // sesso
-                        tipoDocumento,  // tipoDocumento
-                        numeroDocumento,// numeroDocumento
-                        Cap,            // CAP (int)
-                        via,            // via
-                        provincia,      // provincia
-                        comune,         // comune
-                        civico,         // numeroCivico (int)
-                        CF,             // codiceFiscale
-                        telefono,       // telefono
-                        ruolo1,          // ruolo (Enum)
-                        stipendio,      // stipendio
-                        date1, // dataAssunzione
-                        date2,   // dataRilascio
-                        emailAzienda, // emailAziendale
-                        cittadinanza,   // cittadinanza
-                        dataScadenza    // dataScadenza
-                );
+                ArrayList<Impiegato> impiegatoes = new ArrayList<>();
+                while(resultSet.next()){
+                    String CF = resultSet.getString("CF");
+                    double stipendio = resultSet.getDouble("Stipedio");
+                    String nome = resultSet.getString("Nome");
+                    String cognome = resultSet.getString("Cognome");
+                    int Cap = resultSet.getInt("Cap");
+                    LocalDate date1 = resultSet.getDate("DataAssunzione").toLocalDate();
+                    String telefono = resultSet.getString("Telefono");
+                    String cittadinanza = resultSet.getString("Cittadinanza");
+                    String emailAzienda = resultSet.getString("EmailAziendale");
+                    String sesso = resultSet.getString("Sesso");
+                    String ruolo = resultSet.getString("Ruolo");
+                    Ruolo ruolo1 = Ruolo.valueOf(ruolo);
+                    LocalDate date2 = resultSet.getDate("DataRilascio").toLocalDate();
+                    String tipoDocumento = resultSet.getString("TipoDocumento");
+                    String via = resultSet.getString("Via");
+                    String provincia = resultSet.getString("Provincia");
+                    String comune = resultSet.getString("Comune");
+                    int civico = resultSet.getInt("Civico");
+                    String numeroDocumento = resultSet.getString("NumeroDocumento");
+                    LocalDate dataScadenza = resultSet.getDate("DataScadenza").toLocalDate();
+                    impiegatoes.add(new Impiegato(
+                            "",       // username
+                            "",       // hashedPassword
+                            nome,           // nome
+                            cognome,        // cognome
+                            sesso,          // sesso
+                            tipoDocumento,  // tipoDocumento
+                            numeroDocumento,// numeroDocumento
+                            Cap,            // CAP (int)
+                            via,            // via
+                            provincia,      // provincia
+                            comune,         // comune
+                            civico,         // numeroCivico (int)
+                            CF,             // codiceFiscale
+                            telefono,       // telefono
+                            ruolo1,          // ruolo (Enum)
+                            stipendio,      // stipendio
+                            date1, // dataAssunzione
+                            date2,   // dataRilascio
+                            emailAzienda, // emailAziendale
+                            cittadinanza,   // cittadinanza
+                            dataScadenza    // dataScadenza
+                    ));
+                }
+                return impiegatoes;
             }finally{
                     if(connection != null){
                         ConnectionStorage.releaseConnection(connection);
                     }
             }
+        }else{
+            throw new RuntimeException();
         }
 
-        return impiegato;
+
+    }
+
+    @Override
+    public Collection<Impiegato> doFilter(String nome, String sesso, Ruolo ruolo) throws SQLException {
+        return List.of();
     }
 
     @Override

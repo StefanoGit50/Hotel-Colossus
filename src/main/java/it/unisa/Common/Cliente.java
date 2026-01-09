@@ -10,7 +10,6 @@ import java.util.Objects;
  * del cliente, oltre a un flag per indicare se è inserito nella blacklist.
  */
 public class Cliente implements Cloneable, Serializable {
-
     /**
      * Il nome del cliente.
      */

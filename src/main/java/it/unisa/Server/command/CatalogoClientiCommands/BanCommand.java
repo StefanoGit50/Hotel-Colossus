@@ -3,7 +3,9 @@ package it.unisa.Server.command.CatalogoClientiCommands;
 import it.unisa.Common.Cliente;
 import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
+import it.unisa.Storage.DAO.ClienteDAO;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -63,7 +65,13 @@ public class BanCommand implements Command {
                 if(cli.equals(c)) {
                     cli.setBlacklisted(true); // ban
                     lc.remove(cli); // rimuovi il cliente dalla lista dei clienti (non bannati)
-                    lcb.add(cli); // aggiungilo alla lista dei clienti (bannati)
+                    lc.add(cli); // aggiungilo alla lista dei clienti (bannati)
+                    try{
+                        ClienteDAO clienteDAO = new ClienteDAO();
+                        clienteDAO.doUpdate(cli);
+                    }catch (SQLException sqlException){
+                        sqlException.printStackTrace();
+                    }
                     break;
                 }
 
@@ -92,6 +100,14 @@ public class BanCommand implements Command {
                     cli.setBlacklisted(false); // annulla il ban
                     lcb.remove(cli); // rimuovi il cliente dalla lista dei clienti bannati
                     lc.add(cli); // aggiungilo alla lista dei clienti (non bannati)
+                    try{
+                        ClienteDAO clienteDAO = new ClienteDAO();
+                        Cliente cliente = clienteDAO.doRetriveByKey(cli.getCf());
+                        cliente.setBlacklisted(false);
+                        clienteDAO.doSave(cliente);
+                    }catch (SQLException sqlException){
+                        sqlException.printStackTrace();
+                    }
                     break;
                 }
             }
