@@ -5,7 +5,6 @@ import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.FrontDeskStorage;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.NoSuchElementException;
@@ -174,7 +173,7 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
     }
 
     @Override
-    public Collection<RicevutaFiscale> doRetriveByAttribute(String attribute, String value) throws SQLException {
+    public synchronized Collection<RicevutaFiscale> doRetriveByAttribute(String attribute, String value) throws SQLException {
         Connection connection;
         PreparedStatement preparedStatement = null;
         ArrayList<RicevutaFiscale> lista = new ArrayList<>();
@@ -207,7 +206,7 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
                     }
                 }
         }else{
-            throw new RuntimeException();
+            throw new RuntimeException("Attributo e/o valore non valido/i");
         }
 
         if(lista.isEmpty()) throw new NoSuchElementException("Nessuna ricevuta fiscale con " + attribute + " = " + value + "!");

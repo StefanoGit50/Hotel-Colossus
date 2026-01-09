@@ -39,6 +39,11 @@ public class Trattamento implements Cloneable, Serializable {
     }
 
     /**
+     * Costruttore vuoto
+     */
+    public Trattamento(){}
+
+    /**
      * Restituisce il nome del trattamento.
      *
      * @return Il nome del trattamento.

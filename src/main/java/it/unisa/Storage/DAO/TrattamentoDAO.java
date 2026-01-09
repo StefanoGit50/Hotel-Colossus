@@ -11,6 +11,8 @@ import java.util.NoSuchElementException;
 
 public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
 {
+    private static final String TABLE_NAME = "Trattamento";
+
     @Override
     public synchronized void doSave(Trattamento trattamento) throws SQLException
     {
@@ -154,32 +156,46 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
             throw new SQLException();
         }
     }
+
     @Override
-    public ArrayList<Trattamento> doRetriveByAttribute(String attribute, String value) throws SQLException {
-        if(attribute != null && value != null && !attribute.isEmpty() && !value.isEmpty()){
-            Connection connection = ConnectionStorage.getConnection();
-            try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM trattamento WHERE "  + attribute + " = ?")){
-                preparedStatement.setString(1,value);
+    public synchronized Collection<Trattamento> doRetriveByAttribute(String attribute, String value) throws SQLException {
+        Connection connection;
+        PreparedStatement preparedStatement = null;
+        ArrayList<Trattamento> lista = new ArrayList<>();
+        String selectSQL;
+
+        if(attribute != null && !attribute.isEmpty() && value != null && !value.isEmpty()){
+            connection = ConnectionStorage.getConnection();
+            selectSQL = "SELECT * FROM " + TrattamentoDAO.TABLE_NAME + " WHERE " + attribute + " = ?";
+            try{
+                preparedStatement = connection.prepareStatement(selectSQL);
+                preparedStatement.setString(1, value);
                 ResultSet resultSet = preparedStatement.executeQuery();
-                if(!resultSet.next()){
-                    return null;
+
+                Trattamento trattamento;
+
+                while (resultSet.next()) {
+                    trattamento = new Trattamento();
+                    trattamento.setNome(resultSet.getString("Nome"));
+                    trattamento.setPrezzo(resultSet.getDouble("Prezzo"));
+
+                    lista.add(trattamento);
                 }
-                ArrayList<Trattamento> trattamentos = new ArrayList<>();
-                while(resultSet.next()){
-                    String nome = resultSet.getString(1);
-                    Double prezzo = resultSet.getDouble(2);
-                    trattamentos.add(new Trattamento(nome,prezzo));
-                }
-                resultSet.close();
-                return trattamentos;
+
             }finally{
                 if(connection != null){
+                    if (preparedStatement != null) {
+                        preparedStatement.close();
+                    }
                     ConnectionStorage.releaseConnection(connection);
                 }
             }
-
         }else{
-            throw new RuntimeException();
+            throw new RuntimeException("Attributo e/o valore non valido/i");
         }
+
+        if(lista.isEmpty()) throw new NoSuchElementException("Nessun trattamento con " + attribute + " = " + value + "!");
+
+        return lista;
     }
 }

@@ -33,6 +33,11 @@ public class Servizio implements Cloneable, Serializable {
     }
 
     /**
+     * Costruttore vuoto
+     */
+    public Servizio() {}
+
+    /**
      * Restituisce il nome del servizio.
      *
      * @return Il nome del servizio.

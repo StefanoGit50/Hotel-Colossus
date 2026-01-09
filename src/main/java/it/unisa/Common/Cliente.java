@@ -127,6 +127,11 @@ public class Cliente implements Cloneable, Serializable {
     }
 
     /**
+     * Costruttore vuoto.
+     */
+    public Cliente() {}
+
+    /**
      * Restituisce il nome del cliente.
      *
      * @return Il nome del cliente.
