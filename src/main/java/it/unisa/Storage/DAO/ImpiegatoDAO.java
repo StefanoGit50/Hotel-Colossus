@@ -1,18 +1,15 @@
 package it.unisa.Storage.DAO;
 
-import it.unisa.Common.Cliente;
+
 import it.unisa.Common.Impiegato;
 import it.unisa.Server.persistent.util.Ruolo;
 import it.unisa.Storage.BackofficeStorage;
 import it.unisa.Storage.ConnectionStorage;
 
-import java.rmi.RemoteException;
 import java.sql.*;
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
 {
@@ -288,18 +285,18 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
     }
 
     @Override
-    public Collection<Impiegato> doRetriveByAttribute(String attribute, String value) throws SQLException {
+    public Collection<Impiegato> doRetriveByAttribute(String attribute, Object value) throws SQLException {
         Connection connection;
         PreparedStatement preparedStatement = null;
         ArrayList<Impiegato> lista = new ArrayList<>();
         String selectSQL;
 
-        if(attribute != null && !attribute.isEmpty() && value != null && !value.isEmpty()) {
+        if(attribute != null && !attribute.isEmpty() && value != null) {
             connection = ConnectionStorage.getConnection();
             selectSQL = "SELECT * FROM " + ImpiegatoDAO.TABLE_NAME + " WHERE " + attribute + " = ?";
             try {
                 preparedStatement = connection.prepareStatement(selectSQL);
-                preparedStatement.setString(1, value);
+                preparedStatement.setObject(1, value);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 Impiegato impiegato;
 
@@ -345,7 +342,7 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
 
     @Override
     public Collection<Impiegato> doFilter(String nome, String sesso, Ruolo ruolo, String orderBy) throws  SQLException {
-        Connection conn = ConnectionStorage.getConnection();
+        Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs;
         List<Impiegato> lista = new ArrayList<>();
@@ -363,7 +360,7 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
         }
 
         // Conta il numero di parametri che sono veri
-        int count = 0;
+        int count = -1;
         for (boolean b : params) {
             if(b) count++;
         }
@@ -372,13 +369,13 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
         selectSQL += " SELECT * FROM " + ImpiegatoDAO.TABLE_NAME + " WHERE ";
         for (int i = 0; i < params.length; i++) {
             if (i == 0 && params[0]) { // Se la flag è vera allora il parametro è presente ed è usato come criterio per la query di ricerca
-                selectSQL += " nome = " + nome + " ";
+                selectSQL += " nome = ? ";
             }
             if (i == 1 && params[1]) {
-                selectSQL += " sesso = " + sesso + " ";
+                selectSQL += " sesso = ? ";
             }
             if (i == 2 && params[2]) {
-                selectSQL += " ruolo = " + ruolo + " ";
+                selectSQL += " ruolo = ? ";
             }
             if (count != 0) {
                 selectSQL += " AND ";
@@ -392,7 +389,17 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
         }
 
         try {
+            conn = ConnectionStorage.getConnection();
             ps = conn.prepareStatement(selectSQL);
+            if (params[0]) { // Se la flag è vera allora il parametro è presente ed è usato come criterio per la query di ricerca
+                ps.setString(1, nome);
+            }
+            if (params[1]) {
+                ps.setString(2, sesso);
+            }
+            if (params[2]) {
+                ps.setObject(3, ruolo);
+            }
             rs = ps.executeQuery();
 
             while(rs.next()){

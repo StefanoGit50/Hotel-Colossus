@@ -1,13 +1,9 @@
 package it.unisa.Storage.DAO;
 
-import it.unisa.Common.Camera;
 import it.unisa.Common.Cliente;
-import it.unisa.Common.RicevutaFiscale;
-import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.FrontDeskStorage;
 
-import java.net.ConnectException;
 import java.rmi.RemoteException;
 import java.sql.*;
 import java.sql.Date;
@@ -250,18 +246,18 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
     }
 
     @Override
-    public synchronized Collection<Cliente> doRetriveByAttribute(String attribute, String value) throws SQLException {
+    public synchronized Collection<Cliente> doRetriveByAttribute(String attribute, Object value) throws SQLException {
         Connection connection;
         PreparedStatement preparedStatement = null;
         ArrayList<Cliente> lista = new ArrayList<>();
         String selectSQL;
 
-        if(attribute != null && !attribute.isEmpty() && value != null && !value.isEmpty()){
+        if(attribute != null && !attribute.isEmpty() && value != null){
             connection = ConnectionStorage.getConnection();
             selectSQL = "SELECT * FROM "+ ClienteDAO.TABLE_NAME + " WHERE " + attribute + " = ?";
             try{
                 preparedStatement = connection.prepareStatement(selectSQL);
-                preparedStatement.setString(1, value);
+                preparedStatement.setObject(1, value);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 Cliente cliente;
                 while (resultSet.next()) {
@@ -303,12 +299,11 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
     }
 
 
-    // TODO: FINIRE I METODI doFilter per le collezioni E POI FARE METODI doFilter e doRetrieveByAttribute per Prenotazione.
     // Filtro clienti
     List<Cliente> doFilter(String nome, String cognome, String nazionalita, LocalDate dataNascita, String sesso, String orderBy) throws RemoteException {
-        Connection connection;
-        PreparedStatement preparedStatement = null;
-        ArrayList<Cliente> lista = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        List<Cliente> lista = new ArrayList<>();
         String selectSQL = "";
 
         // Flags per verificare se almeno un parametro è stato fornito
@@ -325,33 +320,41 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
         }
 
         // Conta il numero di parametri che sono veri
-        int count = 0;
+        int count = -1;
         for (boolean b : params) {
             if(b) count++;
         }
         // Il numero di AND della query è pari a count - 1
 
         selectSQL += " SELECT * FROM " + ClienteDAO.TABLE_NAME + " WHERE ";
-        for (int i = 0; i < params.length; i++) {
+        // Il cliclo serve per inserire gli AND correttamente
+        boolean flag = false; // Indica se nell'i-esima iterazione l'i-esimo parametro è disponibile
+        for (int i = 0, j = count; i < params.length; i++) {
             if (i == 0 && params[0]) { // Se la flag è vera allora il parametro è presente ed è usato come criterio per la query di ricerca
-                selectSQL += " nome = " + nome + " ";
+                selectSQL += " nome = ? ";
+                flag = true;
             }
             if (i == 1 && params[1]) {
-                selectSQL += " cognome = " + cognome + " ";
+                selectSQL += " cognome = ? ";
+                flag = true;
             }
             if (i == 2 && params[2]) {
-                selectSQL += " Cittadinanza = " + nazionalita + " ";
+                selectSQL += " Cittadinanza = ? ";
+                flag = true;
             }
             if (i == 3 && params[3]) {
-                selectSQL += " DataDiNascita = " + dataNascita + " ";
+                selectSQL += " DataDiNascita = ? ";
+                flag = true;
             }
             if (i == 4 && params[4]) {
-                selectSQL += " sesso = " + sesso + " ";
+                selectSQL += " sesso = ? ";
+                flag = true;
             }
-            if (count != 0) {
+            if (j != 0 && flag) {
                 selectSQL += " AND ";
-                count--;
+                j--;
             }
+            flag = false;
         }
 
         if(orderBy != null && !orderBy.isEmpty()) {
@@ -359,18 +362,31 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
                 selectSQL +=  " ORDER BY " + orderBy + ";";
         }
 
-        ArrayList<Cliente> results = null;
-        Connection conn = null;
         try {
             conn = ConnectionStorage.getConnection();
 
-            PreparedStatement ps = null;
+            ps = null;
             ResultSet resultSet = null;
 
             try {
                 ps = conn.prepareStatement(selectSQL);
+                if (params[0]) { // Se la flag è vera allora setto il parametro
+                    ps.setString(1, nome);
+                }
+                if (params[1]) {
+                    ps.setString(2, cognome);
+                }
+                if (params[2]) {
+                    ps.setString(3, nazionalita);
+                }
+                if (params[3]) {
+                    ps.setDate(4, Date.valueOf(dataNascita));
+                }
+                if (params[4]) {
+                    ps.setString(5, sesso);
+                }
                 resultSet = ps.executeQuery();
-                results = new ArrayList<Cliente>();
+
                 Cliente cliente;
                 while (resultSet.next()) {
                     cliente = new Cliente();
@@ -388,7 +404,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
                     cliente.setMetodoDiPagamento(resultSet.getString("MetodoDiPagamento"));
                     cliente.setCittadinanza(resultSet.getString("Cittadinanza"));
 
-                    results.add(cliente);
+                    lista.add(cliente);
                 }
 
             } catch (SQLException e) {
@@ -402,7 +418,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
             e.printStackTrace();
         }
 
-        return results;
+        return lista;
     }
 
 }

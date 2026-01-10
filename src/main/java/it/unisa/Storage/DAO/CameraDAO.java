@@ -177,18 +177,18 @@ public class CameraDAO implements FrontDeskStorage<Camera>{
     }
 
     @Override
-    public synchronized Collection<Camera> doRetriveByAttribute(String attribute, String value) throws SQLException {
+    public synchronized Collection<Camera> doRetriveByAttribute(String attribute, Object value) throws SQLException {
         Connection connection;
         PreparedStatement preparedStatement = null;
         ArrayList<Camera> lista = new ArrayList<>();
         String selectSQL;
 
-        if(attribute != null && !attribute.isEmpty() && value != null && !value.isEmpty()){
+        if(attribute != null && !attribute.isEmpty() && value != null){
             connection = ConnectionStorage.getConnection();
             selectSQL = "SELECT * FROM "+ CameraDAO.TABLE_NAME + " WHERE " + attribute + " = ?";
             try{
                 preparedStatement = connection.prepareStatement(selectSQL);
-                preparedStatement.setString(1, value);
+                preparedStatement.setObject(1, value);
                 ResultSet resultSet = preparedStatement.executeQuery();
 
                 Camera camera;

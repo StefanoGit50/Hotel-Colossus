@@ -6,7 +6,6 @@ import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.FrontDeskStorage;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.NoSuchElementException;
@@ -440,10 +439,10 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
     }
 
     @Override
-    public ArrayList<Prenotazione> doRetriveByAttribute(String attribute, String value) throws SQLException {
+    public ArrayList<Prenotazione> doRetriveByAttribute(String attribute, Object value) throws SQLException {
         Connection connection = ConnectionStorage.getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Prenotazione WHERE " + attribute + " = ?")) {
-            preparedStatement.setString(1,value);
+            preparedStatement.setObject(1, value);
 
             try (ResultSet rs = preparedStatement.executeQuery()){
                 if (rs.next()){
@@ -538,7 +537,8 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                         }
                     }
 
-                    return new Prenotazione(
+                    ArrayList<Prenotazione> prenotazioni = new ArrayList<>();
+                    prenotazioni.add( new Prenotazione(
                             idPrenotazione,
                             rs.getDate("DataPrenotazione").toLocalDate(),
                             rs.getDate("DataArrivoCliente").toLocalDate(),
@@ -553,7 +553,8 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                             (ArrayList<Servizio>) servizi,
                             (ArrayList<Cliente>) clienti,
                             rs.getInt("numeroDocumento")
-                    );
+                    ));
+                    return prenotazioni;
                 }
             }
         }

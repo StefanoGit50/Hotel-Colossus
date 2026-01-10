@@ -173,18 +173,18 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
     }
 
     @Override
-    public synchronized Collection<RicevutaFiscale> doRetriveByAttribute(String attribute, String value) throws SQLException {
+    public synchronized Collection<RicevutaFiscale> doRetriveByAttribute(String attribute, Object value) throws SQLException {
         Connection connection;
         PreparedStatement preparedStatement = null;
         ArrayList<RicevutaFiscale> lista = new ArrayList<>();
         String selectSQL;
 
-        if(attribute != null && !attribute.isEmpty() && value != null && !value.isEmpty()){
+        if(attribute != null && !attribute.isEmpty() && value != null){
             connection = ConnectionStorage.getConnection();
             selectSQL = "SELECT * FROM hotelcolossus.ricevutafiscale WHERE " + attribute + " = ?";
                 try{
                     preparedStatement = connection.prepareStatement(selectSQL);
-                    preparedStatement.setString(1, value);
+                    preparedStatement.setObject(1, value);
                     ResultSet resultSet = preparedStatement.executeQuery();
 
                     RicevutaFiscale ricevuta;
