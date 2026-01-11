@@ -38,6 +38,9 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
     void updateImpiegato(Impiegato i) throws RemoteException;
 
     // Comando undo
-    void undoLastCommand() throws RemoteException;
+    void undoCommand() throws RemoteException;
+
+    // Comando redo
+    void redoCommand() throws RemoteException;
 
 }

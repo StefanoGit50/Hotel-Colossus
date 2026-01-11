@@ -25,10 +25,10 @@ INSERT INTO Impiegato (
     CF, Stipedio, Nome, Cognome, Cap, DataAssunzione, Telefono, Cittadinanza, EmailAziendale,
     Sesso, Ruolo, DataRilascio, TipoDocumento, Via, Provincia, Comune, Civico, NumeroDocumento, DataScadenza, CF1
 ) VALUES
-      ('VLDMRA85A01H501X',2500,'Marco','Valdini','00100','2020-05-01','3312233445','Italiana','marco.valdini@hotelcolossus.it','Maschio','FrontDesk','2018-01-15','Carta Identità','Via del Corso','RM','Roma',10,'AB1234567','2028-01-01',NULL),
+      ('VLDMRA85A01H501X',2500,'Marco','Valdini','00100','2020-05-01','3312233445','Italiana','marco.valdini@hotelcolossus.it','Maschio','FDclient','2018-01-15','Carta Identità','Via del Corso','RM','Roma',10,'AB1234567','2028-01-01',NULL),
       ('TNRGLI90B12F205X',2800,'Lina','Tonarelli','20100','2019-03-10','3285566778','Italiana','lina.tonarelli@hotelcolossus.it','Femmina','Manager','2017-11-20','Passaporto','Corso Vittorio','MI','Milano',12,'CD9876543','2027-03-10',NULL),
       ('BRGFRS92C15D612Y',2200,'Francesco','Borgiani','80100','2021-07-15','3391122334','Italiana','francesco.borgiani@hotelcolossus.it','Maschio','Governante','2019-06-25','Carta Identità','Via Chiaia','NA','Napoli',5,'EF1122334','2031-07-15',NULL),
-      ('DMNFRN88D22H501Z',2300,'Francesca','Damiani','50100','2022-02-01','3374455667','Italiana','francesca.damiani@hotelcolossus.it','Femmina','FrontDesk','2020-03-05','Passaporto','Via Roma','FI','Firenze',7,'GH4455667','2030-02-01',NULL);
+      ('DMNFRN88D22H501Z',2300,'Francesca','Damiani','50100','2022-02-01','3374455667','Italiana','francesca.damiani@hotelcolossus.it','Femmina','FDclient','2020-03-05','Passaporto','Via Roma','FI','Firenze',7,'GH4455667','2030-02-01',NULL);
 
 
 INSERT INTO Associato_a (
