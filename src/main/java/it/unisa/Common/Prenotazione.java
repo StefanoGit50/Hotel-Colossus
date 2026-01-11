@@ -126,6 +126,10 @@ public class Prenotazione implements Cloneable, Serializable {
         this.statoPrenotazione = true;
     }
 
+    /**
+     * Costruttore vuoto.
+     */
+    public Prenotazione () {}
      /**
      * Aggiunge un cliente alla lista dei clienti.
      *
@@ -290,6 +294,8 @@ public class Prenotazione implements Cloneable, Serializable {
     public int getNumeroDocumento(){
         return numeroDocumento;
     }
+
+
     /**
      * Restituisce una deep copy della lista delle camere.
      *

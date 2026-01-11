@@ -132,7 +132,7 @@ public class CatalogoPrenotazioni implements Serializable {
      */
     public Prenotazione getPrenotazione(int codicePrenotazione) throws CloneNotSupportedException{
         for (Prenotazione p : listaPrenotazioni) {
-            if (p.getCodicePrenotazione() == codicePrenotazione)
+            if (p.getIDPrenotazione() == codicePrenotazione)
                 return p.clone();
         }
         return null;

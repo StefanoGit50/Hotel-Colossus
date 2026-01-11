@@ -300,7 +300,8 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
 
 
     // Filtro clienti
-    List<Cliente> doFilter(String nome, String cognome, String nazionalita, LocalDate dataNascita, String sesso, String orderBy) throws RemoteException {
+    @Override
+    public List<Cliente> doFilter(String nome, String cognome, String nazionalita, LocalDate dataNascita, String sesso, String orderBy) {
         Connection conn = null;
         PreparedStatement ps = null;
         List<Cliente> lista = new ArrayList<>();

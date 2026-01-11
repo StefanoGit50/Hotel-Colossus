@@ -217,7 +217,7 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
     }
 
     @Override
-    public Collection<RicevutaFiscale> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, String sesso) {
-        return List.of();
+    public Collection<RicevutaFiscale> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, String sesso, String orderBy) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

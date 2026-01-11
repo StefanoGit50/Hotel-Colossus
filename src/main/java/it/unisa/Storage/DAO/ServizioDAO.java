@@ -204,7 +204,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
     }
 
     @Override
-    public Collection<Servizio> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, String sesso) {
-        return List.of();
+    public Collection<Servizio> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, String sesso, String orderBy) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

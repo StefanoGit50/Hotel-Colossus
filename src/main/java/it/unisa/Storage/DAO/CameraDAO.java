@@ -221,8 +221,17 @@ public class CameraDAO implements FrontDeskStorage<Camera>{
         return lista;
     }
 
+    /**
+     * @param nome
+     * @param cognome
+     * @param nazionalita
+     * @param dataDiNascita
+     * @param sesso
+     * @param orderBy
+     * @return
+     */
     @Override
-    public Collection<Camera> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, String sesso) {
-        return List.of();
+    public Collection<Camera> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, String sesso, String orderBy) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
