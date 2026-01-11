@@ -13,7 +13,7 @@
         <maven.compiler.target>25</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javafx.version>25.0.1</javafx.version>
-        <main.class>it.unisa.Main</main.class>
+        <main.class>it.unisa.GUI.MainApp</main.class>
     </properties>
 
 
@@ -61,9 +61,15 @@
             <version>9.4.0</version>
         </dependency>
 
+        <!-- GSON -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.13.1</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
-
 
 
     <build>

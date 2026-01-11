@@ -38,9 +38,9 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
     void updateImpiegato(Impiegato i) throws RemoteException;
 
     // Comando undo
-    void undoLastCommand() throws RemoteException;
+    void undoCommand() throws RemoteException;
 
-    // Filtro clienti
-    List<Cliente> cercaClienti(String nome, String cognome, String nazionalita, LocalDate dataNascita, String sesso, String orderBy) throws RemoteException;
+    // Comando redo
+    void redoCommand() throws RemoteException;
 
 }

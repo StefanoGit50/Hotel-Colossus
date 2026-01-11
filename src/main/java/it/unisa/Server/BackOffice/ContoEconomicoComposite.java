@@ -4,7 +4,7 @@ import java.util.List;
 
 public class ContoEconomicoComposite extends ContoEconomicoComponentAbstract {
 
-    ContoEconomicoComposite(String nome) {
+    public ContoEconomicoComposite(String nome) {
         super(nome);
     }
 
@@ -59,8 +59,4 @@ public class ContoEconomicoComposite extends ContoEconomicoComponentAbstract {
         }
         return totale;
     }
-
-
-
-
 }

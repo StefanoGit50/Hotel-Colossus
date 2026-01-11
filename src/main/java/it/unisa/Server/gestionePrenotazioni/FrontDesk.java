@@ -16,7 +16,6 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -152,16 +151,19 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
 
 
     // COMANDI PRENOTAZIONE
+    @Override
     public void addPrenotazione(Prenotazione p) throws RemoteException {
         AddPrenotazioneCommand command = new AddPrenotazioneCommand(catalogoPrenotazioni, p);
         invoker.executeCommand(command);
     }
 
+    @Override
     public void removePrenotazione(Prenotazione p) throws RemoteException {
         RemovePrenotazioneCommand command = new RemovePrenotazioneCommand(catalogoPrenotazioni, p);
         invoker.executeCommand(command);
     }
 
+    @Override
     public void updatePrenotazione(Prenotazione p) throws RemoteException {
         UpdatePrenotazioneCommand command = new UpdatePrenotazioneCommand(catalogoPrenotazioni, p);
         invoker.executeCommand(command);
@@ -172,6 +174,11 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     public void addCliente(Cliente c) throws RemoteException {
         AddClienteCommand command = new AddClienteCommand(catalogoClienti, c);
         invoker.executeCommand(command);
+        if(!CatalogoClienti.getListaClienti().isEmpty()){
+            CatalogoClienti.getListaClienti().forEach(o -> System.out.println(o.toString()));
+        } else {
+            System.out.println("lista cliente vuoto");
+        }
     }
 
     @Override
@@ -219,15 +226,26 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     }
 
     // COMANDO UNDO
-    public void undoLastCommand() throws RemoteException {
-        invoker.undoCommand();
-    }
-
-
-    // FILTRO CLIENTI
     @Override
-    public List<Cliente> cercaClienti(String nome, String cognome, String nazionalita, LocalDate dataNascita, String sesso, String orderBy) throws RemoteException {
-
+    public void undoCommand() throws RemoteException {
+        invoker.undoCommand();
+        if(!CatalogoClienti.getListaClienti().isEmpty()){
+            System.out.println("UNDO");
+            CatalogoClienti.getListaClienti().forEach(o -> System.out.println(o.toString()));
+        } else {
+            System.out.println("UNDO: lista cliente vuoto");
+        }
     }
 
+    // COMANDO REDO
+    @Override
+    public void redoCommand() throws RemoteException {
+        invoker.redo();
+        if(!CatalogoClienti.getListaClienti().isEmpty()){
+            System.out.println("REDO");
+            CatalogoClienti.getListaClienti().forEach(o -> System.out.println(o.toString()));
+        } else {
+            System.out.println("REDO: lista cliente vuoto");
+        }
+    }
 }

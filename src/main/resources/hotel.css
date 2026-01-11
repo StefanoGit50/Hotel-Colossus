@@ -1,0 +1,181 @@
+/*==================== ROOT E COLORI ==================== */
+.root {
+    /* Palette colori */
+    -burgundy-primary: #a40a1d;
+    -burgundy-gradient: linear-gradient(to right, rgba(194, 18, 44, 0.85) 20%, #834f90 90%);
+    -burgundy-gradient-vertical: linear-gradient(to bottom, #82101F 20%, rgba(102, 11, 45, 0.94) 90%);
+    -white: #ffffff;
+    -background: #fafafa;
+    -light-gray: #f0f0f0;
+    -text-dark: #1a202c;
+    -text-gray: #666666;
+}
+
+/* Cambia questi per i colori burgundy del logo */
+/*
+.root {
+    -burgundy-primary: #6d1331;
+    -burgundy-gradient: linear-gradient(to right, #6d1331 0%, #8b1538 100%);
+    -burgundy-gradient-vertical: linear-gradient(to bottom, #6d1331 0%, #8b1538 100%);
+}
+*/
+
+/* ==================== ROOT CONTAINER ==================== */
+.root-container {
+    -fx-background-color: -background;
+}
+
+/* ==================== TOP BAR ==================== */
+.top-bar {
+    -fx-background-color: #faf8f5;
+    -fx-background-radius: 15;
+    /*-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 2);*/
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 2)
+}
+
+.logo {
+    -fx-font-family: "Segoe UI Light", "Helvetica Neue Light", "Arial";
+    -fx-font-size: 39px;
+    -fx-font-weight: 600;
+    -fx-text-fill: -burgundy-primary;
+    -fx-letter-spacing: 4px; /* ✅ Spaziatura elegante */
+   /* -fx-effect: dropshadow(gaussian, rgba(164, 10, 29, 0.2), 4, 0, 0, 2);*/
+}
+
+.user-name {
+    -fx-font-size: 14px;
+    -fx-text-fill: -text-dark;
+}
+
+
+.user-role {
+    -fx-font-size: 12px;
+    -fx-text-fill: #999999;
+}
+
+
+.avatar {
+    -fx-background-color: -burgundy-gradient;
+    -fx-background-radius: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+.avatar-text {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.context-menu {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 12, 0, 0, 4);
+    -fx-padding: 8px 0;
+}
+
+.menu-item {
+    -fx-padding: 12px 20px;
+    -fx-background-color: transparent;
+}
+
+.menu-item:hover {
+    -fx-background-color: #f5f5f5;
+}
+
+.menu-item:focused {
+    -fx-background-color: rgb(234, 229, 225);
+}
+
+.menu-item .label {
+    -fx-text-fill: #1a202c;
+    -fx-font-size: 13px;
+}
+
+
+
+/* ==================== SIDEBAR ==================== */
+.sidebar {
+    -fx-background-color: -white;
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 2);
+}
+
+.nav-item {
+    -fx-background-color: transparent;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+
+.nav-item:hover {
+    -fx-background-color: -light-gray;
+}
+
+.nav-item-active {
+    -fx-background-color: -burgundy-gradient;
+}
+
+.nav-item-active .nav-text {
+    -fx-text-fill: white;
+}
+
+.nav-icon {
+    -fx-font-size: 16px;
+}
+
+.nav-text {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+}
+
+/* ==================== CONTENT AREA ==================== */
+.content-area {
+    -fx-background-color: -white;
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 2);
+}
+
+.section-title {
+    -fx-font-size: 18px;
+    -fx-text-fill: #6d1331;
+    -fx-font-weight: bolder;
+}
+
+.placeholder-text {
+    -fx-text-fill: -text-gray;
+}
+
+/* ==================== STAT CARDS ==================== */
+.stats-grid {
+    -fx-padding: 0;
+}
+
+.stat-card {
+    -fx-background-color: -burgundy-gradient-vertical;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 2);
+    -fx-cursor: hand;
+    -fx-border-color: #f5e6d3;;
+}
+
+.stat-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 12, 0, 0, 4);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.stat-number {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.stat-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: rgba(255,255,255,0.9);
+    -fx-alignment: center;
+}
+
+/* ==================== ANIMAZIONI ==================== */
+.nav-item,
+.stat-card {
+    -fx-transition: all 0.3s ease;
+}

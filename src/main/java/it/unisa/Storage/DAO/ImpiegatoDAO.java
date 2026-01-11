@@ -1,41 +1,35 @@
 package it.unisa.Storage.DAO;
 
+
 import it.unisa.Common.Impiegato;
 import it.unisa.Server.persistent.util.Ruolo;
 import it.unisa.Storage.BackofficeStorage;
 import it.unisa.Storage.ConnectionStorage;
 
 import java.sql.*;
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
 {
     private static final String TABLE_NAME = "Impiegato";
-    private static final String[] whitelist = {
+    String[] whitelist = {
             "CF",
-            "Stipedio",
-            "Nome",
-            "Cognome",
+            "nome",
+            "cognome",
             "Cap",
-            "DataAssunzione",
-            "Telefono",
-            "Cittadinanza",
-            "EmailAziendale",
+            "comune",
+            "civico",
+            "provincia",
+            "via",
+            "Email",
             "Sesso",
-            "Ruolo",
-            "DataRilascio",
-            "TipoDocumento",
-            "Via",
-            "Provincia",
-            "Comune",
-            "Civico",
-            "NumeroDocumento",
-            "DataScadenza",
-            "CF1"
+            "telefono",
+            "MetodoDiPagamento",
+            "Cittadinanza",
+            "DataDiNascita",
+            "IsBackListed"
     };
 
     @Override
@@ -254,27 +248,27 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
                             "Provincia = ?, Comune = ?, Civico = ?, NumeroDocumento = ?, " +
                             "DataScadenza = ? WHERE CF = ?")){
 
-                preparedStatement.setDouble(1, impiegato.getStipendio());
-                preparedStatement.setString(2, impiegato.getNome());
-                preparedStatement.setString(3, impiegato.getCognome());
-                preparedStatement.setString(4, "" + impiegato.getCAP());
-                preparedStatement.setDate(5, Date.valueOf(impiegato.getDataAssunzione()));
-                preparedStatement.setString(6, impiegato.getTelefono());
-                preparedStatement.setString(7, impiegato.getCittadinanza());
-                preparedStatement.setString(8, impiegato.getEmailAziendale());
-                preparedStatement.setString(9, impiegato.getSesso());
-                preparedStatement.setString(10, "" + impiegato.getRuolo());
-                preparedStatement.setDate(11, Date.valueOf(impiegato.getDataRilascio()));
-                preparedStatement.setString(12, impiegato.getTipoDocumento());
-                preparedStatement.setString(13, impiegato.getVia());
-                preparedStatement.setString(14, impiegato.getProvincia());
-                preparedStatement.setString(15, impiegato.getComune());
-                preparedStatement.setInt(16, impiegato.getNumeroCivico());
-                preparedStatement.setString(17, impiegato.getNumeroDocumento());
-                preparedStatement.setDate(18, Date.valueOf(impiegato.getDataScadenza()));
-                preparedStatement.setString(19, impiegato.getCodiceFiscale());
+                        preparedStatement.setDouble(1, impiegato.getStipendio());
+                        preparedStatement.setString(2, impiegato.getNome());
+                        preparedStatement.setString(3, impiegato.getCognome());
+                        preparedStatement.setString(4, "" + impiegato.getCAP());
+                        preparedStatement.setDate(5, Date.valueOf(impiegato.getDataAssunzione()));
+                        preparedStatement.setString(6, impiegato.getTelefono());
+                        preparedStatement.setString(7, impiegato.getCittadinanza());
+                        preparedStatement.setString(8, impiegato.getEmailAziendale());
+                        preparedStatement.setString(9, impiegato.getSesso());
+                        preparedStatement.setString(10, "" + impiegato.getRuolo());
+                        preparedStatement.setDate(11, Date.valueOf(impiegato.getDataRilascio()));
+                        preparedStatement.setString(12, impiegato.getTipoDocumento());
+                        preparedStatement.setString(13, impiegato.getVia());
+                        preparedStatement.setString(14, impiegato.getProvincia());
+                        preparedStatement.setString(15, impiegato.getComune());
+                        preparedStatement.setInt(16, impiegato.getNumeroCivico());
+                        preparedStatement.setString(17, impiegato.getNumeroDocumento());
+                        preparedStatement.setDate(18, Date.valueOf(impiegato.getDataScadenza()));
+                        preparedStatement.setString(19, impiegato.getCodiceFiscale());
 
-                preparedStatement.executeUpdate();
+                        preparedStatement.executeUpdate();
             }
             finally
             {
@@ -291,18 +285,18 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
     }
 
     @Override
-    public Collection<Impiegato> doRetriveByAttribute(String attribute, String value) throws SQLException {
+    public Collection<Impiegato> doRetriveByAttribute(String attribute, Object value) throws SQLException {
         Connection connection;
         PreparedStatement preparedStatement = null;
         ArrayList<Impiegato> lista = new ArrayList<>();
         String selectSQL;
 
-        if(attribute != null && !attribute.isEmpty() && value != null && !value.isEmpty()) {
+        if(attribute != null && !attribute.isEmpty() && value != null) {
             connection = ConnectionStorage.getConnection();
             selectSQL = "SELECT * FROM " + ImpiegatoDAO.TABLE_NAME + " WHERE " + attribute + " = ?";
             try {
                 preparedStatement = connection.prepareStatement(selectSQL);
-                preparedStatement.setString(1, value);
+                preparedStatement.setObject(1, value);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 Impiegato impiegato;
 
@@ -348,13 +342,46 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
 
     @Override
     public Collection<Impiegato> doFilter(String nome, String sesso, Ruolo ruolo, String orderBy) throws  SQLException {
-        Connection conn = ConnectionStorage.getConnection();
+        Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs;
         List<Impiegato> lista = new ArrayList<>();
+        String selectSQL = "";
 
-        String selectSQL = "select * FROM " + ImpiegatoDAO.TABLE_NAME +
-                " where nome = ? AND sesso = ? AND ruolo = ?";
+        // Flags per verificare se almeno un parametro è stato fornito
+        boolean[] params = new boolean[4];
+        params[0] = nome != null && !nome.isEmpty();
+        params[1] = sesso != null && !sesso.isEmpty();
+        params[2] = ruolo != null;
+
+        // Se tutti i parametri sono nulli allora lancia l'eccezione
+        if (!params[0] && !params[1] && !params[2]) {
+            throw new RuntimeException("Nessun parametro inserito!");
+        }
+
+        // Conta il numero di parametri che sono veri
+        int count = -1;
+        for (boolean b : params) {
+            if(b) count++;
+        }
+        // Il numero di AND della query è pari a count - 1
+
+        selectSQL += " SELECT * FROM " + ImpiegatoDAO.TABLE_NAME + " WHERE ";
+        for (int i = 0; i < params.length; i++) {
+            if (i == 0 && params[0]) { // Se la flag è vera allora il parametro è presente ed è usato come criterio per la query di ricerca
+                selectSQL += " nome = ? ";
+            }
+            if (i == 1 && params[1]) {
+                selectSQL += " sesso = ? ";
+            }
+            if (i == 2 && params[2]) {
+                selectSQL += " ruolo = ? ";
+            }
+            if (count != 0) {
+                selectSQL += " AND ";
+                count--;
+            }
+        }
 
         if(orderBy != null && !orderBy.isEmpty()) {
             if (DaoUtils.checkWhitelist(whitelist, orderBy))
@@ -362,7 +389,17 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
         }
 
         try {
+            conn = ConnectionStorage.getConnection();
             ps = conn.prepareStatement(selectSQL);
+            if (params[0]) { // Se la flag è vera allora il parametro è presente ed è usato come criterio per la query di ricerca
+                ps.setString(1, nome);
+            }
+            if (params[1]) {
+                ps.setString(2, sesso);
+            }
+            if (params[2]) {
+                ps.setObject(3, ruolo);
+            }
             rs = ps.executeQuery();
 
             while(rs.next()){

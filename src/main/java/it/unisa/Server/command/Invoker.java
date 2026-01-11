@@ -19,25 +19,43 @@ import java.util.Stack;
  */
 public class Invoker {
     /**
-     * Stack di esecuzione dei comandi.
+     * Stack di undo dei comandi.
      */
-    private Stack<Command> stackOperazioni = new Stack<>();
+    private Stack<Command> undoStack = new Stack<>();
 
     /**
-     * Esegue il comando passato come parametro esplicito e lo aggiunge allo stack.
+     * Stack di redo dei comandi. Si svuota ogni qual volta si esegue un nuovo comando.
+     */
+    private Stack<Command> redoStack = new Stack<>();
+
+    /**
+     * Esegue il comando passato come parametro esplicito, lo aggiunge allo stack e svuota lo stack {@code redoStack}.
      * @param c Comando da eseguire.
      */
     public void executeCommand(Command c) {
-        stackOperazioni.push(c);
+        undoStack.push(c);
         c.execute();
+        redoStack.clear(); // Invalida il redo dopo nuova azione
     }
     /**
      * Annulla l'ultimo comando eseguito.
      */
     public void undoCommand() {
-        if (!stackOperazioni.isEmpty()) {
-            Command c = stackOperazioni.pop();
+        if (!undoStack.isEmpty()) {
+            Command c = undoStack.pop();
             c.undo();
+            redoStack.push(c);
+        }
+    }
+
+    /**
+     * Riapplica le modifiche del comando in allo stack {@code undoStack}.
+     */
+    public void redo() {
+        if (!redoStack.isEmpty()) {
+            Command command = redoStack.pop();
+            command.execute();
+            undoStack.push(command);
         }
     }
 }

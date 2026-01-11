@@ -4,7 +4,6 @@ import it.unisa.Common.Camera;
 
 import it.unisa.Server.ObserverCamereInterface;
 
-
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;

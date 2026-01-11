@@ -1,7 +1,6 @@
 package it.unisa.Server.BackOffice;
 
 import it.unisa.Common.*;
-import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
 import it.unisa.Server.persistent.util.Ruolo;
 import it.unisa.Server.persistent.util.Stato;
@@ -62,9 +61,9 @@ public class main {
                 cliente.getNome()+" "+cliente.getCognome(),
                 "renato ti massaggiA",
                 c,listaServizi,clist,34569);
-        p1.setStatoPrenotazione(StatoPrenotazione.COMPLETATA);
+        p1.setStatoPrenotazione(false);
 
-
+        CatalogoPrenotazioni catalogoPrenotazioni = new CatalogoPrenotazioni();
 
         List<ContoEconomicoComposite> ComponentList =  new ArrayList<ContoEconomicoComposite>();
 
@@ -73,8 +72,8 @@ public class main {
         CatalogoPrenotazioni.getListaPrenotazioni().add(p1);
         //mostra solo le prenotazioni completate
          for(Prenotazione p : CatalogoPrenotazioni.getListaPrenotazioni()){
-             if(p.getStatoPrenotazione()== StatoPrenotazione.COMPLETATA){
-                ContoEconomicoComposite prenotazioneComposite = new ContoEconomicoComposite("PRENOTAZIONE"+p.getCodicePrenotazione()+" "+p.getIntestatario());
+             if(!p.getStatoPrenotazione()){
+                ContoEconomicoComposite prenotazioneComposite = new ContoEconomicoComposite("PRENOTAZIONE"+p.getIDPrenotazione()+" "+p.getIntestatario());
 
                 // creazione composite CAMERE
                  if(!p.getListaCamere().isEmpty() && p.getListaCamere()!= null) {
@@ -141,8 +140,7 @@ public class main {
                 LocalDate.of(2033, 3, 15)           // dataScadenza documento
         ));
 
-
-// creiamo il composite stipendi
+// creo il composite stipendi
         ContoEconomicoComposite stipendi = creaNodoeFoglie(
                 "Stipendi Personale",
                 listaImpiegati,
@@ -176,6 +174,7 @@ public class main {
         // ⚠ CORRETTO: conto economico = ricavi - passività
         double totaleVeroContoEconomico = totaleRicavi - totalePassivita;
 
+
         // -------------------
         // RIEPILOGO CONTABILE
         // -------------------
@@ -187,5 +186,7 @@ public class main {
         System.out.println("Totale Passività = " + totalePassivita);
         System.out.println("Totale Ricavi = " + totaleRicavi);
         System.out.println("Totale Conto Economico = " + totaleVeroContoEconomico);
+
+
     }
 }

@@ -123,7 +123,7 @@ create table Impiegato(
     Cittadinanza varchar(50) not null,
     EmailAziendale varchar(100) not null,
     Sesso varchar(20) not null,
-    Ruolo enum('FrontDesk','Manager','Governante') not null,
+    Ruolo enum('FDclient','Manager','Governante') not null,
     DataRilascio date not null,
     TipoDocumento varchar(50) not null,
     Via varchar(40) not null,

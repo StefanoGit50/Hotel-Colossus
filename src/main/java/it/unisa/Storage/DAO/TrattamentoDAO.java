@@ -160,18 +160,18 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
     }
 
     @Override
-    public synchronized Collection<Trattamento> doRetriveByAttribute(String attribute, String value) throws SQLException {
+    public synchronized Collection<Trattamento> doRetriveByAttribute(String attribute, Object value) throws SQLException {
         Connection connection;
         PreparedStatement preparedStatement = null;
         ArrayList<Trattamento> lista = new ArrayList<>();
         String selectSQL;
 
-        if(attribute != null && !attribute.isEmpty() && value != null && !value.isEmpty()){
+        if(attribute != null && !attribute.isEmpty() && value != null){
             connection = ConnectionStorage.getConnection();
             selectSQL = "SELECT * FROM " + TrattamentoDAO.TABLE_NAME + " WHERE " + attribute + " = ?";
             try{
                 preparedStatement = connection.prepareStatement(selectSQL);
-                preparedStatement.setString(1, value);
+                preparedStatement.setObject(1, value);
                 ResultSet resultSet = preparedStatement.executeQuery();
 
                 Trattamento trattamento;

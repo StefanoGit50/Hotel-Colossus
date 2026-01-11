@@ -32,7 +32,7 @@ public class CameraDAO implements FrontDeskStorage<Camera>{
                 }
             }
         }else{
-            throw new NullPointerException();
+            throw new NoSuchElementException("elemento non trovato");
         }
     }
 
@@ -132,7 +132,7 @@ public class CameraDAO implements FrontDeskStorage<Camera>{
      *
      * @param o La camera con i dati aggiornati da persistere.
      * @throws SQLException Se si verifica un errore durante l'accesso al database.
-     * @throws NullPointerException Se il parametro o è null.
+     * @throws NoSuchElementException Se il parametro o è null quindi non trovato.
      *
      * Precondizioni:
      *   o != null
@@ -174,23 +174,23 @@ public class CameraDAO implements FrontDeskStorage<Camera>{
         }
         else
         {
-            throw new NullPointerException();
+            throw new NoSuchElementException("elemento non trovato");
         }
     }
 
     @Override
-    public synchronized Collection<Camera> doRetriveByAttribute(String attribute, String value) throws SQLException {
+    public synchronized Collection<Camera> doRetriveByAttribute(String attribute, Object value) throws SQLException {
         Connection connection;
         PreparedStatement preparedStatement = null;
         ArrayList<Camera> lista = new ArrayList<>();
         String selectSQL;
 
-        if(attribute != null && !attribute.isEmpty() && value != null && !value.isEmpty()){
+        if(attribute != null && !attribute.isEmpty() && value != null){
             connection = ConnectionStorage.getConnection();
             selectSQL = "SELECT * FROM "+ CameraDAO.TABLE_NAME + " WHERE " + attribute + " = ?";
             try{
                 preparedStatement = connection.prepareStatement(selectSQL);
-                preparedStatement.setString(1, value);
+                preparedStatement.setObject(1, value);
                 ResultSet resultSet = preparedStatement.executeQuery();
 
                 Camera camera;
