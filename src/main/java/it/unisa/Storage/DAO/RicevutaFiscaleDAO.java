@@ -174,7 +174,6 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
         }
     }
 
-    @Override
     public synchronized Collection<RicevutaFiscale> doRetriveByAttribute(String attribute, Object value) throws SQLException {
         Connection connection;
         PreparedStatement preparedStatement = null;
@@ -215,7 +214,10 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
 
         return lista;
     }
-
+    /**
+     *
+     * NON è SUPPORTATA
+     */
     @Override
     public Collection<RicevutaFiscale> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, String sesso) {
         return List.of();

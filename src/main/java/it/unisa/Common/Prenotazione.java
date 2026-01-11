@@ -126,6 +126,24 @@ public class Prenotazione implements Cloneable, Serializable {
         this.statoPrenotazione = true;
     }
 
+    public Prenotazione() {
+        this.IDPrenotazione = 0;
+        this.numeroDocumento = 0;
+        this.dataCreazionePrenotazione = LocalDate.now();
+        this.dataFine = LocalDate.now();
+        this.dataInizio = LocalDate.now();
+        this.dataRilascio = LocalDate.now();
+        this.dataScadenza = LocalDate.now();
+        this.listaCamere = new ArrayList<>();
+        this.listaClienti = new ArrayList<>();
+        this.listaServizi = new ArrayList<>();
+        this.noteAggiuntive = "";
+        this.trattamento = new Trattamento();
+        this.intestatario = "";
+        this.statoPrenotazione = false;
+    }
+
+
      /**
      * Aggiunge un cliente alla lista dei clienti.
      *

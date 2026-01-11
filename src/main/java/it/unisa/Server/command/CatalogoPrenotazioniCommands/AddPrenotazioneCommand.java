@@ -64,7 +64,7 @@ public class AddPrenotazioneCommand implements Command {
     @Override
     public void undo() {
         try {
-            Prenotazione p = catalogue.getPrenotazione(prenotazione.getCodicePrenotazione());
+            Prenotazione p = catalogue.getPrenotazione(prenotazione.getIDPrenotazione());
             ArrayList<Prenotazione> lp = CatalogoPrenotazioni.getListaPrenotazioni();
             lp.remove(p);
             PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO();

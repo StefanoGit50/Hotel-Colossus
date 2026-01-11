@@ -7,11 +7,13 @@ import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.DAO.*;
 import it.unisa.Storage.DAO.PrenotazioneDR.PrenotazioneBuilder;
 
+import java.rmi.RemoteException;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class Main{
     public static void main(String[] args){
@@ -354,6 +356,7 @@ public class Main{
             sqlException.printStackTrace();
         }
     }*/
+        /*
         CameraDAO cameraDAO = new CameraDAO();
         ArrayList<Camera> cameras;
         ArrayList<Servizio> servizios = null;
@@ -384,8 +387,19 @@ public class Main{
             throw new RuntimeException(e);
         }
         */
+
         PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO();
-        ArrayList<Prenotazione> prenotaziones = prenotazioneDAO.doFilter("Mario Rossi", Date.valueOf("2026-01-01").toLocalDate(),Date.valueOf("2031-02-03").toLocalDate(),102,"IDPrenotazione");
+        ArrayList<Prenotazione> prenotaziones = prenotazioneDAO.doFilter(null,null, Date.valueOf("2026-01-10").toLocalDate(),Date.valueOf("2030-01-01").toLocalDate(),101,"IDPrenotazione");
         System.out.println(prenotaziones);
+        ClienteDAO servizioDAO = new ClienteDAO();
+        try {
+            ArrayList<Cliente> servizios = (ArrayList<Cliente>) servizioDAO.doFilter("Laura","Bianchi",null ,null,"F","CF");
+            System.out.println(servizios);
+        } catch (RuntimeException runtimeException){
+            runtimeException.printStackTrace();
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

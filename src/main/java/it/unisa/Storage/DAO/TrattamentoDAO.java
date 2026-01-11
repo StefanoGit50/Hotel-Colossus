@@ -159,7 +159,6 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
         }
     }
 
-    @Override
     public synchronized Collection<Trattamento> doRetriveByAttribute(String attribute, Object value) throws SQLException {
         Connection connection;
         PreparedStatement preparedStatement = null;

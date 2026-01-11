@@ -246,6 +246,10 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
     }
 
     @Override
+    public Collection<Cliente> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, String sesso) {
+        return List.of();
+    }
+
     public synchronized Collection<Cliente> doRetriveByAttribute(String attribute, Object value) throws SQLException {
         Connection connection;
         PreparedStatement preparedStatement = null;
@@ -300,7 +304,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
 
 
     // Filtro clienti
-    List<Cliente> doFilter(String nome, String cognome, String nazionalita, LocalDate dataNascita, String sesso, String orderBy) throws RemoteException {
+    public List<Cliente> doFilter(String nome, String cognome, String nazionalita, LocalDate dataNascita, String sesso, String orderBy) throws RemoteException {
         Connection conn = null;
         PreparedStatement ps = null;
         List<Cliente> lista = new ArrayList<>();
@@ -370,20 +374,25 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
 
             try {
                 ps = conn.prepareStatement(selectSQL);
+                int counter = 1;
                 if (params[0]) { // Se la flag è vera allora setto il parametro
-                    ps.setString(1, nome);
+                    ps.setString(counter, nome);
+                    counter++;
                 }
                 if (params[1]) {
-                    ps.setString(2, cognome);
+                    ps.setString(counter, cognome);
+                    counter++;
                 }
                 if (params[2]) {
-                    ps.setString(3, nazionalita);
+                    ps.setString(counter, nazionalita);
+                    counter++;
                 }
                 if (params[3]) {
-                    ps.setDate(4, Date.valueOf(dataNascita));
+                    ps.setDate(counter, Date.valueOf(dataNascita));
+                    counter++;
                 }
                 if (params[4]) {
-                    ps.setString(5, sesso);
+                    ps.setString(counter, sesso);
                 }
                 resultSet = ps.executeQuery();
 

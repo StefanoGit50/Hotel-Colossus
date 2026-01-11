@@ -38,7 +38,7 @@ public class PrenotazioneBuilder{    private final Prenotazione prenotazione;
      * Aggiungi un cliente (se non c'è già)
      */
     public void addCliente(ResultSet rs) throws SQLException {
-        String cf = rs.getString("ClienteCF");
+        String cf = rs.getString("CF");
 
         // Controlla se il cliente è già stato aggiunto
         if (!clientiMap.containsKey(cf)) {

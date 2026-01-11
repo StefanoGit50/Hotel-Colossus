@@ -4,6 +4,7 @@ import it.unisa.Common.Camera;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.FrontDeskStorage;
+import it.unisa.Storage.GovernanteStorage;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,7 +16,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-public class CameraDAO implements FrontDeskStorage<Camera>{
+public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Camera>{
 
     public static final String TABLE_NAME = "Camera";
 
@@ -179,6 +180,10 @@ public class CameraDAO implements FrontDeskStorage<Camera>{
     }
 
     @Override
+    public Collection<Camera> doRetriveByAttribute(String attribute, String value) throws SQLException {
+        return List.of();
+    }
+
     public synchronized Collection<Camera> doRetriveByAttribute(String attribute, Object value) throws SQLException {
         Connection connection;
         PreparedStatement preparedStatement = null;

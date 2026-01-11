@@ -391,14 +391,17 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
         try {
             conn = ConnectionStorage.getConnection();
             ps = conn.prepareStatement(selectSQL);
+            int counter = 1;
             if (params[0]) { // Se la flag è vera allora il parametro è presente ed è usato come criterio per la query di ricerca
-                ps.setString(1, nome);
+                ps.setString(counter, nome);
+                counter++;
             }
             if (params[1]) {
-                ps.setString(2, sesso);
+                ps.setString(counter, sesso);
+                counter++;
             }
             if (params[2]) {
-                ps.setObject(3, ruolo);
+                ps.setObject(counter, ruolo);
             }
             rs = ps.executeQuery();
 
