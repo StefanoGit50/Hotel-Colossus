@@ -30,7 +30,7 @@ public class CameraDAO implements FrontDeskStorage<Camera>{
                 }
             }
         }else{
-            throw new NullPointerException();
+            throw new NoSuchElementException("elemento non trovato");
         }
     }
 
@@ -130,7 +130,7 @@ public class CameraDAO implements FrontDeskStorage<Camera>{
      *
      * @param o La camera con i dati aggiornati da persistere.
      * @throws SQLException Se si verifica un errore durante l'accesso al database.
-     * @throws NullPointerException Se il parametro o è null.
+     * @throws NoSuchElementException Se il parametro o è null quindi non trovato.
      *
      * Precondizioni:
      *   o != null
@@ -172,7 +172,7 @@ public class CameraDAO implements FrontDeskStorage<Camera>{
         }
         else
         {
-            throw new NullPointerException();
+            throw new NoSuchElementException("elemento non trovato");
         }
     }
 

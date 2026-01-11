@@ -92,15 +92,15 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
     }
 
     @Override
-    public synchronized Prenotazione doRetriveByKey(Object codicePrenotazione) throws SQLException {
-        if (!(codicePrenotazione instanceof Integer)) {
-            return null;
+    public synchronized Prenotazione doRetriveByKey(Object IDPrenotazione) throws SQLException {
+        if (!(IDPrenotazione instanceof Integer)) {
+            throw new RuntimeException("IDPrenotazione must be an integer");
         }
 
         Connection connection = ConnectionStorage.getConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Prenotazione WHERE IDPrenotazione = ?")) {
-            preparedStatement.setInt(1, (Integer) codicePrenotazione);
+            preparedStatement.setInt(1, (Integer) IDPrenotazione);
 
             try (ResultSet rs = preparedStatement.executeQuery()) {
                 if (rs.next()) {

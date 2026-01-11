@@ -14,7 +14,7 @@ public class RicevutaFiscale implements Serializable, Cloneable {
     private int IDRicevutaFiscale;
 
     /** Identificativo della prenotazione a cui la ricevuta fa riferimento. */
-    private int IDPrenotazione;
+    Prenotazione IDPrenotazione;
 
     /** Importo complessivo della ricevuta (somma delle voci). */
     private double Totale;
@@ -29,7 +29,7 @@ public class RicevutaFiscale implements Serializable, Cloneable {
      * @param totale l'importo complessivo del documento.
      * @param dataEmissione la data di emissione della ricevuta.
      */
-    public RicevutaFiscale(int IDRicevutaFiscale, int IDPrenotazione, double totale, LocalDate dataEmissione) {
+    public RicevutaFiscale(int IDRicevutaFiscale, Prenotazione IDPrenotazione, double totale, LocalDate dataEmissione) {
         this.IDRicevutaFiscale = IDRicevutaFiscale;
         this.IDPrenotazione = IDPrenotazione;
         this.Totale = totale;
@@ -87,14 +87,14 @@ public class RicevutaFiscale implements Serializable, Cloneable {
      * @return l'id univoco della prenotazione.
      */
     public int getIDPrenotazione() {
-        return IDPrenotazione;
+        return IDPrenotazione.getIDPrenotazione();
     }
 
     /**
      * @param IDPrenotazione l'id univoco della prenotazione.
      */
     public void setIDPrenotazione(int IDPrenotazione) {
-        this.IDPrenotazione = IDPrenotazione;
+        this.IDPrenotazione.setIDPrenotazione(IDPrenotazione);
     }
 
     /**

@@ -72,7 +72,6 @@
     </dependencies>
 
 
-
     <build>
         <extensions>
             <!-- Rileva OS e architettura -->
