@@ -1,9 +1,8 @@
 package it.unisa.Storage;
 
-import it.unisa.Common.Prenotazione;
-import it.unisa.Storage.DAO.CameraDAO;
-
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 
 public interface FrontDeskStorage<T>
@@ -14,4 +13,5 @@ public interface FrontDeskStorage<T>
     Collection<T> doRetriveAll(String order) throws SQLException;
     void doUpdate(T o) throws SQLException;
     Collection<T> doRetriveByAttribute(String attribute , String value) throws SQLException;
+    Collection<T> doFilter(String nome , String cognome , String nazionalita , LocalDate dataDiNascita , String sesso);
 }

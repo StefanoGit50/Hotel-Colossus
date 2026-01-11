@@ -279,6 +279,11 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
         return lista;
     }
 
+    @Override
+    public Collection<Cliente> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, String sesso) {
+        return List.of();
+    }
+
     // Filtro clienti
     /* TODO: FINIRE I METODI doFilter per le collezioni E POI FARE METODI doFilter e doRetrieveByAttribute per Prenotazione.
     List<Cliente> doFilter(String nome, String cognome, String nazionalita, LocalDate dataNascita, String sesso, String orderBy) throws RemoteException {

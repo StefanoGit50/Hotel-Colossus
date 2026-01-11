@@ -5,8 +5,10 @@ import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.FrontDeskStorage;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
@@ -214,4 +216,8 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
         return lista;
     }
 
+    @Override
+    public Collection<RicevutaFiscale> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, String sesso) {
+        return List.of();
+    }
 }

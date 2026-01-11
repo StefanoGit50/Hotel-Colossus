@@ -126,6 +126,7 @@ public class Prenotazione implements Cloneable, Serializable {
         this.statoPrenotazione = StatoPrenotazione.IN_CORSO;
     }
 
+    public Prenotazione(){}
 
     public StatoPrenotazione getStatoPrenotazione(){
         return this.statoPrenotazione;

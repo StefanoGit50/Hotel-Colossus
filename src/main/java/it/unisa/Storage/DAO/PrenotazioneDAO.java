@@ -3,13 +3,13 @@ package it.unisa.Storage.DAO;
 import it.unisa.Common.*;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.ConnectionStorage;
+import it.unisa.Storage.DAO.PrenotazioneDR.PrenotazioneBuilder;
 import it.unisa.Storage.FrontDeskStorage;
 
 import java.sql.*;
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
 
@@ -19,7 +19,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
         Connection connection = ConnectionStorage.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO prenotazione(DataPrenotazione, DataArrivoCliente, " +
                 "DataPartenzaCliente, NoteAggiuntive, Intestatario, dataScadenza, " +
-                "numeroDocumento, DataRilascio, Tipo) " +
+                "numeroDocumento, DataRilascio, TipoDocumento) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ");
 
         preparedStatement.setDate(1, Date.valueOf(p.getDataCreazionePrenotazione()));
@@ -353,38 +353,34 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
      * al trattamento e ai servizi associati.
      *
      * @param p La prenotazione con i dati aggiornati da persistere.
-     * @throws SQLException Se si verifica un errore durante l'accesso al database.
+     * @throws SQLException         Se si verifica un errore durante l'accesso al database.
      * @throws NullPointerException Se il parametro p è null.
-     *
-     * Precondizioni:
-     *   p != null
-     *   p.getCodicePrenotazione() deve corrispondere a una prenotazione esistente nel database
-     *   Tutte le date (DataCreazionePrenotazione, DataInizio, DataFine, DataRilascio, DataScadenza)
-     *       devono essere valorizzate e valide
-     *   Se p.getTrattamento() != null, il trattamento deve esistere nel database
-     *   Tutti i servizi in p.getListaServizi() devono esistere nel database
-     *   p.getNumeroDocumento() deve essere maggiore di 0
-     *
-     * Postcondizioni:
-     *   Il record della prenotazione nel database viene aggiornato con i nuovi valori
-     *   Il IDPrenotazione (chiave primaria) rimane invariato
-     *   Se presente, il trattamento viene collegato alla prenotazione
-     *   Tutti i servizi nella lista vengono collegati alla prenotazione
-     *   Le associazioni clienti-camere nella tabella Associato_a NON vengono modificate
+     *                              Precondizioni:
+     *                              p != null
+     *                              p.getCodicePrenotazione() deve corrispondere a una prenotazione esistente nel database
+     *                              Tutte le date (DataCreazionePrenotazione, DataInizio, DataFine, DataRilascio, DataScadenza)
+     *                              devono essere valorizzate e valide
+     *                              Se p.getTrattamento() != null, il trattamento deve esistere nel database
+     *                              Tutti i servizi in p.getListaServizi() devono esistere nel database
+     *                              p.getNumeroDocumento() deve essere maggiore di 0
+     *                              <p>
+     *                              Postcondizioni:
+     *                              Il record della prenotazione nel database viene aggiornato con i nuovi valori
+     *                              Il IDPrenotazione (chiave primaria) rimane invariato
+     *                              Se presente, il trattamento viene collegato alla prenotazione
+     *                              Tutti i servizi nella lista vengono collegati alla prenotazione
+     *                              Le associazioni clienti-camere nella tabella Associato_a NON vengono modificate
      */
     @Override
-    public synchronized void doUpdate(Prenotazione p) throws SQLException
-    {
-        if (p != null)
-        {
+    public synchronized void doUpdate(Prenotazione p) throws SQLException {
+        if (p != null) {
             Connection connection = ConnectionStorage.getConnection();
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(
                     "UPDATE Prenotazione SET DataPrenotazione = ?, DataArrivoCliente = ?, " +
                             "DataPartenzaCliente = ?, NoteAggiuntive = ?, Intestatario = ?, " +
-                            "dataScadenza = ?, numeroDocumento = ?, DataRilascio = ?, Tipo = ? " +
-                            "WHERE IDPrenotazione = ?"))
-            {
+                            "dataScadenza = ?, numeroDocumento = ?, DataRilascio = ?, TipoDocumento = ? " +
+                            "WHERE IDPrenotazione = ?")) {
 
                 preparedStatement.setDate(1, Date.valueOf(p.getDataCreazionePrenotazione()));
                 preparedStatement.setDate(2, Date.valueOf(p.getDataInizio()));
@@ -400,12 +396,10 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                 preparedStatement.executeUpdate();
 
                 // Aggiorna il trattamento associato
-                if (p.getTrattamento() != null)
-                {
+                if (p.getTrattamento() != null) {
                     String query = "UPDATE Trattamento SET IDPrenotazione = ? WHERE Nome = ?";
 
-                    try (PreparedStatement stmt = connection.prepareStatement(query))
-                    {
+                    try (PreparedStatement stmt = connection.prepareStatement(query)) {
                         stmt.setInt(1, p.getCodicePrenotazione());
                         stmt.setString(2, p.getTrattamento().getNome());
                         stmt.executeUpdate();
@@ -413,28 +407,21 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                 }
 
                 // Aggiorna i servizi associati
-                for (Servizio servizio : p.getListaServizi())
-                {
+                for (Servizio servizio : p.getListaServizi()) {
                     String query = "UPDATE Servizio SET IDPrenotazione = ? WHERE Nome = ?";
 
-                    try (PreparedStatement stmt = connection.prepareStatement(query))
-                    {
+                    try (PreparedStatement stmt = connection.prepareStatement(query)) {
                         stmt.setInt(1, p.getCodicePrenotazione());
                         stmt.setString(2, servizio.getNome());
                         stmt.executeUpdate();
                     }
                 }
-            }
-            finally
-            {
-                if (connection != null)
-                {
+            } finally {
+                if (connection != null) {
                     ConnectionStorage.releaseConnection(connection);
                 }
             }
-        }
-        else
-        {
+        } else {
             throw new NullPointerException();
         }
     }
@@ -443,10 +430,10 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
     public ArrayList<Prenotazione> doRetriveByAttribute(String attribute, String value) throws SQLException {
         Connection connection = ConnectionStorage.getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Prenotazione WHERE " + attribute + " = ?")) {
-            preparedStatement.setString(1,value);
+            preparedStatement.setString(1, value);
 
-            try (ResultSet rs = preparedStatement.executeQuery()){
-                if (rs.next()){
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                if (rs.next()) {
                     int idPrenotazione = rs.getInt("IDPrenotazione");
 
                     // Recupera il trattamento
@@ -538,7 +525,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                         }
                     }
 
-                    return new Prenotazione(
+                    /*return new Prenotazione(
                             idPrenotazione,
                             rs.getDate("DataPrenotazione").toLocalDate(),
                             rs.getDate("DataArrivoCliente").toLocalDate(),
@@ -553,10 +540,59 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                             (ArrayList<Servizio>) servizi,
                             (ArrayList<Cliente>) clienti,
                             rs.getInt("numeroDocumento")
-                    );
+                    );*/
+                    return null;
                 }
             }
         }
         return null;
+    }
+
+    /**
+     * Non è supportata una implementazione
+     *
+     */
+    @Override
+    public Collection<Prenotazione> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, String sesso) {
+        return null;
+    }
+
+    public ArrayList<Prenotazione> doFilter(String nome, LocalDate dataInizio, LocalDate dataFine, int numeroCamera, String elementOrder) {
+        if(nome != null && dataFine != null && dataInizio != null && elementOrder != null){
+            try{
+                Connection connection = ConnectionStorage.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM prenotais WHERE ClienteNome = ? && NumeroCamera = ? && Stato = true && DataArrivoCliente >= ? && DataPartenzaCliente <= ? ORDER BY ? DESC");
+                preparedStatement.setString(1,nome);
+                preparedStatement.setInt(2,numeroCamera);
+                preparedStatement.setDate(3,Date.valueOf(dataInizio));
+                preparedStatement.setDate(4,Date.valueOf(dataFine));
+                preparedStatement.setString(5,elementOrder);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                Map<Integer, PrenotazioneBuilder> prenotazioneBuilderMap = new LinkedHashMap<>();
+
+                while(resultSet.next()){
+                    Integer integer =  resultSet.getInt("IDPrenotazione");
+                    PrenotazioneBuilder builder = prenotazioneBuilderMap.get(integer);
+                    if(builder == null){
+                        builder = new PrenotazioneBuilder(resultSet);
+                        prenotazioneBuilderMap.put(integer,builder);
+                    }
+                    builder.addCliente(resultSet);
+                    builder.addCamera(resultSet);
+                    builder.addServizio(resultSet);
+                }
+
+                ArrayList<Prenotazione> prenotaziones = new ArrayList<>(prenotazioneBuilderMap.size());
+                for(PrenotazioneBuilder prenotazione: prenotazioneBuilderMap.values()){
+                    prenotaziones.add(prenotazione.build());
+                }
+                return prenotaziones;
+            }catch (SQLException sqlException){
+                sqlException.printStackTrace();
+            }
+        }else{
+            throw new RuntimeException();
+        }
+        throw new NoSuchElementException("NON ci sono gli elementi");
     }
 }
