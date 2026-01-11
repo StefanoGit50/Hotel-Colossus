@@ -426,8 +426,23 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
         }
     }
 
+    /**
+     * Non è supportata una implementazione
+     *
+     */
     @Override
-    public ArrayList<Prenotazione> doRetriveByAttribute(String attribute, Object value) throws SQLException {
+    public Collection<Prenotazione> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, String sesso, String orderBy) throws SQLException {
+        return List.of();
+    }
+
+    /**
+     * @param attribute
+     * @param value
+     * @return
+     * @throws SQLException
+     */
+    @Override
+    public Collection<Prenotazione> doRetriveByAttribute(String attribute, Object value) throws SQLException {
         Connection connection = ConnectionStorage.getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Prenotazione WHERE " + attribute + " = ?")) {
             preparedStatement.setObject(1, value);
@@ -548,14 +563,6 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
         return null;
     }
 
-    /**
-     * Non è supportata una implementazione
-     *
-     */
-    @Override
-    public Collection<Prenotazione> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, String sesso, String orderBy) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 
     public ArrayList<Prenotazione> doFilter(String nome, LocalDate dataInizio, LocalDate dataFine, int numeroCamera, String elementOrder) {
         if(nome != null && dataFine != null && dataInizio != null && elementOrder != null){
