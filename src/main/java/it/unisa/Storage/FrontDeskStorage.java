@@ -13,5 +13,5 @@ public interface FrontDeskStorage<T>
     Collection<T> doRetriveAll(String order) throws SQLException;
     void doUpdate(T o) throws SQLException;
     Collection<T> doRetriveByAttribute(String attribute , Object value) throws SQLException;
-    Collection<T> doFilter(String nome , String cognome , String nazionalita , LocalDate dataDiNascita , String sesso, String orderBy);
+    Collection<T> doFilter(String nome , String cognome , String nazionalita , LocalDate dataDiNascita , String sesso, String orderBy) throws SQLException;
 }

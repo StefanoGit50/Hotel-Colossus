@@ -159,7 +159,6 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
         }
     }
 
-    @Override
     public synchronized Collection<Trattamento> doRetriveByAttribute(String attribute, Object value) throws SQLException {
         Connection connection;
         PreparedStatement preparedStatement = null;
@@ -202,7 +201,7 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
     }
 
     @Override
-    public Collection<Trattamento> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, String sesso, String orderBy) {
+    public Collection<Trattamento> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, String sesso, String orderBy) throws SQLException{
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

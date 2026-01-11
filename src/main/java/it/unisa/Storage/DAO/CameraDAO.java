@@ -4,6 +4,7 @@ import it.unisa.Common.Camera;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.FrontDeskStorage;
+import it.unisa.Storage.GovernanteStorage;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,7 +16,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-public class CameraDAO implements FrontDeskStorage<Camera>{
+public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Camera>{
 
     public static final String TABLE_NAME = "Camera";
 
@@ -178,6 +179,17 @@ public class CameraDAO implements FrontDeskStorage<Camera>{
         }
     }
 
+    /**
+     * @param attribute
+     * @param value
+     * @return
+     * @throws SQLException
+     */
+    @Override
+    public Collection<Camera> doRetriveByAttribute(String attribute, String value) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     @Override
     public synchronized Collection<Camera> doRetriveByAttribute(String attribute, Object value) throws SQLException {
         Connection connection;
@@ -231,7 +243,7 @@ public class CameraDAO implements FrontDeskStorage<Camera>{
      * @return
      */
     @Override
-    public Collection<Camera> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, String sesso, String orderBy) {
+    public Collection<Camera> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, String sesso, String orderBy)  throws SQLException{
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

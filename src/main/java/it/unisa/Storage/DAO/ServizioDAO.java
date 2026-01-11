@@ -161,8 +161,6 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
         }
     }
 
-
-    @Override
     public synchronized Collection<Servizio> doRetriveByAttribute(String attribute, Object value) throws SQLException {
         Connection connection;
         PreparedStatement preparedStatement = null;
