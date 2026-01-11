@@ -55,7 +55,7 @@ public class UpdatePrenotazioneCommand implements Command {
     @Override
     public void execute() {
         try {
-            Prenotazione p = catalogue.getPrenotazione(prenotazione.getCodicePrenotazione());
+            Prenotazione p = catalogue.getPrenotazione(prenotazione.getIDPrenotazione());
             ArrayList<Prenotazione> lp = CatalogoPrenotazioni.getListaPrenotazioni();
 
             Iterator<Prenotazione> it = lp.iterator(); // Evita di modificare l'array metre lo si itera
@@ -63,7 +63,7 @@ public class UpdatePrenotazioneCommand implements Command {
             while (it.hasNext()) {
                 pren = it.next();
 
-                if(pren.getCodicePrenotazione() ==  p.getCodicePrenotazione()) {
+                if(pren.getIDPrenotazione() ==  p.getIDPrenotazione()) {
                     prenotazioneNonModificata = pren;
                     lp.remove(p); // rimuovi la prenotazione 'non modificata' dalla lista delle prenotazioni
                     lp.add(prenotazione); // aggiungi la prenotazione 'modificata' alla lista delle prenotazioni
@@ -82,7 +82,7 @@ public class UpdatePrenotazioneCommand implements Command {
     @Override
     public void undo() {
         try {
-            Prenotazione p = catalogue.getPrenotazione(prenotazione.getCodicePrenotazione());
+            Prenotazione p = catalogue.getPrenotazione(prenotazione.getIDPrenotazione());
             ArrayList<Prenotazione> lp = CatalogoPrenotazioni.getListaPrenotazioni();
 
             Iterator<Prenotazione> it = lp.iterator(); // Evita di modificare l'array metre lo si itera
@@ -90,7 +90,7 @@ public class UpdatePrenotazioneCommand implements Command {
             while (it.hasNext()) {
                 pren = it.next();
 
-                if(pren.getCodicePrenotazione() == p.getCodicePrenotazione()) {
+                if(pren.getIDPrenotazione() == p.getIDPrenotazione()) {
                     lp.remove(p); // rimuovi il prenotazione 'non modificato' dalla lista dei prenotazioni
                     lp.add(prenotazioneNonModificata); // aggiungi il prenotazione 'modificato' alla lista dei prenotazioni
                     break;

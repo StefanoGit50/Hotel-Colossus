@@ -71,16 +71,16 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         boolean trovata = false;
         for(Prenotazione p2: prenotazioni)
         {
-            if(p2.getCodicePrenotazione() == p.getCodicePrenotazione())
+            if(p2.getIDPrenotazione() == p.getIDPrenotazione())
             {
                 prenotazioni.remove(p2);
-                logger.info("Prenotazione " + p.getCodicePrenotazione() + " cancellata");
+                logger.info("Prenotazione " + p.getIDPrenotazione() + " cancellata");
                 trovata = true;
                 return;
             }
         }
         if(!trovata) {
-            logger.warning("Prenotazione " + p.getCodicePrenotazione() + " non trovata");
+            logger.warning("Prenotazione " + p.getIDPrenotazione() + " non trovata");
             System.err.println("Prenotazione non trovata");
         }
     }
@@ -90,7 +90,7 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     {
         for(Prenotazione p2: prenotazioni)
         {
-            if(p2.getCodicePrenotazione() == Integer.getInteger(id))
+            if(p2.getIDPrenotazione() == Integer.getInteger(id))
             {
                 return p2;
             }

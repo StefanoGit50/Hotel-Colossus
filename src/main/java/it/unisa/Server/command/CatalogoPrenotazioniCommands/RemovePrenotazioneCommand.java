@@ -52,7 +52,7 @@ public class RemovePrenotazioneCommand implements Command {
     @Override
     public void execute() {
         try {
-            Prenotazione p = catalogue.getPrenotazione(prenotazione.getCodicePrenotazione());
+            Prenotazione p = catalogue.getPrenotazione(prenotazione.getIDPrenotazione());
             ArrayList<Prenotazione> lp = CatalogoPrenotazioni.getListaPrenotazioni();
             lp.remove(p);
             FrontDeskStorage<Prenotazione> frontDeskStorage = new PrenotazioneDAO();
