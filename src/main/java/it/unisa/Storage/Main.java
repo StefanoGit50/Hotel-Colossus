@@ -5,7 +5,9 @@ import it.unisa.Common.*;
 import it.unisa.Server.persistent.util.Ruolo;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.DAO.*;
+import it.unisa.Storage.DAO.PrenotazioneDR.PrenotazioneBuilder;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -382,5 +384,8 @@ public class Main{
             throw new RuntimeException(e);
         }
         */
+        PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO();
+        ArrayList<Prenotazione> prenotaziones = prenotazioneDAO.doFilter("Mario Rossi", Date.valueOf("2026-01-01").toLocalDate(),Date.valueOf("2031-02-03").toLocalDate(),102,"IDPrenotazione");
+        System.out.println(prenotaziones);
     }
 }

@@ -9,8 +9,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 public class CameraDAO implements FrontDeskStorage<Camera>{
@@ -30,7 +32,7 @@ public class CameraDAO implements FrontDeskStorage<Camera>{
                 }
             }
         }else{
-            throw new NullPointerException();
+            throw new NoSuchElementException("elemento non trovato");
         }
     }
 
@@ -130,7 +132,7 @@ public class CameraDAO implements FrontDeskStorage<Camera>{
      *
      * @param o La camera con i dati aggiornati da persistere.
      * @throws SQLException Se si verifica un errore durante l'accesso al database.
-     * @throws NullPointerException Se il parametro o è null.
+     * @throws NoSuchElementException Se il parametro o è null quindi non trovato.
      *
      * Precondizioni:
      *   o != null
@@ -172,7 +174,7 @@ public class CameraDAO implements FrontDeskStorage<Camera>{
         }
         else
         {
-            throw new NullPointerException();
+            throw new NoSuchElementException("elemento non trovato");
         }
     }
 
@@ -217,5 +219,10 @@ public class CameraDAO implements FrontDeskStorage<Camera>{
         if(lista.isEmpty()) throw new NoSuchElementException("Nessuna camera con " + attribute + " = " + value + "!");
 
         return lista;
+    }
+
+    @Override
+    public Collection<Camera> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, String sesso) {
+        return List.of();
     }
 }

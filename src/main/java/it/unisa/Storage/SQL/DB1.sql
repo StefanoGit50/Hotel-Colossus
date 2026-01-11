@@ -35,12 +35,14 @@ create table Prenotazione(
     DataPrenotazione date not null,
     DataArrivoCliente date not null,
     DataPartenzaCliente date not null,
+    NomeTrattamento varchar(50) not null,
     NoteAggiuntive varchar(1000) not null,
     Intestatario varchar(50) not null,
     dataScadenza date not null,
     numeroDocumento int not null,
     DataRilascio date not null,
-    Tipo varchar(50) not null,
+    TipoDocumento varchar(50) not null,
+    Stato boolean not null,
     primary key(IDPrenotazione)
 );
 
@@ -58,10 +60,40 @@ create table Associato_a(
 create table RicevutaFiscale(
 	IDRicevutaFiscale int not null,
     IDPrenotazione int not null,
-    Totale double not null,
 	DataEmissione date not null,
-	foreign key(IDPrenotazione)references Prenotazione(IDPrenotazione) on delete cascade on update cascade,
-    primary key(IDRicevutaFiscale , IDPrenotazione)
+    metodoPagamento varchar(50) not null,
+    DataPrenotazione Date not null,
+    PrezzoTrattamento double not null,
+	TipoTrattamento varchar(50) not null,
+    foreign key(IDPrenotazione)references Prenotazione(IDPrenotazione) on delete cascade on update cascade,
+    primary key(IDRicevutaFiscale)
+);
+
+create table ClientiRicevuta(
+    CFCliente varchar(50) not null,
+    IDRicevutaFiscale int not null,
+    NomeCliente varchar(50) not null,
+    CognomeCliente varchar(50) not null,
+    isIntestatario bool not null,
+    foreign key(IDRicevutaFiscale) references RicevutaFiscale(IDRicevutaFiscale),
+    primary key(CFCliente , IDRicevutaFiscale)
+);
+
+create table CameraRicevuta(
+    IDRicevutaFiscale int not null ,
+    NumeroCamera int not null ,
+    PrezzoCamera double not null,
+    foreign key(IDRicevutaFiscale) references RicevutaFiscale(IDRicevutaFiscale),
+    primary key (IDRicevutaFiscale , NumeroCamera)
+);
+
+create table ServiziRicevuta(
+    IDRicevutaFiscale int not null,
+    NomeServizio varchar(50) not null,
+    Quantità int not null,
+    PrezzoServizio double not null,
+    foreign key(IDRicevutaFiscale) references RicevutaFiscale(IDRicevutaFiscale),
+    primary key(NomeServizio,IDRicevutaFiscale )
 );
 
 create table Servizio(
@@ -73,11 +105,11 @@ create table Servizio(
 );
 
 create table Trattamento(
-	Nome varchar(50) not null,
-	Prezzo double not null,
-	IDPrenotazione int null default null,
-    primary key(Nome),
-    foreign key(IDPrenotazione) references Prenotazione(IDPrenotazione) on delete cascade on update cascade 
+     Nome varchar(50) not null,
+     Prezzo double not null,
+     IDPrenotazione int null default null,
+     primary key(Nome),
+     foreign key(IDPrenotazione) references Prenotazione(IDPrenotazione) on delete cascade on update cascade
 );
 
 create table Impiegato(

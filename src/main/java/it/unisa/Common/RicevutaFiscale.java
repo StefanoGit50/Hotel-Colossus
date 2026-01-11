@@ -22,18 +22,38 @@ public class RicevutaFiscale implements Serializable, Cloneable {
     /** Data in cui il documento fiscale è stato emesso. */
     private LocalDate dataEmissione;
 
+    /** Metodo di pagamento scelto dal Cliente */
+    private String metodoPagamento;
+
+    /** Data della Prenotazione */
+    private LocalDate dataPrenotazione;
+
+    /** Prezzo del trattamento*/
+    private double prezzoTrattamento;
+
+    /** la tipologia del trattamento*/
+    private String tipoTrattamento;
+
+
     /**
      * Inizializza una nuova ricevuta con i dati identificativi e il totale.
      * @param IDRicevutaFiscale l'identificativo univoco della ricevuta.
      * @param IDPrenotazione l'identificativo della prenotazione associata.
      * @param totale l'importo complessivo del documento.
      * @param dataEmissione la data di emissione della ricevuta.
+     * @param metodoPagamento il metodo di pagamento
+     *
+     *
      */
-    public RicevutaFiscale(int IDRicevutaFiscale, int IDPrenotazione, double totale, LocalDate dataEmissione) {
+    public RicevutaFiscale(int IDRicevutaFiscale, int IDPrenotazione, double totale, LocalDate dataEmissione ,String metodoPagamento,LocalDate dataPrenotazione ,double prezzoTrattamento , String tipoTrattamento){
         this.IDRicevutaFiscale = IDRicevutaFiscale;
         this.IDPrenotazione = IDPrenotazione;
         this.Totale = totale;
         this.dataEmissione = dataEmissione;
+        this.metodoPagamento = metodoPagamento;
+        this.dataPrenotazione = dataPrenotazione;
+        this.prezzoTrattamento = prezzoTrattamento;
+        this.tipoTrattamento = tipoTrattamento;
     }
 
     /**
@@ -95,6 +115,59 @@ public class RicevutaFiscale implements Serializable, Cloneable {
      */
     public void setIDPrenotazione(int IDPrenotazione) {
         this.IDPrenotazione = IDPrenotazione;
+    }
+    /**
+     * @return metodoPagamento ritorna il metodo di pagamento scelto dal Cliente
+     */
+    public String getMetodoPagamento() {
+        return metodoPagamento;
+    }
+    /**
+     * @param metodoPagamento è il metodo di pagamento scelto dal cliente
+     * */
+    public void setMetodoPagamento(String metodoPagamento) {
+        this.metodoPagamento = metodoPagamento;
+    }
+    /**
+     * @return datPrenotazione restituisce il la data della prenotazione
+     * */
+
+    public LocalDate getDataPrenotazione() {
+        return dataPrenotazione;
+    }
+    /**
+     * @param dataPrenotazione la data della prenotazione
+     * */
+    public void setDataPrenotazione(LocalDate dataPrenotazione) {
+        this.dataPrenotazione = dataPrenotazione;
+    }
+    /**
+     * @return prezzoTrattamento il prezzo del trattamento
+     * */
+    public double getPrezzoTrattamento() {
+        return prezzoTrattamento;
+    }
+
+    /**
+     * @param prezzoTrattamento il prezzo del trattamento
+     * */
+
+    public void setPrezzoTrattamento(double prezzoTrattamento) {
+        this.prezzoTrattamento = prezzoTrattamento;
+    }
+    /**
+     * @return tipoTrattamento il tipo di trattamento
+     * */
+    public String getTipoTrattamento() {
+        return tipoTrattamento;
+    }
+
+    /**
+     * @param tipoTrattamento il tipo di trattamento
+     * */
+
+    public void setTipoTrattamento(String tipoTrattamento) {
+        this.tipoTrattamento = tipoTrattamento;
     }
 
     /**

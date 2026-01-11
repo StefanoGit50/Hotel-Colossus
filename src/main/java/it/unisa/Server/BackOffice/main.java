@@ -61,7 +61,7 @@ public class main {
                 cliente.getNome()+" "+cliente.getCognome(),
                 "renato ti massaggiA",
                 c,listaServizi,clist,34569);
-        p1.setStatoPrenotazione(StatoPrenotazione.COMPLETATA);
+        p1.setStatoPrenotazione(false);
 
         CatalogoPrenotazioni catalogoPrenotazioni = new CatalogoPrenotazioni();
 
@@ -72,8 +72,8 @@ public class main {
         CatalogoPrenotazioni.getListaPrenotazioni().add(p1);
         //mostra solo le prenotazioni completate
          for(Prenotazione p : CatalogoPrenotazioni.getListaPrenotazioni()){
-             if(p.getStatoPrenotazione()== StatoPrenotazione.COMPLETATA){
-                ContoEconomicoComposite prenotazioneComposite = new ContoEconomicoComposite("PRENOTAZIONE"+p.getCodicePrenotazione()+" "+p.getIntestatario());
+             if(!p.getStatoPrenotazione()){
+                ContoEconomicoComposite prenotazioneComposite = new ContoEconomicoComposite("PRENOTAZIONE"+p.getIDPrenotazione()+" "+p.getIntestatario());
 
                 // creazione composite CAMERE
                  if(!p.getListaCamere().isEmpty() && p.getListaCamere()!= null) {

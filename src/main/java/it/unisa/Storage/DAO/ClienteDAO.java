@@ -137,7 +137,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
                 }
             }
         }else{
-            throw new NullPointerException();
+            throw new NoSuchElementException("elemento non trovato");
         }
     }
 
@@ -191,7 +191,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
      *
      * @param o Il cliente con i dati aggiornati da persistere.
      * @throws SQLException Se si verifica un errore durante l'accesso al database.
-     * @throws NullPointerException Se il parametro o è null.
+     * @throws NoSuchElementException Se il parametro o è null o non trovato.
      *
      * Precondizioni:
      * o != null
@@ -241,7 +241,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
         }
         else
         {
-            throw new NullPointerException();
+            throw new NoSuchElementException("elemento non trovato");
         }
     }
 
