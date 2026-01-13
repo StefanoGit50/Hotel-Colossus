@@ -10,7 +10,7 @@
 set -e  # Exit on error
 
 
-# Colori per output
+# --- CONFIGURAZIONE COLORI PER OUTPUT TERMINALE ---
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -18,7 +18,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 
-# Variabili configurazione
+# --- DEFINIZIONE VARIABILI DI CONFIGURAZIONE ---
 RMI_PORT=1099
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BIN_DIR="$PROJECT_ROOT/bin"

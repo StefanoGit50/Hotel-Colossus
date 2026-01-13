@@ -7,7 +7,7 @@
 #==============================================================================
 
 
-set -e
+set -e  # Blocca l'esecuzione dello script in caso di errore in qualsiasi comando
 
 
 # Carica environment
@@ -15,7 +15,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/env.sh"
 
 
-# Colori
+# --- CONFIGURAZIONE COLORI PER OUTPUT TERMINALE ---
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -184,7 +184,7 @@ sleep 3
 
 
 # 5. Avvia Manager Server
-start_service "Manager" "it.unisa.Server.BackOffice.ManagerImpl"
+start_service "Manager" "it.unisa.Server.gestioneImpiegati.Manager"
 
 
 # Summary
