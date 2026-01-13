@@ -36,7 +36,11 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
             "CF1"
     };
 
-    public synchronized void doSave(Cliente o) throws SQLException{
+    /**
+     * @param o;
+     * @throws SQLException;
+     */
+    public synchronized void     doSave(Cliente o) throws SQLException{
         Connection connection = null;
         try{
                 connection = ConnectionStorage.getConnection();
@@ -68,6 +72,12 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
                 }
             }
     }
+
+    /**
+     * @param oggetto è un oggetto (rappresenta la chiave del );
+     * @return Cliente;
+     * @throws SQLException;
+     */
 
     @Override
     public synchronized Cliente doRetriveByKey(Object oggetto) throws SQLException{
@@ -303,11 +313,10 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
     @Override
     public List<Cliente> doFilter(String nome, String cognome, String nazionalita, LocalDate dataNascita, String sesso, String orderBy) {
         Connection conn = null;
-        PreparedStatement ps = null;
+        PreparedStatement preparedStatement = null;
         List<Cliente> lista = new ArrayList<>();
         String selectSQL = "";
 
-        // Flags per verificare se almeno un parametro è stato fornito
         boolean[] params = new boolean[5];
         params[0] = nome != null && !nome.isEmpty();
         params[1] = cognome != null && !cognome.isEmpty();
@@ -327,74 +336,64 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
         }
         // Il numero di AND della query è pari a count - 1
 
-        selectSQL += " SELECT * FROM " + ClienteDAO.TABLE_NAME + " WHERE ";
+        selectSQL += "SELECT * FROM " + ClienteDAO.TABLE_NAME + " WHERE ";
         // Il cliclo serve per inserire gli AND correttamente
-        boolean flag = false; // Indica se nell'i-esima iterazione l'i-esimo parametro è disponibile
         for (int i = 0, j = count; i < params.length; i++) {
             if (i == 0 && params[0]) { // Se la flag è vera allora il parametro è presente ed è usato come criterio per la query di ricerca
-                selectSQL += " nome = ? ";
-                flag = true;
+                selectSQL += " nome = ?";
             }
             if (i == 1 && params[1]) {
-                selectSQL += " cognome = ? ";
-                flag = true;
+                selectSQL += " cognome = ?";
             }
             if (i == 2 && params[2]) {
-                selectSQL += " Cittadinanza = ? ";
-                flag = true;
+                selectSQL += " Cittadinanza = ?";
             }
             if (i == 3 && params[3]) {
-                selectSQL += " DataDiNascita = ? ";
-                flag = true;
+                selectSQL += " DataDiNascita = ?";
             }
             if (i == 4 && params[4]) {
-                selectSQL += " sesso = ? ";
-                flag = true;
+                selectSQL += " sesso = ?";
             }
-            if (j != 0 && flag) {
+            if (j != 0 && params[i]){
                 selectSQL += " AND ";
                 j--;
             }
-            flag = false;
         }
 
         if(orderBy != null && !orderBy.isEmpty()) {
-            if (DaoUtils.checkWhitelist(whitelist, orderBy))
-                selectSQL +=  " ORDER BY " + orderBy + ";";
+            if(DaoUtils.checkWhitelist(whitelist, orderBy))
+                selectSQL +=  " ORDER BY " + orderBy;
         }
-
-        try {
+        System.out.println(selectSQL);
+        try{
             conn = ConnectionStorage.getConnection();
-
-            ps = null;
             ResultSet resultSet = null;
 
-            try {
-                ps = conn.prepareStatement(selectSQL);
+            try{
+                preparedStatement = conn.prepareStatement(selectSQL);
                 int counter = 1;
-                if (params[0]) { // Se la flag è vera allora setto il parametro
-                    ps.setString(counter, nome);
+                if (params[0]) {
+                    preparedStatement.setString(counter, nome);
                     counter++;
                 }
                 if (params[1]) {
-                    ps.setString(counter, cognome);
+                    preparedStatement.setString(counter, cognome);
                     counter++;
                 }
                 if (params[2]) {
-                    ps.setString(counter, nazionalita);
+                    preparedStatement.setString(counter, nazionalita);
                     counter++;
                 }
                 if (params[3]) {
-                    ps.setDate(counter, Date.valueOf(dataNascita));
+                    preparedStatement.setDate(counter, Date.valueOf(dataNascita));
                     counter++;
                 }
                 if (params[4]) {
-                    ps.setString(counter, sesso);
+                    preparedStatement.setString(counter, sesso);
                 }
-                resultSet = ps.executeQuery();
-
+                resultSet = preparedStatement.executeQuery();
                 Cliente cliente;
-                while (resultSet.next()) {
+                while (resultSet.next()){
                     cliente = new Cliente();
                     cliente.setCf(resultSet.getString("CF"));
                     cliente.setNome(resultSet.getString("nome"));
@@ -412,12 +411,11 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
 
                     lista.add(cliente);
                 }
-
             } catch (SQLException e) {
                 e.printStackTrace();
             } finally {
-                if (ps != null)
-                    ps.close();
+                if (preparedStatement != null)
+                    preparedStatement.close();
                 ConnectionStorage.releaseConnection(conn);
             }
         } catch (SQLException e) {

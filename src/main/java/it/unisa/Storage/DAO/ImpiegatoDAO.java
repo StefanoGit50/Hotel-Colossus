@@ -341,33 +341,33 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
     }
 
     @Override
-    public Collection<Impiegato> doFilter(String nome, String sesso, Ruolo ruolo, String orderBy) throws  SQLException {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs;
-        List<Impiegato> lista = new ArrayList<>();
-        String selectSQL = "";
+    public Collection<Impiegato> doFilter(String nome, String sesso, Ruolo ruolo, String orderBy) throws  SQLException{
+                Connection conn = null;
+                PreparedStatement ps = null;
+                ResultSet rs;
+                List<Impiegato> lista = new ArrayList<>();
+                String selectSQL = "";
 
-        // Flags per verificare se almeno un parametro è stato fornito
-        boolean[] params = new boolean[4];
-        params[0] = nome != null && !nome.isEmpty();
-        params[1] = sesso != null && !sesso.isEmpty();
-        params[2] = ruolo != null;
+                // Flags per verificare se almeno un parametro è stato fornito
+                boolean[] params = new boolean[3];
+                 params[0] = nome != null && !nome.isEmpty();
+                 params[1] = sesso != null && !sesso.isEmpty();
+                 params[2] = ruolo != null;
 
-        // Se tutti i parametri sono nulli allora lancia l'eccezione
-        if (!params[0] && !params[1] && !params[2]) {
+            // Se tutti i parametri sono nulli allora lancia l'eccezione
+                if (!params[0] && !params[1] && !params[2]) {
             throw new RuntimeException("Nessun parametro inserito!");
-        }
+            }
 
-        // Conta il numero di parametri che sono veri
-        int count = -1;
-        for (boolean b : params) {
-            if(b) count++;
-        }
-        // Il numero di AND della query è pari a count - 1
-
-        selectSQL += " SELECT * FROM " + ImpiegatoDAO.TABLE_NAME + " WHERE ";
-        for (int i = 0; i < params.length; i++) {
+            // Conta il numero di parametri che sono veri
+            int count = -1;
+                for (boolean b : params) {
+                    if(b) count++;
+                }
+            // Il numero di AND della query è pari a count - 1
+            System.out.println(count);
+            selectSQL += "SELECT * FROM " + ImpiegatoDAO.TABLE_NAME + " WHERE ";
+                for(int i = 0; i < params.length; i++) {
             if (i == 0 && params[0]) { // Se la flag è vera allora il parametro è presente ed è usato come criterio per la query di ricerca
                 selectSQL += " nome = ? ";
             }
@@ -377,19 +377,20 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
             if (i == 2 && params[2]) {
                 selectSQL += " ruolo = ? ";
             }
-            if (count != 0) {
-                selectSQL += " AND ";
+            if (count != 0 && params[i]){
+                selectSQL += "AND";
                 count--;
             }
         }
 
-        if(orderBy != null && !orderBy.isEmpty()) {
+                if(orderBy != null && !orderBy.isEmpty()) {
             if (DaoUtils.checkWhitelist(whitelist, orderBy))
-                selectSQL +=  " ORDER BY " + orderBy + ";";
+                selectSQL +=  " ORDER BY " + orderBy;
         }
 
-        try {
+                try {
             conn = ConnectionStorage.getConnection();
+            System.out.println(selectSQL);
             ps = conn.prepareStatement(selectSQL);
             int counter = 1;
             if (params[0]) { // Se la flag è vera allora il parametro è presente ed è usato come criterio per la query di ricerca
@@ -401,8 +402,9 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
                 counter++;
             }
             if (params[2]) {
-                ps.setObject(counter, ruolo);
+                ps.setString(counter, ruolo.name());
             }
+
             rs = ps.executeQuery();
 
             while(rs.next()){
@@ -414,11 +416,11 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
                 impiegato.setCognome(rs.getString("Cognome"));
                 impiegato.setCAP(rs.getInt("Cap"));
                 impiegato.setSesso(rs.getString("sesso"));
-                impiegato.setDataAssunzione(rs.getDate("date").toLocalDate());
+                impiegato.setDataAssunzione(rs.getDate("DataAssunzione").toLocalDate());
                 impiegato.setTelefono(rs.getString("Telefono"));
                 impiegato.setCittadinanza(rs.getString("Cittadinanza"));
                 impiegato.setEmailAziendale(rs.getString("EmailAziendale"));
-                impiegato.setRuolo(rs.getObject("Ruolo", Ruolo.class));
+                impiegato.setRuolo(Ruolo.valueOf(rs.getString("Ruolo")));
                 impiegato.setDataRilascio(rs.getDate("DataRilascio").toLocalDate());
                 impiegato.setComune(rs.getString("Comune"));
                 impiegato.setProvincia(rs.getString("Provincia"));
@@ -440,8 +442,8 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
             }
         }
 
-        if(lista.isEmpty()) throw new NoSuchElementException("Nessun immpiegato {" + nome + ", " + sesso + "," + ruolo + "," + orderBy + "}!");
+                if(lista.isEmpty()) throw new NoSuchElementException("Nessun immpiegato {" + nome + ", " + sesso + "," + ruolo + "," + orderBy + "}!");
 
-        return lista;
-    }
+                return lista;
+        }
 }

@@ -12,7 +12,20 @@ import java.time.LocalDate;
 import java.util.*;
 
 public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
-
+    private static final String [] whitelist = {
+        "IDPrenotazione",
+        "DataPrenotazione",
+        "DataArrivoCliente",
+        "DataPartenzaCliente",
+        "NomeTrattamento",
+        "NoteAggiuntive",
+        "Intestatario",
+        "dataScadenza",
+        "numeroDocumento",
+        "DataRilascio",
+        "TipoDocumento",
+        "Stato"
+    };
     // motodo che salva
     @Override
     public synchronized void doSave(Prenotazione p) throws SQLException {
@@ -564,17 +577,98 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
     }
 
 
-    public ArrayList<Prenotazione> doFilter(String nome, LocalDate dataInizio, LocalDate dataFine, int numeroCamera, String elementOrder) {
-        if(nome != null && dataFine != null && dataInizio != null && elementOrder != null){
+    public ArrayList<Prenotazione> doFilter(String nome,String cognome, LocalDate dataInizio, LocalDate dataFine, Integer numeroCamera, String elementOrder) {
+
             try{
-                Connection connection = ConnectionStorage.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM prenotais WHERE ClienteNome = ? && NumeroCamera = ? && Stato = true && DataArrivoCliente >= ? && DataPartenzaCliente <= ? ORDER BY ? DESC");
-                preparedStatement.setString(1,nome);
-                preparedStatement.setInt(2,numeroCamera);
-                preparedStatement.setDate(3,Date.valueOf(dataInizio));
-                preparedStatement.setDate(4,Date.valueOf(dataFine));
-                preparedStatement.setString(5,elementOrder);
-                ResultSet resultSet = preparedStatement.executeQuery();
+                        Connection connection = ConnectionStorage.getConnection();
+                        boolean [] booleans = new boolean[5];
+                        PreparedStatement preparedStatement = connection.prepareStatement("CREATE or replace view PrenotaIS as\n" +
+                                "SELECT  p.*, t.Nome as TrattamentoNome, t.Prezzo as TrattamentoPrezzo,\n" +
+                                "        c.CF, c.nome as ClienteNome, c.cognome as ClienteCognome,   c.Email, c.telefono, c.Sesso, c.DataDiNascita, c.Cittadinanza,\n" +
+                                "        c.via, c.civico, c.comune, c.provincia, c.Cap,  c.MetodoDiPagamento, c.IsBackListed,\n" +
+                                "        cam.NumeroCamera, cam.NumeroMaxOcc, cam.NoteCamera, cam.Stato as CameraStato, cam.Prezzo\n" +
+                                "            as CameraPrezzo,s.Nome as ServizioNome, s.Prezzo as ServizioPrezzo\n" +
+                                "From  Prenotazione p\n" +
+                                "          join Trattamento t ON p.NomeTrattamento = t.Nome\n" +
+                                "          join Associato_a a ON p.IDPrenotazione = a.IDPrenotazione\n" +
+                                "          JOIN Cliente c ON a.CF = c.CF\n" +
+                                "          JOIN Camera cam ON a.NumeroCamera = cam.NumeroCamera\n" +
+                                "          LEFT JOIN Servizio s ON s.IDPrenotazione = p.IDPrenotazione\n");
+
+                        preparedStatement.executeUpdate();
+                        String sqlBello = "SELECT * FROM prenotais WHERE ";
+                        booleans[0] = nome != null && !nome.isEmpty();
+                        booleans[1] = cognome != null && !cognome.isEmpty();
+                        booleans[2] = dataInizio != null;
+                        booleans[3] = dataFine != null;
+                        booleans[4] = numeroCamera != null;
+                        int count = -1;
+                        for(int i = 0;i < booleans.length;i++){
+                            if(booleans[i]){
+                                count++;
+                            }
+                        }
+
+                        int countInter = 0;
+                        for(int i = 0;i < 5;i++){
+                            boolean f = false;
+                            if(i == 0 && booleans[i]){
+                                sqlBello += " ClienteNome = ?";
+                                f = true;
+                            }
+                            if(i == 1 && booleans[i]){
+                                sqlBello += " ClienteCognome = ? ";
+                                f = true;
+                            }
+                            if(i == 2 && booleans[i]){
+                                sqlBello += " DataArrivoCliente >= ? ";
+                                f = true;
+                            }
+                            if(i == 3 && booleans[i]){
+                                sqlBello += " DataPartenzaCliente <= ? ";
+                                f = true;
+                            }
+                            if(i == 4 && booleans[i]){
+                                sqlBello += " NumeroCamera = ? ";
+                                f = true;
+                            }
+                            if(f && count != 0){
+                                sqlBello += " AND ";
+                                count--;
+                            }
+                        }
+                        if(elementOrder != null && !elementOrder.isEmpty()){
+                            if(DaoUtils.checkWhitelist(whitelist,elementOrder)){
+                                sqlBello += " ORDER BY " + elementOrder;
+                            }
+                        }
+                        PreparedStatement preparedStatement1 = connection.prepareStatement(sqlBello);
+                        int counter = 1;
+                        if(booleans[0]){
+                            preparedStatement1.setString(counter,nome);
+                            counter++;
+                        }
+                        if(booleans[1]){
+                            preparedStatement1.setString(counter,cognome);
+                            counter++;
+                        }
+                        if(booleans[2]){
+                            preparedStatement1.setDate(counter,Date.valueOf(dataInizio));
+                            counter++;
+                        }
+                        if(booleans[3]){
+                            preparedStatement1.setDate(counter,Date.valueOf(dataFine));
+                            counter++;
+                        }
+                        if(booleans[4]){
+                            preparedStatement1.setInt(counter,numeroCamera);
+                            counter++;
+                        }
+                        if(elementOrder != null){
+                            preparedStatement1.setString(counter,elementOrder);
+                        }
+
+                        ResultSet resultSet = preparedStatement1.executeQuery();
                 Map<Integer, PrenotazioneBuilder> prenotazioneBuilderMap = new LinkedHashMap<>();
 
                 while(resultSet.next()){
@@ -597,9 +691,6 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
             }catch (SQLException sqlException){
                 sqlException.printStackTrace();
             }
-        }else{
-            throw new RuntimeException();
-        }
         throw new NoSuchElementException("NON ci sono gli elementi");
     }
 }

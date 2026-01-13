@@ -134,15 +134,12 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
      * @param o La camera con i dati aggiornati da persistere.
      * @throws SQLException Se si verifica un errore durante l'accesso al database.
      * @throws NoSuchElementException Se il parametro o è null quindi non trovato.
-     *
      * Precondizioni:
      *   o != null
      *   o.getNumeroCamera() deve corrispondere a una camera esistente nel database
      *   o.getStatoCamera() deve essere un valore valido dell'enum Stato
      *   o.getCapacità() deve essere maggiore di 0
      *   o.getPrezzoCamera() deve essere maggiore o uguale a 0
-     *
-     *
      * Postcondizioni:
      *   Il record della camera nel database viene aggiornato con i nuovi valori
      *   Il NumeroCamera (chiave primaria) rimane invariato
@@ -179,17 +176,17 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
         }
     }
 
-    /**
-     * @param attribute
-     * @param value
-     * @return
-     * @throws SQLException
-     */
+
     @Override
     public Collection<Camera> doRetriveByAttribute(String attribute, String value) throws SQLException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
+    /**
+     * @param attribute;
+     * @param value;
+     * @return Collection<Camera>;
+     * @throws SQLException;
+     */
     @Override
     public synchronized Collection<Camera> doRetriveByAttribute(String attribute, Object value) throws SQLException {
         Connection connection;
@@ -234,13 +231,13 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
     }
 
     /**
-     * @param nome
-     * @param cognome
-     * @param nazionalita
-     * @param dataDiNascita
-     * @param sesso
-     * @param orderBy
-     * @return
+     * @param nome;
+     * @param cognome;
+     * @param nazionalita;
+     * @param dataDiNascita;
+     * @param sesso;
+     * @param orderBy;
+     * @throws UnsupportedOperationException;
      */
     @Override
     public Collection<Camera> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, String sesso, String orderBy)  throws SQLException{

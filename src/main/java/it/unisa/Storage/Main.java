@@ -389,9 +389,10 @@ public class Main{
         */
 
         PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO();
-        ArrayList<Prenotazione> prenotaziones = prenotazioneDAO.doFilter(null, Date.valueOf("2026-01-10").toLocalDate(), Date.valueOf("2030-01-01").toLocalDate(),101,"IDPrenotazione");
+        ArrayList<Prenotazione> prenotaziones = prenotazioneDAO.doFilter(null,null, Date.valueOf("2026-01-10").toLocalDate(), Date.valueOf("2030-01-01").toLocalDate(),101,"IDPrenotazione");
         System.out.println(prenotaziones);
         ClienteDAO servizioDAO = new ClienteDAO();
+
         try {
             ArrayList<Cliente> servizios = (ArrayList<Cliente>) servizioDAO.doFilter("Laura","Bianchi",null ,null,"F","CF");
             System.out.println(servizios);
@@ -399,5 +400,12 @@ public class Main{
             runtimeException.printStackTrace();
         }
 
+        ImpiegatoDAO impiegatoDAO = new ImpiegatoDAO();
+        ArrayList<Impiegato> impiegatoes = (ArrayList<Impiegato>) impiegatoDAO.doFilter(null,"M",null,"CF");
+        System.out.println(impiegatoes);
+
+        ClienteDAO clienteDAO = new ClienteDAO();
+        ArrayList<Cliente> clientes = (ArrayList<Cliente>) clienteDAO.doFilter(null,null,"Italiana",Date.valueOf("1992-03-23").toLocalDate(),"F","CF ASC");
+        System.out.println(clientes);
     }
 }
