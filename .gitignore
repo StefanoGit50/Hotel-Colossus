@@ -39,3 +39,6 @@ build/
 .DS_Store/target/
 *.iml
 /.idea/
+pids/
+*.log
+logs/

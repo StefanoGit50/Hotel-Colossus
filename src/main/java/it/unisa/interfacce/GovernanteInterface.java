@@ -11,7 +11,7 @@ import java.util.List;
 
 
 public interface GovernanteInterface extends Remote, ObserverCamereInterface {
-    List<Camera> getListCamere();
+    List<Camera> getListCamere() throws RemoteException;
     boolean aggiornaStatoCamera(Camera c) throws RemoteException;
 
 }
