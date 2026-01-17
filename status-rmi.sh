@@ -8,8 +8,18 @@
 
 
 # Carica environment
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/env.sh"
+
+# Carica configurazione
+if [ -f "$SCRIPT_DIR/load-config.sh" ]; then
+    source "$SCRIPT_DIR/load-config.sh"
+elif [ -f "$SCRIPT_DIR/env.sh" ]; then
+    source "$SCRIPT_DIR/env.sh"
+else
+    echo "⚠ Configurazione non trovata"
+    exit 1
+fi
 
 
 # Colori
@@ -101,7 +111,6 @@ test_rmi_connection()
         echo -e "${GREEN}●${NC} Reachable"
 
         # Tenta di listare servizi (richiede compilazione tool)
-        # Qui potremmo chiamare un piccolo Java tool che fa Naming.list()
     else
         echo -e "${RED}●${NC} Unreachable"
     fi
@@ -176,7 +185,7 @@ echo -e "${BLUE}Service Status:${NC}"
 check_service_status "rmiregistry"
 check_service_status "FrontDesk"
 check_service_status "Governante"
-# check_service_status "Manager"
+check_service_status "Manager"
 
 
 list_rmi_services
@@ -185,7 +194,7 @@ list_rmi_services
 # Conta servizi attivi
 echo ""
 active_count=0
-for service in rmiregistry FrontDesk Governante; do
+for service in rmiregistry FrontDesk Governante Manager; do
     if [ -f "$PID_DIR/${service}.pid" ]; then
         pid=$(cat "$PID_DIR/${service}.pid")
         if ps -p "$pid" > /dev/null 2>&1; then
@@ -195,7 +204,7 @@ for service in rmiregistry FrontDesk Governante; do
 done
 
 
-echo -e "${BLUE}Summary:${NC} $active_count/3 servizi attivi"
+echo -e "${BLUE}Summary:${NC} $active_count/4 servizi attivi"
 
 
 # Suggerimenti

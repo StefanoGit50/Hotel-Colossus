@@ -16,12 +16,13 @@ set -e
 # Carica environment
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-
-if [ -f "$SCRIPT_DIR/env.sh" ]; then
+# Carica configurazione
+if [ -f "$SCRIPT_DIR/load-config.sh" ]; then
+    source "$SCRIPT_DIR/load-config.sh"
+elif [ -f "$SCRIPT_DIR/env.sh" ]; then
     source "$SCRIPT_DIR/env.sh"
 else
-    echo "ERRORE: File env.sh non trovato!"
-    echo "Esegui prima: ./setup-rmi.sh"
+    echo "⚠ Configurazione non trovata"
     exit 1
 fi
 
