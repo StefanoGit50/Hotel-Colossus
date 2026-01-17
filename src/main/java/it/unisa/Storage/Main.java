@@ -30,7 +30,7 @@ public class Main{
         }catch(SQLException sqlException){
             sqlException.getMessage();
             sqlException.getErrorCode();
-            sqlException.getCause();
+        sqlException.getCause();
         }
         Camera camera1 = new Camera(
                 102,                    // numeroCamera
