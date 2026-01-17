@@ -59,7 +59,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
         }
 
         // Salva i servizi associati
-        for (Servizio servizio : p.getListaServizi()) {
+        for (Servizio servizio : p.getListaServizi()){
             String query = "UPDATE Servizio SET IDPrenotazione = ? WHERE Nome = ?";
 
             try (PreparedStatement stmt = connection.prepareStatement(query)) {
