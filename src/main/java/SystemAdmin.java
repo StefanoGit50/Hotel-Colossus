@@ -190,17 +190,318 @@ public class SystemAdmin
 
 
     /**
-     * Modalità manutenzione (da implementare)
+     * Modalità manutenzione programmata
      */
-    private void maintenanceMode()
-    {
+    private void maintenanceMode() {
         clearScreen();
-        printHeader("Modalità Manutenzione");
+        printHeader("Modalità Manutenzione Programmata");
 
-        printWarning("Funzionalità in fase di sviluppo");
+        System.out.println(YELLOW + "⚙ Questa modalità:" + RESET);
+        System.out.println("  • Notifica tutti i client connessi");
+        System.out.println("  • Blocca nuove connessioni");
+        System.out.println("  • Completa le operazioni in corso");
+        System.out.println("  • Esegue shutdown programmato");
         System.out.println();
 
+        // Chiedi minuti per la manutenzione
+        int minutes = getIntInput("Tempo prima dello shutdown (minuti)");
+
+        if (minutes <= 0 || minutes > 120) {
+            printError("Tempo non valido! Deve essere tra 1 e 120 minuti.");
+            pause();
+            return;
+        }
+
+        System.out.println();
+        System.out.println(RED + "⚠ ATTENZIONE:" + RESET);
+        System.out.println("  Il sistema andrà in manutenzione tra " + YELLOW + minutes + " minuti" + RESET);
+        System.out.println("  Tutti i client riceveranno una notifica");
+        System.out.println();
+
+        System.out.print("Confermi? (yes/no): ");
+        String confirm = scanner.nextLine().trim();
+
+        if (!"yes".equalsIgnoreCase(confirm)) {
+            printWarning("Manutenzione annullata");
+            pause();
+            return;
+        }
+
+        // Avvia il processo di manutenzione
+        scheduleMaintenance(minutes);
+    }
+
+    /**
+     * Schedula ed esegue la manutenzione programmata
+     */
+    private void scheduleMaintenance(int minutes) {
+        clearScreen();
+        printHeader("Manutenzione in Corso");
+
+        try {
+            // 1. Crea file di stato manutenzione
+            createMaintenanceStatusFile(minutes);
+            printSuccess("File di stato manutenzione creato");
+
+            // 2. Notifica i server RMI tramite file flag
+            notifyServersMaintenanceMode(minutes);
+            printSuccess("Notifica inviata ai server RMI");
+
+            // 3. Conta alla rovescia con notifiche periodiche
+            performCountdown(minutes);
+
+            // 4. Shutdown finale
+            printInfo("Tempo scaduto! Avvio shutdown...");
+            Thread.sleep(2000);
+
+            // Esegui backup prima dello shutdown
+            printInfo("Esecuzione backup...");
+            performBackup();
+
+            // Shutdown del sistema
+            if (executeScript("stop-rmi.sh")) {
+                printSuccess("Sistema fermato correttamente");
+            } else {
+                printError("Errore durante lo shutdown");
+            }
+
+            // Cleanup
+            cleanupMaintenanceFiles();
+
+        } catch (Exception e) {
+            printError("Errore durante la manutenzione: " + e.getMessage());
+            cleanupMaintenanceFiles();
+        }
+
         pause();
+    }
+
+    /**
+     * Crea file di stato manutenzione che i client possono leggere
+     */
+    private void createMaintenanceStatusFile(int minutes) throws IOException {
+        File maintenanceFile = new File("maintenance.status");
+
+        try (PrintWriter writer = new PrintWriter(new FileWriter(maintenanceFile))) {
+            long shutdownTime = System.currentTimeMillis() + (minutes * 60 * 1000);
+
+            writer.println("# Hotel Colossus - Maintenance Status");
+            writer.println("maintenance.active=true");
+            writer.println("maintenance.message=Sistema in manutenzione programmata");
+            writer.println("maintenance.shutdown.minutes=" + minutes);
+            writer.println("maintenance.shutdown.timestamp=" + shutdownTime);
+            writer.println("maintenance.started=" + System.currentTimeMillis());
+            writer.println("maintenance.reason=Manutenzione programmata del sistema");
+        }
+    }
+
+    /**
+     * Notifica i server RMI della manutenzione imminente
+     */
+    private void notifyServersMaintenanceMode(int minutes) throws IOException {
+        // Crea file che i server monitorano
+        File notifyFile = new File("pids/maintenance.flag");
+        notifyFile.getParentFile().mkdirs();
+
+        try (PrintWriter writer = new PrintWriter(new FileWriter(notifyFile))) {
+            writer.println("MAINTENANCE_MODE");
+            writer.println("MINUTES=" + minutes);
+            writer.println("TIMESTAMP=" + System.currentTimeMillis());
+        }
+
+        // Invia anche tramite file di log speciale
+        File logNotify = new File("logs/maintenance.notify");
+        try (PrintWriter writer = new PrintWriter(new FileWriter(logNotify, true))) {
+            writer.println("[" + new Date() + "] MAINTENANCE SCHEDULED: " + minutes + " minutes");
+        }
+    }
+
+    /**
+     * Esegue countdown con notifiche periodiche
+     */
+    private void performCountdown(int totalMinutes) throws InterruptedException {
+        int remainingSeconds = totalMinutes * 60;
+
+        // Intervalli di notifica (in secondi)
+        int[] notifyIntervals = {
+                totalMinutes * 60,      // Inizio
+                30 * 60,                // 30 minuti
+                15 * 60,                // 15 minuti
+                10 * 60,                // 10 minuti
+                5 * 60,                 // 5 minuti
+                3 * 60,                 // 3 minuti
+                1 * 60,                 // 1 minuto
+                30,                     // 30 secondi
+                10                      // 10 secondi
+        };
+
+        System.out.println();
+        printInfo("Countdown iniziato - Tempo totale: " + totalMinutes + " minuti");
+        System.out.println(GRAY + "─".repeat(60) + RESET);
+
+        long startTime = System.currentTimeMillis();
+        long endTime = startTime + (totalMinutes * 60 * 1000);
+
+        while (System.currentTimeMillis() < endTime) {
+            long currentTime = System.currentTimeMillis();
+            remainingSeconds = (int)((endTime - currentTime) / 1000);
+
+            // Verifica se è il momento di notificare
+            for (int interval : notifyIntervals) {
+                if (remainingSeconds == interval) {
+                    sendMaintenanceNotification(remainingSeconds);
+                    break;
+                }
+            }
+
+            // Aggiorna display ogni secondo
+            updateCountdownDisplay(remainingSeconds);
+
+            Thread.sleep(1000);
+        }
+
+        System.out.println();
+    }
+
+    /**
+     * Invia notifica di manutenzione
+     */
+    private void sendMaintenanceNotification(int remainingSeconds) {
+        try {
+            String message;
+            String color;
+
+            if (remainingSeconds >= 300) { // >= 5 minuti
+                int mins = remainingSeconds / 60;
+                message = "Manutenzione tra " + mins + " minuti";
+                color = YELLOW;
+            } else if (remainingSeconds >= 60) { // >= 1 minuto
+                int mins = remainingSeconds / 60;
+                message = "ATTENZIONE: Manutenzione tra " + mins + " minuti!";
+                color = YELLOW;
+            } else if (remainingSeconds >= 30) {
+                message = "ATTENZIONE: Manutenzione tra " + remainingSeconds + " secondi!";
+                color = RED;
+            } else {
+                message = "SHUTDOWN IMMINENTE: " + remainingSeconds + " secondi!";
+                color = RED;
+            }
+
+            // Log della notifica
+            File notifyLog = new File("logs/maintenance.notify");
+            try (PrintWriter writer = new PrintWriter(new FileWriter(notifyLog, true))) {
+                writer.println("[" + new Date() + "] " + message);
+            }
+
+            // Aggiorna il file di stato
+            updateMaintenanceStatus(remainingSeconds);
+
+            // Stampa a video
+            System.out.println();
+            System.out.println(color + "🔔 " + message + RESET);
+
+        } catch (IOException e) {
+            printWarning("Impossibile inviare notifica: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Aggiorna il file di stato con il tempo rimanente
+     */
+    private void updateMaintenanceStatus(int remainingSeconds) throws IOException {
+        File statusFile = new File("maintenance.status");
+        Properties status = new Properties();
+
+        status.setProperty("maintenance.active", "true");
+        status.setProperty("maintenance.remaining.seconds", String.valueOf(remainingSeconds));
+        status.setProperty("maintenance.remaining.minutes", String.valueOf(remainingSeconds / 60));
+        status.setProperty("maintenance.message",
+                "Sistema in manutenzione. Shutdown tra " + formatTime(remainingSeconds));
+
+        try (FileOutputStream fos = new FileOutputStream(statusFile)) {
+            status.store(fos, "Maintenance Status - Updated: " + new Date());
+        }
+    }
+
+    /**
+     * Aggiorna il display del countdown
+     */
+    private void updateCountdownDisplay(int seconds) {
+        int hours = seconds / 3600;
+        int minutes = (seconds % 3600) / 60;
+        int secs = seconds % 60;
+
+        String timeStr = String.format("%02d:%02d:%02d", hours, minutes, secs);
+        String color = seconds <= 60 ? RED : (seconds <= 300 ? YELLOW : GREEN);
+
+        // Progress bar
+        int totalBars = 50;
+        int filledBars = Math.max(0, totalBars - (seconds / 60));
+        String bar = "█".repeat(filledBars) + "░".repeat(totalBars - filledBars);
+
+        System.out.print("\r" + color + "⏱ Tempo rimanente: " + timeStr + RESET +
+                " [" + bar + "]");
+    }
+
+    /**
+     * Formatta i secondi in stringa leggibile
+     */
+    private String formatTime(int seconds) {
+        if (seconds >= 3600) {
+            int hours = seconds / 3600;
+            int mins = (seconds % 3600) / 60;
+            return hours + "h " + mins + "m";
+        } else if (seconds >= 60) {
+            return (seconds / 60) + " minuti";
+        } else {
+            return seconds + " secondi";
+        }
+    }
+
+    /**
+     * Esegue backup prima dello shutdown
+     */
+    private void performBackup() {
+        try {
+            File backupDir = new File("backups");
+            backupDir.mkdirs();
+
+            String timestamp = new java.text.SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String backupFile = "backups/maintenance_backup_" + timestamp + ".tar.gz";
+
+            // Backup dei log
+            ProcessBuilder pb = new ProcessBuilder(
+                    "tar", "-czf", backupFile,
+                    "logs/", "pids/", CONFIG_FILE
+            );
+
+            pb.directory(new File("."));
+            Process process = pb.start();
+
+            int exitCode = process.waitFor();
+
+            if (exitCode == 0) {
+                printSuccess("Backup creato: " + backupFile);
+            } else {
+                printWarning("Backup completato con avvisi");
+            }
+
+        } catch (Exception e) {
+            printWarning("Impossibile creare backup: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Pulisce i file di manutenzione
+     */
+    private void cleanupMaintenanceFiles() {
+        try {
+            new File("maintenance.status").delete();
+            new File("pids/maintenance.flag").delete();
+            printInfo("File di manutenzione rimossi");
+        } catch (Exception e) {
+            printWarning("Cleanup parziale: " + e.getMessage());
+        }
     }
 
 
