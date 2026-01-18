@@ -192,7 +192,8 @@ public class SystemAdmin
     /**
      * Modalità manutenzione programmata
      */
-    private void maintenanceMode() {
+    private void maintenanceMode()
+    {
         clearScreen();
         printHeader("Modalità Manutenzione Programmata");
 
@@ -206,7 +207,8 @@ public class SystemAdmin
         // Chiedi minuti per la manutenzione
         int minutes = getIntInput("Tempo prima dello shutdown (minuti)");
 
-        if (minutes <= 0 || minutes > 120) {
+        if (minutes <= 0 || minutes > 120)
+        {
             printError("Tempo non valido! Deve essere tra 1 e 120 minuti.");
             pause();
             return;
@@ -221,7 +223,8 @@ public class SystemAdmin
         System.out.print("Confermi? (yes/no): ");
         String confirm = scanner.nextLine().trim();
 
-        if (!"yes".equalsIgnoreCase(confirm)) {
+        if (!"yes".equalsIgnoreCase(confirm))
+        {
             printWarning("Manutenzione annullata");
             pause();
             return;
@@ -234,11 +237,13 @@ public class SystemAdmin
     /**
      * Schedula ed esegue la manutenzione programmata
      */
-    private void scheduleMaintenance(int minutes) {
+    private void scheduleMaintenance(int minutes)
+    {
         clearScreen();
         printHeader("Manutenzione in Corso");
 
-        try {
+        try
+        {
             // 1. Crea file di stato manutenzione
             createMaintenanceStatusFile(minutes);
             printSuccess("File di stato manutenzione creato");
@@ -259,16 +264,21 @@ public class SystemAdmin
             performBackup();
 
             // Shutdown del sistema
-            if (executeScript("stop-rmi.sh")) {
+            if (executeScript("stop-rmi.sh"))
+            {
                 printSuccess("Sistema fermato correttamente");
-            } else {
+            }
+            else
+            {
                 printError("Errore durante lo shutdown");
             }
 
             // Cleanup
             cleanupMaintenanceFiles();
 
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             printError("Errore durante la manutenzione: " + e.getMessage());
             cleanupMaintenanceFiles();
         }
@@ -279,10 +289,12 @@ public class SystemAdmin
     /**
      * Crea file di stato manutenzione che i client possono leggere
      */
-    private void createMaintenanceStatusFile(int minutes) throws IOException {
+    private void createMaintenanceStatusFile(int minutes) throws IOException
+    {
         File maintenanceFile = new File("maintenance.status");
 
-        try (PrintWriter writer = new PrintWriter(new FileWriter(maintenanceFile))) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(maintenanceFile)))
+        {
             long shutdownTime = System.currentTimeMillis() + (minutes * 60 * 1000);
 
             writer.println("# Hotel Colossus - Maintenance Status");
@@ -298,12 +310,14 @@ public class SystemAdmin
     /**
      * Notifica i server RMI della manutenzione imminente
      */
-    private void notifyServersMaintenanceMode(int minutes) throws IOException {
+    private void notifyServersMaintenanceMode(int minutes) throws IOException
+    {
         // Crea file che i server monitorano
         File notifyFile = new File("pids/maintenance.flag");
         notifyFile.getParentFile().mkdirs();
 
-        try (PrintWriter writer = new PrintWriter(new FileWriter(notifyFile))) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(notifyFile)))
+        {
             writer.println("MAINTENANCE_MODE");
             writer.println("MINUTES=" + minutes);
             writer.println("TIMESTAMP=" + System.currentTimeMillis());
@@ -311,7 +325,8 @@ public class SystemAdmin
 
         // Invia anche tramite file di log speciale
         File logNotify = new File("logs/maintenance.notify");
-        try (PrintWriter writer = new PrintWriter(new FileWriter(logNotify, true))) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(logNotify, true)))
+        {
             writer.println("[" + new Date() + "] MAINTENANCE SCHEDULED: " + minutes + " minutes");
         }
     }
@@ -319,11 +334,13 @@ public class SystemAdmin
     /**
      * Esegue countdown con notifiche periodiche
      */
-    private void performCountdown(int totalMinutes) throws InterruptedException {
+    private void performCountdown(int totalMinutes) throws InterruptedException
+    {
         int remainingSeconds = totalMinutes * 60;
 
         // Intervalli di notifica (in secondi)
-        int[] notifyIntervals = {
+        int[] notifyIntervals =
+                {
                 totalMinutes * 60,      // Inizio
                 30 * 60,                // 30 minuti
                 15 * 60,                // 15 minuti
@@ -342,13 +359,16 @@ public class SystemAdmin
         long startTime = System.currentTimeMillis();
         long endTime = startTime + (totalMinutes * 60 * 1000);
 
-        while (System.currentTimeMillis() < endTime) {
+        while (System.currentTimeMillis() < endTime)
+        {
             long currentTime = System.currentTimeMillis();
             remainingSeconds = (int)((endTime - currentTime) / 1000);
 
             // Verifica se è il momento di notificare
-            for (int interval : notifyIntervals) {
-                if (remainingSeconds == interval) {
+            for (int interval : notifyIntervals)
+            {
+                if (remainingSeconds == interval)
+                {
                     sendMaintenanceNotification(remainingSeconds);
                     break;
                 }
@@ -366,30 +386,40 @@ public class SystemAdmin
     /**
      * Invia notifica di manutenzione
      */
-    private void sendMaintenanceNotification(int remainingSeconds) {
-        try {
+    private void sendMaintenanceNotification(int remainingSeconds)
+    {
+        try
+        {
             String message;
             String color;
 
-            if (remainingSeconds >= 300) { // >= 5 minuti
+            if (remainingSeconds >= 300)
+            { // >= 5 minuti
                 int mins = remainingSeconds / 60;
                 message = "Manutenzione tra " + mins + " minuti";
                 color = YELLOW;
-            } else if (remainingSeconds >= 60) { // >= 1 minuto
+            }
+            else if (remainingSeconds >= 60)
+            { // >= 1 minuto
                 int mins = remainingSeconds / 60;
                 message = "ATTENZIONE: Manutenzione tra " + mins + " minuti!";
                 color = YELLOW;
-            } else if (remainingSeconds >= 30) {
+            }
+            else if (remainingSeconds >= 30)
+            {
                 message = "ATTENZIONE: Manutenzione tra " + remainingSeconds + " secondi!";
                 color = RED;
-            } else {
+            }
+            else
+            {
                 message = "SHUTDOWN IMMINENTE: " + remainingSeconds + " secondi!";
                 color = RED;
             }
 
             // Log della notifica
             File notifyLog = new File("logs/maintenance.notify");
-            try (PrintWriter writer = new PrintWriter(new FileWriter(notifyLog, true))) {
+            try (PrintWriter writer = new PrintWriter(new FileWriter(notifyLog, true)))
+            {
                 writer.println("[" + new Date() + "] " + message);
             }
 
@@ -400,7 +430,9 @@ public class SystemAdmin
             System.out.println();
             System.out.println(color + "🔔 " + message + RESET);
 
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             printWarning("Impossibile inviare notifica: " + e.getMessage());
         }
     }
@@ -408,7 +440,8 @@ public class SystemAdmin
     /**
      * Aggiorna il file di stato con il tempo rimanente
      */
-    private void updateMaintenanceStatus(int remainingSeconds) throws IOException {
+    private void updateMaintenanceStatus(int remainingSeconds) throws IOException
+    {
         File statusFile = new File("maintenance.status");
         Properties status = new Properties();
 
@@ -418,7 +451,8 @@ public class SystemAdmin
         status.setProperty("maintenance.message",
                 "Sistema in manutenzione. Shutdown tra " + formatTime(remainingSeconds));
 
-        try (FileOutputStream fos = new FileOutputStream(statusFile)) {
+        try (FileOutputStream fos = new FileOutputStream(statusFile))
+        {
             status.store(fos, "Maintenance Status - Updated: " + new Date());
         }
     }
@@ -426,7 +460,8 @@ public class SystemAdmin
     /**
      * Aggiorna il display del countdown
      */
-    private void updateCountdownDisplay(int seconds) {
+    private void updateCountdownDisplay(int seconds)
+    {
         int hours = seconds / 3600;
         int minutes = (seconds % 3600) / 60;
         int secs = seconds % 60;
@@ -446,14 +481,20 @@ public class SystemAdmin
     /**
      * Formatta i secondi in stringa leggibile
      */
-    private String formatTime(int seconds) {
-        if (seconds >= 3600) {
+    private String formatTime(int seconds)
+    {
+        if (seconds >= 3600)
+        {
             int hours = seconds / 3600;
             int mins = (seconds % 3600) / 60;
             return hours + "h " + mins + "m";
-        } else if (seconds >= 60) {
+        }
+        else if (seconds >= 60)
+        {
             return (seconds / 60) + " minuti";
-        } else {
+        }
+        else
+        {
             return seconds + " secondi";
         }
     }
@@ -461,8 +502,10 @@ public class SystemAdmin
     /**
      * Esegue backup prima dello shutdown
      */
-    private void performBackup() {
-        try {
+    private void performBackup()
+    {
+        try
+        {
             File backupDir = new File("backups");
             backupDir.mkdirs();
 
@@ -480,13 +523,18 @@ public class SystemAdmin
 
             int exitCode = process.waitFor();
 
-            if (exitCode == 0) {
+            if (exitCode == 0)
+            {
                 printSuccess("Backup creato: " + backupFile);
-            } else {
+            }
+            else
+            {
                 printWarning("Backup completato con avvisi");
             }
 
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             printWarning("Impossibile creare backup: " + e.getMessage());
         }
     }
@@ -494,12 +542,16 @@ public class SystemAdmin
     /**
      * Pulisce i file di manutenzione
      */
-    private void cleanupMaintenanceFiles() {
-        try {
+    private void cleanupMaintenanceFiles()
+    {
+        try
+        {
             new File("maintenance.status").delete();
             new File("pids/maintenance.flag").delete();
             printInfo("File di manutenzione rimossi");
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             printWarning("Cleanup parziale: " + e.getMessage());
         }
     }
