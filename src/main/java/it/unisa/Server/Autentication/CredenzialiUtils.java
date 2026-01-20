@@ -24,12 +24,11 @@ public class CredenzialiUtils {
         return false;
     }
 
-    public static boolean checkAccount(String username, String password) {
-
+    public static boolean checkAccount(String username, String password, BackofficeStorage<Impiegato> storage)
+    {
         Impiegato impiegato;
-        BackofficeStorage<Impiegato> impiegatoStorage = new ImpiegatoDAO();
         try{
-             impiegato=impiegatoStorage.doRetriveByKey(username);
+            impiegato = storage.doRetriveByKey(username);
         }catch (Exception e){
             return false;
         }
