@@ -124,7 +124,6 @@ class CredenzialiUtilsTest
         String wrongPassword = "passwordErrata";
         when(impiegatoStorage.doRetriveByKey(testUsername)).thenReturn(impiegato);
         when(impiegato.getHashedPassword()).thenReturn(hashedPassword);
-        when(impiegato.getUsername()).thenReturn(testUsername);
 
         // Act
         boolean result = CredenzialiUtils.checkAccount(testUsername, wrongPassword, impiegatoStorage);
