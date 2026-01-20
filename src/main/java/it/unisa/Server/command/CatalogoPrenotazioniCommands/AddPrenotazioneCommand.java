@@ -53,7 +53,8 @@ public class AddPrenotazioneCommand implements Command {
     public void execute() {
         ArrayList<Prenotazione> lp = CatalogoPrenotazioni.getListaPrenotazioni();
         lp.add(prenotazione);
-        FrontDeskStorage<Prenotazione> frontDeskStorage = new PrenotazioneDAO();
+        FrontDeskStorage<Prenotazione> frontDeskStorage = null;
+        frontDeskStorage = new PrenotazioneDAO();
         try {
             frontDeskStorage.doSave(prenotazione);
         }catch (SQLException e) {

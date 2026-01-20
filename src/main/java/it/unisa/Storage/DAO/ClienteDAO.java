@@ -45,10 +45,10 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
         try{
                 connection = ConnectionStorage.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO CLIENTE(\n" +
-                        "    CF, nome, cognome, Cap, comune, civico, provincia, via,\n" +
-                        "    Email, Sesso, telefono, MetodoDiPagamento, Cittadinanza,\n" +
-                        "    DataDiNascita, IsBackListed\n" +
-                        ") VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                        "CF, nome, cognome, Cap, comune, civico, provincia, via,\n" +
+                        "Email, Sesso, telefono, MetodoDiPagamento, Cittadinanza,\n" +
+                        "DataDiNascita, IsBackListed\n" +
+                        ")VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
                 preparedStatement.setString(1,o.getCf());
                 preparedStatement.setString(2,o.getNome());
                 preparedStatement.setString(3,o.getCognome());

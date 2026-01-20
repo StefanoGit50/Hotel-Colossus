@@ -37,8 +37,8 @@ public class    ConnectionStorage{
     }
 
 
-    public static synchronized Connection getConnection() throws SQLException {
-        Connection connection;
+    public static synchronized Connection getConnection(){
+        Connection connection = null;
 
         if (!freeDbConnections.isEmpty()) {
             connection =  freeDbConnections.getFirst(); // restituisce la prima connessione disponibile
@@ -49,12 +49,20 @@ public class    ConnectionStorage{
                         return getConnection(); // richiama se stesso fin quando non trova una connessione valida
                     }
                 } catch (SQLException e) {
-                    connection.close();
+                    try{
+                        connection.close();
+                    }catch (SQLException sqlException){
+                        sqlException.printStackTrace();
+                    }
                     return getConnection(); // richiama se stesso fin quando non trova una connessione valida
                 }
 
         } else {
-            connection = createDBConnection();
+            try{
+                connection = createDBConnection();
+            }catch (SQLException sqlException){
+                sqlException.printStackTrace();
+            }
         }
         return connection;
     }

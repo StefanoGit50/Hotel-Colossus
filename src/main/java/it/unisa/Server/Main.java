@@ -84,7 +84,8 @@ public class Main {
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
         }
-        PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO();
+        PrenotazioneDAO prenotazioneDAO = null;
+        prenotazioneDAO = new PrenotazioneDAO();
         try{
             ArrayList<Prenotazione> prenotaziones = (ArrayList<Prenotazione>) prenotazioneDAO.doRetriveAll("IDPrenotazione");
             CatalogoPrenotazioni.addPrenotazioni(prenotaziones);

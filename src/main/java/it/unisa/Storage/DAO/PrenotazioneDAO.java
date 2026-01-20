@@ -26,29 +26,30 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
         "TipoDocumento",
         "Stato"
     };
-    // motodo che salva
+
     @Override
     public synchronized void doSave(Prenotazione p) throws SQLException {
         Connection connection = ConnectionStorage.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO prenotazione(DataPrenotazione, DataArrivoCliente, " +
                 "DataPartenzaCliente, NoteAggiuntive, Intestatario, dataScadenza, " +
-                "numeroDocumento, DataRilascio, TipoDocumento) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+                "numeroDocumento, DataRilascio, TipoDocumento,NomeTrattamento,Stato) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ? , ?, ? , ? , ?) ");
 
-        preparedStatement.setDate(1, Date.valueOf(p.getDataCreazionePrenotazione()));
-        preparedStatement.setDate(2, Date.valueOf(p.getDataInizio()));
-        preparedStatement.setDate(3, Date.valueOf(p.getDataFine()));
-        preparedStatement.setString(4, p.getNoteAggiuntive());
-        preparedStatement.setString(5, p.getIntestatario());
+        preparedStatement.setDate(1,Date.valueOf(p.getDataCreazionePrenotazione()));
+        preparedStatement.setDate(2,Date.valueOf(p.getDataInizio()));
+        preparedStatement.setDate(3,Date.valueOf(p.getDataFine()));
+        preparedStatement.setString(10, p.getTrattamento().getNome());
+        preparedStatement.setString(4,p.getNoteAggiuntive());
+        preparedStatement.setString(5 , p.getIntestatario());
         preparedStatement.setDate(6, Date.valueOf(p.getDataScadenza()));
-        preparedStatement.setInt(7, p.getNumeroDocumento());
-        preparedStatement.setDate(8, Date.valueOf(p.getDataRilascio()));
-        preparedStatement.setString(9, p.getTipoDocumento());
-
+        preparedStatement.setInt(7,p.getNumeroDocumento());
+        preparedStatement.setDate(8,Date.valueOf(p.getDataRilascio()));
+        preparedStatement.setString(9,p.getTipoDocumento());
+        preparedStatement.setBoolean(11,p.getStatoPrenotazione());
         preparedStatement.executeUpdate();
 
         // Salva il trattamento associato
-        if (p.getTrattamento() != null) {
+        if(p.getTrattamento() != null){
             String query = "UPDATE Trattamento SET IDPrenotazione = ? WHERE Nome = ?";
 
             try (PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -70,7 +71,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
         }
         ClienteDAO clienteDAO = new ClienteDAO();
         // Salva le associazioni clienti-camere
-        for (Cliente cliente : p.getListaClienti()) {
+        for(Cliente cliente : p.getListaClienti()) {
             clienteDAO.doSave(cliente);
         }
 
