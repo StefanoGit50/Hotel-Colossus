@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
 {
 
-    protected ManagerImpl() throws RemoteException {
+    public ManagerImpl() throws RemoteException {
         super();
     }
 
