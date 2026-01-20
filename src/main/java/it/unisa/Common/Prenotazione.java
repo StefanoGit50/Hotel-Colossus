@@ -17,7 +17,7 @@ public class Prenotazione implements Cloneable, Serializable {
     /**
      * Codice univoco della prenotazione.
      */
-    private int IDPrenotazione;
+    private Integer IDPrenotazione;
 
     /**
      * Data in cui è stata creata la prenotazione.
@@ -83,8 +83,14 @@ public class Prenotazione implements Cloneable, Serializable {
      * Lista dei clienti che soggiorneranno.
      */
     private ArrayList<Cliente> listaClienti;
-
+    /**
+     * Indica lo stato della prenotazione
+     */
     private boolean statoPrenotazione;
+    /**
+     * Dice se è stato fatto il check-In della prenotazione
+     */
+    private boolean checkIn;
 
     /**
      * Costruttore completo per creare una nuova istanza di {@code Prenotazione}.
@@ -124,8 +130,32 @@ public class Prenotazione implements Cloneable, Serializable {
         this.listaClienti = Util.deepCopyArrayList(listaClienti);
         this.numeroDocumento = numeroDocumento;
         this.statoPrenotazione = true;
+        this.checkIn = false;
     }
+    public Prenotazione(int IDPrenotazione, LocalDate dataCreazionePrenotazione, LocalDate dataInizio, LocalDate dataFine,
+                        Trattamento trattamento, String tipoDocumento, LocalDate dataRilascio, LocalDate dataScadenza,
+                        String intestatario, String noteAggiuntive, ArrayList<Camera> listaCamere, ArrayList<Servizio> listaServizi,
+                        ArrayList<Cliente> listaClienti ,int numeroDocumento,boolean statoPrenotazione,boolean checkIn){
 
+        this.IDPrenotazione = IDPrenotazione;
+        this.dataCreazionePrenotazione = dataCreazionePrenotazione;
+        this.dataInizio = dataInizio;
+        this.dataFine = dataFine;
+        this.trattamento = trattamento;
+        this.tipoDocumento = tipoDocumento;
+        this.dataRilascio = dataRilascio;
+        this.dataScadenza = dataScadenza;
+        this.intestatario = intestatario;
+        this.noteAggiuntive = noteAggiuntive;
+        // Uso di deep copy per l'incapsulamento delle liste
+        this.listaCamere = Util.deepCopyArrayList(listaCamere);
+        this.listaServizi = Util.deepCopyArrayList(listaServizi);
+        this.listaClienti = Util.deepCopyArrayList(listaClienti);
+        this.numeroDocumento = numeroDocumento;
+        this.statoPrenotazione = statoPrenotazione;
+        this.checkIn = checkIn;
+
+    }
     public Prenotazione() {
         this.IDPrenotazione = 0;
         this.numeroDocumento = 0;
@@ -210,11 +240,11 @@ public class Prenotazione implements Cloneable, Serializable {
     // --- Getter e Setter ---
     // I getter per le liste restituiscono deep copy per l'incapsulamento
 
-    public void setIDPrenotazione(int IDPrenotazione) {
+    public void setIDPrenotazione(Integer IDPrenotazione) {
         this.IDPrenotazione = IDPrenotazione;
     }
 
-    public int getIDPrenotazione() {
+    public Integer getIDPrenotazione() {
         return IDPrenotazione;
     }
 
@@ -362,6 +392,17 @@ public class Prenotazione implements Cloneable, Serializable {
         this.listaClienti = Util.deepCopyArrayList(listaClienti);
     }
 
+    public boolean isCheckIn() {
+        return checkIn;
+    }
+
+    public boolean isStatoPrenotazione() {
+        return statoPrenotazione;
+    }
+
+    public void setCheckIn(boolean checkIn) {
+        this.checkIn = checkIn;
+    }
 
     // --- Metodi Standard di Object ---
 

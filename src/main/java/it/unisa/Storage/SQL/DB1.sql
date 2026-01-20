@@ -43,6 +43,7 @@ create table Prenotazione(
     DataRilascio date not null,
     TipoDocumento varchar(50) not null,
     Stato boolean not null,
+    ChekIn boolean not null,
     primary key(IDPrenotazione)
 );
 

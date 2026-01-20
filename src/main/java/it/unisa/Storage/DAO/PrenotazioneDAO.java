@@ -30,10 +30,8 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
     @Override
     public synchronized void doSave(Prenotazione p) throws SQLException {
         Connection connection = ConnectionStorage.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO prenotazione(DataPrenotazione, DataArrivoCliente, " +
-                "DataPartenzaCliente, NoteAggiuntive, Intestatario, dataScadenza, " +
-                "numeroDocumento, DataRilascio, TipoDocumento,NomeTrattamento,Stato) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ? , ?, ? , ? , ?) ");
+        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO prenotazione " +
+                "VALUES (?, ?, ?, ?, ?, ?, ? , ?, ? , ? , ? , ?, ?) ");
 
         preparedStatement.setDate(1,Date.valueOf(p.getDataCreazionePrenotazione()));
         preparedStatement.setDate(2,Date.valueOf(p.getDataInizio()));
@@ -46,6 +44,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
         preparedStatement.setDate(8,Date.valueOf(p.getDataRilascio()));
         preparedStatement.setString(9,p.getTipoDocumento());
         preparedStatement.setBoolean(11,p.getStatoPrenotazione());
+        preparedStatement.setBoolean(12,p.isCheckIn());
         preparedStatement.executeUpdate();
 
         // Salva il trattamento associato
@@ -118,7 +117,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
             preparedStatement.setInt(1, (Integer) codicePrenotazione);
 
             try (ResultSet rs = preparedStatement.executeQuery()) {
-                if (rs.next()) {
+                if (rs.next()){
                     int idPrenotazione = rs.getInt("IDPrenotazione");
 
                     // Recupera il trattamento
@@ -224,7 +223,9 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                             (ArrayList<Camera>) camere,
                             (ArrayList<Servizio>) servizi,
                             (ArrayList<Cliente>) clienti,
-                            rs.getInt("numeroDocumento")
+                            rs.getInt("numeroDocumento"),
+                            rs.getBoolean("Stato"),
+                            rs.getBoolean("CheckIn")
                     );
                 }
             }
@@ -344,7 +345,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                         rs.getDate("DataArrivoCliente").toLocalDate(),
                         rs.getDate("DataPartenzaCliente").toLocalDate(),
                         trattamento,
-                        rs.getString("Tipo"),
+                        rs.getString("TipoDocumento"),
                         rs.getDate("DataRilascio").toLocalDate(),
                         rs.getDate("dataScadenza").toLocalDate(),
                         rs.getString("Intestatario"),
@@ -352,7 +353,9 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                         (ArrayList<Camera>) camere,
                         (ArrayList<Servizio>) servizi,
                         (ArrayList<Cliente>) clienti,
-                        rs.getInt("numeroDocumento")
+                        rs.getInt("numeroDocumento"),
+                        rs.getBoolean("Stato"),
+                        rs.getBoolean("CheckIn")
                 );
                 prenotazioni.add(p);
             }
@@ -393,7 +396,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
             try (PreparedStatement preparedStatement = connection.prepareStatement(
                     "UPDATE Prenotazione SET DataPrenotazione = ?, DataArrivoCliente = ?, " +
                             "DataPartenzaCliente = ?, NoteAggiuntive = ?, Intestatario = ?, " +
-                            "dataScadenza = ?, numeroDocumento = ?, DataRilascio = ?, TipoDocumento = ? " +
+                            "dataScadenza = ?, numeroDocumento = ?, DataRilascio = ?, TipoDocumento = ? , Stato = ? , ChekIn = ?" +
                             "WHERE IDPrenotazione = ?")) {
 
                 preparedStatement.setDate(1, Date.valueOf(p.getDataCreazionePrenotazione()));
@@ -406,7 +409,8 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                 preparedStatement.setDate(8, Date.valueOf(p.getDataRilascio()));
                 preparedStatement.setString(9, p.getTipoDocumento());
                 preparedStatement.setInt(10, p.getIDPrenotazione());
-
+                preparedStatement.setBoolean(11,p.getStatoPrenotazione());
+                preparedStatement.setBoolean(12,p.isCheckIn());
                 preparedStatement.executeUpdate();
 
                 // Aggiorna il trattamento associato
@@ -450,10 +454,10 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
     }
 
     /**
-     * @param attribute
-     * @param value
-     * @return
-     * @throws SQLException
+     * @param attribute;
+     * @param value;
+     * @return Collection<Prenotazione>;
+     * @throws SQLException;
      */
     @Override
     public Collection<Prenotazione> doRetriveByAttribute(String attribute, Object value) throws SQLException {
@@ -554,22 +558,6 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                         }
                     }
 
-                    /*return new Prenotazione(
-                            idPrenotazione,
-                            rs.getDate("DataPrenotazione").toLocalDate(),
-                            rs.getDate("DataArrivoCliente").toLocalDate(),
-                            rs.getDate("DataPartenzaCliente").toLocalDate(),
-                            trattamento,
-                            rs.getString("Tipo"),
-                            rs.getDate("DataRilascio").toLocalDate(),
-                            rs.getDate("dataScadenza").toLocalDate(),
-                            rs.getString("Intestatario"),
-                            rs.getString("NoteAggiuntive"),
-                            (ArrayList<Camera>) camere,
-                            (ArrayList<Servizio>) servizi,
-                            (ArrayList<Cliente>) clienti,
-                            rs.getInt("numeroDocumento")
-                    );*/
                     return null;
                 }
             }
