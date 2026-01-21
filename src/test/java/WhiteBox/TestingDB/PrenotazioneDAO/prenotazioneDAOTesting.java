@@ -25,8 +25,6 @@ public class prenotazioneDAOTesting {
     private static Servizio servizio;
     @Mock
     private static Connection connection;
-    @Mock
-    private static ResultSet resultSet;
     private static String sql = "INSERT INTO prenotazione(DataPrenotazione, DataArrivoCliente, " +
             "DataPartenzaCliente, NoteAggiuntive, Intestatario, dataScadenza, " +
             "numeroDocumento, DataRilascio, TipoDocumento) " +
@@ -41,6 +39,16 @@ public class prenotazioneDAOTesting {
     private static PreparedStatement preparedStatement3;
     @Mock
     private static PreparedStatement preparedStatement4;
+    @Mock
+    private static ResultSet resultSet;
+    @Mock
+    private static ResultSet resultSet1;
+    @Mock
+    private static ResultSet resultSet2;
+    @Mock
+    private static ResultSet resultSet3;
+    @Mock
+    private static ResultSet resultSet4;
     private static Prenotazione prenotazione;
     @InjectMocks
     private static PrenotazioneDAO prenotazioneDAO;
@@ -298,12 +306,14 @@ public class prenotazioneDAOTesting {
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
         when(resultSet.next()).thenReturn(false);
 
-        assertThrows(NoSuchElementException.class,()-> {prenotazioneDAO.doRetriveByKey(6);});
-
         connection = source.getConnection();
         preparedStatement = connection.prepareStatement("SELECT * FROM Prenotazione WHERE IDPrenotazione = ?");
         resultSet = preparedStatement.executeQuery();
+
+        assertThrows(NoSuchElementException.class,()-> {prenotazioneDAO.doRetriveByKey(7);});
+
         assertFalse(resultSet.next());
+
     }
 
     @Test
@@ -318,23 +328,61 @@ public class prenotazioneDAOTesting {
         when(connection.prepareStatement("SELECT DISTINCT cl.* FROM Cliente cl " +
                 "JOIN Associato_a a ON cl.CF = a.CF " +
                 "WHERE a.IDPrenotazione = ?")).thenReturn(preparedStatement4);
-        when(preparedStatement.getResultSet()).thenReturn(resultSet);
-        when(resultSet.next()).thenReturn(true);
+        when(preparedStatement.executeQuery()).thenReturn(resultSet);
+        when(preparedStatement1.executeQuery()).thenReturn(resultSet1);
+        when(preparedStatement2.executeQuery()).thenReturn(resultSet2);
+        when(preparedStatement3.executeQuery()).thenReturn(resultSet3);
+        when(preparedStatement4.executeQuery()).thenReturn(resultSet4);
 
         connection = source.getConnection();
         preparedStatement = connection.prepareStatement("SELECT * FROM Prenotazione WHERE IDPrenotazione = ?");
         preparedStatement1 = connection.prepareStatement("SELECT * FROM Trattamento WHERE IDPrenotazione = ?");
+        preparedStatement2 = connection.prepareStatement("SELECT * FROM Servizio WHERE IDPrenotazione = ?");
+        preparedStatement3 = connection.prepareStatement("SELECT DISTINCT c.* FROM Camera c " +
+                "JOIN Associato_a a ON c.NumeroCamera = a.NumeroCamera " +
+                "WHERE a.IDPrenotazione = ?");
+        preparedStatement4 = connection.prepareStatement("SELECT DISTINCT cl.* FROM Cliente cl " +
+                "JOIN Associato_a a ON cl.CF = a.CF " +
+                "WHERE a.IDPrenotazione = ?");
+
         resultSet = preparedStatement.executeQuery();
+        resultSet1 = preparedStatement1.executeQuery();
+        resultSet2 = preparedStatement2.executeQuery();
+        resultSet3 = preparedStatement3.executeQuery();
+        resultSet4 = preparedStatement4.executeQuery();
+
         ArrayList<Camera> cameras = new ArrayList<>();
         ArrayList<Servizio> servizios = new ArrayList<>();
         ArrayList<Cliente> clientes = new ArrayList<>();
-        clientes.add(new Cliente("John","Smith","Inglese","Estero","Londra","Baker Street",45,00121,"447123456","Maschio",Date.valueOf("1975-04-15").toLocalDate(),"SMIJHN75D15Z114B","john.smith@uk.com","Carta di Credito"));
+
+        clientes.add(new Cliente("John","Smith","Inglese","Estero","Londra","Baker Street",45,121,"447123456","Maschio",Date.valueOf("1975-04-15").toLocalDate(),"SMIJHN75D15Z114B","john.smith@uk.com","Carta di Credito"));
         servizios.add(new Servizio("Transfer Aeroporto",40));
         cameras.add(new Camera(202,Stato.InPulizia,1,85,"Singola business"));
+        assertEquals(new Prenotazione(6,Date.valueOf("2023-11-15").toLocalDate(),Date.valueOf("2024-02-14").toLocalDate(),Date.valueOf("2024-02-16").toLocalDate(),new Trattamento("Massaggio Sportivo",70),"Passaporto",Date.valueOf("2022-12-10").toLocalDate(),Date.valueOf("2032-12-10").toLocalDate(),"John Smith","Anniversario",cameras,servizios,clientes,901234,true,false),prenotazioneDAO.doRetriveByKey(6));
 
-        assertEquals(new Prenotazione(4,Date.valueOf("2023-11-15").toLocalDate(),Date.valueOf("2024-02-14").toLocalDate(),Date.valueOf("2024-02-16").toLocalDate(),new Trattamento("Massaggio Sportivo",70),"Passaporto",Date.valueOf("2022-12-10").toLocalDate(),Date.valueOf("2032-12-10").toLocalDate(),"John Smith","Anniversario",cameras,servizios,clientes,901234),prenotazioneDAO.doRetriveByKey(4));
+        verify(preparedStatement, times(1)).executeQuery();
+        verify(preparedStatement1, times(1)).executeQuery();
+        verify(preparedStatement2, times(1)).executeQuery();
+        verify(preparedStatement3, times(1)).executeQuery();
+        verify(preparedStatement4, times(1)).executeQuery();
 
-
-
+        verify(connection, times(5)).prepareStatement(anyString());
     }
+
+    @Test
+    public void doRetriveAllTrue() throws SQLException {
+        when(source.getConnection()).thenReturn(connection);
+        when(connection.prepareStatement("SELECT * FROM Prenotazione ORDER BY ?")).thenReturn(preparedStatement);
+        when(connection.prepareStatement("SELECT * FROM Trattamento WHERE IDPrenotazione = ?")).thenReturn(preparedStatement1);
+        when(connection.prepareStatement("SELECT * FROM Servizio WHERE IDPrenotazione = ?")).thenReturn(preparedStatement2);
+        when(connection.prepareStatement("SELECT DISTINCT c.* FROM Camera c " +
+                "JOIN Associato_a a ON c.NumeroCamera = a.NumeroCamera " +
+                "WHERE a.IDPrenotazione = ?")).thenReturn(preparedStatement3);
+        when(connection.prepareStatement("SELECT DISTINCT cl.* FROM Cliente cl " +
+                "JOIN Associato_a a ON cl.CF = a.CF " +
+                "WHERE a.IDPrenotazione = ?")).thenReturn(preparedStatement4);
+        when();
+    }
+
+
 }

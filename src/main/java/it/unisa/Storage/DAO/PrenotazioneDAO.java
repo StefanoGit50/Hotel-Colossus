@@ -215,7 +215,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                             rs.getDate("DataArrivoCliente").toLocalDate(),
                             rs.getDate("DataPartenzaCliente").toLocalDate(),
                             trattamento,
-                            rs.getString("Tipo"),
+                            rs.getString("TipoDocumento"),
                             rs.getDate("DataRilascio").toLocalDate(),
                             rs.getDate("dataScadenza").toLocalDate(),
                             rs.getString("Intestatario"),
@@ -225,7 +225,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                             (ArrayList<Cliente>) clienti,
                             rs.getInt("numeroDocumento"),
                             rs.getBoolean("Stato"),
-                            rs.getBoolean("CheckIn")
+                            rs.getBoolean("ChekIn")
                     );
                 }
             }
