@@ -3,6 +3,7 @@ package it.unisa.Server.command.CatalogoPrenotazioniCommands;
 import it.unisa.Common.Prenotazione;
 import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
+import it.unisa.Server.persistent.obj.catalogues.CatalogueUtils;
 import it.unisa.Storage.DAO.PrenotazioneDAO;
 import it.unisa.Storage.FrontDeskStorage;
 
@@ -56,6 +57,8 @@ public class AddPrenotazioneCommand implements Command {
         FrontDeskStorage<Prenotazione> frontDeskStorage = null;
         frontDeskStorage = new PrenotazioneDAO();
         try {
+            CatalogueUtils.checkNull(prenotazione);                 // Lancia InvalidInputException
+            CatalogoPrenotazioni.checkPrenotazione(prenotazione);   // Lancia InvalidInputException
             frontDeskStorage.doSave(prenotazione);
         }catch (SQLException e) {
             e.printStackTrace();
