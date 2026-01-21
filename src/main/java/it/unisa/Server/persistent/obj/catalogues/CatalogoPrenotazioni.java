@@ -103,6 +103,11 @@ public class CatalogoPrenotazioni implements Serializable {
         return listaPrenotazioni;
     }
 
+    public synchronized static void setListaPrenotazioni(ArrayList<Prenotazione> lista)
+    {
+        listaPrenotazioni = lista;
+    }
+
     /**
      * Imposta o sostituisce l'intera lista delle prenotazioni.
      */
