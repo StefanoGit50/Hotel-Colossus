@@ -1,5 +1,7 @@
 package it.unisa.GUI;// HotelColossusApp.java
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -9,6 +11,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.logging.Logger;
 
 
@@ -16,9 +21,27 @@ public class MainApp extends Application {
 
         private VBox selectedNavItem = null;
 
+        // ===== BOOKING DATA =====
+        private ObservableList<BookingFilter> allBookings = FXCollections.observableArrayList();
+        private ObservableList<BookingFilter> filteredBookings = FXCollections.observableArrayList();
+        private VBox bookingsContainer;
+
+        // ===== FILTRI =====
+        private TextField nameFilter;
+        private DatePicker startDateFilter;
+        private DatePicker endDateFilter;
+        private Button sortAscBtn;
+        private Button sortDescBtn;
+        private boolean isAscending = true;
+
+
+
         @Override
         public void start(Stage primaryStage) {
             primaryStage.setTitle("Hotel Colossus - Management System");
+
+            BookingFilter.initializeSampleBookings(allBookings);
+            filteredBookings.addAll(allBookings);
 
             // Root layout
             VBox root = new VBox(20);
@@ -34,7 +57,7 @@ public class MainApp extends Application {
             root.getChildren().add(mainArea);
 
             // Scene
-            Scene scene = new Scene(root, 1400, 800);
+            Scene scene = new Scene(root, 1400, 900);
 
             // Load CSS
             scene.getStylesheets().add(
@@ -46,6 +69,7 @@ public class MainApp extends Application {
         }
 
 
+
         private HBox createTopBar() {
         HBox topBar = new HBox(15);
         topBar.setPadding(new Insets(21,30,21,30));
@@ -55,7 +79,7 @@ public class MainApp extends Application {
         // Logo Image PICCOLO a SINISTRA
         ImageView logoImage = new ImageView();
         try {
-            Image image = new Image(getClass().getResourceAsStream("/hotelcolossus_logo.png"));
+            Image image = new Image(getClass().getResourceAsStream("/logo3.png"));
             logoImage.setImage(image);
             logoImage.setFitHeight(120);  // ✅ Ridotto da 180 a 60
             logoImage.setFitWidth(120);   // ✅ Ridotto da 180 a 60
@@ -69,8 +93,8 @@ public class MainApp extends Application {
         logo.getStyleClass().add("logo");
 
 
-            Region spacer = new Region();
-            HBox.setHgrow(spacer, Priority.ALWAYS);
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
 
         // Spacer PRIMA della scritta (centra la scritta)
         Region spacerLeft = new Region();
@@ -85,7 +109,7 @@ public class MainApp extends Application {
         HBox userBox = createUserBox();
 
         // ✅ LAYOUT: Logo piccolo | Spacer | SCRITTA GRANDE | Spacer | User
-        topBar.getChildren().addAll(  logo, spacer, userBox);
+        topBar.getChildren().addAll(logoImage,  logo, spacer, userBox);
 
         return topBar;
     }
@@ -95,7 +119,6 @@ public class MainApp extends Application {
             userBox.setAlignment(Pos.CENTER_RIGHT);
             userBox.getStyleClass().add("user-box");
             userBox.setPadding(new Insets(0, 20, 0, 0));
-
             Label userName = new Label("Receptionist1");
             userName.getStyleClass().add("user-name");
 
@@ -119,7 +142,6 @@ public class MainApp extends Application {
             ContextMenu contextMenu = new ContextMenu();
 
             MenuItem profileItem = new MenuItem("👤 Profilo");
-            MenuItem settingsItem = new MenuItem("⚙️ Impostazioni");
             MenuItem logoutItem = new MenuItem("🚪 Logout");
 
             // Styling per i menu items
@@ -171,16 +193,14 @@ public class MainApp extends Application {
 
             // Menu items
             VBox dashboardItem = createNavItem("📊", "Dashboard", true);
-            VBox guestItem = createNavItem("👥", "Guest Management", false);
+            VBox guestItem = createNavItem("👥", "Guest Management", true);
             VBox planningItem = createNavItem("📅", "Planning", false);
-            VBox roomsItem = createNavItem("🛏️", "Camere", false);
             VBox checkoutItem = createNavItem("💰", "Check-out", false);
 
             sidebar.getChildren().addAll(
                     dashboardItem,
                     guestItem,
                     planningItem,
-                    roomsItem,
                     checkoutItem
             );
 
@@ -231,17 +251,240 @@ public class MainApp extends Application {
             // Stats Grid
             GridPane statsGrid = createStatsGrid();
 
+            // Section Title con decorazioni - PIÙ VICINO e CENTRATO
+            HBox sectionTitleBox = new HBox(123); // Container per titolo + decorazioni
+            sectionTitleBox.setAlignment(Pos.CENTER); // ✅ CENTRA TUTTO
+            VBox.setMargin(sectionTitleBox, new Insets(10, 0, 3, 0));
+
+            // Decorazione sinistra
+            Label leftDecor = new Label("◈───");
+            leftDecor.getStyleClass().add("section-decoration");
+
             // Section Title
             Label sectionTitle = new Label("Prossime Prenotazioni");
             sectionTitle.getStyleClass().add("section-title");
 
-            // Placeholder text
-            Label placeholder = new Label("Lista prenotazioni con timeline interattiva...");
-            placeholder.getStyleClass().add("placeholder-text");
+            Label rightDecor = new Label("───◈");
+            rightDecor.getStyleClass().add("section-decoration");
 
-            contentArea.getChildren().addAll(statsGrid, sectionTitle, placeholder);
+            sectionTitleBox.getChildren().addAll(leftDecor, sectionTitle, rightDecor);
+
+            VBox filtersSection = createFiltersSection();
+            VBox.setMargin(filtersSection, new Insets(0, 0, 2, 0));
+
+            ScrollPane scrollPane = new ScrollPane();
+            scrollPane.setFitToWidth(true);
+            scrollPane.getStyleClass().add("bookings-scroll");
+
+
+            bookingsContainer = new VBox(15);
+            bookingsContainer.getStyleClass().add("bookings-container");
+            bookingsContainer.setPadding(new Insets(10, 0, 10, 0));
+
+            updateBookingsList();
+
+            scrollPane.setContent(bookingsContainer);
+            VBox.setVgrow(scrollPane, Priority.ALWAYS);
+
+            contentArea.getChildren().addAll(statsGrid, sectionTitleBox, filtersSection,scrollPane);
             return contentArea;
         }
+
+
+    private VBox createFiltersSection() {
+        VBox filtersSection = new VBox(3);
+        filtersSection.getStyleClass().add("filters-section");
+        filtersSection.setPadding(new Insets(12, 25, 2, 25));
+
+        Label filtersTitle = new Label("🔍 Filtri di Ricerca");
+        filtersTitle.getStyleClass().add("filters-title");
+
+        GridPane filtersGrid = new GridPane();
+        filtersGrid.setHgap(15);
+        filtersGrid.setVgap(10);
+
+        // Filtro Nome
+        Label nameLabel = new Label("Nome Cliente");
+        nameLabel.getStyleClass().add("filter-label");
+
+        nameFilter = new TextField();
+        nameFilter.setPromptText("Cerca per nome...");
+        nameFilter.getStyleClass().add("filter-input");
+        nameFilter.textProperty().addListener((obs, old, newVal) -> applyFilters());
+
+        // Filtro Data Inizio
+        Label startDateLabel = new Label("Check-in Da");
+        startDateLabel.getStyleClass().add("filter-label");
+
+        startDateFilter = new DatePicker();
+        startDateFilter.setPromptText("Seleziona data");
+        startDateFilter.getStyleClass().add("filter-input");
+        startDateFilter.valueProperty().addListener((obs, old, newVal) -> applyFilters());
+
+        // Filtro Data Fine
+        Label endDateLabel = new Label("Check-in A");
+        endDateLabel.getStyleClass().add("filter-label");
+
+        endDateFilter = new DatePicker();
+        endDateFilter.setPromptText("Seleziona data");
+        endDateFilter.getStyleClass().add("filter-input");
+        endDateFilter.valueProperty().addListener((obs, old, newVal) -> applyFilters());
+
+        // Ordinamento
+        Label sortLabel = new Label("Ordina per Data");
+        sortLabel.getStyleClass().add("filter-label");
+
+        HBox sortButtons = new HBox(10);
+
+        sortAscBtn = new Button("↑ Crescente");
+        sortAscBtn.getStyleClass().addAll("sort-btn", "active");
+        sortAscBtn.setOnAction(e -> {
+            isAscending = true;
+            sortAscBtn.getStyleClass().add("active");
+            sortDescBtn.getStyleClass().remove("active");
+            applyFilters();
+        });
+
+        sortDescBtn = new Button("↓ Decrescente");
+        sortDescBtn.getStyleClass().add("sort-btn");
+        sortDescBtn.setOnAction(e -> {
+            isAscending = false;
+            sortDescBtn.getStyleClass().add("active");
+            sortAscBtn.getStyleClass().remove("active");
+            applyFilters();
+        });
+
+        sortButtons.getChildren().addAll(sortAscBtn, sortDescBtn);
+
+        // Bottone Reset
+        Button resetBtn = new Button("↺ Reset");
+        resetBtn.getStyleClass().add("reset-btn");
+        resetBtn.setOnAction(e -> resetFilters());
+
+        // Aggiungi al grid
+        filtersGrid.add(nameLabel, 0, 0);
+        filtersGrid.add(nameFilter, 0, 1);
+        filtersGrid.add(startDateLabel, 1, 0);
+        filtersGrid.add(startDateFilter, 1, 1);
+        filtersGrid.add(endDateLabel, 2, 0);
+        filtersGrid.add(endDateFilter, 2, 1);
+        filtersGrid.add(sortLabel, 3, 0);
+        filtersGrid.add(sortButtons, 3, 1);
+        filtersGrid.add(resetBtn, 4, 1);
+
+        // Imposta larghezze colonne
+        ColumnConstraints col1 = new ColumnConstraints();
+        col1.setPercentWidth(25);
+        ColumnConstraints col2 = new ColumnConstraints();
+        col2.setPercentWidth(18);
+        ColumnConstraints col3 = new ColumnConstraints();
+        col3.setPercentWidth(18);
+        ColumnConstraints col4 = new ColumnConstraints();
+        col4.setPercentWidth(24);
+        ColumnConstraints col5 = new ColumnConstraints();
+        col5.setPercentWidth(15);
+
+        filtersGrid.getColumnConstraints().addAll(col1, col2, col3, col4, col5);
+
+        filtersSection.getChildren().addAll(filtersTitle, filtersGrid);
+        return filtersSection;
+    }
+
+    // ✅ APPLICA FILTRI
+    private void applyFilters() {
+        filteredBookings.clear();
+
+        String nameQuery = nameFilter.getText().toLowerCase().trim();
+        LocalDate startDate = startDateFilter.getValue();
+        LocalDate endDate = endDateFilter.getValue();
+
+        for (BookingFilter booking : allBookings) {
+            boolean matchesName = nameQuery.isEmpty() ||
+                    booking.guestName.toLowerCase().contains(nameQuery);
+
+            boolean matchesStartDate = startDate == null ||
+                    !booking.checkIn.isBefore(startDate);
+
+            boolean matchesEndDate = endDate == null ||
+                    !booking.checkIn.isAfter(endDate);
+
+            if (matchesName && matchesStartDate && matchesEndDate) {
+                filteredBookings.add(booking);
+            }
+        }
+
+        // Ordina
+        if (isAscending) {
+            filteredBookings.sort(Comparator.comparing(b -> b.checkIn));
+        } else {
+            filteredBookings.sort(Comparator.comparing((BookingFilter b) -> b.checkIn).reversed());
+        }
+
+        updateBookingsList();
+    }
+
+    // ✅ RESET FILTRI
+    private void resetFilters() {
+        nameFilter.clear();
+        startDateFilter.setValue(null);
+        endDateFilter.setValue(null);
+        isAscending = true;
+        sortAscBtn.getStyleClass().add("active");
+        sortDescBtn.getStyleClass().remove("active");
+        applyFilters();
+    }
+
+    // ✅ AGGIORNA LISTA PRENOTAZIONI
+    private void updateBookingsList() {
+        bookingsContainer.getChildren().clear();
+
+        if (filteredBookings.isEmpty()) {
+            Label noResults = new Label("Nessuna prenotazione trovata");
+            noResults.getStyleClass().add("no-results");
+            bookingsContainer.getChildren().add(noResults);
+            return;
+        }
+
+        for (BookingFilter booking : filteredBookings) {
+            HBox bookingCard = createBookingCard(booking);
+            bookingsContainer.getChildren().add(bookingCard);
+        }
+    }
+
+    // ✅ CREA CARD PRENOTAZIONE
+    public HBox createBookingCard(BookingFilter booking) {
+        HBox card = new HBox();
+        card.setAlignment(Pos.CENTER_LEFT);
+        card.getStyleClass().add("booking-card");
+        card.setPadding(new Insets(12, 18, 12, 18));
+
+        VBox infoBox = new VBox(6);
+
+        Label nameLabel = new Label(booking.guestName);
+        nameLabel.getStyleClass().add("booking-name");
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String dates = booking.checkIn.format(formatter) + " - " + booking.checkOut.format(formatter);
+        String details = dates + " • Camera " + booking.room + " • " + booking.mealPlan;
+
+        Label detailsLabel = new Label(details);
+        detailsLabel.getStyleClass().add("booking-details");
+
+        infoBox.getChildren().addAll(nameLabel, detailsLabel);
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        Label arrow = new Label("→");
+        arrow.getStyleClass().add("booking-arrow");
+
+        card.getChildren().addAll(infoBox, spacer, arrow);
+
+        card.setOnMouseClicked(e -> System.out.println("Prenotazione selezionata: " + booking.guestName));
+
+        return card;
+    }
+
 
         private GridPane createStatsGrid() {
             GridPane grid = new GridPane();
@@ -254,6 +497,11 @@ public class MainApp extends Application {
             VBox stat2 = createStatCard("12", "Check-in Oggi");
             VBox stat3 = createStatCard("8", "Check-out Oggi");
             VBox stat4 = createStatCard("15", "Camere Libere");
+
+            GridPane.setMargin(stat1, new Insets(0, 0, 15, 0));
+            GridPane.setMargin(stat2, new Insets(0, 0, 15, 0));
+            GridPane.setMargin(stat3, new Insets(0, 0, 15, 0));
+            GridPane.setMargin(stat4, new Insets(0, 0, 15, 0));
 
             grid.add(stat1, 0, 0);
             grid.add(stat2, 1, 0);
@@ -276,6 +524,7 @@ public class MainApp extends Application {
             card.setPadding(new Insets(20));
             card.setPrefHeight(120);
             card.getStyleClass().add("stat-card");
+            VBox.setMargin(card,new Insets(0,0,30,0) );
 
             Label numberLabel = new Label(number);
             numberLabel.getStyleClass().add("stat-number");

@@ -13,16 +13,16 @@
         <maven.compiler.target>25</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javafx.version>25.0.1</javafx.version>
-        <main.class>it.unisa.GUI.MainApp</main.class>
+        <main.class>it.unisa.GUI.MainApp4</main.class>
     </properties>
 
 
     <dependencies>
         <!-- JUnit -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.13.4</version>
             <scope>test</scope>
         </dependency>
 
