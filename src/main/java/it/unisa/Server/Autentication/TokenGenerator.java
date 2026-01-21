@@ -24,6 +24,4 @@ public class TokenGenerator {
         String token = "PWD-PASS-" + randomPart;
         return token;
     }
-
-
 }
