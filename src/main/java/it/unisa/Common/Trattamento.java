@@ -102,6 +102,11 @@ public class Trattamento implements Cloneable, Serializable {
         return Math.abs(trattamento.prezzo - prezzo) < EPSILON && Objects.equals(nome, trattamento.nome);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(nome, prezzo);
+    }
+
     /**
      * Crea e restituisce una copia dell'oggetto (clone).
      * Poiché la classe contiene solo tipi primitivi e una stringa immutabile,
