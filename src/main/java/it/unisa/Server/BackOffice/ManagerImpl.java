@@ -1,179 +1,125 @@
 package it.unisa.Server.BackOffice;
 
 import it.unisa.Common.*;
+import it.unisa.Server.command.CatalogoImpiegatiCommands.AddImpiegatoCommand;
+import it.unisa.Server.command.CatalogoImpiegatiCommands.RemoveImpiegatoCommand;
+import it.unisa.Server.command.CatalogoImpiegatiCommands.UpdateImpiegatoCommand;
+import it.unisa.Server.command.Invoker;
+import it.unisa.Server.persistent.obj.catalogues.CatalogoImpiegati;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
+import it.unisa.Server.persistent.obj.catalogues.CatalogueUtils;
 import it.unisa.Server.persistent.util.Ruolo;
 import it.unisa.Server.persistent.util.Stato;
-import it.unisa.Storage.DAO.ImpiegatoDAO;
 import it.unisa.interfacce.ManagerInterface;
 
+import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.security.SecureRandom;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
 {
-
+    // Costruttore
     protected ManagerImpl() throws RemoteException {
         super();
     }
 
-    @Override
-    public void aggiungiImpiegato(Impiegato E)
-    {
-        try {
-            ImpiegatoDAO impiegatoDAO = new ImpiegatoDAO();
-            impiegatoDAO.doSave(E);
-        } catch (SQLException e) {
-            System.out.println(e);
-            e.printStackTrace();
-        }
-    }
+    // RMI
+    static Logger logger = Logger.getLogger("global");
+    private static final int RMI_PORT = 1099;
 
-    @Override
-    public List<Impiegato> ottieniImpiegatiTutti()
-    {
-        try {
-            ImpiegatoDAO impiegatoDAO = new ImpiegatoDAO();
-            return (List<Impiegato>)impiegatoDAO.doRetriveAll("null");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public Impiegato ottieniImpiegatoDaId(String codiceFiscale)
-    {
-        try {
-            ImpiegatoDAO impiegatoDAO = new ImpiegatoDAO();
-            return impiegatoDAO.doRetriveByKey(codiceFiscale);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public List<Impiegato> ottieniImpiegatiDaFiltro(String nome, String cognome, Ruolo ruolo, String sesso)
+    static void main(String[] args)
     {
         try
         {
-            ImpiegatoDAO impiegatoDAO = new ImpiegatoDAO();
-            List<Impiegato> impiegati = (List<Impiegato>)impiegatoDAO.doRetriveAll("null");
+            logger.info("Avvio RMI Registry sulla porta " + RMI_PORT + "...");
 
-            List<Impiegato> impiegati2 = new ArrayList<>();
-
-            for(Impiegato i: impiegati)
-            {
-                if (nome != null && nome.equals(i.getNome()))
-                {
-                    if (cognome != null && cognome.equals(i.getCognome()))
-                    {
-                        if (ruolo != null && ruolo == i.getRuolo())
-                        {
-                            if (sesso != null && sesso.equals(i.getSesso()))
-                                impiegati2.add(i);
-                            else if (sesso == null)
-                                impiegati2.add(i);
-                        }
-                        else if (ruolo == null)
-                        {
-                            if (sesso != null && sesso.equals(i.getSesso()))
-                                impiegati2.add(i);
-                            else if (sesso == null)
-                                impiegati2.add(i);
-                        }
-                    }
-                    else if (cognome == null)
-                    {
-                        if (ruolo != null && ruolo == i.getRuolo())
-                        {
-                            if (sesso != null && sesso.equals(i.getSesso()))
-                                impiegati2.add(i);
-                            else if (sesso == null)
-                                impiegati2.add(i);
-                        }
-                        else if (ruolo == null)
-                        {
-                            if (sesso != null && sesso.equals(i.getSesso()))
-                                impiegati2.add(i);
-                            else if (sesso == null)
-                                impiegati2.add(i);
-                        }
-                    }
-                }
-                else if (nome == null)
-                {
-                    if (cognome != null && cognome.equals(i.getCognome()))
-                    {
-                        if (ruolo != null && ruolo == i.getRuolo())
-                        {
-                            if (sesso != null && sesso.equals(i.getSesso()))
-                                impiegati2.add(i);
-                            else if (sesso == null)
-                                impiegati2.add(i);
-                        }
-                        else if (ruolo == null)
-                        {
-                            if (sesso != null && sesso.equals(i.getSesso()))
-                                impiegati2.add(i);
-                            else if (sesso == null)
-                                impiegati2.add(i);
-                        }
-                    }
-                }
-                else if (cognome == null)
-                {
-                    if (ruolo != null && ruolo == i.getRuolo())
-                    {
-                        if (sesso != null && sesso.equals(i.getSesso()))
-                            impiegati2.add(i);
-                        else if (sesso == null)
-                            impiegati2.add(i);
-                    }
-                    else if (ruolo == null)
-                    {
-                        if (sesso != null && sesso.equals(i.getSesso()))
-                            impiegati2.add(i);
-                        else if (sesso == null)
-                            impiegati2.add(i);
-                    }
-                }
+            try {
+                // Prova a creare un nuovo registry
+                LocateRegistry.createRegistry(RMI_PORT);
+                logger.info("✓ RMI Registry creato con successo!");
+            } catch (RemoteException e) {
+                // Se esiste già, ottieni il riferimento
+                LocateRegistry.getRegistry(RMI_PORT);
+                logger.info("✓ Connesso a RMI Registry esistente");
             }
 
-            return impiegati;
-        }
-        catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+            logger.info("Genero il gestore degli impiegati...");
+            ManagerImpl man = new ManagerImpl();
+            logger.info("✓ Gestore impiegati creato");
 
-    @Override
-    public boolean eliminaImpiegato(Impiegato E)
-    {
-        try
+            logger.info("Effettuo il rebind di gestione impiegati...");
+            Naming.rebind("rmi://localhost:" + RMI_PORT + "/GestioneImpiegati", man);
+            logger.info("✓ Gestore impiegati registrato con successo!");
+            logger.info("✓ Servizio 'GestioneImpiegati' pronto");
+            logger.info("Server in attesa di connessioni...");
+
+            // Mantieni il server in esecuzione
+            Thread.currentThread().join();
+        }
+        catch(Exception e)
         {
-            ImpiegatoDAO impiegatoDAO = new ImpiegatoDAO();
-
-            impiegatoDAO.doDelete(E);
-
-            return true;
-        }
-        catch (SQLException e)
-        {
-            System.out.println(e);
+            logger.severe("Errore durante l'avvio del server: " + e.getMessage());
             e.printStackTrace();
         }
+    }
 
-        return false;
+    // COMANDI
+
+    // Catalogo impiegati
+    private static CatalogoImpiegati catalogoImpiegati = new CatalogoImpiegati();
+
+    // Invoker --> mantiene l'ordine delle chiamate ai comandi
+    private Invoker invoker = new Invoker();
+
+    @Override
+    public List<Impiegato> filtroImpiegati(String nome, String cognome, Ruolo ruolo, String sesso) throws RemoteException {
+        return (List<Impiegato>) catalogoImpiegati.cercaimpiegati(nome, cognome, sesso, ruolo);
+    }
+
+    //  COMANDI IMPIEGATO
+    @Override
+    public void addImpiegato(Impiegato i) throws RemoteException {
+        CatalogueUtils.checkNull(i);            // Lancia InvalidInputException
+        CatalogoImpiegati.checkImpiegato(i);    // Lancia InvalidInputException
+        AddImpiegatoCommand command = new AddImpiegatoCommand(catalogoImpiegati, i);
+        invoker.executeCommand(command);
     }
 
     @Override
-    public String generatePassword()
+    public void removeImpiegato(Impiegato i) throws RemoteException {
+        RemoveImpiegatoCommand command = new RemoveImpiegatoCommand(catalogoImpiegati, i);
+        invoker.executeCommand(command);
+
+    }
+
+    @Override
+    public void updateImpiegato(Impiegato i) throws RemoteException {
+        UpdateImpiegatoCommand command = new UpdateImpiegatoCommand(catalogoImpiegati, i);
+        invoker.executeCommand(command);
+    }
+
+    // Comando undo
+    public void undoCommand() throws RemoteException {
+        invoker.undoCommand();
+    }
+
+    // Comando redo
+    public void redoCommand() throws RemoteException {
+        invoker.redo();
+    }
+
+    /**
+     * @return nuova pssword temporanea
+     */
+    @Override
+    public String generatePassword() throws RemoteException
     {
         // definiamo i set di caratteri
         int length = 10;
@@ -215,25 +161,9 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
         return result.toString();
     }
 
-    //
-    @Override
-    public void modificaDatiImpiegato(Impiegato E)
-    {
-        try
-        {
-            ImpiegatoDAO impiegatoDAO = new ImpiegatoDAO();
-
-            impiegatoDAO.doUpdate(E);
-        }
-        catch (SQLException e)
-        {
-            System.out.println(e);
-            e.printStackTrace();
-        }
-    }
 
     @Override
-    public Map<String, Double> calcolaContoHotel() {
+    public Map<String, Double> calcolaContoHotel() throws RemoteException{
         ArrayList<Servizio> listaServizi = new ArrayList<Servizio>();
         listaServizi.add(new Servizio("Spa", 325));
         ArrayList<Camera> c = new ArrayList<Camera>();

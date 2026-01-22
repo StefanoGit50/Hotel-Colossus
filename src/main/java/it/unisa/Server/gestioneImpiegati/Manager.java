@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 /**
  * Classe di implememtazione del manager --TEST
+ * //TODO: Spostare in package gestioneImpiegato -> sostituire con la classe Manager
  */
 public class Manager {
 

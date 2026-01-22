@@ -57,8 +57,6 @@ public class AddPrenotazioneCommand implements Command {
         FrontDeskStorage<Prenotazione> frontDeskStorage = null;
         frontDeskStorage = new PrenotazioneDAO();
         try {
-            CatalogueUtils.checkNull(prenotazione);                 // Lancia InvalidInputException
-            CatalogoPrenotazioni.checkPrenotazione(prenotazione);   // Lancia InvalidInputException
             frontDeskStorage.doSave(prenotazione);
         }catch (SQLException e) {
             e.printStackTrace();
