@@ -27,11 +27,17 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
         "Stato"
     };
 
+    private Connection connection;
+    /*
+    public PrenotazioneDAO(Connection connection){
+            this.connection = connection;
+    }
+   */
     @Override
     public synchronized void doSave(Prenotazione p) throws SQLException {
         Connection connection = ConnectionStorage.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO prenotazione " +
-                "VALUES (?, ?, ?, ?, ?, ?, ? , ?, ? , ? , ? , ?, ?) ");
+        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO prenotazione(DataPrenotazione, DataArrivoCliente, DataPartenzaCliente, NomeTrattamento, NoteAggiuntive, Intestatario, dataScadenza, numeroDocumento, DataRilascio, TipoDocumento, Stato, ChekIn) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ? , ?, ? , ? , ? , ?)");
 
         preparedStatement.setDate(1,Date.valueOf(p.getDataCreazionePrenotazione()));
         preparedStatement.setDate(2,Date.valueOf(p.getDataInizio()));
@@ -215,7 +221,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                             rs.getDate("DataArrivoCliente").toLocalDate(),
                             rs.getDate("DataPartenzaCliente").toLocalDate(),
                             trattamento,
-                            rs.getString("Tipo"),
+                            rs.getString("TipoDocumento"),
                             rs.getDate("DataRilascio").toLocalDate(),
                             rs.getDate("dataScadenza").toLocalDate(),
                             rs.getString("Intestatario"),
@@ -225,7 +231,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                             (ArrayList<Cliente>) clienti,
                             rs.getInt("numeroDocumento"),
                             rs.getBoolean("Stato"),
-                            rs.getBoolean("CheckIn")
+                            rs.getBoolean("ChekIn")
                     );
                 }
             }

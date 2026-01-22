@@ -1,5 +1,6 @@
 package it.unisa.Common;
 
+import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Server.persistent.util.Util;
 
 import java.io.Serializable;
@@ -431,15 +432,20 @@ public class Prenotazione implements Cloneable, Serializable {
      * Indica se un altro oggetto è "uguale a" questa prenotazione.
      * Il confronto è basato sul codice di prenotazione e su tutti gli attributi.
      *
-     * @param obj L'oggetto da confrontare.
+     * @param o L'oggetto da confrontare.
      * @return {@code true} se le due prenotazioni sono uguali, {@code false} altrimenti.
      */
+
     @Override
-    public boolean equals(Object obj){
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Prenotazione that = (Prenotazione) obj;
-        return Objects.equals(IDPrenotazione, that.IDPrenotazione) && Objects.equals(dataCreazionePrenotazione, that.dataCreazionePrenotazione) && Objects.equals(dataInizio, that.dataInizio) && Objects.equals(dataFine, that.dataFine) && Objects.equals(trattamento, that.trattamento) && Objects.equals(tipoDocumento, that.tipoDocumento) && Objects.equals(dataRilascio, that.dataRilascio) && Objects.equals(dataScadenza, that.dataScadenza) && Objects.equals(intestatario, that.intestatario) && Objects.equals(noteAggiuntive, that.noteAggiuntive) && Objects.equals(listaCamere, that.listaCamere) && Objects.equals(listaServizi, that.listaServizi) && Objects.equals(listaClienti, that.listaClienti) && numeroDocumento == that.numeroDocumento;
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Prenotazione that = (Prenotazione) o;
+        return numeroDocumento == that.numeroDocumento && statoPrenotazione == that.statoPrenotazione && checkIn == that.checkIn && Objects.equals(IDPrenotazione, that.IDPrenotazione) && Objects.equals(dataCreazionePrenotazione, that.dataCreazionePrenotazione) && Objects.equals(dataInizio, that.dataInizio) && Objects.equals(dataFine, that.dataFine) && Objects.equals(trattamento, that.trattamento) && Objects.equals(tipoDocumento, that.tipoDocumento) && Objects.equals(dataRilascio, that.dataRilascio) && Objects.equals(dataScadenza, that.dataScadenza) && Objects.equals(intestatario, that.intestatario) && Objects.equals(noteAggiuntive, that.noteAggiuntive) && Objects.equals(listaCamere, that.listaCamere) && Objects.equals(listaServizi, that.listaServizi) && Objects.equals(listaClienti, that.listaClienti);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(IDPrenotazione, dataCreazionePrenotazione, dataInizio, dataFine, trattamento, tipoDocumento, dataRilascio, dataScadenza, intestatario, noteAggiuntive, numeroDocumento, listaCamere, listaServizi, listaClienti, statoPrenotazione, checkIn);
     }
 
     /**
