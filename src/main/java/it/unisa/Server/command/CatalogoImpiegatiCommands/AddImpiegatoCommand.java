@@ -57,8 +57,8 @@ public class AddImpiegatoCommand implements Command {
         try{
             BackofficeStorage<Impiegato> impiegatoFrontDeskStorage = new ImpiegatoDAO();
             impiegatoFrontDeskStorage.doSave(impiegato);
-        }catch (SQLException sqlException){
-
+        } catch (SQLException e){
+            e.printStackTrace();
         }
     }
 

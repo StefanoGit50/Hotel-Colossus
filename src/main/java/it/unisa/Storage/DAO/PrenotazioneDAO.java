@@ -566,8 +566,8 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
     }
 
 
-    public ArrayList<Prenotazione> doFilter(String nome,String cognome, LocalDate dataInizio, LocalDate dataFine, Integer numeroCamera, String elementOrder) {
-
+    public ArrayList<Prenotazione> doFilter(String nome,String cognome, LocalDate dataInizio, LocalDate dataFine, Integer numeroCamera, String elementOrder)
+    {
             try{
                         Connection connection = ConnectionStorage.getConnection();
                         boolean [] booleans = new boolean[5];
@@ -598,7 +598,6 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                             }
                         }
 
-                        int countInter = 0;
                         for(int i = 0;i < 5;i++){
                             boolean f = false;
                             if(i == 0 && booleans[i]){

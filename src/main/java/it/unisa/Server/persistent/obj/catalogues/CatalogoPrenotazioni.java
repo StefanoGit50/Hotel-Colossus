@@ -138,4 +138,39 @@ public class CatalogoPrenotazioni implements Serializable {
         return null;
     }
 
+    /**
+     * Metodo usato per controllare la validità dei campi di una prenotazione.
+     * @param prenotazione prenotazione da controllare.
+     * @throws InvalidInputException se un campo presenta un valore errato.
+     */
+    public static void checkPrenotazione(Prenotazione prenotazione) throws InvalidInputException {
+        LocalDate inizio = prenotazione.getDataInizio(),  fine = prenotazione.getDataFine(),
+                rilascio = prenotazione.getDataRilascio(), scadenza = prenotazione.getDataScadenza();
+        String documento = prenotazione.getTipoDocumento();
+        int nClienti = prenotazione.getListaClienti().size();
+        int nPostiCamere = 0;
+        for (Camera c : prenotazione.getListaCamere()) {
+            nPostiCamere +=  c.getCapacità();
+        }
+
+        // Lista di condizioni che possono lanciare un errore
+        if (inizio.isBefore(LocalDate.now()) || // data di arrivo passata
+                fine.isBefore(inizio) ||        // data di partenza precedente a quella di arrivo
+                fine.isEqual(inizio) ||         // data di partenza uguale a quella di arrivo
+                fine.isBefore(LocalDate.now()) ||   // data di partenza passata
+                prenotazione.getListaCamere().isEmpty() ||  // Nessuna camera selezionata
+                prenotazione.getListaClienti().isEmpty() || // Nessun cliente selezionato
+                ( !documento.equalsIgnoreCase("carta d'identità") &&    /*  Tipo di     */
+                        !documento.equalsIgnoreCase("passaporto") &&    /*  documento   */
+                        !documento.equalsIgnoreCase("patente") ) ||     /*  non valido  */
+                nPostiCamere == 0 ||    // Nessun posto camera
+                nClienti == 0 ||        // Nessun cliente selezionato
+                nClienti != nPostiCamere ||     // Mismatch clienti/posti camera
+                rilascio.isAfter(LocalDate.now()) ||    // data rilascio documento futura
+                scadenza.isBefore(LocalDate.now()) ||   // data scadenza documento passata
+                scadenza.isBefore(rilascio))    // data scadenza è antecedente la data di rilascio
+        {
+            throw new InvalidInputException();
+        }
+    }
 }
