@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
@@ -381,7 +382,226 @@ public class prenotazioneDAOTesting {
         when(connection.prepareStatement("SELECT DISTINCT cl.* FROM Cliente cl " +
                 "JOIN Associato_a a ON cl.CF = a.CF " +
                 "WHERE a.IDPrenotazione = ?")).thenReturn(preparedStatement4);
-        when();
+        when(preparedStatement.executeQuery()).thenReturn(resultSet);
+        when(preparedStatement1.executeQuery()).thenReturn(resultSet1);
+        when(preparedStatement2.executeQuery()).thenReturn(resultSet2);
+        when(preparedStatement3.executeQuery()).thenReturn(resultSet3);
+        when(preparedStatement4.executeQuery()).thenReturn(resultSet4);
+
+
+        connection = source.getConnection();
+        preparedStatement = connection.prepareStatement("SELECT * FROM Prenotazione ORDER BY ?");
+        preparedStatement1 = connection.prepareStatement("SELECT * FROM Trattamento WHERE IDPrenotazione = ?");
+        preparedStatement2 = connection.prepareStatement("SELECT * FROM Servizio WHERE IDPrenotazione = ?");
+        preparedStatement3 = connection.prepareStatement("SELECT DISTINCT c.* FROM Camera c " +
+                "JOIN Associato_a a ON c.NumeroCamera = a.NumeroCamera " +
+                "WHERE a.IDPrenotazione = ?");
+        preparedStatement4 = connection.prepareStatement("SELECT DISTINCT cl.* FROM Cliente cl " +
+                "JOIN Associato_a a ON cl.CF = a.CF " +
+                "WHERE a.IDPrenotazione = ?");
+
+
+        // PRENOTAZIONE 1
+        ArrayList<Camera> camere1 = new ArrayList<>();
+        camere1.add(new Camera(101, Stato.Prenotata, 2, 150.0, "Vista mare"));
+
+        ArrayList<Servizio> servizi1 = new ArrayList<>();
+        servizi1.add(new Servizio("Colazione", 15.0));
+
+        ArrayList<Cliente> clienti1 = new ArrayList<>();
+        clienti1.add(new Cliente("Mario", "Rossi", "Italiana", "NA", "Napoli", "Via Roma", 12, 80100,
+                "3331234567", "M", LocalDate.of(1985, 3, 15), "RSSMRA85C15F839K", "mario.rossi@email.com", "Carta di Credito"));
+
+        Trattamento trattamento1 = new Trattamento("Bed & Breakfast", 25.0);
+
+        Prenotazione p1 = new Prenotazione(1, LocalDate.of(2026, 1, 15), LocalDate.of(2026, 2, 10),
+                LocalDate.of(2026, 2, 15), trattamento1, "Carta d'Identità", LocalDate.of(2020, 5, 10),
+                LocalDate.of(2030, 5, 10), "Mario Rossi", "Cliente VIP", camere1, servizi1, clienti1, 123456789);
+
+// PRENOTAZIONE 2
+        ArrayList<Camera> camere2 = new ArrayList<>();
+        camere2.add(new Camera(205, Stato.Prenotata, 4, 220.0, "Suite familiare"));
+
+        ArrayList<Servizio> servizi2 = new ArrayList<>();
+        servizi2.add(new Servizio("Spa", 50.0));
+        servizi2.add(new Servizio("Minibar", 30.0));
+
+        ArrayList<Cliente> clienti2 = new ArrayList<>();
+        clienti2.add(new Cliente("Laura", "Bianchi", "Italiana", "RM", "Roma", "Via Nazionale", 45, 185,
+                "3339876543", "F", LocalDate.of(1990, 7, 20), "BNCLRA90L60H501Z", "laura.bianchi@email.com", "PayPal"));
+        clienti2.add(new Cliente("Giuseppe", "Bianchi", "Italiana", "RM", "Roma", "Via Nazionale", 45, 185,
+                "3339876544", "M", LocalDate.of(1988, 11, 5), "BNCGPP88S05H501W", "giuseppe.bianchi@email.com", "Contanti"));
+
+        Trattamento trattamento2 = new Trattamento("Mezza Pensione", 45.0);
+
+        Prenotazione p2 = new Prenotazione(2, LocalDate.of(2026, 1, 20), LocalDate.of(2026, 3, 1),
+                LocalDate.of(2026, 3, 7), trattamento2, "Passaporto", LocalDate.of(2019, 8, 15),
+                LocalDate.of(2029, 8, 15), "Laura Bianchi", "Anniversario di matrimonio", camere2, servizi2, clienti2, 987654321);
+
+// PRENOTAZIONE 3
+        ArrayList<Camera> camere3 = new ArrayList<>();
+        camere3.add(new Camera(310, Stato.Prenotata, 2, 180.0, "Vista panoramica"));
+
+        ArrayList<Servizio> servizi3 = new ArrayList<>();
+        servizi3.add(new Servizio("Cena romantica", 80.0));
+
+        ArrayList<Cliente> clienti3 = new ArrayList<>();
+        clienti3.add(new Cliente("Anna", "Verdi", "Italiana", "MI", "Milano", "Corso Buenos Aires", 78, 20124,
+                "3347891234", "F", LocalDate.of(1992, 4, 12), "VRDNNA92D52F205X", "anna.verdi@email.com", "Bonifico"));
+
+        Trattamento trattamento3 = new Trattamento("Pensione Completa", 65.0);
+
+        Prenotazione p3 = new Prenotazione(3, LocalDate.of(2026, 1, 18), LocalDate.of(2026, 2, 14),
+                LocalDate.of(2026, 2, 16), trattamento3, "Carta d'Identità", LocalDate.of(2021, 2, 20),
+                LocalDate.of(2031, 2, 20), "Anna Verdi", "San Valentino", camere3, servizi3, clienti3, 456789123);
+
+// PRENOTAZIONE 4
+        ArrayList<Camera> camere4 = new ArrayList<>();
+        camere4.add(new Camera(102, Stato.Prenotata, 3, 190.0, "Camera tripla standard"));
+
+        ArrayList<Servizio> servizi4 = new ArrayList<>();
+        servizi4.add(new Servizio("Parcheggio", 20.0));
+        servizi4.add(new Servizio("Lavanderia", 25.0));
+
+        ArrayList<Cliente> clienti4 = new ArrayList<>();
+        clienti4.add(new Cliente("Francesco", "Neri", "Italiana", "TO", "Torino", "Via Po", 23, 10123,
+                "3356781234", "M", LocalDate.of(1978, 9, 8), "NREFNC78P08L219Y", "francesco.neri@email.com", "Carta di Credito"));
+        clienti4.add(new Cliente("Giulia", "Neri", "Italiana", "TO", "Torino", "Via Po", 23, 10123,
+                "3356781235", "F", LocalDate.of(1980, 12, 3), "NREGLI80T43L219K", "giulia.neri@email.com", "Carta di Credito"));
+        clienti4.add(new Cliente("Luca", "Neri", "Italiana", "TO", "Torino", "Via Po", 23, 10123,
+                "3356781236", "M", LocalDate.of(2010, 5, 15), "NRELCU10E15L219M", "luca.neri@email.com", "Carta di Credito"));
+
+        Trattamento trattamento4 = new Trattamento("Bed & Breakfast", 25.0);
+
+        Prenotazione p4 = new Prenotazione(4, LocalDate.of(2026, 1, 22), LocalDate.of(2026, 4, 5),
+                LocalDate.of(2026, 4, 12), trattamento4, "Patente", LocalDate.of(2018, 6, 10),
+                LocalDate.of(2028, 6, 10), "Francesco Neri", "Vacanza famiglia", camere4, servizi4, clienti4, 741852963);
+
+// PRENOTAZIONE 5
+        ArrayList<Camera> camere5 = new ArrayList<>();
+        camere5.add(new Camera(401, Stato.Prenotata, 2, 250.0, "Suite deluxe"));
+
+        ArrayList<Servizio> servizi5 = new ArrayList<>();
+        servizi5.add(new Servizio("Room Service", 40.0));
+        servizi5.add(new Servizio("Transfer aeroporto", 60.0));
+
+        ArrayList<Cliente> clienti5 = new ArrayList<>();
+        clienti5.add(new Cliente("Roberto", "Gialli", "Italiana", "FI", "Firenze", "Via dei Calzaiuoli", 15, 50122,
+                "3312345678", "M", LocalDate.of(1975, 1, 25), "GLLRRT75A25D612P", "roberto.gialli@email.com", "American Express"));
+
+        Trattamento trattamento5 = new Trattamento("All Inclusive", 95.0);
+
+        Prenotazione p5 = new Prenotazione(5, LocalDate.of(2026, 1, 10), LocalDate.of(2026, 5, 20),
+                LocalDate.of(2026, 5, 27), trattamento5, "Passaporto", LocalDate.of(2022, 3, 5),
+                LocalDate.of(2032, 3, 5), "Roberto Gialli", "Viaggio d'affari", camere5, servizi5, clienti5, 159753486);
+
+// PRENOTAZIONE 6
+        ArrayList<Camera> camere6 = new ArrayList<>();
+        camere6.add(new Camera(150, Stato.Prenotata, 2, 165.0, "Camera matrimoniale"));
+
+        ArrayList<Servizio> servizi6 = new ArrayList<>();
+        servizi6.add(new Servizio("Palestra", 15.0));
+
+        ArrayList<Cliente> clienti6 = new ArrayList<>();
+        clienti6.add(new Cliente("Valentina", "Blu", "Italiana", "BO", "Bologna", "Via Indipendenza", 88, 40121,
+                "3398765432", "F", LocalDate.of(1995, 6, 30), "BLUVNT95H70A944L", "valentina.blu@email.com", "Bancomat"));
+
+        Trattamento trattamento6 = new Trattamento("Solo Pernottamento", 0.0);
+
+        Prenotazione p6 = new Prenotazione(6, LocalDate.of(2026, 1, 25), LocalDate.of(2026, 3, 15),
+                LocalDate.of(2026, 3, 18), trattamento6, "Carta d'Identità", LocalDate.of(2023, 9, 12),
+                LocalDate.of(2033, 9, 12), "Valentina Blu", "Weekend relax", camere6, servizi6, clienti6, 852963741);
+
+// PRENOTAZIONE 7
+        ArrayList<Camera> camere7 = new ArrayList<>();
+        camere7.add(new Camera(201, Stato.Prenotata, 2, 200.0, "Vista città"));
+        camere7.add(new Camera(202, Stato.Prenotata, 2, 200.0, "Vista città"));
+
+        ArrayList<Servizio> servizi7 = new ArrayList<>();
+        servizi7.add(new Servizio("Escursione guidata", 70.0));
+
+        ArrayList<Cliente> clienti7 = new ArrayList<>();
+        clienti7.add(new Cliente("Marco", "Viola", "Italiana", "VE", "Venezia", "Calle Lunga", 33, 30100,
+                "3345678901", "M", LocalDate.of(1987, 8, 18), "VLAMRC87M18L736N", "marco.viola@email.com", "Carta di Credito"));
+        clienti7.add(new Cliente("Stefania", "Rosa", "Italiana", "VE", "Venezia", "Calle Corta", 12, 30100,
+                "3345678902", "F", LocalDate.of(1989, 2, 14), "RSOSFN89B54L736R", "stefania.rosa@email.com", "Carta di Credito"));
+
+        Trattamento trattamento7 = new Trattamento("Mezza Pensione", 45.0);
+
+        Prenotazione p7 = new Prenotazione(7, LocalDate.of(2026, 1, 12), LocalDate.of(2026, 6, 1),
+                LocalDate.of(2026, 6, 8), trattamento7, "Passaporto", LocalDate.of(2020, 11, 22),
+                LocalDate.of(2030, 11, 22), "Marco Viola", "Viaggio di gruppo", camere7, servizi7, clienti7, 369258147);
+
+// PRENOTAZIONE 8
+        ArrayList<Camera> camere8 = new ArrayList<>();
+        camere8.add(new Camera(305, Stato.Prenotata, 1, 120.0, "Camera singola economica"));
+
+        ArrayList<Servizio> servizi8 = new ArrayList<>();
+
+        ArrayList<Cliente> clienti8 = new ArrayList<>();
+        clienti8.add(new Cliente("Alessio", "Arancio", "Italiana", "GE", "Genova", "Via XX Settembre", 67, 16121,
+                "3387654321", "M", LocalDate.of(1993, 10, 5), "RNCLS93R05D969Q", "alessio.arancio@email.com", "Contanti"));
+
+        Trattamento trattamento8 = new Trattamento("Solo Pernottamento", 0.0);
+
+        Prenotazione p8 = new Prenotazione(8, LocalDate.of(2026, 1, 28), LocalDate.of(2026, 2, 20),
+                LocalDate.of(2026, 2, 22), trattamento8, "Carta d'Identità", LocalDate.of(2024, 1, 8),
+                LocalDate.of(2034, 1, 8), "Alessio Arancio", "Breve sosta", camere8, servizi8, clienti8, 258369147);
+
+// PRENOTAZIONE 9
+        ArrayList<Camera> camere9 = new ArrayList<>();
+        camere9.add(new Camera(450, Stato.Prenotata, 4, 280.0, "Suite presidenziale"));
+
+        ArrayList<Servizio> servizi9 = new ArrayList<>();
+        servizi9.add(new Servizio("Butler service", 100.0));
+        servizi9.add(new Servizio("Champagne", 120.0));
+        servizi9.add(new Servizio("Massaggio", 90.0));
+
+        ArrayList<Cliente> clienti9 = new ArrayList<>();
+        clienti9.add(new Cliente("Davide", "Marrone", "Italiana", "PA", "Palermo", "Via Maqueda", 150, 90133,
+                "3321234567", "M", LocalDate.of(1982, 3, 28), "MRRDVD82C28G273S", "davide.marrone@email.com", "Carta di Credito"));
+        clienti9.add(new Cliente("Elisa", "Marrone", "Italiana", "PA", "Palermo", "Via Maqueda", 150, 90133,
+                "3321234568", "F", LocalDate.of(1984, 7, 11), "MRRLS84L51G273V", "elisa.marrone@email.com", "Carta di Credito"));
+
+        Trattamento trattamento9 = new Trattamento("All Inclusive", 95.0);
+
+        Prenotazione p9 = new Prenotazione(9, LocalDate.of(2026, 1, 5), LocalDate.of(2026, 7, 10),
+                LocalDate.of(2026, 7, 20), trattamento9, "Passaporto", LocalDate.of(2021, 4, 15),
+                LocalDate.of(2031, 4, 15), "Davide Marrone", "Luna di miele", camere9, servizi9, clienti9, 147258369);
+
+// PRENOTAZIONE 10
+        ArrayList<Camera> camere10 = new ArrayList<>();
+        camere10.add(new Camera(120, Stato.Prenotata, 2, 175.0, "Camera comfort"));
+
+        ArrayList<Servizio> servizi10 = new ArrayList<>();
+        servizi10.add(new Servizio("Late check-out", 35.0));
+        servizi10.add(new Servizio("Noleggio bici", 25.0));
+
+        ArrayList<Cliente> clienti10 = new ArrayList<>();
+        clienti10.add(new Cliente("Chiara", "Grigio", "Italiana", "SA", "Salerno", "Corso Vittorio Emanuele", 200, 84100,
+                "3369871234", "F", LocalDate.of(1991, 11, 22), "GRGCHR91S62H703B", "chiara.grigio@email.com", "PayPal"));
+
+        Trattamento trattamento10 = new Trattamento("Bed & Breakfast", 25.0);
+
+        Prenotazione p10 = new Prenotazione(10, LocalDate.of(2026, 1, 30), LocalDate.of(2026, 4, 25),
+                LocalDate.of(2026, 4, 28), trattamento10, "Patente", LocalDate.of(2022, 8, 30),
+                LocalDate.of(2032, 8, 30), "Chiara Grigio", "Weekend mare", camere10, servizi10, clienti10, 963852741);
+
+        Prenotazione [] prenotaziones = new Prenotazione[10];
+        prenotaziones[0] = p1;
+        prenotaziones[1] = p2;
+        prenotaziones[2] = p3;
+        prenotaziones[3] = p4;
+        prenotaziones[4] = p5;
+        prenotaziones[5] = p6;
+        prenotaziones[6] = p7;
+        prenotaziones[7] = p8;
+        prenotaziones[8] = p9;
+        prenotaziones[9] = p10;
+
+        assertArrayEquals(prenotaziones, prenotazioneDAO.doRetriveAll("").toArray());
+
+
     }
 
 

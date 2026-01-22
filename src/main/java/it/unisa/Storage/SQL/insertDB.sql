@@ -1,141 +1,246 @@
--- CLIENTE
-INSERT INTO Cliente VALUES
-                        ('MSCMRA00T04H703M','Mario','Masceri','84085','Mercato San Severino',12,'Salerno','Corso Armando Diaz','mario.masceri@gmail.com','Maschio','3249552034','Bancomat','Italiana','1899-12-04',false),
-                        ('MSCMRA00T04H703H','Mario','Masceri','84085','Mercato San Severino',12,'Salerno','Corso Armando Diaz','mario.masceri@gmail.com','Maschio','3249552034','Carta','Italiana','1899-12-04',false),
-                        ('RSSMRA80A01H501Z','Mario','Rossi','00100','Roma',10,'Roma','Via Roma','rossi@gmail.com','Maschio','3331112222','Contanti','Italiana','1980-01-01',false),
-                        ('BNCLGI85B10F205X','Luigi','Bianchi','20100','Milano',5,'Milano','Via Milano','bianchi@gmail.com','Maschio','3334445555','Carta','Italiana','1985-02-10',false),
-                        ('VRDLRA90C20D612Y','Laura','Verdi','80100','Napoli',7,'Napoli','Via Napoli','verdi@gmail.com','Femmina','3337778888','Bonifico','Italiana','1990-03-20',false);
+-- ============================================
+-- 1. INSERT CLIENTI (nessuna dipendenza)
+-- ============================================
 
--- CAMERA
-INSERT INTO Camera VALUES
-                       (101,2,'Non ce la faccio piu','Libera',120),
-                       (102,3,'Non ce la faccio piu','Libera',110),
-                       (103,2,'Vista mare','Libera',130),
-                       (104,4,'Suite','Libera',200),
-                       (105,1,'Singola','Libera',80);
+INSERT INTO Cliente (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, MetodoDiPagamento, Cittadinanza, DataDiNascita, IsBackListed)
+VALUES ('RSSMRA85C15F839K', 'Mario', 'Rossi', '80100', 'Napoli', 12, 'NA', 'Via Roma', 'mario.rossi@email.com', 'M', '3331234567', 'Carta di Credito', 'Italiana', '1985-03-15', FALSE);
 
--- PRENOTAZIONE (AUTO_INCREMENT)
-INSERT INTO Prenotazione
-(DataPrenotazione,DataArrivoCliente,DataPartenzaCliente,NomeTrattamento,NoteAggiuntive,Intestatario,
- dataScadenza,numeroDocumento,DataRilascio,TipoDocumento,Stato,ChekIn)
-VALUES
-    ('1992-12-20','1994-11-30','1990-09-20','asporto','Note test','Mario Masceri',
-     '2004-12-02',112,'2000-12-02','Carta didentita ',true,false),
-    ('2024-01-10','2024-02-01','2024-02-10','Pensione Completa','---','Rossi',
-     '2024-01-20',201,'2019-05-10','Passaporto',true,false),
-    ('2024-03-01','2024-03-10','2024-03-15','Mezza Pensione','---','Bianchi',
-     '2024-03-05',301,'2018-04-10','CI',true,false),
-    ('2024-04-01','2024-04-05','2024-04-07','Solo Pernotto','---','Verdi',
-     '2024-04-02',401,'2020-07-01','CI',true,false),
-    ('2024-05-01','2024-05-10','2024-05-20','All Inclusive','---','Neri',
-     '2024-05-05',501,'2021-06-01','CI',true,false);
+INSERT INTO Cliente (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, MetodoDiPagamento, Cittadinanza, DataDiNascita, IsBackListed)
+VALUES ('BNCLRA90L60H501Z', 'Laura', 'Bianchi', '00185', 'Roma', 45, 'RM', 'Via Nazionale', 'laura.bianchi@email.com', 'F', '3339876543', 'PayPal', 'Italiana', '1990-07-20', FALSE);
 
--- TRATTAMENTO
-INSERT INTO Trattamento VALUES
-                            ('Dasporto',22,1),
-                            ('Pensione Completa',40,2),
-                            ('Mezza Pensione',30,3),
-                            ('Solo Pernotto',15,4),
-                            ('All Inclusive',60,5);
+INSERT INTO Cliente (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, MetodoDiPagamento, Cittadinanza, DataDiNascita, IsBackListed)
+VALUES ('BNCGPP88S05H501W', 'Giuseppe', 'Bianchi', '00185', 'Roma', 45, 'RM', 'Via Nazionale', 'giuseppe.bianchi@email.com', 'M', '3339876544', 'Contanti', 'Italiana', '1988-11-05', FALSE);
 
--- SERVIZIO
-INSERT INTO Servizio VALUES
-                         ('Mensa',11,1),
-                         ('Piscina',12,1),
-                         ('ijjknk',15,1),
-                         ('Spa',25,2),
-                         ('Parcheggio',10,3);
+INSERT INTO Cliente (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, MetodoDiPagamento, Cittadinanza, DataDiNascita, IsBackListed)
+VALUES ('VRDNNA92D52F205X', 'Anna', 'Verdi', '20124', 'Milano', 78, 'MI', 'Corso Buenos Aires', 'anna.verdi@email.com', 'F', '3347891234', 'Bonifico', 'Italiana', '1992-04-12', FALSE);
 
--- ASSOCIATO_A
-INSERT INTO Associato_a VALUES
-                            ('MSCMRA00T04H703M',101,1,120),
-                            ('MSCMRA00T04H703H',102,1,110),
-                            ('RSSMRA80A01H501Z',103,2,130),
-                            ('BNCLGI85B10F205X',104,3,200),
-                            ('VRDLRA90C20D612Y',105,4,80);
+INSERT INTO Cliente (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, MetodoDiPagamento, Cittadinanza, DataDiNascita, IsBackListed)
+VALUES ('NREFNC78P08L219Y', 'Francesco', 'Neri', '10123', 'Torino', 23, 'TO', 'Via Po', 'francesco.neri@email.com', 'M', '3356781234', 'Carta di Credito', 'Italiana', '1978-09-08', FALSE);
 
--- RICEVUTAFISCALE
-INSERT INTO RicevutaFiscale VALUES
-                                (1,1,'1992-12-21','Bancomat','1992-12-20',22,'Dasporto'),
-                                (2,2,'2024-01-11','Contanti','2024-01-10',40,'Pensione Completa'),
-                                (3,3,'2024-03-02','Carta','2024-03-01',30,'Mezza Pensione'),
-                                (4,4,'2024-04-02','Bonifico','2024-04-01',15,'Solo Pernotto'),
-                                (5,5,'2024-05-02','Carta','2024-05-01',60,'All Inclusive');
+INSERT INTO Cliente (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, MetodoDiPagamento, Cittadinanza, DataDiNascita, IsBackListed)
+VALUES ('NREGLI80T43L219K', 'Giulia', 'Neri', '10123', 'Torino', 23, 'TO', 'Via Po', 'giulia.neri@email.com', 'F', '3356781235', 'Carta di Credito', 'Italiana', '1980-12-03', FALSE);
 
--- CLIENTIRICEVUTA
-INSERT INTO ClientiRicevuta VALUES
-                                ('MSCMRA00T04H703M',1,'Mario','Masceri',true),
-                                ('RSSMRA80A01H501Z',2,'Mario','Rossi',true),
-                                ('BNCLGI85B10F205X',3,'Luigi','Bianchi',true),
-                                ('VRDLRA90C20D612Y',4,'Laura','Verdi',true),
-                                ('MSCMRA00T04H703H',1,'Mario','Masceri',false);
+INSERT INTO Cliente (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, MetodoDiPagamento, Cittadinanza, DataDiNascita, IsBackListed)
+VALUES ('NRELCU10E15L219M', 'Luca', 'Neri', '10123', 'Torino', 23, 'TO', 'Via Po', 'luca.neri@email.com', 'M', '3356781236', 'Carta di Credito', 'Italiana', '2010-05-15', FALSE);
 
--- CAMERARICEVUTA
-INSERT INTO CameraRicevuta VALUES
-                               (1,101,120),
-                               (1,102,110),
-                               (2,103,130),
-                               (3,104,200),
-                               (4,105,80);
+INSERT INTO Cliente (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, MetodoDiPagamento, Cittadinanza, DataDiNascita, IsBackListed)
+VALUES ('GLLRRT75A25D612P', 'Roberto', 'Gialli', '50122', 'Firenze', 15, 'FI', 'Via dei Calzaiuoli', 'roberto.gialli@email.com', 'M', '3312345678', 'American Express', 'Italiana', '1975-01-25', FALSE);
 
--- SERVIZIRICEVUTA
-INSERT INTO ServiziRicevuta VALUES
-                                (1,'Mensa',1,11),
-                                (1,'Piscina',1,12),
-                                (1,'ijjknk',1,15),
-                                (2,'Spa',1,25),
-                                (3,'Parcheggio',1,10);
+INSERT INTO Cliente (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, MetodoDiPagamento, Cittadinanza, DataDiNascita, IsBackListed)
+VALUES ('BLUVNT95H70A944L', 'Valentina', 'Blu', '40121', 'Bologna', 88, 'BO', 'Via Indipendenza', 'valentina.blu@email.com', 'F', '3398765432', 'Bancomat', 'Italiana', '1995-06-30', FALSE);
 
--- IMPIEGATO
-INSERT INTO Impiegato VALUES
-                          ('AAAABBBBCCCCDDDD',1500,'Luigi','Neri','00100','2020-01-10','3331110000','Italiana','luigi@hotel.it','Maschio','Manager','2018-01-01','CI','Via Roma','Roma','Roma',10,'AA1234567','2028-01-01',NULL),
-                          ('EEEEFFFFGGGGHHHH',1200,'Anna','Blu','20100','2021-02-10','3332220000','Italiana','anna@hotel.it','Femmina','FDclient','2019-02-02','CI','Via Milano','Milano','Milano',5,'BB1234567','2029-02-02',NULL),
-                          ('IIIIJJJJKKKKLLLL',1300,'Paolo','Verdi','80100','2019-03-10','3333330000','Italiana','paolo@hotel.it','Maschio','Governante','2017-03-03','CI','Via Napoli','Napoli','Napoli',7,'CC1234567','2027-03-03',NULL),
-                          ('MMMMNNNNOOOOPPPP',1400,'Sara','Rosa','50100','2022-04-10','3334440000','Italiana','sara@hotel.it','Femmina','FDclient','2020-04-04','CI','Via Firenze','Firenze','Firenze',8,'DD1234567','2030-04-04',NULL),
-                          ('QQQQRRRRSSSSTTTT',2000,'Carlo','Gialli','10100','2018-05-10','3335550000','Italiana','carlo@hotel.it','Maschio','Manager','2016-05-05','CI','Via Torino','Torino','Torino',9,'EE1234567','2026-05-05','AAAABBBBCCCCDDDD');
+INSERT INTO Cliente (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, MetodoDiPagamento, Cittadinanza, DataDiNascita, IsBackListed)
+VALUES ('VLAMRC87M18L736N', 'Marco', 'Viola', '30100', 'Venezia', 33, 'VE', 'Calle Lunga', 'marco.viola@email.com', 'M', '3345678901', 'Carta di Credito', 'Italiana', '1987-08-18', FALSE);
 
-INSERT INTO Cliente
-(CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, MetodoDiPagamento, Cittadinanza, DataDiNascita, IsBackListed)
-VALUES
-    ('SMIJHN75D15Z114B','John','Smith','00121','Londra',45,'Estero','Baker Street',
-     'john.smith@uk.com','Maschio','447123456','Carta di Credito','Inglese','1975-04-15',false);
+INSERT INTO Cliente (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, MetodoDiPagamento, Cittadinanza, DataDiNascita, IsBackListed)
+VALUES ('RSOSFN89B54L736R', 'Stefania', 'Rosa', '30100', 'Venezia', 12, 'VE', 'Calle Corta', 'stefania.rosa@email.com', 'F', '3345678902', 'Carta di Credito', 'Italiana', '1989-02-14', FALSE);
 
-INSERT INTO Camera
-(NumeroCamera, NumeroMaxOcc, NoteCamera, Stato, Prezzo)
-VALUES
-    (202,1,'Singola business','InPulizia',85);
+INSERT INTO Cliente (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, MetodoDiPagamento, Cittadinanza, DataDiNascita, IsBackListed)
+VALUES ('RNCLS93R05D969Q', 'Alessio', 'Arancio', '16121', 'Genova', 67, 'GE', 'Via XX Settembre', 'alessio.arancio@email.com', 'M', '3387654321', 'Contanti', 'Italiana', '1993-10-05', FALSE);
 
-INSERT INTO Servizio
-(Nome, Prezzo, IDPrenotazione)
-VALUES
-    ('Transfer Aeroporto',40,NULL);
+INSERT INTO Cliente (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, MetodoDiPagamento, Cittadinanza, DataDiNascita, IsBackListed)
+VALUES ('MRRDVD82C28G273S', 'Davide', 'Marrone', '90133', 'Palermo', 150, 'PA', 'Via Maqueda', 'davide.marrone@email.com', 'M', '3321234567', 'Carta di Credito', 'Italiana', '1982-03-28', FALSE);
 
+INSERT INTO Cliente (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, MetodoDiPagamento, Cittadinanza, DataDiNascita, IsBackListed)
+VALUES ('MRRLS84L51G273V', 'Elisa', 'Marrone', '90133', 'Palermo', 150, 'PA', 'Via Maqueda', 'elisa.marrone@email.com', 'F', '3321234568', 'Carta di Credito', 'Italiana', '1984-07-11', FALSE);
 
-INSERT INTO Trattamento
-(Nome, Prezzo, IDPrenotazione)
-VALUES
-    ('Massaggio Sportivo',70,NULL);
+INSERT INTO Cliente (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, MetodoDiPagamento, Cittadinanza, DataDiNascita, IsBackListed)
+VALUES ('GRGCHR91S62H703B', 'Chiara', 'Grigio', '84100', 'Salerno', 200, 'SA', 'Corso Vittorio Emanuele', 'chiara.grigio@email.com', 'F', '3369871234', 'PayPal', 'Italiana', '1991-11-22', FALSE);
 
-INSERT INTO Prenotazione
-(DataPrenotazione, DataArrivoCliente, DataPartenzaCliente, NomeTrattamento,
- NoteAggiuntive, Intestatario, dataScadenza, numeroDocumento, DataRilascio,
- TipoDocumento, Stato, ChekIn)
-VALUES
-    ('2023-11-15','2024-02-14','2024-02-16','Massaggio Sportivo',
-     'Anniversario','John Smith','2032-12-10',901234,'2022-12-10',
-     'Passaporto',true,false);
+-- ============================================
+-- 2. INSERT CAMERE (nessuna dipendenza)
+-- ============================================
 
+INSERT INTO Camera (NumeroCamera, NumeroMaxOcc, NoteCamera, Stato, Prezzo)
+VALUES (101, 2, 'Vista mare', 'Prenotata', 150.0);
 
+INSERT INTO Camera (NumeroCamera, NumeroMaxOcc, NoteCamera, Stato, Prezzo)
+VALUES (205, 4, 'Suite familiare', 'Prenotata', 220.0);
 
-INSERT INTO Associato_a
-(CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto)
-VALUES
-    ('SMIJHN75D15Z114B',202,6,85);
+INSERT INTO Camera (NumeroCamera, NumeroMaxOcc, NoteCamera, Stato, Prezzo)
+VALUES (310, 2, 'Vista panoramica', 'Prenotata', 180.0);
 
-UPDATE Servizio
-SET IDPrenotazione = 6
-WHERE Nome = 'Transfer Aeroporto';
+INSERT INTO Camera (NumeroCamera, NumeroMaxOcc, NoteCamera, Stato, Prezzo)
+VALUES (102, 3, 'Camera tripla standard', 'Prenotata', 190.0);
 
-UPDATE Trattamento
-SET IDPrenotazione = 6
-WHERE Nome = 'Massaggio Sportivo';
+INSERT INTO Camera (NumeroCamera, NumeroMaxOcc, NoteCamera, Stato, Prezzo)
+VALUES (401, 2, 'Suite deluxe', 'Prenotata', 250.0);
+
+INSERT INTO Camera (NumeroCamera, NumeroMaxOcc, NoteCamera, Stato, Prezzo)
+VALUES (150, 2, 'Camera matrimoniale', 'Prenotata', 165.0);
+
+INSERT INTO Camera (NumeroCamera, NumeroMaxOcc, NoteCamera, Stato, Prezzo)
+VALUES (201, 2, 'Vista città', 'Prenotata', 200.0);
+
+INSERT INTO Camera (NumeroCamera, NumeroMaxOcc, NoteCamera, Stato, Prezzo)
+VALUES (202, 2, 'Vista città', 'Prenotata', 200.0);
+
+INSERT INTO Camera (NumeroCamera, NumeroMaxOcc, NoteCamera, Stato, Prezzo)
+VALUES (305, 1, 'Camera singola economica', 'Prenotata', 120.0);
+
+INSERT INTO Camera (NumeroCamera, NumeroMaxOcc, NoteCamera, Stato, Prezzo)
+VALUES (450, 4, 'Suite presidenziale', 'Prenotata', 280.0);
+
+INSERT INTO Camera (NumeroCamera, NumeroMaxOcc, NoteCamera, Stato, Prezzo)
+VALUES (120, 2, 'Camera comfort', 'Prenotata', 175.0);
+
+-- ============================================
+-- 3. INSERT TRATTAMENTI (SENZA IDPrenotazione - lo aggiungeremo dopo)
+-- ============================================
+
+INSERT INTO Trattamento (Nome, Prezzo, IDPrenotazione)
+VALUES ('Bed & Breakfast', 25.0, NULL);
+
+INSERT INTO Trattamento (Nome, Prezzo, IDPrenotazione)
+VALUES ('Mezza Pensione', 45.0, NULL);
+
+INSERT INTO Trattamento (Nome, Prezzo, IDPrenotazione)
+VALUES ('Pensione Completa', 65.0, NULL);
+
+INSERT INTO Trattamento (Nome, Prezzo, IDPrenotazione)
+VALUES ('All Inclusive', 95.0, NULL);
+
+INSERT INTO Trattamento (Nome, Prezzo, IDPrenotazione)
+VALUES ('Solo Pernottamento', 0.0, NULL);
+
+-- ============================================
+-- 4. INSERT PRENOTAZIONI (referenzia Trattamento per nome)
+-- ============================================
+
+INSERT INTO Prenotazione (IDPrenotazione, DataPrenotazione, DataArrivoCliente, DataPartenzaCliente, NomeTrattamento, NoteAggiuntive, Intestatario, dataScadenza, numeroDocumento, DataRilascio, TipoDocumento, Stato, ChekIn)
+VALUES (1, '2026-01-15', '2026-02-10', '2026-02-15', 'Bed & Breakfast', 'Cliente VIP', 'Mario Rossi', '2030-05-10', 123456789, '2020-05-10', 'Carta d\'Identità', TRUE, FALSE);
+
+INSERT INTO Prenotazione (IDPrenotazione, DataPrenotazione, DataArrivoCliente, DataPartenzaCliente, NomeTrattamento, NoteAggiuntive, Intestatario, dataScadenza, numeroDocumento, DataRilascio, TipoDocumento, Stato, ChekIn)
+VALUES (2, '2026-01-20', '2026-03-01', '2026-03-07', 'Mezza Pensione', 'Anniversario di matrimonio', 'Laura Bianchi', '2029-08-15', 987654321, '2019-08-15', 'Passaporto', TRUE, FALSE);
+
+INSERT INTO Prenotazione (IDPrenotazione, DataPrenotazione, DataArrivoCliente, DataPartenzaCliente, NomeTrattamento, NoteAggiuntive, Intestatario, dataScadenza, numeroDocumento, DataRilascio, TipoDocumento, Stato, ChekIn)
+VALUES (3, '2026-01-18', '2026-02-14', '2026-02-16', 'Pensione Completa', 'San Valentino', 'Anna Verdi', '2031-02-20', 456789123, '2021-02-20', 'Carta d\'Identità', TRUE, FALSE);
+
+INSERT INTO Prenotazione (IDPrenotazione, DataPrenotazione, DataArrivoCliente, DataPartenzaCliente, NomeTrattamento, NoteAggiuntive, Intestatario, dataScadenza, numeroDocumento, DataRilascio, TipoDocumento, Stato, ChekIn)
+VALUES (4, '2026-01-22', '2026-04-05', '2026-04-12', 'Bed & Breakfast', 'Vacanza famiglia', 'Francesco Neri', '2028-06-10', 741852963, '2018-06-10', 'Patente', TRUE, FALSE);
+
+INSERT INTO Prenotazione (IDPrenotazione, DataPrenotazione, DataArrivoCliente, DataPartenzaCliente, NomeTrattamento, NoteAggiuntive, Intestatario, dataScadenza, numeroDocumento, DataRilascio, TipoDocumento, Stato, ChekIn)
+VALUES (5, '2026-01-10', '2026-05-20', '2026-05-27', 'All Inclusive', 'Viaggio d\'affari', 'Roberto Gialli', '2032-03-05', 159753486, '2022-03-05', 'Passaporto', TRUE, FALSE);
+
+INSERT INTO Prenotazione (IDPrenotazione, DataPrenotazione, DataArrivoCliente, DataPartenzaCliente, NomeTrattamento, NoteAggiuntive, Intestatario, dataScadenza, numeroDocumento, DataRilascio, TipoDocumento, Stato, ChekIn)
+VALUES (6, '2026-01-25', '2026-03-15', '2026-03-18', 'Solo Pernottamento', 'Weekend relax', 'Valentina Blu', '2033-09-12', 852963741, '2023-09-12', 'Carta d\'Identità', TRUE, FALSE);
+
+INSERT INTO Prenotazione (IDPrenotazione, DataPrenotazione, DataArrivoCliente, DataPartenzaCliente, NomeTrattamento, NoteAggiuntive, Intestatario, dataScadenza, numeroDocumento, DataRilascio, TipoDocumento, Stato, ChekIn)
+VALUES (7, '2026-01-12', '2026-06-01', '2026-06-08', 'Mezza Pensione', 'Viaggio di gruppo', 'Marco Viola', '2030-11-22', 369258147, '2020-11-22', 'Passaporto', TRUE, FALSE);
+
+INSERT INTO Prenotazione (IDPrenotazione, DataPrenotazione, DataArrivoCliente, DataPartenzaCliente, NomeTrattamento, NoteAggiuntive, Intestatario, dataScadenza, numeroDocumento, DataRilascio, TipoDocumento, Stato, ChekIn)
+VALUES (8, '2026-01-28', '2026-02-20', '2026-02-22', 'Solo Pernottamento', 'Breve sosta', 'Alessio Arancio', '2034-01-08', 258369147, '2024-01-08', 'Carta d\'Identità', TRUE, FALSE);
+
+INSERT INTO Prenotazione (IDPrenotazione, DataPrenotazione, DataArrivoCliente, DataPartenzaCliente, NomeTrattamento, NoteAggiuntive, Intestatario, dataScadenza, numeroDocumento, DataRilascio, TipoDocumento, Stato, ChekIn)
+VALUES (9, '2026-01-05', '2026-07-10', '2026-07-20', 'All Inclusive', 'Luna di miele', 'Davide Marrone', '2031-04-15', 147258369, '2021-04-15', 'Passaporto', TRUE, FALSE);
+
+INSERT INTO Prenotazione (IDPrenotazione, DataPrenotazione, DataArrivoCliente, DataPartenzaCliente, NomeTrattamento, NoteAggiuntive, Intestatario, dataScadenza, numeroDocumento, DataRilascio, TipoDocumento, Stato, ChekIn)
+VALUES (10, '2026-01-30', '2026-04-25', '2026-04-28', 'Bed & Breakfast', 'Weekend mare', 'Chiara Grigio', '2032-08-30', 963852741, '2022-08-30', 'Patente', TRUE, FALSE);
+
+-- ============================================
+-- 5. UPDATE TRATTAMENTI (aggiorna IDPrenotazione)
+-- ============================================
+
+UPDATE Trattamento SET IDPrenotazione = 1 WHERE Nome = 'Bed & Breakfast' AND IDPrenotazione IS NULL LIMIT 1;
+UPDATE Trattamento SET IDPrenotazione = 2 WHERE Nome = 'Mezza Pensione' AND IDPrenotazione IS NULL LIMIT 1;
+UPDATE Trattamento SET IDPrenotazione = 3 WHERE Nome = 'Pensione Completa' AND IDPrenotazione IS NULL LIMIT 1;
+UPDATE Trattamento SET IDPrenotazione = 5 WHERE Nome = 'All Inclusive' AND IDPrenotazione IS NULL LIMIT 1;
+UPDATE Trattamento SET IDPrenotazione = 6 WHERE Nome = 'Solo Pernottamento' AND IDPrenotazione IS NULL LIMIT 1;
+
+-- ============================================
+-- 6. INSERT SERVIZI (referenzia Prenotazione)
+-- ============================================
+
+INSERT INTO Servizio (Nome, Prezzo, IDPrenotazione)
+VALUES ('Colazione_P1', 15.0, 1);
+
+INSERT INTO Servizio (Nome, Prezzo, IDPrenotazione)
+VALUES ('Spa_P2', 50.0, 2);
+
+INSERT INTO Servizio (Nome, Prezzo, IDPrenotazione)
+VALUES ('Minibar_P2', 30.0, 2);
+
+INSERT INTO Servizio (Nome, Prezzo, IDPrenotazione)
+VALUES ('Cena romantica_P3', 80.0, 3);
+
+INSERT INTO Servizio (Nome, Prezzo, IDPrenotazione)
+VALUES ('Parcheggio_P4', 20.0, 4);
+
+INSERT INTO Servizio (Nome, Prezzo, IDPrenotazione)
+VALUES ('Lavanderia_P4', 25.0, 4);
+
+INSERT INTO Servizio (Nome, Prezzo, IDPrenotazione)
+VALUES ('Room Service_P5', 40.0, 5);
+
+INSERT INTO Servizio (Nome, Prezzo, IDPrenotazione)
+VALUES ('Transfer aeroporto_P5', 60.0, 5);
+
+INSERT INTO Servizio (Nome, Prezzo, IDPrenotazione)
+VALUES ('Palestra_P6', 15.0, 6);
+
+INSERT INTO Servizio (Nome, Prezzo, IDPrenotazione)
+VALUES ('Escursione guidata_P7', 70.0, 7);
+
+INSERT INTO Servizio (Nome, Prezzo, IDPrenotazione)
+VALUES ('Butler service_P9', 100.0, 9);
+
+INSERT INTO Servizio (Nome, Prezzo, IDPrenotazione)
+VALUES ('Champagne_P9', 120.0, 9);
+
+INSERT INTO Servizio (Nome, Prezzo, IDPrenotazione)
+VALUES ('Massaggio_P9', 90.0, 9);
+
+INSERT INTO Servizio (Nome, Prezzo, IDPrenotazione)
+VALUES ('Late check-out_P10', 35.0, 10);
+
+INSERT INTO Servizio (Nome, Prezzo, IDPrenotazione)
+VALUES ('Noleggio bici_P10', 25.0, 10);
+
+-- ============================================
+-- 7. INSERT ASSOCIATO_A (referenzia Cliente, Camera, Prenotazione)
+-- ============================================
+
+INSERT INTO Associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto)
+VALUES ('RSSMRA85C15F839K', 101, 1, 150.0);
+
+INSERT INTO Associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto)
+VALUES ('BNCLRA90L60H501Z', 205, 2, 220.0);
+
+INSERT INTO Associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto)
+VALUES ('BNCGPP88S05H501W', 205, 2, 220.0);
+
+INSERT INTO Associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto)
+VALUES ('VRDNNA92D52F205X', 310, 3, 180.0);
+
+INSERT INTO Associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto)
+VALUES ('NREFNC78P08L219Y', 102, 4, 190.0);
+
+INSERT INTO Associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto)
+VALUES ('NREGLI80T43L219K', 102, 4, 190.0);
+
+INSERT INTO Associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto)
+VALUES ('NRELCU10E15L219M', 102, 4, 190.0);
+
+INSERT INTO Associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto)
+VALUES ('GLLRRT75A25D612P', 401, 5, 250.0);
+
+INSERT INTO Associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto)
+VALUES ('BLUVNT95H70A944L', 150, 6, 165.0);
+
+INSERT INTO Associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto)
+VALUES ('VLAMRC87M18L736N', 201, 7, 200.0);
+
+INSERT INTO Associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto)
+VALUES ('RSOSFN89B54L736R', 202, 7, 200.0);
+
+INSERT INTO Associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto)
+VALUES ('RNCLS93R05D969Q', 305, 8, 120.0);
+
+INSERT INTO Associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto)
+VALUES ('MRRDVD82C28G273S', 450, 9, 280.0);
+
+INSERT INTO Associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto)
+VALUES ('MRRLS84L51G273V', 450, 9, 280.0);
+
+INSERT INTO Associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto)
+VALUES ('GRGCHR91S62H703B', 120, 10, 175.0);
