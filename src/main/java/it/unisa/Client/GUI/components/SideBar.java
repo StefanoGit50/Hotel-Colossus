@@ -1,4 +1,4 @@
-package it.unisa.GUI.components;
+package it.unisa.Client.GUI.components;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -24,6 +24,8 @@ public class SideBar extends VBox{
     public static final String PLANNING = "Planning";
     public static final String ROOMS = "Camere";
     public static final String CHECKOUT = "Check-out";
+    public static final String CONTO_ECONOMICO = "Conto Economico";  // ← AGGIUNTO
+
 
     // ===== ATTRIBUTI =====
     private VBox selectedNavItem = null;
@@ -57,19 +59,21 @@ public class SideBar extends VBox{
         VBox guestItem = createNavItem("👥", GUEST_MANAGEMENT, true);
         VBox planningItem = createNavItem("📅", PLANNING, false);
         VBox roomsItem = createNavItem("🛏️", ROOMS, false);
-
+        VBox contoEconomicoItem = createNavItem("💰", CONTO_ECONOMICO, false);
         // Salva i riferimenti
         navItems.put(DASHBOARD, dashboardItem);
         navItems.put(GUEST_MANAGEMENT, guestItem);
         navItems.put(PLANNING, planningItem);
         navItems.put(ROOMS, roomsItem);
+        navItems.put(CONTO_ECONOMICO, contoEconomicoItem);
 
         // Aggiungi alla sidebar
         this.getChildren().addAll(
                 dashboardItem,
                 guestItem,
                 planningItem,
-                roomsItem
+                roomsItem,
+                contoEconomicoItem
         );
     }
 

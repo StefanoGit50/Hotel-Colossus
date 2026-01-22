@@ -1,4 +1,4 @@
-package it.unisa.GUI;
+package it.unisa.Client.GUI;
 
 
 import javafx.application.Application;

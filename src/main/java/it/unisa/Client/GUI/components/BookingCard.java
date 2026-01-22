@@ -1,7 +1,7 @@
-package it.unisa.GUI.components;
+package it.unisa.Client.GUI.components;
 
 
-import it.unisa.GUI.BookingFilter;
+import it.unisa.Client.GUI.BookingFilter;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;

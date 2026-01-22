@@ -1,4 +1,4 @@
-package it.unisa.GUI.components;
+package it.unisa.Client.GUI.components;
 
 import javafx.scene.layout.HBox;
 import javafx.geometry.Insets;

@@ -1,6 +1,6 @@
-package it.unisa.GUI;
+package it.unisa.Client.GUI;
 
-import it.unisa.GUI.components.LoginView;
+import it.unisa.Client.GUI.components.LoginView;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

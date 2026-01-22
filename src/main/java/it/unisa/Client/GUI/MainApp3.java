@@ -1,7 +1,7 @@
-package it.unisa.GUI;
+package it.unisa.Client.GUI;
 
 
-import it.unisa.GUI.components.*;
+import it.unisa.Client.GUI.components.*;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,11 +27,12 @@ public class MainApp3 extends Application {
     private TopBar topBar;
     private SideBar sidebar;
     private VBox contentArea;
-
+    private RoomManagementView roomManagementView;
     // ===== VISTE =====
     private Dashboard dashboardView;
     private GuestManagement guestManagement;
     private Planning planning;
+    private ContoEconomico contoEconomicoView;
 
     // ===== DATI =====
     private ObservableList<BookingFilter> allBookings = FXCollections.observableArrayList();
@@ -64,7 +65,7 @@ public class MainApp3 extends Application {
         VBox root = createMainLayout();
 
         // Crea la scena
-        Scene scene = new Scene(root, 1200, 400);
+        Scene scene = new Scene(root, 1200, 700);
 
 
         // SHORTCUT DA TASTIERA
@@ -180,6 +181,9 @@ public class MainApp3 extends Application {
             case SideBar.CHECKOUT:
                 showCheckout();
                 break;
+            case SideBar.CONTO_ECONOMICO:
+                showContoEconomico();
+                break;
             default:
                 System.err.println("⚠️ Destinazione sconosciuta: " + destination);
         }
@@ -224,8 +228,6 @@ public class MainApp3 extends Application {
     private void showPlanning() {
         contentArea.getChildren().clear();
 
-        contentArea.getChildren().clear();
-
         if (planning == null) {
             planning = new Planning();
         }
@@ -240,16 +242,16 @@ public class MainApp3 extends Application {
      */
     private void showRooms() {
         contentArea.getChildren().clear();
+        contentArea.getChildren().clear();
 
-        // TODO: Implementare RoomsView
-        VBox placeholder = createPlaceholder(
-                "🛏️ Camere",
-                "Vista per la gestione delle camere"
-        );
+        if (roomManagementView == null) {
+            roomManagementView = new RoomManagementView();
+        }
 
-        contentArea.getChildren().add(placeholder);
+        contentArea.getChildren().add(roomManagementView);
+        VBox.setVgrow(roomManagementView, Priority.ALWAYS);
 
-        System.out.println("🛏️ Camere - TODO");
+        System.out.println("🛏️ Room Management caricata");
     }
 
     /**
@@ -268,6 +270,19 @@ public class MainApp3 extends Application {
 
         System.out.println("💰 Check-out - TODO");
     }
+
+    /**
+     * Mostra la vista ContoEconomico
+     */
+    private void showContoEconomico() {
+        contentArea.getChildren().clear();
+        if (contoEconomicoView == null) {
+            contoEconomicoView = new ContoEconomico();
+        }
+        contentArea.getChildren().add(contoEconomicoView);
+        VBox.setVgrow(contoEconomicoView, Priority.ALWAYS);
+    }
+
 
     // ===== UTILITY =====
 
