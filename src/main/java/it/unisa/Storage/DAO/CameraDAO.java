@@ -19,12 +19,15 @@ import java.util.NoSuchElementException;
 public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Camera>{
 
     public static final String TABLE_NAME = "Camera";
-
+    private Connection connection;
+    private PreparedStatement preparedStatement;
+    private ResultSet resultSet;
     @Override
     public synchronized void doDelete(Camera o) throws SQLException {
         if(o != null){
-            Connection connection = ConnectionStorage.getConnection();
-            try(PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Camera WHERE NumeroCamera = ?")){
+             connection = ConnectionStorage.getConnection();
+            try{
+                PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Camera WHERE NumeroCamera = ?");
                 preparedStatement.setInt(1,o.getNumeroCamera());
                 preparedStatement.executeUpdate();
             }finally {
@@ -41,11 +44,11 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
     public synchronized Camera doRetriveByKey(Object oggetto) throws SQLException {
             if(oggetto instanceof Integer){
                 Integer integer = (Integer) oggetto;
-                Connection connection = ConnectionStorage.getConnection();
-                try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Camera WHERE NumeroCamera = ?")){
-
+                connection = ConnectionStorage.getConnection();
+                try{
+                    preparedStatement = connection.prepareStatement("SELECT * FROM Camera WHERE NumeroCamera = ?");
                     preparedStatement.setInt(1,integer);
-                    ResultSet resultSet = preparedStatement.executeQuery();
+                    resultSet = preparedStatement.executeQuery();
                     Integer numeroCamera = null,numeroMaxOcc = null,piano = null;
                     String noteCamera = null, TipologiaCamera = null;
                     Stato stato = null;
@@ -75,10 +78,9 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
 
     @Override
     public synchronized void doSave(Camera o) throws SQLException {
-        Connection connection = ConnectionStorage.getConnection();
-
-        try(PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO CAMERA VALUES (?,?,?,?,?)")){
-
+        connection = ConnectionStorage.getConnection();
+        try{
+            preparedStatement = connection.prepareStatement("INSERT INTO CAMERA VALUES (?,?,?,?,?)");
             preparedStatement.setInt(1,o.getNumeroCamera());
             preparedStatement.setInt(2,o.getCapacità());
             preparedStatement.setString(3,o.getNoteCamera());
@@ -95,7 +97,7 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
 
     @Override
     public synchronized Collection<Camera> doRetriveAll(String order) throws SQLException{
-        Connection connection = ConnectionStorage.getConnection();
+        connection = ConnectionStorage.getConnection();
         String sql = "SELECT * FROM Camera ORDER BY ? ";
             if(order != null){
                 if(order.equalsIgnoreCase("decrescente")){
@@ -109,9 +111,10 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
 
         ArrayList<Camera> cameras = new ArrayList<>();
 
-        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+        try{
+            preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1,"NumeroCamera");
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
 
                 while(resultSet.next()){
                    Integer numeroCamera = (Integer) resultSet.getObject(1);
@@ -154,11 +157,11 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
     {
         if(o != null)
         {
-            Connection connection = ConnectionStorage.getConnection();
-            try(PreparedStatement preparedStatement = connection.prepareStatement(
-                    "UPDATE Camera SET NumeroMaxOcc = ?, NoteCamera = ?, Stato = ?, " +
-                            "Prezzo = ? WHERE NumeroCamera = ?")){
-
+            connection = ConnectionStorage.getConnection();
+            try{
+                preparedStatement = connection.prepareStatement(
+                        "UPDATE Camera SET NumeroMaxOcc = ?, NoteCamera = ?, Stato = ?, " +
+                                "Prezzo = ? WHERE NumeroCamera = ?");
                 preparedStatement.setInt(1, o.getCapacità());
                 preparedStatement.setString(2, o.getNoteCamera());
                 preparedStatement.setString(3, o.getStatoCamera().name());
@@ -194,8 +197,6 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
      */
     @Override
     public synchronized Collection<Camera> doRetriveByAttribute(String attribute, Object value) throws SQLException {
-        Connection connection;
-        PreparedStatement preparedStatement = null;
         ArrayList<Camera> lista = new ArrayList<>();
         String selectSQL;
 
@@ -205,7 +206,7 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
             try{
                 preparedStatement = connection.prepareStatement(selectSQL);
                 preparedStatement.setObject(1, value);
-                ResultSet resultSet = preparedStatement.executeQuery();
+                 resultSet = preparedStatement.executeQuery();
 
                 Camera camera;
                 while (resultSet.next()) {
@@ -217,6 +218,7 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
                     camera.setCapacità(resultSet.getInt("NumeroMaxOcc"));
                     lista.add(camera);
                 }
+
 
             }finally{
                 if(connection != null){

@@ -26,13 +26,6 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
         "TipoDocumento",
         "Stato"
     };
-
-    private Connection connection;
-    /*
-    public PrenotazioneDAO(Connection connection){
-            this.connection = connection;
-    }
-   */
     @Override
     public synchronized void doSave(Prenotazione p) throws SQLException {
         Connection connection = ConnectionStorage.getConnection();
@@ -74,13 +67,14 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                 stmt.executeUpdate();
             }
         }
+
         ClienteDAO clienteDAO = new ClienteDAO();
         // Salva le associazioni clienti-camere
-        for(Cliente cliente : p.getListaClienti()) {
+        for(Cliente cliente : p.getListaClienti()){
             clienteDAO.doSave(cliente);
         }
 
-        for (Camera camera : p.getListaCamere()) {
+        for (Camera camera : p.getListaCamere()){
             for (Cliente cliente : p.getListaClienti()) {
                 String query = "INSERT INTO Associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto) " +
                         "VALUES (?, ?, ?, ?)";
