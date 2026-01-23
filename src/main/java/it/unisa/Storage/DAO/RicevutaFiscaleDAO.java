@@ -81,15 +81,26 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
             ps.setInt(2, keys.get(1));
             rs = ps.executeQuery();
 
-            if (rs.next()) {
+            if (rs.next()){
                 ricevuta = new RicevutaFiscale();
                 ricevuta.setIDRicevutaFiscale(rs.getInt("IDPrenotazione"));
                 ricevuta.setIDPrenotazione(rs.getInt("IDRicevutaFiscale"));
                 ricevuta.setDataPrenotazione(rs.getDate("DataPrenotazione").toLocalDate());
-                ricevuta.setDataEmissione(rs.getDate("DataEmissione").toLocalDate()):
                 ricevuta.setDataEmissione(rs.getDate("DataEmissione").toLocalDate());
-            }
+                ricevuta.setMetodoPagamento(rs.getString("metodoDiPagamento"));
+                ricevuta.setPrezzoTrattamento(rs.getDouble("PrezzoTrattamento"));
+                ricevuta.setTipoTrattamento(rs.getString("TipoTrattamento"));
+                double prezzoTrattamento = ricevuta.getPrezzoTrattamento();
+                PreparedStatement preparedStatement = conn.prepareStatement("SELECT PrezzoCamera FROM (ricevutafiscale join hotelcolossus.cameraricevuta c on ricevutafiscale.IDRicevutaFiscale = c.IDRicevutaFiscale) where c.IDRicevutaFiscale = ?");
+                preparedStatement.setInt(1,ricevuta.getIDRicevutaFiscale());
+                ResultSet resultSet = preparedStatement.executeQuery();
 
+                if(resultSet.next()){
+                    ricevuta.setTotale(resultSet.getDouble("PrezzoCamera") + prezzoTrattamento);
+                }else{
+                    ricevuta.setTotale(prezzoTrattamento);
+                }
+            }
         } finally {
             if (ps != null)
                 ps.close();
