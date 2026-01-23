@@ -18,7 +18,9 @@ import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
+/*
+* da finire
+* */
 @ExtendWith(MockitoExtension.class)
 public class prenotazioneDAOTesting {
     @Mock
@@ -594,7 +596,5 @@ public class prenotazioneDAOTesting {
         prenotaziones[9] = p10;
 
         assertArrayEquals(prenotaziones, prenotazioneDAO.doRetriveAll("").toArray());
-
-
     }
 }

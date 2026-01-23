@@ -13,27 +13,26 @@ import java.util.NoSuchElementException;
 public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
 {
 
-    private static final String TABLE_NAME = "RicevutaFiscale";
-
     private static final String[] attributes = {"IDRicevutaFiscale", "IDPrenotazione", "Totale", "DataEmissione"};
 
     @Override
     public synchronized void doSave(RicevutaFiscale o) throws SQLException {
         Connection conn = ConnectionStorage.getConnection();
         PreparedStatement ps = null;
-        String insertSQL = "insert into " + RicevutaFiscaleDAO.TABLE_NAME +
-                " (IDRicevutaFiscale, IDPrenotazione, Totale, DataEmissione) VALUES (?, ?, ?, ?)";
+        String insertSQL = "insert into RicevutaFiscale VALUES (?,?,?,?,?,?,?)";
 
-        try {
+        try{
             ps = conn.prepareStatement(insertSQL);
             ps.setInt(1, o.getIDRicevutaFiscale());
             ps.setInt(2, o.getIDPrenotazione());
-            ps.setDouble(3, o.getTotale());
-            ps.setDate(4, Date.valueOf(o.getDataEmissione()) );
-
+            ps.setDate(3, Date.valueOf(o.getDataEmissione()));
+            ps.setString(4,o.getMetodoPagamento());
+            ps.setDate(5,Date.valueOf(o.getDataPrenotazione()));
+            ps.setDouble(6,o.getPrezzoTrattamento());
+            ps.setString(7,o.getTipoTrattamento());
             ps.executeUpdate();
-        } finally {
-            if (ps != null)
+        }finally{
+            if(ps != null)
                 ps.close();
             ConnectionStorage.releaseConnection(conn);
         }
@@ -43,7 +42,7 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
     public synchronized void doDelete(RicevutaFiscale o) throws SQLException {
         Connection conn = ConnectionStorage.getConnection();
         PreparedStatement ps = null;
-        String deleteSQL = "delete from " + RicevutaFiscaleDAO.TABLE_NAME +
+        String deleteSQL = "delete from ricevutafiscale" +
                 " where IDRicevutaFiscale = ? and IDPrenotazione = ?";
 
         try {
@@ -73,7 +72,7 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
         ResultSet rs;
         RicevutaFiscale ricevuta = null;
 
-        String selectSQL = "select * FROM " + RicevutaFiscaleDAO.TABLE_NAME +
+        String selectSQL = "select * FROM ricevutafiscale" +
                 " where IDRicevutaFiscale = ? AND  IDPrenotazione = ?";
 
         try {
@@ -86,7 +85,8 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
                 ricevuta = new RicevutaFiscale();
                 ricevuta.setIDRicevutaFiscale(rs.getInt("IDPrenotazione"));
                 ricevuta.setIDPrenotazione(rs.getInt("IDRicevutaFiscale"));
-                ricevuta.setTotale(rs.getDouble("Totale"));
+                ricevuta.setDataPrenotazione(rs.getDate("DataPrenotazione").toLocalDate());
+                ricevuta.setDataEmissione(rs.getDate("DataEmissione").toLocalDate()):
                 ricevuta.setDataEmissione(rs.getDate("DataEmissione").toLocalDate());
             }
 
@@ -106,7 +106,7 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
         Connection conn = ConnectionStorage.getConnection();
         PreparedStatement ps = null;
         ResultSet rs = null;
-        String selectSQL = "select * FROM" + RicevutaFiscaleDAO.TABLE_NAME;
+        String selectSQL = "select * FROM ricevutafiscale" ;
 
         ArrayList<RicevutaFiscale> results = new ArrayList<>();
 
@@ -146,8 +146,8 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
         {
             Connection conn = ConnectionStorage.getConnection();
             PreparedStatement ps = null;
-            String updateSQL = "UPDATE " + RicevutaFiscaleDAO.TABLE_NAME +
-                    " SET Totale = ?, DataEmissione = ? " +
+            String updateSQL = "UPDATE ricevutafiscale" +
+                    " SET metodoPagamento = ? , DataPrenotazione = ? , PrezzoTrattamento = ? , TipoTrattamento = ?, DataEmissione = ? " +
                     "WHERE IDRicevutaFiscale = ? AND IDPrenotazione = ?";
 
             try
