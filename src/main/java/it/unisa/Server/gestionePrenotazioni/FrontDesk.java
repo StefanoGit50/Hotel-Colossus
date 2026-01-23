@@ -7,15 +7,12 @@ import it.unisa.Server.command.CatalogoClientiCommands.*;
 import it.unisa.Server.command.CatalogoImpiegatiCommands.*;
 import it.unisa.Server.command.CatalogoPrenotazioniCommands.*;
 import it.unisa.Server.persistent.obj.catalogues.*;
-import it.unisa.Storage.DAO.PrenotazioneDAO;
-import it.unisa.Storage.FrontDeskStorage;
 import it.unisa.interfacce.FrontDeskInterface;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -32,7 +29,7 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     }
 
     public List<Camera> getCamere(){
-       return CatalogoCamere.getListaCamere();
+        return CatalogoCamere.getListaCamere();
     }
 
     @Override
@@ -47,67 +44,17 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         return CatalogoCamere.getLastModified();
     }
 
-    //@Override
-    public void effettuaPrenotazione(String id, Cliente cliente, Camera stanza) throws RemoteException, SQLException {
-        //prenotazioni.add(new Prenotazione(Integer.parseInt(id), LocalDate.now() , LocalDate.now()));
-        FrontDeskStorage<Prenotazione> prenotazioneFrontDeskStorage = new PrenotazioneDAO();
-
-        while(!prenotazioni.isEmpty()){
-            prenotazioneFrontDeskStorage.doSave(prenotazioni.getFirst());
-            prenotazioni.removeFirst();
-        }
-    }
-
-
     @Override
     public List<Prenotazione> getPrenotazioni() throws RemoteException
     {
-        return prenotazioni;
+        return CatalogoPrenotazioni.getListaPrenotazioni();
     }
-
-    @Override
-    public void cancellaPrenotazione(Prenotazione p) throws RemoteException
-    {
-        boolean trovata = false;
-        for(Prenotazione p2: prenotazioni)
-        {
-            if(p2.getIDPrenotazione() == p.getIDPrenotazione())
-            {
-                prenotazioni.remove(p2);
-                logger.info("Prenotazione " + p.getIDPrenotazione() + " cancellata");
-                trovata = true;
-                return;
-            }
-        }
-        if(!trovata) {
-            logger.warning("Prenotazione " + p.getIDPrenotazione() + " non trovata");
-            System.err.println("Prenotazione non trovata");
-        }
-    }
-
-    @Override
-    public Prenotazione getPrenotazione(String id) throws RemoteException
-    {
-        for(Prenotazione p2: prenotazioni)
-        {
-            if(p2.getIDPrenotazione() == Integer.getInteger(id))
-            {
-                return p2;
-            }
-        }
-        logger.warning("Prenotazione " + id + " non trovata");
-        System.err.println("Prenotazione non trovata");
-        return null;
-    }
-
-
 
 
     public static void main(String[] args)
     {
         try
         {
-            // IMPORTANTE: Avvia l'RMI registry programmaticamente
             logger.info("Avvio RMI Registry sulla porta " + RMI_PORT + "...");
 
             try {
@@ -147,12 +94,13 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     // Cataloghi
     private CatalogoPrenotazioni catalogoPrenotazioni = new CatalogoPrenotazioni();
     private CatalogoClienti catalogoClienti = new CatalogoClienti();
-    private CatalogoImpiegati catalogoImpiegati = new CatalogoImpiegati();
 
 
     // COMANDI PRENOTAZIONE
     @Override
     public void addPrenotazione(Prenotazione p) throws RemoteException {
+        CatalogueUtils.checkNull(p);                 // Lancia InvalidInputException
+        CatalogoPrenotazioni.checkPrenotazione(p);   // Lancia InvalidInputException
         AddPrenotazioneCommand command = new AddPrenotazioneCommand(catalogoPrenotazioni, p);
         invoker.executeCommand(command);
     }
@@ -174,11 +122,6 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     public void addCliente(Cliente c) throws RemoteException {
         AddClienteCommand command = new AddClienteCommand(catalogoClienti, c);
         invoker.executeCommand(command);
-        if(!CatalogoClienti.getListaClienti().isEmpty()){
-            CatalogoClienti.getListaClienti().forEach(o -> System.out.println(o.toString()));
-        } else {
-            System.out.println("lista cliente vuoto");
-        }
     }
 
     @Override
@@ -205,47 +148,15 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         invoker.executeCommand(command);
     }
 
-    //  COMANDI IMPIEGATO
-    @Override
-    public void addImpiegato(Impiegato i) throws RemoteException {
-        AddImpiegatoCommand command = new AddImpiegatoCommand(catalogoImpiegati, i);
-        invoker.executeCommand(command);
-    }
-
-    @Override
-    public void removeImpiegato(Impiegato i) throws RemoteException {
-        RemoveImpiegatoCommand command = new RemoveImpiegatoCommand(catalogoImpiegati, i);
-        invoker.executeCommand(command);
-
-    }
-
-    @Override
-    public void updateImpiegato(Impiegato i) throws RemoteException {
-        UpdateImpiegatoCommand command = new UpdateImpiegatoCommand(catalogoImpiegati, i);
-        invoker.executeCommand(command);
-    }
-
     // COMANDO UNDO
     @Override
     public void undoCommand() throws RemoteException {
         invoker.undoCommand();
-        if(!CatalogoClienti.getListaClienti().isEmpty()){
-            System.out.println("UNDO");
-            CatalogoClienti.getListaClienti().forEach(o -> System.out.println(o.toString()));
-        } else {
-            System.out.println("UNDO: lista cliente vuoto");
-        }
     }
 
     // COMANDO REDO
     @Override
     public void redoCommand() throws RemoteException {
         invoker.redo();
-        if(!CatalogoClienti.getListaClienti().isEmpty()){
-            System.out.println("REDO");
-            CatalogoClienti.getListaClienti().forEach(o -> System.out.println(o.toString()));
-        } else {
-            System.out.println("REDO: lista cliente vuoto");
-        }
     }
 }

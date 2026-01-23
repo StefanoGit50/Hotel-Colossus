@@ -1,4 +1,4 @@
-package it.unisa.Testing.Server.Autentication;
+package Server.Autentication;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import it.unisa.Common.Impiegato;

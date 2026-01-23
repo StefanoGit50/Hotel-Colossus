@@ -1,7 +1,7 @@
-package it.unisa.Testing.Server.command.CatalogoClientiCommands;
+package Server.command.CatalogoClientiCommands;
 
 import it.unisa.Common.Cliente;
-import it.unisa.Server.command.CatalogoClientiCommands.UnBanCommand;
+import it.unisa.Server.command.CatalogoClientiCommands.UpdateClienteCommand;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
 import it.unisa.Storage.DAO.ClienteDAO;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,21 +19,28 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class UnBanCommandTester {
+class UpdateClienteCommandTester {
 
-    private UnBanCommand command;
+    private UpdateClienteCommand command;
     private CatalogoClienti catalogue;
     private Cliente clienteTest;
-    private String CFCliente;
+    private Cliente clienteModificato;
+    private Cliente clienteBannatoTest;
+    private Cliente clienteBannatoModificato;
 
     @BeforeEach
     void setUp() {
         catalogue = mock(CatalogoClienti.class);
-        CFCliente = "RSSMRA90E15H501Z";
 
-        clienteTest = new Cliente("Mario", "Rossi", "Italiana", "Roma", "Roma", "Via del Corso", 10, 18600, "3331234567", "M", LocalDate.of(1990, 5, 15), "RSSMRA90E15H501Z", "mario.rossi@email.com", "Carta di Credito");
+        clienteTest = new Cliente("Maria", "Rosso", "Italiana", "Roma", "Roma", "Via del Corso", 10, 18600, "3331234561", "M", LocalDate.of(1990, 5, 15), "RSSMRA90E15H501G", "maria.rossi@email.com", "Carta di Credito");
 
-        command = new UnBanCommand(catalogue, CFCliente);
+        clienteModificato = new Cliente("Mario", "Rossa", "Italiana", "Roma", "Romolo", "Via del Corso", 10, 18600, "3331234562", "F", LocalDate.of(1990, 5, 15), "RSSMRA90E15H501Z", "mari.rossi@email.com", "Carta di Credito");
+
+        clienteBannatoTest = new Cliente("Mauro", "Rosse", "Italiana", "Roma", "Remo", "Via del Corso", 10, 18600, "3331234563", "M", LocalDate.of(1990, 5, 15), "RSSMRA90E15H501X", "marik.rossi@email.com", "Carta di Credito");
+
+        clienteBannatoModificato = new Cliente("Marco", "Rossi", "Italiana", "Roma", "Rana", "Via del Corso", 10, 18600, "3331234564", "M", LocalDate.of(1990, 5, 15), "RSSMRA90E15H501J", "marii.rossi@email.com", "Carta di Credito");
+
+        command = new UpdateClienteCommand(catalogue, clienteModificato);
     }
 
     // testo costruttore con parametri
@@ -46,10 +53,10 @@ class UnBanCommandTester {
     }
 
     @Test
-    void testConstructorWithParametersSetsCFCliente() {
+    void testConstructorWithParametersSetsCliente() {
         // Assert
-        assertNotNull(command.getCFCliente());
-        assertEquals(CFCliente, command.getCFCliente());
+        assertNotNull(command.getCliente());
+        assertEquals(clienteModificato, command.getCliente());
     }
 
     // testo costruttore vuoto
@@ -57,7 +64,7 @@ class UnBanCommandTester {
     @Test
     void testEmptyConstructorCreatesInstance() {
         // Act
-        UnBanCommand emptyCommand = new UnBanCommand();
+        UpdateClienteCommand emptyCommand = new UpdateClienteCommand();
 
         // Assert
         assertNotNull(emptyCommand);
@@ -84,99 +91,105 @@ class UnBanCommandTester {
     }
 
     @Test
-    void testGetCFClienteReturnsCorrectValue() {
+    void testGetClienteReturnsCorrectValue() {
         // Assert
-        assertEquals(CFCliente, command.getCFCliente());
+        assertEquals(clienteModificato, command.getCliente());
     }
 
     @Test
-    void testSetCFClienteUpdatesValue() {
+    void testSetClienteUpdatesValue() {
         // Arrange
-        String newCF = "BNCGPP85M15F205W";
+        Cliente newCliente = clienteBannatoModificato;
 
         // Act
-        command.setCFCliente(newCF);
+        command.setCliente(newCliente);
 
         // Assert
-        assertEquals(newCF, command.getCFCliente());
+        assertEquals(newCliente, command.getCliente());
     }
 
-    // testo execute
+    // testo execute con cliente non bannato
 
     @Test
-    void testExecuteUnbansCliente() throws CloneNotSupportedException {
+    void testExecuteUpdatesNonBannedClienteInList() throws CloneNotSupportedException {
         // Arrange
         ArrayList<Cliente> listaClienti = new ArrayList<>();
+        listaClienti.add(clienteTest);
         ArrayList<Cliente> listaClientiBannati = new ArrayList<>();
-        listaClientiBannati.add(clienteTest);
 
         CatalogoClienti.setListaClienti(listaClienti);
         CatalogoClienti.setListaClientiBannati(listaClientiBannati);
 
-        when(catalogue.getCliente(CFCliente)).thenReturn(clienteTest);
+        when(catalogue.getCliente(clienteModificato.getCf())).thenReturn(clienteModificato);
 
         try (MockedConstruction<ClienteDAO> mockedDAO = mockConstruction(ClienteDAO.class)) {
             // Act
             command.execute();
 
             // Assert
-            assertFalse(clienteTest.isBlacklisted());
+            assertFalse(listaClienti.contains(clienteTest));
+            assertTrue(listaClienti.contains(clienteModificato));
         }
     }
 
     @Test
-    void testExecuteRemovesClienteFromBannedList() throws CloneNotSupportedException {
+    void testExecuteRemovesOldClienteFromList() throws CloneNotSupportedException {
         // Arrange
         ArrayList<Cliente> listaClienti = new ArrayList<>();
+        listaClienti.add(clienteTest);
         ArrayList<Cliente> listaClientiBannati = new ArrayList<>();
-        listaClientiBannati.add(clienteTest);
 
         CatalogoClienti.setListaClienti(listaClienti);
         CatalogoClienti.setListaClientiBannati(listaClientiBannati);
 
-        when(catalogue.getCliente(CFCliente)).thenReturn(clienteTest);
+        when(catalogue.getCliente(clienteModificato.getCf())).thenReturn(clienteModificato);
 
         try (MockedConstruction<ClienteDAO> mockedDAO = mockConstruction(ClienteDAO.class)) {
             // Act
             command.execute();
 
             // Assert
-            assertFalse(listaClientiBannati.contains(clienteTest));
+            assertEquals(1, listaClienti.size());
         }
     }
 
+    // testo execute con cliente bannato
+
     @Test
-    void testExecuteAddsClienteToNormalList() throws CloneNotSupportedException {
+    void testExecuteUpdatesBannedClienteInList() throws CloneNotSupportedException {
         // Arrange
+        command.setCliente(clienteBannatoModificato);
         ArrayList<Cliente> listaClienti = new ArrayList<>();
         ArrayList<Cliente> listaClientiBannati = new ArrayList<>();
-        listaClientiBannati.add(clienteTest);
+        listaClientiBannati.add(clienteBannatoTest);
 
         CatalogoClienti.setListaClienti(listaClienti);
         CatalogoClienti.setListaClientiBannati(listaClientiBannati);
 
-        when(catalogue.getCliente(CFCliente)).thenReturn(clienteTest);
+        when(catalogue.getCliente(clienteBannatoModificato.getCf())).thenReturn(clienteBannatoModificato);
 
         try (MockedConstruction<ClienteDAO> mockedDAO = mockConstruction(ClienteDAO.class)) {
             // Act
             command.execute();
 
             // Assert
-            assertTrue(listaClienti.contains(clienteTest));
+            assertFalse(listaClientiBannati.contains(clienteBannatoTest));
+            assertTrue(listaClientiBannati.contains(clienteBannatoModificato));
         }
     }
 
     @Test
-    void testExecuteCallsDoUpdate() throws SQLException, CloneNotSupportedException {
+    void testExecuteDoUpdateForBannedCliente() throws SQLException, CloneNotSupportedException {
         // Arrange
+        command.setCliente(clienteBannatoModificato);
         ArrayList<Cliente> listaClienti = new ArrayList<>();
         ArrayList<Cliente> listaClientiBannati = new ArrayList<>();
-        listaClientiBannati.add(clienteTest);
+        listaClientiBannati.add(clienteBannatoTest);
 
         CatalogoClienti.setListaClienti(listaClienti);
         CatalogoClienti.setListaClientiBannati(listaClientiBannati);
 
-        when(catalogue.getCliente(CFCliente)).thenReturn(clienteTest);
+        when(catalogue.getCliente(clienteBannatoModificato.getCf())).thenReturn(clienteBannatoModificato);
 
         try (MockedConstruction<ClienteDAO> mockedDAO = mockConstruction(ClienteDAO.class)) {
             // Act
@@ -184,7 +197,7 @@ class UnBanCommandTester {
 
             // Assert
             ClienteDAO dao = mockedDAO.constructed().get(0);
-            verify(dao).doUpdate(clienteTest);
+            verify(dao).doUpdate(clienteBannatoModificato);
         }
     }
 
@@ -200,14 +213,15 @@ class UnBanCommandTester {
     @Test
     void testExecuteSQLException() throws SQLException, CloneNotSupportedException {
         // Arrange
+        command.setCliente(clienteBannatoModificato);
         ArrayList<Cliente> listaClienti = new ArrayList<>();
         ArrayList<Cliente> listaClientiBannati = new ArrayList<>();
-        listaClientiBannati.add(clienteTest);
+        listaClientiBannati.add(clienteBannatoTest);
 
         CatalogoClienti.setListaClienti(listaClienti);
         CatalogoClienti.setListaClientiBannati(listaClientiBannati);
 
-        when(catalogue.getCliente(CFCliente)).thenReturn(clienteTest);
+        when(catalogue.getCliente(clienteBannatoModificato.getCf())).thenReturn(clienteBannatoModificato);
 
         try (MockedConstruction<ClienteDAO> mockedDAO = mockConstruction(ClienteDAO.class,
                 (mock, context) -> {
@@ -219,12 +233,39 @@ class UnBanCommandTester {
         }
     }
 
-    // testo undo
+    // testo undo con cliente non bannato
 
     @Test
-    void testUndoBansCliente() throws CloneNotSupportedException, SQLException {
+    void testUndoRestoresOriginalNonBannedCliente() throws CloneNotSupportedException, SQLException {
         // Arrange
-        clienteTest.setBlacklisted(false);
+        ArrayList<Cliente> listaClienti = new ArrayList<>();
+        listaClienti.add(clienteModificato);
+        ArrayList<Cliente> listaClientiBannati = new ArrayList<>();
+
+        CatalogoClienti.setListaClienti(listaClienti);
+        CatalogoClienti.setListaClientiBannati(listaClientiBannati);
+
+        when(catalogue.getCliente(clienteModificato.getCf())).thenReturn(clienteModificato);
+
+        // Prima esegue execute per salvare il cliente non modificato
+        try (MockedConstruction<ClienteDAO> mockedDAO = mockConstruction(ClienteDAO.class)) {
+            command.execute();
+        }
+
+        // Poi esegue undo
+        try (MockedConstruction<ClienteDAO> mockedDAO = mockConstruction(ClienteDAO.class)) {
+            // Act
+            command.undo();
+
+            // Assert verifica che doUpdate sia chiamato
+            ClienteDAO dao = mockedDAO.constructed().get(0);
+            verify(dao).doUpdate(any(Cliente.class));
+        }
+    }
+
+    @Test
+    void testUndoRemovesModifiedClienteFromList() throws CloneNotSupportedException {
+        // Arrange
         ArrayList<Cliente> listaClienti = new ArrayList<>();
         listaClienti.add(clienteTest);
         ArrayList<Cliente> listaClientiBannati = new ArrayList<>();
@@ -232,124 +273,86 @@ class UnBanCommandTester {
         CatalogoClienti.setListaClienti(listaClienti);
         CatalogoClienti.setListaClientiBannati(listaClientiBannati);
 
-        when(catalogue.getCliente(CFCliente)).thenReturn(clienteTest);
+        when(catalogue.getCliente(clienteModificato.getCf())).thenReturn(clienteModificato);
 
-        try (MockedConstruction<ClienteDAO> mockedDAO = mockConstruction(ClienteDAO.class,
-                (mock, context) -> {
-                    when(mock.doRetriveByKey(CFCliente)).thenReturn(clienteTest);
-                })) {
+        // Prima esegui execute
+        try (MockedConstruction<ClienteDAO> mockedDAO = mockConstruction(ClienteDAO.class)) {
+            command.execute();
+        }
+
+        // Poi esegui undo
+        try (MockedConstruction<ClienteDAO> mockedDAO = mockConstruction(ClienteDAO.class)) {
+            listaClienti.clear();
+            listaClienti.add(clienteModificato);
 
             // Act
             command.undo();
 
             // Assert
-            assertTrue(clienteTest.isBlacklisted());
+            assertFalse(listaClienti.contains(clienteModificato));
         }
     }
 
+    // testo undo con cliente bannato
+
     @Test
-    void testUndoRemovesClienteFromNormalList() throws CloneNotSupportedException {
+    void testUndoRestoresOriginalBannedCliente() throws CloneNotSupportedException, SQLException {
         // Arrange
-        clienteTest.setBlacklisted(false);
+        command.setCliente(clienteBannatoModificato);
         ArrayList<Cliente> listaClienti = new ArrayList<>();
-        listaClienti.add(clienteTest);
         ArrayList<Cliente> listaClientiBannati = new ArrayList<>();
+        listaClientiBannati.add(clienteBannatoTest);
 
         CatalogoClienti.setListaClienti(listaClienti);
         CatalogoClienti.setListaClientiBannati(listaClientiBannati);
 
-        when(catalogue.getCliente(CFCliente)).thenReturn(clienteTest);
+        when(catalogue.getCliente(clienteBannatoModificato.getCf())).thenReturn(clienteBannatoModificato);
 
-        try (MockedConstruction<ClienteDAO> mockedDAO = mockConstruction(ClienteDAO.class,
-                (mock, context) -> {
-                    when(mock.doRetriveByKey(CFCliente)).thenReturn(clienteTest);
-                })) {
+        // Prima esegue execute
+        try (MockedConstruction<ClienteDAO> mockedDAO = mockConstruction(ClienteDAO.class)) {
+            command.execute();
+        }
 
+        // Poi esegue undo
+        try (MockedConstruction<ClienteDAO> mockedDAO = mockConstruction(ClienteDAO.class)) {
             // Act
             command.undo();
 
             // Assert
-            assertFalse(listaClienti.contains(clienteTest));
+            ClienteDAO dao = mockedDAO.constructed().get(0);
+            verify(dao).doUpdate(any(Cliente.class));
         }
     }
 
     @Test
-    void testUndoAddsClienteToBannedList() throws CloneNotSupportedException {
+    void testUndoDoUpdateForBannedCliente() throws SQLException, CloneNotSupportedException {
         // Arrange
-        clienteTest.setBlacklisted(false);
+        command.setCliente(clienteBannatoModificato);
         ArrayList<Cliente> listaClienti = new ArrayList<>();
-        listaClienti.add(clienteTest);
         ArrayList<Cliente> listaClientiBannati = new ArrayList<>();
+        listaClientiBannati.add(clienteBannatoTest);
 
         CatalogoClienti.setListaClienti(listaClienti);
         CatalogoClienti.setListaClientiBannati(listaClientiBannati);
 
-        when(catalogue.getCliente(CFCliente)).thenReturn(clienteTest);
+        when(catalogue.getCliente(clienteBannatoModificato.getCf())).thenReturn(clienteBannatoModificato);
 
-        try (MockedConstruction<ClienteDAO> mockedDAO = mockConstruction(ClienteDAO.class,
-                (mock, context) -> {
-                    when(mock.doRetriveByKey(CFCliente)).thenReturn(clienteTest);
-                })) {
-
-            // Act
-            command.undo();
-
-            // Assert
-            assertTrue(listaClientiBannati.contains(clienteTest));
+        // Prima esegui execute
+        try (MockedConstruction<ClienteDAO> mockedDAO = mockConstruction(ClienteDAO.class)) {
+            command.execute();
         }
-    }
 
-    @Test
-    void testUndoDoRetriveByKey() throws SQLException, CloneNotSupportedException {
-        // Arrange
-        clienteTest.setBlacklisted(false);
-        ArrayList<Cliente> listaClienti = new ArrayList<>();
-        listaClienti.add(clienteTest);
-        ArrayList<Cliente> listaClientiBannati = new ArrayList<>();
-
-        CatalogoClienti.setListaClienti(listaClienti);
-        CatalogoClienti.setListaClientiBannati(listaClientiBannati);
-
-        when(catalogue.getCliente(CFCliente)).thenReturn(clienteTest);
-
-        try (MockedConstruction<ClienteDAO> mockedDAO = mockConstruction(ClienteDAO.class,
-                (mock, context) -> {
-                    when(mock.doRetriveByKey(CFCliente)).thenReturn(clienteTest);
-                })) {
+        // Poi esegui undo
+        try (MockedConstruction<ClienteDAO> mockedDAO = mockConstruction(ClienteDAO.class)) {
+            listaClientiBannati.clear();
+            listaClientiBannati.add(clienteBannatoModificato);
 
             // Act
             command.undo();
 
             // Assert
             ClienteDAO dao = mockedDAO.constructed().get(0);
-            verify(dao).doRetriveByKey(CFCliente);
-        }
-    }
-
-    @Test
-    void testUndoDoSave() throws SQLException, CloneNotSupportedException {
-        // Arrange
-        clienteTest.setBlacklisted(false);
-        ArrayList<Cliente> listaClienti = new ArrayList<>();
-        listaClienti.add(clienteTest);
-        ArrayList<Cliente> listaClientiBannati = new ArrayList<>();
-
-        CatalogoClienti.setListaClienti(listaClienti);
-        CatalogoClienti.setListaClientiBannati(listaClientiBannati);
-
-        when(catalogue.getCliente(CFCliente)).thenReturn(clienteTest);
-
-        try (MockedConstruction<ClienteDAO> mockedDAO = mockConstruction(ClienteDAO.class,
-                (mock, context) -> {
-                    when(mock.doRetriveByKey(CFCliente)).thenReturn(clienteTest);
-                })) {
-
-            // Act
-            command.undo();
-
-            // Assert
-            ClienteDAO dao = mockedDAO.constructed().get(0);
-            verify(dao).doSave(any(Cliente.class));
+            verify(dao).doUpdate(any(Cliente.class));
         }
     }
 
@@ -365,7 +368,6 @@ class UnBanCommandTester {
     @Test
     void testUndoSQLException() throws SQLException, CloneNotSupportedException {
         // Arrange
-        clienteTest.setBlacklisted(false);
         ArrayList<Cliente> listaClienti = new ArrayList<>();
         listaClienti.add(clienteTest);
         ArrayList<Cliente> listaClientiBannati = new ArrayList<>();
@@ -373,12 +375,21 @@ class UnBanCommandTester {
         CatalogoClienti.setListaClienti(listaClienti);
         CatalogoClienti.setListaClientiBannati(listaClientiBannati);
 
-        when(catalogue.getCliente(CFCliente)).thenReturn(clienteTest);
+        when(catalogue.getCliente(clienteModificato.getCf())).thenReturn(clienteModificato);
 
+        // Prima esegue execute
+        try (MockedConstruction<ClienteDAO> mockedDAO = mockConstruction(ClienteDAO.class)) {
+            command.execute();
+        }
+
+        // Poi esegue undo con SQLException
         try (MockedConstruction<ClienteDAO> mockedDAO = mockConstruction(ClienteDAO.class,
                 (mock, context) -> {
-                    when(mock.doRetriveByKey(CFCliente)).thenThrow(new SQLException("Database error"));
+                    doThrow(new SQLException("Database error")).when(mock).doUpdate(any());
                 })) {
+
+            listaClienti.clear();
+            listaClienti.add(clienteModificato);
 
             // Act e Assert non dovrebbe lanciare eccezione
             assertDoesNotThrow(() -> command.undo());

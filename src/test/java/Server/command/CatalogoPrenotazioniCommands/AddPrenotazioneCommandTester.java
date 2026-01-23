@@ -1,4 +1,4 @@
-package it.unisa.Testing.Server.command.CatalogoPrenotazioniCommands;
+package Server.command.CatalogoPrenotazioniCommands;
 
 import it.unisa.Common.*;
 import it.unisa.Server.command.CatalogoPrenotazioniCommands.AddPrenotazioneCommand;

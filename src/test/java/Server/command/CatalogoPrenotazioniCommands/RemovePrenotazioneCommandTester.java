@@ -1,7 +1,7 @@
-package it.unisa.Testing.Server.command.CatalogoPrenotazioniCommands;
+package Server.command.CatalogoPrenotazioniCommands;
 
 import it.unisa.Common.*;
-import it.unisa.Server.command.CatalogoPrenotazioniCommands.UpdatePrenotazioneCommand;
+import it.unisa.Server.command.CatalogoPrenotazioniCommands.RemovePrenotazioneCommand;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.DAO.PrenotazioneDAO;
@@ -22,15 +22,16 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class UpdatePrenotazioneCommandTester {
+class RemovePrenotazioneCommandTester
+{
 
-    private UpdatePrenotazioneCommand command;
+    private RemovePrenotazioneCommand command;
     private CatalogoPrenotazioni catalogue;
     private Prenotazione prenotazioneTest;
-    private Prenotazione prenotazioneModificata;
 
     @BeforeEach
-    void setUp() {
+    void setUp()
+    {
         catalogue = mock(CatalogoPrenotazioni.class);
 
         Trattamento mezzaPensione = new Trattamento("Mezza Pensione", 45.50);
@@ -56,30 +57,7 @@ class UpdatePrenotazioneCommandTester {
                 12345678
         );
 
-        Trattamento mezzaPensione2 = new Trattamento("Mezza Pensione", 45.50);
-        Camera camera202 = new Camera(202, Stato.Libera, 2, 45.5, "Nessuna");
-        Cliente cliente2 = new Cliente("Valeria", "Bianchi", "Francese", "MI", "Milano", "Via Dante", 42, 20121, "3479876543", "F", LocalDate.of(1985, 12, 02), "BNCVLR85T42F205Z", "valeria.b@provider.it", "PayPal");
-        ArrayList<Cliente> ospiti2 = new ArrayList<>(List.of(cliente2, new Cliente("Valeria", "Bianchi", "Francese", "MI", "Milano", "Via Dante", 42, 20121, "3479876543", "F", LocalDate.of(1985, 12, 02), "BNCVLR85T42F205Z", "valeria.b@provider.it", "PayPal")));
-
-        // Istanza di Prenotazione
-        prenotazioneModificata = new Prenotazione(
-                1001,
-                LocalDate.now(),
-                LocalDate.of(2024, 6, 10),
-                LocalDate.of(2024, 6, 17),
-                mezzaPensione,
-                "Carta d'Identità",
-                LocalDate.of(2020, 1, 1),
-                LocalDate.of(2030, 1, 1),
-                "Mario Rossi",
-                "camera silenziosa",
-                new ArrayList<>(List.of(camera201)),
-                new ArrayList<>(List.of(new Servizio("Aria Condizionata", 5.0))),
-                ospiti,
-                12345678
-        );
-
-        command = new UpdatePrenotazioneCommand(catalogue, prenotazioneModificata);
+        command = new RemovePrenotazioneCommand(catalogue, prenotazioneTest);
     }
 
     // testo costruttore con parametri
@@ -97,7 +75,7 @@ class UpdatePrenotazioneCommandTester {
     {
         // Assert
         assertNotNull(command.getPrenotazione());
-        assertEquals(prenotazioneModificata, command.getPrenotazione());
+        assertEquals(prenotazioneTest, command.getPrenotazione());
     }
 
     // testo costruttore vuoto
@@ -106,7 +84,7 @@ class UpdatePrenotazioneCommandTester {
     void testEmptyConstructorCreatesInstance()
     {
         // Act
-        UpdatePrenotazioneCommand emptyCommand = new UpdatePrenotazioneCommand();
+        RemovePrenotazioneCommand emptyCommand = new RemovePrenotazioneCommand();
 
         // Assert
         assertNotNull(emptyCommand);
@@ -138,7 +116,7 @@ class UpdatePrenotazioneCommandTester {
     void testGetPrenotazioneReturnsCorrectValue()
     {
         // Assert
-        assertEquals(prenotazioneModificata, command.getPrenotazione());
+        assertEquals(prenotazioneTest, command.getPrenotazione());
     }
 
     @Test
@@ -178,14 +156,14 @@ class UpdatePrenotazioneCommandTester {
     // testo execute
 
     @Test
-    void testExecuteUpdatesPrenotazioneInList() throws CloneNotSupportedException
+    void testExecuteRemovesPrenotazioneFromList() throws CloneNotSupportedException
     {
         // Arrange
         ArrayList<Prenotazione> listaPrenotazioni = new ArrayList<>();
         listaPrenotazioni.add(prenotazioneTest);
         CatalogoPrenotazioni.setListaPrenotazioni(listaPrenotazioni);
 
-        when(catalogue.getPrenotazione(prenotazioneModificata.getIDPrenotazione())).thenReturn(prenotazioneModificata);
+        when(catalogue.getPrenotazione(prenotazioneTest.getIDPrenotazione())).thenReturn(prenotazioneTest);
 
         try (MockedConstruction<PrenotazioneDAO> mockedDAO = mockConstruction(PrenotazioneDAO.class)) {
             // Act
@@ -193,48 +171,27 @@ class UpdatePrenotazioneCommandTester {
 
             // Assert
             assertFalse(listaPrenotazioni.contains(prenotazioneTest));
-            assertTrue(listaPrenotazioni.contains(prenotazioneModificata));
+            assertEquals(0, listaPrenotazioni.size());
         }
     }
 
     @Test
-    void testExecuteRemovesOldPrenotazioneFromList() throws CloneNotSupportedException
+    void testExecuteDoDelete() throws SQLException, CloneNotSupportedException
     {
         // Arrange
         ArrayList<Prenotazione> listaPrenotazioni = new ArrayList<>();
         listaPrenotazioni.add(prenotazioneTest);
         CatalogoPrenotazioni.setListaPrenotazioni(listaPrenotazioni);
 
-        when(catalogue.getPrenotazione(prenotazioneModificata.getIDPrenotazione())).thenReturn(prenotazioneModificata);
+        when(catalogue.getPrenotazione(prenotazioneTest.getIDPrenotazione())).thenReturn(prenotazioneTest);
 
-        try (MockedConstruction<PrenotazioneDAO> mockedDAO = mockConstruction(PrenotazioneDAO.class))
-        {
-            // Act
-            command.execute();
-
-            // Assert
-            assertEquals(1, listaPrenotazioni.size());
-        }
-    }
-
-    @Test
-    void testExecuteDoUpdate() throws SQLException, CloneNotSupportedException
-    {
-        // Arrange
-        ArrayList<Prenotazione> listaPrenotazioni = new ArrayList<>();
-        listaPrenotazioni.add(prenotazioneTest);
-        CatalogoPrenotazioni.setListaPrenotazioni(listaPrenotazioni);
-
-        when(catalogue.getPrenotazione(prenotazioneModificata.getIDPrenotazione())).thenReturn(prenotazioneModificata);
-
-        try (MockedConstruction<PrenotazioneDAO> mockedDAO = mockConstruction(PrenotazioneDAO.class))
-        {
+        try (MockedConstruction<PrenotazioneDAO> mockedDAO = mockConstruction(PrenotazioneDAO.class)) {
             // Act
             command.execute();
 
             // Assert
             PrenotazioneDAO dao = mockedDAO.constructed().get(0);
-            verify(dao).doUpdate(prenotazioneModificata);
+            verify(dao).doDelete(prenotazioneTest);
         }
     }
 
@@ -244,7 +201,7 @@ class UpdatePrenotazioneCommandTester {
         // Arrange
         when(catalogue.getPrenotazione(anyInt())).thenThrow(new CloneNotSupportedException("Clone error"));
 
-        // Act & Assert - non dovrebbe lanciare eccezione
+        // Act e Assert
         assertDoesNotThrow(() -> command.execute());
     }
 
@@ -256,15 +213,14 @@ class UpdatePrenotazioneCommandTester {
         listaPrenotazioni.add(prenotazioneTest);
         CatalogoPrenotazioni.setListaPrenotazioni(listaPrenotazioni);
 
-        when(catalogue.getPrenotazione(prenotazioneModificata.getIDPrenotazione())).thenReturn(prenotazioneModificata);
+        when(catalogue.getPrenotazione(prenotazioneTest.getIDPrenotazione())).thenReturn(prenotazioneTest);
 
         try (MockedConstruction<PrenotazioneDAO> mockedDAO = mockConstruction(PrenotazioneDAO.class,
-                (mock, context) ->
-                {
-                    doThrow(new SQLException("Database error")).when(mock).doUpdate(any());
+                (mock, context) -> {
+                    doThrow(new SQLException("Database error")).when(mock).doDelete(any());
                 })) {
 
-            // Act & Assert - non dovrebbe lanciare eccezione
+            // Act e Assert
             assertDoesNotThrow(() -> command.execute());
         }
     }
@@ -272,118 +228,53 @@ class UpdatePrenotazioneCommandTester {
     // testo undo
 
     @Test
-    void testUndoRestoresOriginalPrenotazione() throws CloneNotSupportedException
+    void testUndoAddsPrenotazioneToList()
     {
         // Arrange
         ArrayList<Prenotazione> listaPrenotazioni = new ArrayList<>();
-        listaPrenotazioni.add(prenotazioneTest);
         CatalogoPrenotazioni.setListaPrenotazioni(listaPrenotazioni);
-
-        when(catalogue.getPrenotazione(prenotazioneModificata.getIDPrenotazione())).thenReturn(prenotazioneModificata);
-
-        // Prima esegui execute per salvare la prenotazione non modificata
-        try (MockedConstruction<PrenotazioneDAO> mockedDAO = mockConstruction(PrenotazioneDAO.class)) {
-            command.execute();
-        }
-
-        // Poi esegui undo
-        listaPrenotazioni.clear();
-        listaPrenotazioni.add(prenotazioneModificata);
-
-        // Act
-        command.undo();
-
-        // Assert
-        assertFalse(listaPrenotazioni.contains(prenotazioneModificata));
-    }
-
-    @Test
-    void testUndoRemovesModifiedPrenotazioneFromList() throws CloneNotSupportedException
-    {
-        // Arrange
-        ArrayList<Prenotazione> listaPrenotazioni = new ArrayList<>();
-        listaPrenotazioni.add(prenotazioneTest);
-        CatalogoPrenotazioni.setListaPrenotazioni(listaPrenotazioni);
-
-        when(catalogue.getPrenotazione(prenotazioneModificata.getIDPrenotazione())).thenReturn(prenotazioneModificata);
-
-        // Prima esegui execute
-        try (MockedConstruction<PrenotazioneDAO> mockedDAO = mockConstruction(PrenotazioneDAO.class)) {
-            command.execute();
-        }
-
-        // Poi esegui undo
-        listaPrenotazioni.clear();
-        listaPrenotazioni.add(prenotazioneModificata);
-
-        // Act
-        command.undo();
-
-        // Assert
-        assertEquals(1, listaPrenotazioni.size());
-    }
-
-    @Test
-    void testUndoAddsOriginalPrenotazioneBackToList() throws CloneNotSupportedException
-    {
-        // Arrange
-        ArrayList<Prenotazione> listaPrenotazioni = new ArrayList<>();
-        listaPrenotazioni.add(prenotazioneTest);
-        CatalogoPrenotazioni.setListaPrenotazioni(listaPrenotazioni);
-
-        when(catalogue.getPrenotazione(prenotazioneModificata.getIDPrenotazione())).thenReturn(prenotazioneModificata);
-
-        // Prima esegui execute per salvare la prenotazione non modificata
-        try (MockedConstruction<PrenotazioneDAO> mockedDAO = mockConstruction(PrenotazioneDAO.class)) {
-            command.execute();
-        }
-
-        // Poi esegui undo
-        listaPrenotazioni.clear();
-        listaPrenotazioni.add(prenotazioneModificata);
-
-        // Act
-        command.undo();
-
-        // Assert
-        assertEquals(1, listaPrenotazioni.size());
-    }
-
-    @Test
-    void testUndoCloneNotSupportedException() throws CloneNotSupportedException
-    {
-        // Arrange
-        when(catalogue.getPrenotazione(anyInt())).thenThrow(new CloneNotSupportedException("Clone error"));
-
-        // Act e Assert
-        assertDoesNotThrow(() -> command.undo());
-    }
-
-    @Test
-    void testUndoNotCallDatabase() throws CloneNotSupportedException
-    {
-        // Arrange
-        ArrayList<Prenotazione> listaPrenotazioni = new ArrayList<>();
-        listaPrenotazioni.add(prenotazioneTest);
-        CatalogoPrenotazioni.setListaPrenotazioni(listaPrenotazioni);
-
-        when(catalogue.getPrenotazione(prenotazioneModificata.getIDPrenotazione())).thenReturn(prenotazioneModificata);
-
-        // Prima esegui execute
-        try (MockedConstruction<PrenotazioneDAO> mockedDAO = mockConstruction(PrenotazioneDAO.class)) {
-            command.execute();
-        }
-
-        // Poi esegui undo
-        listaPrenotazioni.clear();
-        listaPrenotazioni.add(prenotazioneModificata);
 
         try (MockedConstruction<PrenotazioneDAO> mockedDAO = mockConstruction(PrenotazioneDAO.class)) {
             // Act
             command.undo();
 
             // Assert
-            assertEquals(0, mockedDAO.constructed().size());
+            assertTrue(listaPrenotazioni.contains(prenotazioneTest));
+            assertEquals(1, listaPrenotazioni.size());
+        }
+    }
+
+    @Test
+    void testUndoDoSave() throws SQLException
+    {
+        // Arrange
+        ArrayList<Prenotazione> listaPrenotazioni = new ArrayList<>();
+        CatalogoPrenotazioni.setListaPrenotazioni(listaPrenotazioni);
+
+        try (MockedConstruction<PrenotazioneDAO> mockedDAO = mockConstruction(PrenotazioneDAO.class)) {
+            // Act
+            command.undo();
+
+            // Assert
+            PrenotazioneDAO dao = mockedDAO.constructed().get(0);
+            verify(dao).doSave(prenotazioneTest);
+        }
+    }
+
+    @Test
+    void testUndoSQLException() throws SQLException
+    {
+        // Arrange
+        ArrayList<Prenotazione> listaPrenotazioni = new ArrayList<>();
+        CatalogoPrenotazioni.setListaPrenotazioni(listaPrenotazioni);
+
+        try (MockedConstruction<PrenotazioneDAO> mockedDAO = mockConstruction(PrenotazioneDAO.class,
+                (mock, context) -> {
+                    doThrow(new SQLException("Database error")).when(mock).doSave(any());
+                })) {
+
+            // Act e Assert
+            assertDoesNotThrow(() -> command.undo());
         }
     }
 }

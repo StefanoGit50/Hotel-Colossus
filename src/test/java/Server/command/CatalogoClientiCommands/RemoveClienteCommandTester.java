@@ -1,4 +1,4 @@
-package it.unisa.Testing.Server.command.CatalogoClientiCommands;
+package Server.command.CatalogoClientiCommands;
 
 import it.unisa.Common.Cliente;
 import it.unisa.Server.command.CatalogoClientiCommands.RemoveClienteCommand;

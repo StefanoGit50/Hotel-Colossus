@@ -1,6 +1,8 @@
 // Invoker
 package it.unisa.Server.command;
 
+import it.unisa.Server.persistent.obj.catalogues.InvalidInputException;
+
 import java.util.Objects;
 import java.util.Stack;
 
@@ -46,6 +48,9 @@ public class Invoker {
             c.undo();
             redoStack.push(c);
         }
+        else  {
+            throw new RuntimeException("CommandStack is empty");
+        }
     }
 
     /**
@@ -56,6 +61,9 @@ public class Invoker {
             Command command = redoStack.pop();
             command.execute();
             undoStack.push(command);
+        }
+        else  {
+            throw new RuntimeException("redoStack is empty");
         }
     }
 }

@@ -1,4 +1,4 @@
-package it.unisa.Testing.Server.BackOffice;
+package Server.BackOffice;
 
 import it.unisa.Common.*;
 import it.unisa.Server.BackOffice.ManagerImpl;
