@@ -3,7 +3,6 @@ package Server.command;
 
 import it.unisa.Server.command.Command;
 import it.unisa.Server.command.Invoker;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +27,7 @@ public class TestInvoker {
     Invoker invoker;
 
 @Test
-    @DisplayName("undoCommandTest stack != da vuoto")
+    @DisplayName("undoCommandTest stack vuoto")
     void undoCommandTest_Void() {
       when(undoStack.isEmpty()).thenReturn(true);
       assertThrows(RuntimeException.class, () -> invoker.undoCommand());
@@ -42,7 +41,5 @@ public class TestInvoker {
         doNothing().when(c).undo();
         invoker.undoCommand();
     }
-
-
 
 }
