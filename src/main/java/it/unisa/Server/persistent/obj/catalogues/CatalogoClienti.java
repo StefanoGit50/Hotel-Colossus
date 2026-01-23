@@ -117,7 +117,7 @@ public class CatalogoClienti implements Serializable {
                 }
             }
             if (params[2]) {
-                if (!Objects.equals(cliente.getSesso(), sesso)) {
+                if (!Objects.equals(cliente.getNazionalita(), nazionalita)) {
                     continue;
                 }
             }
@@ -127,7 +127,7 @@ public class CatalogoClienti implements Serializable {
                 }
             }
             if (params[4]) {
-                if (!Objects.equals(cliente.getNazionalita(),  nazionalita)) {
+                if (!Objects.equals(cliente.getSesso(),  sesso)) {
                     continue;
                 }
             }
