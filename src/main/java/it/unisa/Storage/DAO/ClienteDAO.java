@@ -191,7 +191,6 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                 String email = (String) resultSet.getObject(9);
                 String  sesso = (String) resultSet.getObject(10);
                 String  telefono = (String) resultSet.getObject(11);
-                String metodoDiPagamento = (String) resultSet.getObject(12);
                 String  cittadinazione = (String) resultSet.getObject(13);
                 Date date1 = (Date) resultSet.getObject(14);
                 LocalDate date = date1.toLocalDate();
