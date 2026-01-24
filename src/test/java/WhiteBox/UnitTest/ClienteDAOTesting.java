@@ -26,6 +26,11 @@ public class ClienteDAOTesting {
 
     private final String stringSQLRetrieveByKey = "SELECT * FROM Cliente WHERE CF = ?";
     private final String stringSQLDoDelete= "DELETE FROM Cliente WHERE CF = ?";
+    private final String stringSQLDoSave= "INSERT INTO CLIENTE(\n" +
+            "CF, nome, cognome, Cap, comune, civico, provincia, via,\n" +
+            "Email, Sesso, telefono, Cittadinanza,\n" +
+            "DataDiNascita, IsBackListed\n" +
+            ")VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private Object object = new Object();
 
     @Mock
@@ -206,8 +211,9 @@ public class ClienteDAOTesting {
     @Tag("true")
     public void DoSaveTestTrue() throws SQLException{
         when(cliente.getCf()).thenReturn("CF");
-        when(connection.prepareStatement(stringSQLDoDelete)).thenReturn(preparedStatement);
-        when(preparedStatement.executeUpdate()).thenReturn(0);
-        assertThrows(NoSuchElementException.class, () ->  clienteDAO.doDelete(cliente));
+        when(connection.prepareStatement(stringSQLDoSave)).thenReturn(preparedStatement);
+        when(preparedStatement.executeUpdate()).thenReturn(14);
+
+        verify(preparedStatement).executeUpdate();
     }
 }

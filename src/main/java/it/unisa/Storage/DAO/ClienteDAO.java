@@ -45,10 +45,10 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
      * @throws SQLException;
      */
     public synchronized void doSave(Cliente o) throws SQLException{
-        Connection connection = null;
+
         try{
-                connection = ConnectionStorage.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO CLIENTE(\n" +
+                con= ConnectionStorage.getConnection();
+                PreparedStatement preparedStatement = con.prepareStatement("INSERT INTO CLIENTE(\n" +
                         "CF, nome, cognome, Cap, comune, civico, provincia, via,\n" +
                         "Email, Sesso, telefono, Cittadinanza,\n" +
                         "DataDiNascita, IsBackListed\n" +
@@ -70,8 +70,8 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                 preparedStatement.setBoolean(14,o.isBlacklisted());
                 preparedStatement.executeUpdate();
             }finally {
-                if(connection != null){
-                    ConnectionStorage.releaseConnection(connection);
+                if(con != null){
+                    ConnectionStorage.releaseConnection(con);
                 }
             }
     }
