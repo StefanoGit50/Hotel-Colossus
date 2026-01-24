@@ -83,8 +83,8 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
 
             if (rs.next()){
                 ricevuta = new RicevutaFiscale();
-                ricevuta.setIDRicevutaFiscale(rs.getInt("IDPrenotazione"));
-                ricevuta.setIDPrenotazione(rs.getInt("IDRicevutaFiscale"));
+                ricevuta.setIDRicevutaFiscale(rs.getInt("IDRicevutaFiscale"));
+                ricevuta.setIDPrenotazione(rs.getInt("IDPrenotazione"));
                 ricevuta.setDataPrenotazione(rs.getDate("DataPrenotazione").toLocalDate());
                 ricevuta.setDataEmissione(rs.getDate("DataEmissione").toLocalDate());
                 ricevuta.setMetodoPagamento(rs.getString("metodoDiPagamento"));
@@ -117,7 +117,7 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
         Connection conn = ConnectionStorage.getConnection();
         PreparedStatement ps = null;
         ResultSet rs = null;
-        String selectSQL = "select * FROM ricevutafiscale" ;
+        String selectSQL = "SELECT * FROM ricevutafiscale" ;
 
         ArrayList<RicevutaFiscale> results = new ArrayList<>();
 
@@ -129,22 +129,34 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
             ps = conn.prepareStatement(selectSQL);
             rs = ps.executeQuery();
 
+            PreparedStatement preparedStatement = conn.prepareStatement("SELECT PrezzoCamera FROM cameraricevuta where IDRicevutaFiscale = ?");
+            double prezzoTrattamento = 0;
+            double prezzoCamera = 0;
             RicevutaFiscale ricevuta;
-            while (rs.next()) {
+            while (rs.next()){
+                preparedStatement.setInt(1,rs.getInt("IDRicevutaFiscale"));
+                ResultSet resultSet = preparedStatement.executeQuery();
                 ricevuta = new RicevutaFiscale();
-                ricevuta.setIDRicevutaFiscale(rs.getInt("IDPrenotazione"));
-                ricevuta.setIDPrenotazione(rs.getInt("IDRicevutaFiscale"));
-                ricevuta.setTotale(rs.getDouble("Totale"));
+                prezzoTrattamento = rs.getDouble("PrezzoTrattamento");
+                if(resultSet.next()){
+                    prezzoCamera = resultSet.getDouble("PrezzoCamera");
+                }
+                ricevuta.setIDRicevutaFiscale(rs.getInt("IDRicevutaFiscale"));
+                ricevuta.setIDPrenotazione(rs.getInt("IDPrenotazione"));
+                ricevuta.setTotale(prezzoTrattamento + prezzoCamera);
                 ricevuta.setDataEmissione(rs.getDate("DataEmissione").toLocalDate());
-                results.add(ricevuta);
-
+                ricevuta.setTipoTrattamento(rs.getString("TipoTrattamento"));
+                ricevuta.setPrezzoTrattamento(rs.getDouble("PrezzoTrattamento"));
+                ricevuta.setDataPrenotazione(rs.getDate("DataPrenotazione").toLocalDate());
+                ricevuta.setMetodoPagamento(rs.getString("metodoPagamento"));
                 results.add(ricevuta);
             }
 
         } finally {
-            if (ps != null)
+            if (ps != null){
                 ps.close();
-            ConnectionStorage.releaseConnection(conn);
+                ConnectionStorage.releaseConnection(conn);
+            }
         }
 
         return results;
