@@ -10,6 +10,7 @@ import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
 import it.unisa.Server.persistent.obj.catalogues.CatalogueUtils;
 import it.unisa.Server.persistent.util.Ruolo;
 import it.unisa.Server.persistent.util.Stato;
+import it.unisa.Storage.DAO.ImpiegatoDAO;
 import it.unisa.interfacce.ManagerInterface;
 
 import java.rmi.Naming;
@@ -80,7 +81,14 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
 
     @Override
     public List<Impiegato> filtroImpiegati(String nome, String cognome, Ruolo ruolo, String sesso) throws RemoteException {
-        return (List<Impiegato>) catalogoImpiegati.cercaimpiegati(nome, cognome, sesso, ruolo);
+        ImpiegatoDAO impDao = new ImpiegatoDAO();
+        List<Impiegato> impiegati = null;
+        try{
+            impiegati = (List<Impiegato>) impDao.doFilter(nome, cognome, ruolo, sesso);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return impiegati;
     }
 
     //  COMANDI IMPIEGATO

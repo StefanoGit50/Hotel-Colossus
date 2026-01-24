@@ -8,7 +8,6 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
@@ -201,7 +200,7 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
     }
 
     @Override
-    public Collection<Trattamento> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, String sesso, String orderBy) throws SQLException{
+    public Collection<Trattamento> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, Boolean blackListed, String orderBy) throws SQLException{
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

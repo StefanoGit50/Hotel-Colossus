@@ -6,13 +6,13 @@ import it.unisa.Server.ObserverCamereInterface;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public interface FrontDeskInterface extends Remote, ObserverCamereInterface
 {
+    // Comandi camere
     List<Prenotazione> getPrenotazioni() throws RemoteException;
     boolean aggiornaStatoCamera(Camera c) throws RemoteException;
     List<Camera> getCamere() throws RemoteException;
@@ -28,6 +28,9 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
     void updateCliente(Cliente c) throws RemoteException;
     void banCliente(Cliente c) throws RemoteException;
     void unBanCliente(Cliente c) throws RemoteException;
+    // Filtro cliente
+    List<Cliente> filterClienti(String nome, String cognome, String nazionalita, LocalDate dataNascita, Boolean blackListed, String orderBy)
+            throws RemoteException;
 
     // Comando undo
     void undoCommand() throws RemoteException;

@@ -125,47 +125,98 @@ public class CatalogoImpiegati implements Serializable {
     public static void checkImpiegato(Impiegato impiegato) throws InvalidInputException {
         Pattern cfPattern = Pattern.compile("^[A-Z0-9]{16}$"),
                 numletterPattern = Pattern.compile("^[A-Za-z0-9]*$"),
-            namePattern = Pattern.compile("^[A-Za-z\\s]*$"),
-            telPattern = Pattern.compile("^[0-9]{0,15}$"),
-            emailPattern = Pattern.compile("^[A-Za-z]*\\.[A-Za-z]*[0-9]*@HotelColossus\\.it$");
+                namePattern = Pattern.compile("^[A-Za-z\\s]*$"),
+                telPattern = Pattern.compile("^[0-9]{0,15}$"),
+                emailPattern = Pattern.compile("^[A-Za-z]*\\.[A-Za-z]*[0-9]*@HotelColossus\\.it$");
 
         String[] listaRuolo = {Ruolo.FrontDesk.toString(), Ruolo.Manager.toString(), Ruolo.Governante.toString()},
-            listaSesso = {"maschio", "femmina", "altro"},
+            listaSesso = {"Maschio", "Femmina", "Altro"},
             listaDocumenti = {"Patente", "CID", "Passaporto"};
 
         LocalDate assunzione = impiegato.getDataAssunzione(),
             rilascioDocumento = impiegato.getDataRilascio(),
             scadenzaDocumento = impiegato.getDataScadenza();
 
+        // Condizioni che possono lanciare un errore
+        // 1. Codice Fiscale
+        if (!cfPattern.matcher(impiegato.getCodiceFiscale()).matches())
+            throw new InvalidInputException("[Codice Fiscale] errato");
 
+        // 2. Stipendio
+        if (impiegato.getStipendio() <= 0)
+            throw new InvalidInputException("[Stipendio] errato");
 
-        // Lista di condizioni che possono lanciare un errore
-        if (!cfPattern.matcher(impiegato.getCodiceFiscale()).matches() || // CF composto da caratteri diversi da numeri e lettere
-                impiegato.getStipendio() <= 0 || // stipendio negativo o uguale a 0
-                !namePattern.matcher(impiegato.getNome()).matches() || // nome composto da caratteri diversi da lettere e spazi
-                !namePattern.matcher(impiegato.getCognome()).matches() || // cognome composto da caratteri diversi da lettere e spazi
-                (impiegato.getCAP() < 10000 || impiegato.getCAP() > 99999) || // CAP deve essere di 5 cifre esatte
-                assunzione.isAfter(LocalDate.now()) || // data di assunzione successiva alla data odierna
-                impiegato.getTelefono().length() > 15 || // numero di telefono di più di 15 cifre
-                !telPattern.matcher(impiegato.getTelefono()).matches() || // telefono composto da caratteri diversi da cifre
-                !namePattern.matcher(impiegato.getCittadinanza()).matches() || // cittadinanza composta da caratteri diversi da lettere e spazi
-                !emailPattern.matcher(impiegato.getEmailAziendale()).matches() || // email aziendale errata
-                !Arrays.asList(listaRuolo).contains(impiegato.getRuolo().toString().toLowerCase().trim()) || // ruolo errato
-                !Arrays.asList(listaSesso).contains(impiegato.getSesso().toLowerCase().trim()) || // sesso errato
-                rilascioDocumento.isAfter(LocalDate.now()) || // data rilascio documento successiva alla data odierna
-                !Arrays.asList(listaDocumenti).contains(impiegato.getTipoDocumento().toLowerCase().trim()) || // tipo documento errato
-                !namePattern.matcher(impiegato.getVia()).matches() || // via composta da caratteri diversi da lettere e spazi
-                !namePattern.matcher(impiegato.getProvincia()).matches() || // provincia composta da caratteri diversi da lettere e spazi
-                !namePattern.matcher(impiegato.getComune()).matches() || // comune composto da caratteri diversi da lettere e spazi
-                impiegato.getNumeroCivico() <= 0 || // numero civico negativo
-                !numletterPattern.matcher(impiegato.getNumeroDocumento()).matches() || // nome composto da caratteri diversi da lettere e numeri
-                scadenzaDocumento.isBefore(LocalDate.now()) || // data scadenza documento antecedente alla data odierna
-                scadenzaDocumento.isBefore(rilascioDocumento) || // data scadenza documento antecedente alla data di rilascio del documento
-                scadenzaDocumento.isEqual(rilascioDocumento) // data scadenza documento coincide con la data di rilascio del documento
-        )
-        {
-            throw new InvalidInputException();
+        // 3. Nome
+        if (!namePattern.matcher(impiegato.getNome()).matches())
+            throw new InvalidInputException("[Nome] errato");
+
+        // 4. Cognome
+        if (!namePattern.matcher(impiegato.getCognome()).matches())
+            throw new InvalidInputException("[Cognome] errato");
+
+        // 5. CAP
+        if (impiegato.getCAP() < 10000 || impiegato.getCAP() > 99999)
+            throw new InvalidInputException("[CAP] errato");
+
+        // 6. Data Assunzione
+        if (assunzione.isAfter(LocalDate.now()))
+            throw new InvalidInputException("[Data Assunzione] errato");
+
+        // 7. Lunghezza Telefono e 8. Formato Telefono
+        if (impiegato.getTelefono().length() > 15 || !telPattern.matcher(impiegato.getTelefono()).matches())
+            throw new InvalidInputException("[Telefono] errato");
+
+        // 9. Cittadinanza
+        if (!namePattern.matcher(impiegato.getCittadinanza()).matches())
+            throw new InvalidInputException("[Cittadinanza] errato");
+
+        // 10. Email Aziendale
+        if (!emailPattern.matcher(impiegato.getEmailAziendale()).matches())
+            throw new InvalidInputException("[Email Aziendale] errato");
+
+        // 11. Ruolo
+        if (!Arrays.asList(listaRuolo).contains(impiegato.getRuolo().toString().trim()))
+            throw new InvalidInputException("[Ruolo] errato");
+
+        // 12. Sesso
+        if (!Arrays.asList(listaSesso).contains(impiegato.getSesso().trim()))
+            throw new InvalidInputException("[Sesso] errato");
+
+        // 13. Data Rilascio Documento
+        if (rilascioDocumento.isAfter(LocalDate.now()))
+            throw new InvalidInputException("[Data Rilascio Documento] errato");
+
+        // 14. Tipo Documento
+        if (!Arrays.asList(listaDocumenti).contains(impiegato.getTipoDocumento().trim()))
+            throw new InvalidInputException("[Tipo Documento] errato");
+
+        // 15. Via
+        if (!namePattern.matcher(impiegato.getVia()).matches())
+            throw new InvalidInputException("[Via] errato");
+
+        // 16. Provincia
+        if (!namePattern.matcher(impiegato.getProvincia()).matches())
+            throw new InvalidInputException("[Provincia] errato");
+
+        // 17. Comune
+        if (!namePattern.matcher(impiegato.getComune()).matches())
+            throw new InvalidInputException("[Comune] errato");
+
+        // 18. Numero Civico
+        if (impiegato.getNumeroCivico() <= 0)
+            throw new InvalidInputException("[Numero Civico] errato");
+
+        // 19. Numero Documento
+        if (!numletterPattern.matcher(impiegato.getNumeroDocumento()).matches())
+            throw new InvalidInputException("[Numero Documento] errato");
+
+        // 20, 21, 22. Validazione Data Scadenza Documento
+        if (scadenzaDocumento.isBefore(LocalDate.now()) ||
+                scadenzaDocumento.isBefore(rilascioDocumento) ||
+                scadenzaDocumento.isEqual(rilascioDocumento)) {
+            throw new InvalidInputException("[Data Scadenza Documento] errato");
         }
+
     }
     
     // Metodi della classe Object

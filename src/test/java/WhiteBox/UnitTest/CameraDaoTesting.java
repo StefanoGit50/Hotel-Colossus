@@ -4,9 +4,7 @@ import it.unisa.Common.Camera;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.DAO.CameraDAO;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -40,30 +38,36 @@ public class CameraDaoTesting {
     private CameraDAO cameraDAO;
     private Camera camera;
 
+    private MockedStatic<ConnectionStorage> mocked;
+
     @BeforeEach
     public void setUp() {
         cameraDAO = new CameraDAO();
         camera = new Camera(112, Stato.Libera, 3, 300, "");
+        mocked = mockStatic(ConnectionStorage.class);
+    }
+
+    @AfterEach
+    public void setAfter(){
+        mocked.close();
     }
 
     // --------------------- TEST DELETE ---------------------
     @Test
+    @Tag("True")
     @DisplayName("doDelete() tutte le condizioni vere")
     public void doDeleteAllTrue() throws SQLException {
-        try (MockedStatic<ConnectionStorage> mocked = Mockito.mockStatic(ConnectionStorage.class)) {
             mocked.when(ConnectionStorage::getConnection).thenReturn(connection);
-
-
             when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
             when(preparedStatement.executeUpdate()).thenReturn(1);
 
             cameraDAO.doDelete(camera);
 
             verify(preparedStatement, times(1)).executeUpdate();
-        }
     }
 
     @Test
+    @Tag("Exception")
     @DisplayName("doDelete() quando null")
     public void doDeleteException() {
         assertThrows(NoSuchElementException.class, () -> cameraDAO.doDelete(null));
@@ -71,9 +75,9 @@ public class CameraDaoTesting {
 
     // --------------------- TEST RETRIEVE BY KEY ---------------------
     @Test
+    @Tag("True")
     @DisplayName("doRetriveByKey() va tutto bene")
     public void doRetrieveByKeyAllTrue() throws SQLException {
-        try (MockedStatic<ConnectionStorage> mocked = Mockito.mockStatic(ConnectionStorage.class)) {
             mocked.when(ConnectionStorage::getConnection).thenReturn(connection);
 
             when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
@@ -89,10 +93,10 @@ public class CameraDaoTesting {
             Camera result = cameraDAO.doRetriveByKey(112);
             assertEquals(camera.getNumeroCamera(), result.getNumeroCamera());
             assertEquals(camera.getPrezzoCamera(), result.getPrezzoCamera());
-        }
     }
 
     @Test
+    @Tag("Exception")
     @DisplayName("doRetriveByKey() quando eccezione")
     public void doRetrieveByKeyException() {
         assertThrows(SQLException.class, () -> cameraDAO.doRetriveByKey(null));
@@ -100,9 +104,9 @@ public class CameraDaoTesting {
 
     // --------------------- TEST SAVE ---------------------
     @Test
+    @Tag("True")
     @DisplayName("doSave() tutto bene")
     public void doSaveAllTrue() throws SQLException {
-        try (MockedStatic<ConnectionStorage> mocked = Mockito.mockStatic(ConnectionStorage.class)) {
             mocked.when(ConnectionStorage::getConnection).thenReturn(connection);
 
             when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
@@ -114,14 +118,13 @@ public class CameraDaoTesting {
             cameraDAO.doSave(camera);
 
             verify(preparedStatement, times(1)).executeUpdate();
-        }
     }
 
     // --------------------- TEST RETRIEVE ALL ---------------------
     @Test
+    @Tag("True")
     @DisplayName("doRetriveAll() tutto bene")
     public void doRetrieveAllAllTrue() throws SQLException {
-        try (MockedStatic<ConnectionStorage> mocked = Mockito.mockStatic(ConnectionStorage.class)) {
             mocked.when(ConnectionStorage::getConnection).thenReturn(connection);
 
             when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
@@ -135,14 +138,14 @@ public class CameraDaoTesting {
             when(resultSet.getObject(5)).thenReturn(30.0);
 
             cameraDAO.doRetriveAll("desc");
-        }
+
     }
 
     // --------------------- TEST UPDATE ---------------------
     @Test
+    @Tag("True")
     @DisplayName("doUpdate() tutto bene")
     public void doUpdateAllTrue() throws SQLException {
-        try (MockedStatic<ConnectionStorage> mocked = Mockito.mockStatic(ConnectionStorage.class)) {
             mocked.when(ConnectionStorage::getConnection).thenReturn(connection);
 
             when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
@@ -151,10 +154,11 @@ public class CameraDaoTesting {
             cameraDAO.doUpdate(camera);
 
             verify(preparedStatement, times(1)).executeUpdate();
-        }
+
     }
 
     @Test
+    @Tag("Exception")
     @DisplayName("doUpdate() eccezione")
     public void doUpdateException() {
         assertThrows(NoSuchElementException.class, () -> cameraDAO.doUpdate(null));
@@ -162,9 +166,10 @@ public class CameraDaoTesting {
 
     // --------------------- TEST RETRIEVE BY ATTRIBUTE ---------------------
     @Test
+    @Tag("True")
     @DisplayName("doRetriveByAttribute() tutto bene")
     public void doRetrieveByAttributeAllTrue() throws SQLException {
-        try (MockedStatic<ConnectionStorage> mocked = Mockito.mockStatic(ConnectionStorage.class)) {
+
             mocked.when(ConnectionStorage::getConnection).thenReturn(connection);
 
             when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
@@ -178,9 +183,10 @@ public class CameraDaoTesting {
             when(resultSet.getInt("NumeroMaxOcc")).thenReturn(2);
 
             cameraDAO.doRetriveByAttribute("NumeroCamera", 122);
-        }
+
     }
     @Test
+    @Tag("Exception")
     @DisplayName("")
     public void doRetrieveryByAttributeException() throws SQLException {
         assertThrows(RuntimeException.class,()->cameraDAO.doRetriveByAttribute(null,null));

@@ -7,12 +7,14 @@ import it.unisa.Server.command.CatalogoClientiCommands.*;
 import it.unisa.Server.command.CatalogoImpiegatiCommands.*;
 import it.unisa.Server.command.CatalogoPrenotazioniCommands.*;
 import it.unisa.Server.persistent.obj.catalogues.*;
+import it.unisa.Storage.DAO.ClienteDAO;
 import it.unisa.interfacce.FrontDeskInterface;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -152,6 +154,31 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         UnBanCommand command = new UnBanCommand(catalogoClienti, c.getCf());
         invoker.executeCommand(command);
     }
+
+    /**
+     * @param nome nome del cliente.
+     * @param cognome cognome del cliente.
+     * @param nazionalita nazionalità del cliente.
+     * @param dataNascita data di nascita (gg/mm/aaaa) del cliente.
+     * @param blackListed stato di ban del ciente.
+     * @param orderBy criterio di ordinamento [attributo][ASC/DESC].
+     * @return lista di oggetti {@code Cliente} che rispettano i parametri della ricerca.
+     * @throws RemoteException .
+     */
+    @Override
+    public List<Cliente> filterClienti(String nome, String cognome, String nazionalita, LocalDate dataNascita, Boolean blackListed, String orderBy)
+            throws RemoteException {
+
+        CatalogoClienti.checkCliente(nome, cognome, nazionalita,  dataNascita, blackListed);
+        ClienteDAO clienteDAO = null;
+        try {
+            clienteDAO = new ClienteDAO();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return clienteDAO.doFilter(nome, cognome, nazionalita, dataNascita, blackListed, orderBy);
+    }
+
 
     // COMANDO UNDO
     @Override
