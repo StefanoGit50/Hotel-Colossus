@@ -1,4 +1,4 @@
-package WhiteBox.TestingDB.RicevutaFiscaleDAO;
+package WhiteBox.UnitTest;
 
 import it.unisa.Common.RicevutaFiscale;
 import it.unisa.Storage.ConnectionStorage;
@@ -69,7 +69,7 @@ public class RicevutaFiscaleDAOTesting{
         }
 
     }
-
+/*
     public void doRetriveByKey() throws SQLException {
         try(MockedStatic<ConnectionStorage> connectionSM = mockStatic(ConnectionStorage.class)){
             connectionSM.when(ConnectionStorage::getConnection).thenReturn(connection);
@@ -85,6 +85,6 @@ public class RicevutaFiscaleDAOTesting{
 
         }
     }
-
+*/
 
 }

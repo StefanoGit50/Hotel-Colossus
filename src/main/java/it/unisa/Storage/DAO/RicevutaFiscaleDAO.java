@@ -86,7 +86,7 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
                 ricevuta.setIDRicevutaFiscale(rs.getInt("IDPrenotazione"));
                 ricevuta.setIDPrenotazione(rs.getInt("IDRicevutaFiscale"));
                 ricevuta.setDataPrenotazione(rs.getDate("DataPrenotazione").toLocalDate());
-                ricevuta.setDataEmissione(rs.getDate("DataEmissione").toLocalDate()):
+                ricevuta.setDataEmissione(rs.getDate("DataEmissione").toLocalDate());
                 ricevuta.setDataEmissione(rs.getDate("DataEmissione").toLocalDate());
             }
 

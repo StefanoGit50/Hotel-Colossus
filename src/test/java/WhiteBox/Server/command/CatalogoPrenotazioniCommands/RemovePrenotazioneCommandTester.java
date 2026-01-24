@@ -36,8 +36,8 @@ class RemovePrenotazioneCommandTester
 
         Trattamento mezzaPensione = new Trattamento("Mezza Pensione", 45.50);
         Camera camera201 = new Camera(201, Stato.Libera, 2, 45.5, "Nessuna");
-        Cliente cliente = new Cliente("Valeria", "Bianchi", "Francese", "MI", "Milano", "Via Dante", 42, 20121, "3479876543", "F", LocalDate.of(1985, 12, 02), "BNCVLR85T42F205Z", "valeria.b@provider.it", "PayPal");
-        ArrayList<Cliente> ospiti = new ArrayList<>(List.of(cliente, new Cliente("Valeria", "Bianchi", "Francese", "MI", "Milano", "Via Dante", 42, 20121, "3479876543", "F", LocalDate.of(1985, 12, 02), "BNCVLR85T42F205Z", "valeria.b@provider.it", "PayPal")));
+        Cliente cliente = new Cliente("Valeria", "Bianchi", "Francese", "MI", "Milano", "Via Dante", 42, 20121, "3479876543", "F", LocalDate.of(1985, 12, 02), "BNCVLR85T42F205Z", "valeria.b@provider.it");
+        ArrayList<Cliente> ospiti = new ArrayList<>(List.of(cliente, new Cliente("Valeria", "Bianchi", "Francese", "MI", "Milano", "Via Dante", 42, 20121, "3479876543", "F", LocalDate.of(1985, 12, 02), "BNCVLR85T42F205Z", "valeria.b@provider.it")));
 
         // Istanza di Prenotazione
         prenotazioneTest = new Prenotazione(
@@ -125,8 +125,8 @@ class RemovePrenotazioneCommandTester
         // Arrange
         Trattamento mezzaPensione = new Trattamento("Mezza Pensione", 45.50);
         Camera camera201 = new Camera(201, Stato.Libera, 2, 45.5, "Nessuna");
-        Cliente cliente = new Cliente("Valeria", "Bianchi", "Francese", "MI", "Milano", "Via Dante", 42, 20121, "3479876543", "F", LocalDate.of(1985, 12, 02), "BNCVLR85T42F205Z", "valeria.b@provider.it", "PayPal");
-        ArrayList<Cliente> ospiti = new ArrayList<>(List.of(cliente, new Cliente("Valeria", "Bianchi", "Francese", "MI", "Milano", "Via Dante", 42, 20121, "3479876543", "F", LocalDate.of(1985, 12, 02), "BNCVLR85T42F205Z", "valeria.b@provider.it", "PayPal")));
+        Cliente cliente = new Cliente("Valeria", "Bianchi", "Francese", "MI", "Milano", "Via Dante", 42, 20121, "3479876543", "F", LocalDate.of(1985, 12, 02), "BNCVLR85T42F205Z", "valeria.b@provider.it");
+        ArrayList<Cliente> ospiti = new ArrayList<>(List.of(cliente, new Cliente("Valeria", "Bianchi", "Francese", "MI", "Milano", "Via Dante", 42, 20121, "3479876543", "F", LocalDate.of(1985, 12, 02), "BNCVLR85T42F205Z", "valeria.b@provider.it")));
 
         // Istanza di Prenotazione
         Prenotazione newPrenotazione = new Prenotazione(

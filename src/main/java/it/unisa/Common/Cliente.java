@@ -24,13 +24,7 @@ public class Cliente implements Cloneable, Serializable {
     /**
      *  email del cliente
      */
-
     private String email;
-
-    /**
-     *  Il metodo di pagamento di cui ha scelto il cliente
-     */
-    private String metodoDiPagamento;
 
     /**
      * Il cognome del cliente.
@@ -60,12 +54,12 @@ public class Cliente implements Cloneable, Serializable {
     /**
      * Il numero civico dell'abitazione.
      */
-    private int numeroCivico;
+    private Integer numeroCivico;
 
     /**
      * Il Codice di Avviamento Postale (CAP).
      */
-    private int CAP;
+    private Integer CAP;
 
     /**
      * Il numero di telefono per i contatti.
@@ -108,7 +102,7 @@ public class Cliente implements Cloneable, Serializable {
      * @param cf il codice fiscale del cliente
      * @param email l'email del cliente
      */
-    public Cliente(String nome, String cognome, String cittadinanza, String provincia, String comune, String via, int numeroCivico, int CAP, String numeroTelefono, String sesso, LocalDate dataNascita ,String cf , String email,String metodoDiPagamento) {
+    public Cliente(String nome, String cognome, String cittadinanza, String provincia, String comune, String via, Integer numeroCivico, Integer CAP, String numeroTelefono, String sesso, LocalDate dataNascita ,String cf , String email) {
         this.nome = nome;
         this.cognome = cognome;
         this.cittadinanza = cittadinanza;
@@ -123,7 +117,6 @@ public class Cliente implements Cloneable, Serializable {
         this.dataNascita = dataNascita;
         this.cf = cf;
         this.email = email;
-        this.metodoDiPagamento = metodoDiPagamento;
     }
 
     /**
@@ -244,7 +237,7 @@ public class Cliente implements Cloneable, Serializable {
      *
      * @return Il numero civico.
      */
-    public int getNumeroCivico() {
+    public Integer getNumeroCivico() {
         return numeroCivico;
     }
 
@@ -262,7 +255,7 @@ public class Cliente implements Cloneable, Serializable {
      *
      * @return Il CAP.
      */
-    public int getCAP() {
+    public Integer getCAP() {
         return CAP;
     }
 
@@ -271,7 +264,7 @@ public class Cliente implements Cloneable, Serializable {
      *
      * @param CAP Il nuovo CAP.
      */
-    public void setCAP(int CAP) {
+    public void setCAP(Integer CAP) {
         this.CAP = CAP;
     }
 
@@ -402,25 +395,6 @@ public class Cliente implements Cloneable, Serializable {
         return email;
     }
 
-    /**
-     * Mostra i metodoDiPagamento
-     *
-     * @return metodoDiPagamento il metodo di pagamento scelto dal cliente
-     */
-
-    public String getMetodoDiPagamento() {
-        return metodoDiPagamento;
-    }
-
-    /**
-     * Setta il metodo di pagamento del cliente
-     *
-     * @param metodoDiPagamento il metodo di pagamento del cliente
-     */
-
-    public void setMetodoDiPagamento(String metodoDiPagamento) {
-        this.metodoDiPagamento = metodoDiPagamento;
-    }
 
 
     @Override
@@ -429,7 +403,6 @@ public class Cliente implements Cloneable, Serializable {
                 "nome='" + nome + '\'' +
                 ", cf='" + cf + '\'' +
                 ", email='" + email + '\'' +
-                ", metodoDiPagamento='" + metodoDiPagamento + '\'' +
                 ", cognome='" + cognome + '\'' +
                 ", cittadinanza='" + cittadinanza + '\'' +
                 ", provincia='" + provincia + '\'' +
@@ -458,13 +431,11 @@ public class Cliente implements Cloneable, Serializable {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Cliente cliente = (Cliente) obj;
-        return numeroCivico == cliente.numeroCivico && CAP == cliente.CAP && isBlacklisted == cliente.isBlacklisted
-                && Objects.equals(nome, cliente.nome) && Objects.equals(cognome, cliente.cognome)
+        return numeroCivico == cliente.numeroCivico && Objects.equals(CAP,cliente.CAP)&& Objects.equals(cognome, cliente.cognome)
                 && Objects.equals(cittadinanza, cliente.cittadinanza) && Objects.equals(provincia, cliente.provincia)
                 && Objects.equals(comune, cliente.comune) && Objects.equals(via, cliente.via)
                 && Objects.equals(numeroTelefono, cliente.numeroTelefono) && Objects.equals(sesso, cliente.sesso)
-                && Objects.equals(dataNascita, cliente.dataNascita) && Objects.equals(nazionalità, cliente.nazionalità) &&
-                Objects.equals(metodoDiPagamento,cliente.metodoDiPagamento) && Objects.equals(email , cliente.email) &&
+                && Objects.equals(dataNascita, cliente.dataNascita) && Objects.equals(nazionalità, cliente.nazionalità) && Objects.equals(email , cliente.email) &&
                 Objects.equals(cf,cliente.cf);
     }
     /**
