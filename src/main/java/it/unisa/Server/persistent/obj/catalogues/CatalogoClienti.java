@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * Gestisce il catalogo dei clienti dell'hotel.
@@ -117,7 +118,7 @@ public class CatalogoClienti implements Serializable {
                 }
             }
             if (params[2]) {
-                if (!Objects.equals(cliente.getNazionalita(), nazionalita)) {
+                if (!Objects.equals(cliente.getSesso(), sesso)) {
                     continue;
                 }
             }
@@ -127,7 +128,7 @@ public class CatalogoClienti implements Serializable {
                 }
             }
             if (params[4]) {
-                if (!Objects.equals(cliente.getSesso(),  sesso)) {
+                if (!Objects.equals(cliente.getNazionalita(),  nazionalita)) {
                     continue;
                 }
             }
@@ -155,6 +156,33 @@ public class CatalogoClienti implements Serializable {
         }
         return null;
     }
+
+    public static void checkCliente(String nome, String cognome, String nazionalita, LocalDate dataNascita, Boolean blackListed) throws InvalidInputException{
+        Pattern namePattern = Pattern.compile("^[A-Za-z\\s]{0,49}$");
+
+        // Verifica se tutti i campi sono nulli / vuoti (stringhe)
+        if ( (nome == null || nome.isBlank()) && (cognome == null || cognome.isBlank()) && (nazionalita == null || nazionalita.isBlank()) && (blackListed == null)){
+            throw new NullPointerException("Tutti i campi sono nulli o vuoti");
+        }
+
+        // 1. Nome
+        if (nome != null && !namePattern.matcher(nome).matches()) {
+            throw new InvalidInputException("[Nome] errato");
+        }
+
+        // 2. Cognome
+        if (cognome != null && !namePattern.matcher(cognome).matches()) {
+            throw new InvalidInputException("[Cognome] errato");
+        }
+
+        // 3. Nazionalità
+        if (nazionalita != null && !namePattern.matcher(nazionalita).matches()) {
+            throw new InvalidInputException("[Nazionalità] errato");
+        }
+
+        // 4. Data di Nascita
+        if (dataNascita != null && (dataNascita.isAfter(LocalDate.now()) || dataNascita.isEqual(LocalDate.now()))) {
+            throw new InvalidInputException("[Data di Nascita] errato");
+        }
+    }
 }
-
-
