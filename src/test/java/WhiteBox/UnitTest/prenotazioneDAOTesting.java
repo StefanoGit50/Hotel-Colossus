@@ -1,4 +1,4 @@
-package WhiteBox.TestingDB.PrenotazioneDAO;
+package WhiteBox.UnitTest;
 
 import it.unisa.Common.*;
 import it.unisa.Server.persistent.util.Stato;
@@ -70,8 +70,8 @@ public class prenotazioneDAOTesting {
         servizios.add(new Servizio("Mensa", 11));
         servizios.add(new Servizio("Piscina", 12));
         servizios.add(new Servizio("ijjknk", 15));
-        clientes.add(new Cliente("Mario", "Masceri", "Italiana", "Salerno", "Mercato San Severino", "Corso Armando diaz", 12, 84085, "3249552034", "Maschio", Date.valueOf("1899-12-04").toLocalDate(), "MSCMRA00T04H703M", "Mario.masceri@gmail.com", "Bancomat"));
-        clientes.add(new Cliente("Mario", "Masceri", "Italiana", "Salerno", "Mercato San Severino", "Corso Armando diaz", 12, 84085, "3249552034", "Maschio", Date.valueOf("1899-12-04").toLocalDate(), "MSCMRA00T04H703H", "Mario.masceri@gmail.com", "carta"));
+        clientes.add(new Cliente("Mario", "Masceri", "Italiana", "Salerno", "Mercato San Severino", "Corso Armando diaz", 12, 84085, "3249552034", "Maschio", Date.valueOf("1899-12-04").toLocalDate(), "MSCMRA00T04H703M", "Mario.masceri@gmail.com"));
+        clientes.add(new Cliente("Mario", "Masceri", "Italiana", "Salerno", "Mercato San Severino", "Corso Armando diaz", 12, 84085, "3249552034", "Maschio", Date.valueOf("1899-12-04").toLocalDate(), "MSCMRA00T04H703H", "Mario.masceri@gmail.com"));
         cameras.add(new Camera(101, Stato.Libera, 2, 120, "Non ce la faccio piu"));
         cameras.add(new Camera(102, Stato.Libera, 3, 110, "Non ce la faccio piu"));
         prenotazione.setDataCreazionePrenotazione(Date.valueOf("1992-12-20").toLocalDate());
@@ -361,7 +361,7 @@ public class prenotazioneDAOTesting {
         ArrayList<Servizio> servizios = new ArrayList<>();
         ArrayList<Cliente> clientes = new ArrayList<>();
 
-        clientes.add(new Cliente("John", "Smith", "Inglese", "Estero", "Londra", "Baker Street", 45, 121, "447123456", "Maschio", Date.valueOf("1975-04-15").toLocalDate(), "SMIJHN75D15Z114B", "john.smith@uk.com", "Carta di Credito"));
+        clientes.add(new Cliente("John", "Smith", "Inglese", "Estero", "Londra", "Baker Street", 45, 121, "447123456", "Maschio", Date.valueOf("1975-04-15").toLocalDate(), "SMIJHN75D15Z114B", "john.smith@uk.com"));
         servizios.add(new Servizio("Transfer Aeroporto", 40));
         cameras.add(new Camera(202, Stato.InPulizia, 1, 85, "Singola business"));
         assertEquals(new Prenotazione(6, Date.valueOf("2023-11-15").toLocalDate(), Date.valueOf("2024-02-14").toLocalDate(), Date.valueOf("2024-02-16").toLocalDate(), new Trattamento("Massaggio Sportivo", 70), "Passaporto", Date.valueOf("2022-12-10").toLocalDate(), Date.valueOf("2032-12-10").toLocalDate(), "John Smith", "Anniversario", cameras, servizios, clientes, 901234, true, false), prenotazioneDAO.doRetriveByKey(6));
@@ -406,7 +406,7 @@ public class prenotazioneDAOTesting {
 
         ArrayList<Cliente> clienti1 = new ArrayList<>();
         clienti1.add(new Cliente("Mario", "Rossi", "Italiana", "NA", "Napoli", "Via Roma", 12, 80100,
-                "3331234567", "M", LocalDate.of(1985, 3, 15), "RSSMRA85C15F839K", "mario.rossi@email.com", "Carta di Credito"));
+                "3331234567", "M", LocalDate.of(1985, 3, 15), "RSSMRA85C15F839K", "mario.rossi@email.com"));
 
         Trattamento trattamento1 = new Trattamento("Bed & Breakfast", 25.0);
 
@@ -424,9 +424,9 @@ public class prenotazioneDAOTesting {
 
         ArrayList<Cliente> clienti2 = new ArrayList<>();
         clienti2.add(new Cliente("Laura", "Bianchi", "Italiana", "RM", "Roma", "Via Nazionale", 45, 185,
-                "3339876543", "F", LocalDate.of(1990, 7, 20), "BNCLRA90L60H501Z", "laura.bianchi@email.com", "PayPal"));
+                "3339876543", "F", LocalDate.of(1990, 7, 20), "BNCLRA90L60H501Z", "laura.bianchi@email.com"));
         clienti2.add(new Cliente("Giuseppe", "Bianchi", "Italiana", "RM", "Roma", "Via Nazionale", 45, 185,
-                "3339876544", "M", LocalDate.of(1988, 11, 5), "BNCGPP88S05H501W", "giuseppe.bianchi@email.com", "Contanti"));
+                "3339876544", "M", LocalDate.of(1988, 11, 5), "BNCGPP88S05H501W", "giuseppe.bianchi@email.com" ));
 
         Trattamento trattamento2 = new Trattamento("Mezza Pensione", 45.0);
 
@@ -443,7 +443,7 @@ public class prenotazioneDAOTesting {
 
         ArrayList<Cliente> clienti3 = new ArrayList<>();
         clienti3.add(new Cliente("Anna", "Verdi", "Italiana", "MI", "Milano", "Corso Buenos Aires", 78, 20124,
-                "3347891234", "F", LocalDate.of(1992, 4, 12), "VRDNNA92D52F205X", "anna.verdi@email.com", "Bonifico"));
+                "3347891234", "F", LocalDate.of(1992, 4, 12), "VRDNNA92D52F205X", "anna.verdi@email.com"));
 
         Trattamento trattamento3 = new Trattamento("Pensione Completa", 65.0);
 
@@ -461,11 +461,11 @@ public class prenotazioneDAOTesting {
 
         ArrayList<Cliente> clienti4 = new ArrayList<>();
         clienti4.add(new Cliente("Francesco", "Neri", "Italiana", "TO", "Torino", "Via Po", 23, 10123,
-                "3356781234", "M", LocalDate.of(1978, 9, 8), "NREFNC78P08L219Y", "francesco.neri@email.com", "Carta di Credito"));
+                "3356781234", "M", LocalDate.of(1978, 9, 8), "NREFNC78P08L219Y", "francesco.neri@email.com"));
         clienti4.add(new Cliente("Giulia", "Neri", "Italiana", "TO", "Torino", "Via Po", 23, 10123,
-                "3356781235", "F", LocalDate.of(1980, 12, 3), "NREGLI80T43L219K", "giulia.neri@email.com", "Carta di Credito"));
+                "3356781235", "F", LocalDate.of(1980, 12, 3), "NREGLI80T43L219K", "giulia.neri@email.com"));
         clienti4.add(new Cliente("Luca", "Neri", "Italiana", "TO", "Torino", "Via Po", 23, 10123,
-                "3356781236", "M", LocalDate.of(2010, 5, 15), "NRELCU10E15L219M", "luca.neri@email.com", "Carta di Credito"));
+                "3356781236", "M", LocalDate.of(2010, 5, 15), "NRELCU10E15L219M", "luca.neri@email.com"));
 
         Trattamento trattamento4 = new Trattamento("Bed & Breakfast", 25.0);
 
@@ -483,7 +483,7 @@ public class prenotazioneDAOTesting {
 
         ArrayList<Cliente> clienti5 = new ArrayList<>();
         clienti5.add(new Cliente("Roberto", "Gialli", "Italiana", "FI", "Firenze", "Via dei Calzaiuoli", 15, 50122,
-                "3312345678", "M", LocalDate.of(1975, 1, 25), "GLLRRT75A25D612P", "roberto.gialli@email.com", "American Express"));
+                "3312345678", "M", LocalDate.of(1975, 1, 25), "GLLRRT75A25D612P", "roberto.gialli@email.com"));
 
         Trattamento trattamento5 = new Trattamento("All Inclusive", 95.0);
 
@@ -500,7 +500,7 @@ public class prenotazioneDAOTesting {
 
         ArrayList<Cliente> clienti6 = new ArrayList<>();
         clienti6.add(new Cliente("Valentina", "Blu", "Italiana", "BO", "Bologna", "Via Indipendenza", 88, 40121,
-                "3398765432", "F", LocalDate.of(1995, 6, 30), "BLUVNT95H70A944L", "valentina.blu@email.com", "Bancomat"));
+                "3398765432", "F", LocalDate.of(1995, 6, 30), "BLUVNT95H70A944L", "valentina.blu@email.com"));
 
         Trattamento trattamento6 = new Trattamento("Solo Pernottamento", 0.0);
 
@@ -518,9 +518,9 @@ public class prenotazioneDAOTesting {
 
         ArrayList<Cliente> clienti7 = new ArrayList<>();
         clienti7.add(new Cliente("Marco", "Viola", "Italiana", "VE", "Venezia", "Calle Lunga", 33, 30100,
-                "3345678901", "M", LocalDate.of(1987, 8, 18), "VLAMRC87M18L736N", "marco.viola@email.com", "Carta di Credito"));
+                "3345678901", "M", LocalDate.of(1987, 8, 18), "VLAMRC87M18L736N", "marco.viola@email.com"));
         clienti7.add(new Cliente("Stefania", "Rosa", "Italiana", "VE", "Venezia", "Calle Corta", 12, 30100,
-                "3345678902", "F", LocalDate.of(1989, 2, 14), "RSOSFN89B54L736R", "stefania.rosa@email.com", "Carta di Credito"));
+                "3345678902", "F", LocalDate.of(1989, 2, 14), "RSOSFN89B54L736R", "stefania.rosa@email.com"));
 
         Trattamento trattamento7 = new Trattamento("Mezza Pensione", 45.0);
 
@@ -536,7 +536,7 @@ public class prenotazioneDAOTesting {
 
         ArrayList<Cliente> clienti8 = new ArrayList<>();
         clienti8.add(new Cliente("Alessio", "Arancio", "Italiana", "GE", "Genova", "Via XX Settembre", 67, 16121,
-                "3387654321", "M", LocalDate.of(1993, 10, 5), "RNCLS93R05D969Q", "alessio.arancio@email.com", "Contanti"));
+                "3387654321", "M", LocalDate.of(1993, 10, 5), "RNCLS93R05D969Q", "alessio.arancio@email.com"));
 
         Trattamento trattamento8 = new Trattamento("Solo Pernottamento", 0.0);
 
@@ -555,9 +555,9 @@ public class prenotazioneDAOTesting {
 
         ArrayList<Cliente> clienti9 = new ArrayList<>();
         clienti9.add(new Cliente("Davide", "Marrone", "Italiana", "PA", "Palermo", "Via Maqueda", 150, 90133,
-                "3321234567", "M", LocalDate.of(1982, 3, 28), "MRRDVD82C28G273S", "davide.marrone@email.com", "Carta di Credito"));
+                "3321234567", "M", LocalDate.of(1982, 3, 28), "MRRDVD82C28G273S", "davide.marrone@email.com"));
         clienti9.add(new Cliente("Elisa", "Marrone", "Italiana", "PA", "Palermo", "Via Maqueda", 150, 90133,
-                "3321234568", "F", LocalDate.of(1984, 7, 11), "MRRLS84L51G273V", "elisa.marrone@email.com", "Carta di Credito"));
+                "3321234568", "F", LocalDate.of(1984, 7, 11), "MRRLS84L51G273V", "elisa.marrone@email.com"));
 
         Trattamento trattamento9 = new Trattamento("All Inclusive", 95.0);
 
@@ -575,7 +575,7 @@ public class prenotazioneDAOTesting {
 
         ArrayList<Cliente> clienti10 = new ArrayList<>();
         clienti10.add(new Cliente("Chiara", "Grigio", "Italiana", "SA", "Salerno", "Corso Vittorio Emanuele", 200, 84100,
-                "3369871234", "F", LocalDate.of(1991, 11, 22), "GRGCHR91S62H703B", "chiara.grigio@email.com", "PayPal"));
+                "3369871234", "F", LocalDate.of(1991, 11, 22), "GRGCHR91S62H703B", "chiara.grigio@email.com"));
 
         Trattamento trattamento10 = new Trattamento("Bed & Breakfast", 25.0);
 

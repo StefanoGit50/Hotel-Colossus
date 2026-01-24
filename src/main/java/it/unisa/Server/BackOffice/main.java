@@ -46,8 +46,7 @@ public class main {
                 "3233452",
                 "m",
                 LocalDate.of(2022, 1, 6),
-                "SDFGANNSOLF","Libero@asfnai",
-                "Carta");
+                "SDFGANNSOLF","Libero@asfnai");
         clist.add(cliente);
 
         Prenotazione p1 = new Prenotazione(1,

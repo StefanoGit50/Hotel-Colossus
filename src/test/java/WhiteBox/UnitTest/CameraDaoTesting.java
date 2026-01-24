@@ -1,4 +1,4 @@
-package WhiteBox.TestingDB.CameraDao;
+package WhiteBox.UnitTest;
 
 import it.unisa.Common.Camera;
 import it.unisa.Server.persistent.util.Stato;

@@ -202,9 +202,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                                         rs4.getString("Sesso"),
                                         rs4.getDate("DataDiNascita") != null ? rs4.getDate("DataDiNascita").toLocalDate() : null,
                                         rs4.getString("CF"),
-                                        rs4.getString("Email"),
-                                        rs4.getString("MetodoDiPagamento")
-                                ));
+                                        rs4.getString("Email")));
                             }
                         }
                     }
@@ -332,8 +330,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                                     rs4.getString("Sesso"),
                                     rs4.getDate("DataDiNascita") != null ? rs4.getDate("DataDiNascita").toLocalDate() : null,
                                     rs4.getString("CF"),
-                                    rs4.getString("Email"),
-                                    rs4.getString("MetodoDiPagamento")
+                                    rs4.getString("Email")
                             ));
                         }
                     }
@@ -551,8 +548,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                                         rs4.getString("Sesso"),
                                         rs4.getDate("DataDiNascita") != null ? rs4.getDate("DataDiNascita").toLocalDate() : null,
                                         rs4.getString("CF"),
-                                        rs4.getString("Email"),
-                                        rs4.getString("MetodoDiPagamento")
+                                        rs4.getString("Email")
                                 ));
                             }
                         }
