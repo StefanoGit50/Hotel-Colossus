@@ -129,8 +129,8 @@ public class CatalogoImpiegati implements Serializable {
                 telPattern = Pattern.compile("^[0-9]{0,15}$"),
                 emailPattern = Pattern.compile("^[A-Za-z]*\\.[A-Za-z]*[0-9]*@HotelColossus\\.it$");
 
-        String[] listaRuolo = {Ruolo.FrontDesk.toString().toLowerCase(), Ruolo.Manager.toString().toLowerCase(), Ruolo.Governante.toString().toLowerCase()},
-            listaSesso = {"maschio", "femmina", "altro"},
+        String[] listaRuolo = {Ruolo.FrontDesk.toString(), Ruolo.Manager.toString(), Ruolo.Governante.toString()},
+            listaSesso = {"Maschio", "Femmina", "Altro"},
             listaDocumenti = {"Patente", "CID", "Passaporto"};
 
         LocalDate assunzione = impiegato.getDataAssunzione(),
@@ -175,11 +175,11 @@ public class CatalogoImpiegati implements Serializable {
             throw new InvalidInputException("[Email Aziendale] errato");
 
         // 11. Ruolo
-        if (!Arrays.asList(listaRuolo).contains(impiegato.getRuolo().toString().toLowerCase().trim()))
+        if (!Arrays.asList(listaRuolo).contains(impiegato.getRuolo().toString().trim()))
             throw new InvalidInputException("[Ruolo] errato");
 
         // 12. Sesso
-        if (!Arrays.asList(listaSesso).contains(impiegato.getSesso().toLowerCase().trim()))
+        if (!Arrays.asList(listaSesso).contains(impiegato.getSesso().trim()))
             throw new InvalidInputException("[Sesso] errato");
 
         // 13. Data Rilascio Documento
@@ -187,7 +187,7 @@ public class CatalogoImpiegati implements Serializable {
             throw new InvalidInputException("[Data Rilascio Documento] errato");
 
         // 14. Tipo Documento
-        if (!Arrays.asList(listaDocumenti).contains(impiegato.getTipoDocumento().toLowerCase().trim()))
+        if (!Arrays.asList(listaDocumenti).contains(impiegato.getTipoDocumento().trim()))
             throw new InvalidInputException("[Tipo Documento] errato");
 
         // 15. Via
@@ -216,7 +216,7 @@ public class CatalogoImpiegati implements Serializable {
                 scadenzaDocumento.isEqual(rilascioDocumento)) {
             throw new InvalidInputException("[Data Scadenza Documento] errato");
         }
-        
+
     }
     
     // Metodi della classe Object

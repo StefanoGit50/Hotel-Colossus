@@ -37,7 +37,7 @@ public class TestCasesRegistraImpiegato {
                 "Mario",                     // nome
                 "Rossi",                     // cognome
                 "Maschio",                   // sesso
-                "Patente",                   // tipoDocumento
+                "CID",                   // tipoDocumento
                 "AB1234567",                 // numeroDocumento
                 80100,                       // CAP
                 "Via Roma",                  // via
