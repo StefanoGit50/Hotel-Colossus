@@ -368,17 +368,17 @@ public class Impiegato extends Utente implements Cloneable, Serializable {
      * Il confronto è basato sull'uguaglianza della superclasse {@code Utente}
      * e di tutti gli attributi specifici dell'impiegato.
      *
-     * @param obj L'oggetto da confrontare.
+     * @param o L'oggetto da confrontare.
      * @return {@code true} se i due oggetti Impiegato sono uguali, {@code false} altrimenti.
      */
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        if (!super.equals(obj)) return false; // Confronta gli attributi di Utente
-        Impiegato impiegato = (Impiegato) obj;
-        return Double.compare(stipendio, impiegato.stipendio) == 0 && Objects.equals(nome, impiegato.nome) && Objects.equals(cognome, impiegato.cognome) && Objects.equals(sesso, impiegato.sesso) && Objects.equals(tipoDocumento, impiegato.tipoDocumento) && Objects.equals(numeroDocumento, impiegato.numeroDocumento) && Objects.equals(CAP, impiegato.CAP) && Objects.equals(via, impiegato.via) && Objects.equals(provincia, impiegato.provincia) && Objects.equals(comune, impiegato.comune) && Objects.equals(numeroCivico, impiegato.numeroCivico) && Objects.equals(codiceFiscale, impiegato.codiceFiscale) && Objects.equals(telefono, impiegato.telefono) && Objects.equals(ruolo, impiegato.ruolo) && Objects.equals(dataAssunzione, impiegato.dataAssunzione) && Objects.equals(dataRilascio, impiegato.dataRilascio) && Objects.equals(emailAziendale, impiegato.emailAziendale) && Objects.equals(cittadinanza, impiegato.cittadinanza) && Objects.equals(dataScadenza , impiegato.dataScadenza);
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Impiegato impiegato = (Impiegato) o;
+        return CAP == impiegato.CAP && numeroCivico == impiegato.numeroCivico && Double.compare(stipendio, impiegato.stipendio) == 0 && Objects.equals(nome, impiegato.nome) && Objects.equals(cognome, impiegato.cognome) && Objects.equals(sesso, impiegato.sesso) && Objects.equals(tipoDocumento, impiegato.tipoDocumento) && Objects.equals(numeroDocumento, impiegato.numeroDocumento) && Objects.equals(via, impiegato.via) && Objects.equals(provincia, impiegato.provincia) && Objects.equals(comune, impiegato.comune) && Objects.equals(codiceFiscale, impiegato.codiceFiscale) && Objects.equals(telefono, impiegato.telefono) && ruolo == impiegato.ruolo && Objects.equals(dataAssunzione, impiegato.dataAssunzione) && Objects.equals(dataScadenza, impiegato.dataScadenza) && Objects.equals(dataRilascio, impiegato.dataRilascio) && Objects.equals(emailAziendale, impiegato.emailAziendale) && Objects.equals(cittadinanza, impiegato.cittadinanza);
     }
+
 
     /**
      * Crea e restituisce una copia dell'oggetto (clone).

@@ -84,7 +84,7 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
         ImpiegatoDAO impDao = new ImpiegatoDAO();
         List<Impiegato> impiegati = null;
         try{
-            impiegati = (List<Impiegato>) impDao.doFilter(nome, cognome, ruolo, sesso);
+            impiegati = (List<Impiegato>) impDao.doFilter(nome, sesso, ruolo, "Nome ASC");
         } catch (Exception e){
             e.printStackTrace();
         }
