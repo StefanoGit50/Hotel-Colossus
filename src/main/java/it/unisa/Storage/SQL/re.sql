@@ -3,7 +3,7 @@ drop view PrenotaIS;
 CREATE view PrenotaIS as
 SELECT  p.*, t.Nome as TrattamentoNome, t.Prezzo as TrattamentoPrezzo,
         c.CF, c.nome as ClienteNome, c.cognome as ClienteCognome,   c.Email, c.telefono, c.Sesso, c.DataDiNascita, c.Cittadinanza,
-        c.via, c.civico, c.comune, c.provincia, c.Cap,  c.MetodoDiPagamento, c.IsBackListed,
+        c.via, c.civico, c.comune, c.provincia, c.Cap, c.IsBackListed,
         cam.NumeroCamera, cam.NumeroMaxOcc, cam.NoteCamera, cam.Stato as CameraStato, cam.Prezzo
             as CameraPrezzo,s.Nome as ServizioNome, s.Prezzo as ServizioPrezzo
 From  Prenotazione p

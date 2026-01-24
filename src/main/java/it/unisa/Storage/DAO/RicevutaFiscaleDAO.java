@@ -13,27 +13,26 @@ import java.util.NoSuchElementException;
 public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
 {
 
-    private static final String TABLE_NAME = "RicevutaFiscale";
-
     private static final String[] attributes = {"IDRicevutaFiscale", "IDPrenotazione", "Totale", "DataEmissione"};
 
     @Override
     public synchronized void doSave(RicevutaFiscale o) throws SQLException {
         Connection conn = ConnectionStorage.getConnection();
         PreparedStatement ps = null;
-        String insertSQL = "insert into " + RicevutaFiscaleDAO.TABLE_NAME +
-                " (IDRicevutaFiscale, IDPrenotazione, Totale, DataEmissione) VALUES (?, ?, ?, ?)";
+        String insertSQL = "insert into RicevutaFiscale VALUES (?,?,?,?,?,?,?)";
 
-        try {
+        try{
             ps = conn.prepareStatement(insertSQL);
             ps.setInt(1, o.getIDRicevutaFiscale());
             ps.setInt(2, o.getIDPrenotazione());
-            ps.setDouble(3, o.getTotale());
-            ps.setDate(4, Date.valueOf(o.getDataEmissione()) );
-
+            ps.setDate(3, Date.valueOf(o.getDataEmissione()));
+            ps.setString(4,o.getMetodoPagamento());
+            ps.setDate(5,Date.valueOf(o.getDataPrenotazione()));
+            ps.setDouble(6,o.getPrezzoTrattamento());
+            ps.setString(7,o.getTipoTrattamento());
             ps.executeUpdate();
-        } finally {
-            if (ps != null)
+        }finally{
+            if(ps != null)
                 ps.close();
             ConnectionStorage.releaseConnection(conn);
         }
@@ -43,7 +42,7 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
     public synchronized void doDelete(RicevutaFiscale o) throws SQLException {
         Connection conn = ConnectionStorage.getConnection();
         PreparedStatement ps = null;
-        String deleteSQL = "delete from " + RicevutaFiscaleDAO.TABLE_NAME +
+        String deleteSQL = "delete from ricevutafiscale" +
                 " where IDRicevutaFiscale = ? and IDPrenotazione = ?";
 
         try {
@@ -73,7 +72,7 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
         ResultSet rs;
         RicevutaFiscale ricevuta = null;
 
-        String selectSQL = "select * FROM " + RicevutaFiscaleDAO.TABLE_NAME +
+        String selectSQL = "select * FROM ricevutafiscale" +
                 " where IDRicevutaFiscale = ? AND  IDPrenotazione = ?";
 
         try {
@@ -82,14 +81,26 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
             ps.setInt(2, keys.get(1));
             rs = ps.executeQuery();
 
-            if (rs.next()) {
+            if (rs.next()){
                 ricevuta = new RicevutaFiscale();
-                ricevuta.setIDRicevutaFiscale(rs.getInt("IDPrenotazione"));
-                ricevuta.setIDPrenotazione(rs.getInt("IDRicevutaFiscale"));
-                ricevuta.setTotale(rs.getDouble("Totale"));
+                ricevuta.setIDRicevutaFiscale(rs.getInt("IDRicevutaFiscale"));
+                ricevuta.setIDPrenotazione(rs.getInt("IDPrenotazione"));
+                ricevuta.setDataPrenotazione(rs.getDate("DataPrenotazione").toLocalDate());
                 ricevuta.setDataEmissione(rs.getDate("DataEmissione").toLocalDate());
-            }
+                ricevuta.setMetodoPagamento(rs.getString("metodoDiPagamento"));
+                ricevuta.setPrezzoTrattamento(rs.getDouble("PrezzoTrattamento"));
+                ricevuta.setTipoTrattamento(rs.getString("TipoTrattamento"));
+                double prezzoTrattamento = ricevuta.getPrezzoTrattamento();
+                PreparedStatement preparedStatement = conn.prepareStatement("SELECT PrezzoCamera FROM (ricevutafiscale join hotelcolossus.cameraricevuta c on ricevutafiscale.IDRicevutaFiscale = c.IDRicevutaFiscale) where c.IDRicevutaFiscale = ?");
+                preparedStatement.setInt(1,ricevuta.getIDRicevutaFiscale());
+                ResultSet resultSet = preparedStatement.executeQuery();
 
+                if(resultSet.next()){
+                    ricevuta.setTotale(resultSet.getDouble("PrezzoCamera") + prezzoTrattamento);
+                }else{
+                    ricevuta.setTotale(prezzoTrattamento);
+                }
+            }
         } finally {
             if (ps != null)
                 ps.close();
@@ -106,7 +117,7 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
         Connection conn = ConnectionStorage.getConnection();
         PreparedStatement ps = null;
         ResultSet rs = null;
-        String selectSQL = "select * FROM" + RicevutaFiscaleDAO.TABLE_NAME;
+        String selectSQL = "SELECT * FROM ricevutafiscale" ;
 
         ArrayList<RicevutaFiscale> results = new ArrayList<>();
 
@@ -118,22 +129,34 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
             ps = conn.prepareStatement(selectSQL);
             rs = ps.executeQuery();
 
+            PreparedStatement preparedStatement = conn.prepareStatement("SELECT PrezzoCamera FROM cameraricevuta where IDRicevutaFiscale = ?");
+            double prezzoTrattamento = 0;
+            double prezzoCamera = 0;
             RicevutaFiscale ricevuta;
-            while (rs.next()) {
+            while (rs.next()){
+                preparedStatement.setInt(1,rs.getInt("IDRicevutaFiscale"));
+                ResultSet resultSet = preparedStatement.executeQuery();
                 ricevuta = new RicevutaFiscale();
-                ricevuta.setIDRicevutaFiscale(rs.getInt("IDPrenotazione"));
-                ricevuta.setIDPrenotazione(rs.getInt("IDRicevutaFiscale"));
-                ricevuta.setTotale(rs.getDouble("Totale"));
+                prezzoTrattamento = rs.getDouble("PrezzoTrattamento");
+                if(resultSet.next()){
+                    prezzoCamera = resultSet.getDouble("PrezzoCamera");
+                }
+                ricevuta.setIDRicevutaFiscale(rs.getInt("IDRicevutaFiscale"));
+                ricevuta.setIDPrenotazione(rs.getInt("IDPrenotazione"));
+                ricevuta.setTotale(prezzoTrattamento + prezzoCamera);
                 ricevuta.setDataEmissione(rs.getDate("DataEmissione").toLocalDate());
-                results.add(ricevuta);
-
+                ricevuta.setTipoTrattamento(rs.getString("TipoTrattamento"));
+                ricevuta.setPrezzoTrattamento(rs.getDouble("PrezzoTrattamento"));
+                ricevuta.setDataPrenotazione(rs.getDate("DataPrenotazione").toLocalDate());
+                ricevuta.setMetodoPagamento(rs.getString("metodoPagamento"));
                 results.add(ricevuta);
             }
 
         } finally {
-            if (ps != null)
+            if (ps != null){
                 ps.close();
-            ConnectionStorage.releaseConnection(conn);
+                ConnectionStorage.releaseConnection(conn);
+            }
         }
 
         return results;
@@ -146,8 +169,8 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
         {
             Connection conn = ConnectionStorage.getConnection();
             PreparedStatement ps = null;
-            String updateSQL = "UPDATE " + RicevutaFiscaleDAO.TABLE_NAME +
-                    " SET Totale = ?, DataEmissione = ? " +
+            String updateSQL = "UPDATE ricevutafiscale" +
+                    " SET metodoPagamento = ? , DataPrenotazione = ? , PrezzoTrattamento = ? , TipoTrattamento = ?, DataEmissione = ? " +
                     "WHERE IDRicevutaFiscale = ? AND IDPrenotazione = ?";
 
             try

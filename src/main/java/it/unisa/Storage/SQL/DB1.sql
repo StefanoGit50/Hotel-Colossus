@@ -14,7 +14,6 @@ create table Cliente(
     Email varchar(100) not null,
     Sesso varchar(40) not null,
     telefono char(15) not null,
-    MetodoDiPagamento varchar(50) not null,
     Cittadinanza varchar(50) not null,
     DataDiNascita date not null,
     IsBackListed boolean not null,
