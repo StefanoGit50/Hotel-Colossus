@@ -4,7 +4,6 @@ import it.unisa.Common.Cliente;
 import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.FrontDeskStorage;
 
-import java.rmi.RemoteException;
 import java.sql.*;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -311,7 +310,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
 
     // Filtro clienti
     @Override
-    public List<Cliente> doFilter(String nome, String cognome, String nazionalita, LocalDate dataNascita, String sesso, String orderBy) {
+    public List<Cliente> doFilter(String nome, String cognome, String nazionalita, LocalDate dataNascita, Boolean blackListed, String orderBy) {
         Connection conn = null;
         PreparedStatement preparedStatement = null;
         List<Cliente> lista = new ArrayList<>();
@@ -322,7 +321,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
         params[1] = cognome != null && !cognome.isEmpty();
         params[2] = nazionalita != null && !nazionalita.isEmpty();
         params[3] = dataNascita != null && dataNascita.isBefore(LocalDate.now());
-        params[4] = sesso != null && !sesso.isEmpty();
+        params[4] = blackListed != null;
 
         // Se tutti i parametri sono nulli allora lancia l'eccezione
         if (!params[0] && !params[1] && !params[2] && !params[3] && !params[4]) {
@@ -352,7 +351,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
                 selectSQL += " DataDiNascita = ?";
             }
             if (i == 4 && params[4]) {
-                selectSQL += " sesso = ?";
+                selectSQL += " IsBlackListed = ?";
             }
             if (j != 0 && params[i]){
                 selectSQL += " AND ";
@@ -389,7 +388,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente>
                     counter++;
                 }
                 if (params[4]) {
-                    preparedStatement.setString(counter, sesso);
+                    preparedStatement.setBoolean(counter, blackListed);
                 }
                 resultSet = preparedStatement.executeQuery();
                 Cliente cliente;

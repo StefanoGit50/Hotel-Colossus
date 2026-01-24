@@ -244,3 +244,48 @@ VALUES ('MRRLS84L51G273V', 450, 9, 280.0);
 
 INSERT INTO Associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto)
 VALUES ('GRGCHR91S62H703B', 120, 10, 175.0);
+
+
+-- ============================================
+-- 7. INSERT IMPIEGATO ------------------------
+-- ============================================
+
+-- 1. Inserimento del Manager (Senza supervisore, CF1 = NULL)
+INSERT INTO Impiegato (
+    CF, Stipedio, Nome, Cognome, Cap, DataAssunzione, Telefono,
+    Cittadinanza, EmailAziendale, Sesso, Ruolo, DataRilascio,
+    TipoDocumento, Via, Provincia, Comune, Civico, NumeroDocumento,
+    DataScadenza, CF1
+) VALUES (
+             'MNGGNN80A01H501U', 2500.00, 'Giovanni', 'Mango', '80100', '2020-01-10', '393123456789',
+             'Italiana', 'giovanni.mango@HotelColossus.it', 'Maschio', 'Manager', '2020-01-05',
+             'Carta di Identità', 'Via Toledo', 'Napoli', 'Napoli', 1, 'CA00000AA',
+             '2030-01-05', NULL
+         );
+
+-- 2. Inserimento del Front Desk (Supervisionato dal Manager precedente)
+-- Dati basati sul metodo createBaseImpiegato() del test Java
+INSERT INTO Impiegato (
+    CF, Stipedio, Nome, Cognome, Cap, DataAssunzione, Telefono,
+    Cittadinanza, EmailAziendale, Sesso, Ruolo, DataRilascio,
+    TipoDocumento, Via, Provincia, Comune, Civico, NumeroDocumento,
+    DataScadenza, CF1
+) VALUES (
+             'RSSMRA85M01H501Z', 1500.00, 'Mario', 'Rossi', '80100', '2024-01-15', '393331234567',
+             'Italiana', 'mario.rossi@HotelColossus.it', 'Maschio', 'FDclient', '2024-01-20',
+             'Patente', 'Via Roma', 'Napoli', 'Napoli', 10, 'AB1234567',
+             '2034-01-20', 'MNGGNN80A01H501U'
+         );
+
+-- 3. Inserimento della Governante (Supervisionata dal Manager)
+INSERT INTO Impiegato (
+    CF, Stipedio, Nome, Cognome, Cap, DataAssunzione, Telefono,
+    Cittadinanza, EmailAziendale, Sesso, Ruolo, DataRilascio,
+    TipoDocumento, Via, Provincia, Comune, Civico, NumeroDocumento,
+    DataScadenza, CF1
+) VALUES (
+             'BNCGRG90T15F205X', 1300.00, 'Giorgia', 'Bianchi', '00100', '2023-05-10', '393444555666',
+             'Italiana', 'giorgia.bianchi@HotelColossus.it', 'Femmina', 'Governante', '2023-05-01',
+             'Passaporto', 'Via del Corso', 'Roma', 'Roma', 42, 'YA9876543',
+             '2033-05-01', 'MNGGNN80A01H501U'
+         );

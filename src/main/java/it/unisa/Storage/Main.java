@@ -85,7 +85,7 @@ public class Main{
                 22,
                 80100,
                 "339987654312345",
-                "F",
+                false,
                 LocalDate.of(1992, 8, 20),
                 "BNCNNA92M60F839Y",
                 "anna.bianchi@email.it",
@@ -394,7 +394,7 @@ public class Main{
         ClienteDAO servizioDAO = new ClienteDAO();
 
         try {
-            ArrayList<Cliente> servizios = (ArrayList<Cliente>) servizioDAO.doFilter("Laura","Bianchi",null ,null,"F","CF");
+            ArrayList<Cliente> servizios = (ArrayList<Cliente>) servizioDAO.doFilter("Laura","Bianchi",null ,null,false,"CF");
             System.out.println(servizios);
         } catch (RuntimeException runtimeException){
             runtimeException.printStackTrace();
@@ -405,7 +405,7 @@ public class Main{
         System.out.println(impiegatoes);
 
         ClienteDAO clienteDAO = new ClienteDAO();
-        ArrayList<Cliente> clientes = (ArrayList<Cliente>) clienteDAO.doFilter(null,null,"Italiana",Date.valueOf("1992-03-23").toLocalDate(),"F","CF ASC");
+        ArrayList<Cliente> clientes = (ArrayList<Cliente>) clienteDAO.doFilter(null,null,"Italiana",Date.valueOf("1992-03-23").toLocalDate(),false,"CF ASC");
         System.out.println(clientes);
     }
 }

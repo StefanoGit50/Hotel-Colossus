@@ -455,7 +455,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
      *
      */
     @Override
-    public Collection<Prenotazione> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, String sesso, String orderBy) throws SQLException {
+    public Collection<Prenotazione> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, Boolean blackListed, String orderBy) throws SQLException {
         return List.of();
     }
 

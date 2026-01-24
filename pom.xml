@@ -25,6 +25,12 @@
             <version>5.13.4</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite</artifactId>
+            <version>1.13.4</version>
+            <scope>test</scope>
+        </dependency>
         <!--mockito-core -->
         <dependency>
             <groupId>org.mockito</groupId>

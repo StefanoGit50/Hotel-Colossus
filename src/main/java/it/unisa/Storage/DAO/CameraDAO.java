@@ -245,7 +245,7 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
      * @throws UnsupportedOperationException;
      */
     @Override
-    public Collection<Camera> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, String sesso, String orderBy)  throws SQLException{
+    public Collection<Camera> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, Boolean blackListed, String orderBy)  throws SQLException{
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

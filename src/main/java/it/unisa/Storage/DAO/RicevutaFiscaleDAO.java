@@ -218,7 +218,7 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
      * NON è SUPPORTATA
      */
     @Override
-    public Collection<RicevutaFiscale> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, String sesso, String orderBy) throws SQLException{
+    public Collection<RicevutaFiscale> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, Boolean blacklisted, String orderBy) throws SQLException{
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

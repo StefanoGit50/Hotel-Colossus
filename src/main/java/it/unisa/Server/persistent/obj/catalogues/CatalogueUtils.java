@@ -13,21 +13,21 @@ public class CatalogueUtils {
      */
     public static <T> void checkNull(T oggetto) throws InvalidInputException {
         Class<?> oggettoClass = oggetto.getClass();
-        Field[] fields = oggettoClass.getDeclaredFields();
+        Field[] fields = oggettoClass.getDeclaredFields(); // Otteni tutti i campi della classe di appartenenza dell'oggetto
 
         for (Field field : fields) {
             try {
-                field.setAccessible(true);
+                field.setAccessible(true); // Rendili accessilibi temporaneamente
                 Object fieldValue = field.get(oggetto);
                 if (fieldValue == null) {
                     throw new InvalidInputException("Campo: " + field.getName() + " è nullo");
                 }
-                if (field.getType().equals(String.class) && ((String) fieldValue).isEmpty()) {
+                if (field.getType().equals(String.class) && ((String) fieldValue).isBlank()) {
                     throw new InvalidInputException("Campo: " + field.getName() + " è vuoto");
                 }
-                field.setAccessible(false);
+                field.setAccessible(false); // Rendili di nuovo non accessibili...
             } catch (IllegalAccessException e) {
-                field.setAccessible(false);
+                field.setAccessible(false); // ...Anche in caso di errore
                 e.printStackTrace();
             }
 

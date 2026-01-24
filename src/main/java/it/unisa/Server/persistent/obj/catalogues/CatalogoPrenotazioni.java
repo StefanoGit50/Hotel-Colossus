@@ -154,23 +154,46 @@ public class CatalogoPrenotazioni implements Serializable {
         }
 
         // Lista di condizioni che possono lanciare un errore
-        if (inizio.isBefore(LocalDate.now()) || // data di arrivo passata
-                fine.isBefore(inizio) ||        // data di partenza precedente a quella di arrivo
-                fine.isEqual(inizio) ||         // data di partenza uguale a quella di arrivo
-                fine.isBefore(LocalDate.now()) ||   // data di partenza passata
-                prenotazione.getListaCamere().isEmpty() ||  // Nessuna camera selezionata
-                prenotazione.getListaClienti().isEmpty() || // Nessun cliente selezionato
-                ( !documento.equalsIgnoreCase("carta d'identità") &&    /*  Tipo di     */
-                        !documento.equalsIgnoreCase("passaporto") &&    /*  documento   */
-                        !documento.equalsIgnoreCase("patente") ) ||     /*  non valido  */
-                nPostiCamere == 0 ||    // Nessun posto camera
-                nClienti == 0 ||        // Nessun cliente selezionato
-                nClienti != nPostiCamere ||     // Mismatch clienti/posti camera
-                rilascio.isAfter(LocalDate.now()) ||    // data rilascio documento futura
-                scadenza.isBefore(LocalDate.now()) ||   // data scadenza documento passata
-                scadenza.isBefore(rilascio))    // data scadenza è antecedente la data di rilascio
-        {
-            throw new InvalidInputException();
+        // 1. Data Inizio (Arrivo)
+        if (inizio.isBefore(LocalDate.now())) {
+            throw new InvalidInputException("[Data Inizio] errato");
+        }
+
+        // 2. Data Fine (Partenza)
+        if (fine.isBefore(inizio) || fine.isEqual(inizio) || fine.isBefore(LocalDate.now())) {
+            throw new InvalidInputException("[Data Fine] errato");
+        }
+
+        // 3. Lista Camere e Posti
+        if (prenotazione.getListaCamere().isEmpty() || nPostiCamere == 0) {
+            throw new InvalidInputException("[Lista Camere] errato");
+        }
+
+        // 4. Lista Clienti
+        if (prenotazione.getListaClienti().isEmpty() || nClienti == 0) {
+            throw new InvalidInputException("[Lista Clienti] errato");
+        }
+
+        // 5. Corrispondenza Clienti/Posti (Capacità)
+        if (nClienti != nPostiCamere) {
+            throw new InvalidInputException("[Capacità Camere] errato");
+        }
+
+        // 6. Tipo Documento
+        if (!documento.equalsIgnoreCase("carta d'identità") &&
+                        !documento.equalsIgnoreCase("passaporto") &&
+                        !documento.equalsIgnoreCase("patente") ) {
+            throw new InvalidInputException("[Tipo Documento] errato");
+        }
+
+        // 7. Data Rilascio Documento
+        if (rilascio.isAfter(LocalDate.now())) {
+            throw new InvalidInputException("[Data Rilascio Documento] errato");
+        }
+
+        // 8. Data Scadenza Documento
+        if (scadenza.isBefore(LocalDate.now()) || scadenza.isBefore(rilascio)) {
+            throw new InvalidInputException("[Data Scadenza Documento] errato");
         }
     }
 }
