@@ -68,19 +68,18 @@ print_menu()
     echo -e "  ${GREEN}4)${NC} Manager Server"
     echo ""
     echo -e "${CYAN}Visualizzazione multipla:${NC}"
-    echo -e "  ${GREEN}5)${NC} Tutti i servizi (split screen)"
-    echo -e "  ${GREEN}6)${NC} Tutti i servizi (interleaved)"
+    echo -e "  ${GREEN}5)${NC} Tutti i servizi (interleaved)"
     echo ""
     echo -e "${CYAN}Filtri e ricerca:${NC}"
-    echo -e "  ${YELLOW}7)${NC} Cerca nel log (grep)"
-    echo -e "  ${YELLOW}8)${NC} Solo ERRORI"
-    echo -e "  ${YELLOW}9)${NC} Solo WARNING"
-    echo -e "  ${YELLOW}10)${NC} Solo INFO"
+    echo -e "  ${YELLOW}6)${NC} Cerca nel log (grep)"
+    echo -e "  ${YELLOW}7)${NC} Solo ERRORI"
+    echo -e "  ${YELLOW}8)${NC} Solo WARNING"
+    echo -e "  ${YELLOW}9)${NC} Solo INFO"
     echo ""
     echo -e "${CYAN}Utilità:${NC}"
-    echo -e "  ${MAGENTA}11)${NC} Statistiche log"
-    echo -e "  ${MAGENTA}12)${NC} Pulisci log"
-    echo -e "  ${MAGENTA}13)${NC} Esporta log"
+    echo -e "  ${MAGENTA}10)${NC} Statistiche log"
+    echo -e "  ${MAGENTA}11)${NC} Pulisci log"
+    echo -e "  ${MAGENTA}12)${NC} Esporta log"
     echo ""
     echo -e "  ${RED}0)${NC} Esci"
     echo ""
@@ -168,41 +167,6 @@ view_log_single()
     done
 }
 
-
-# Visualizza tutti i log con split (richiede tmux o screen)
-view_all_logs_split()
-{
-    print_header
-
-    # Verifica se tmux è disponibile
-    if ! command -v tmux &> /dev/null; then
-        echo -e "${RED}✗ tmux non installato${NC}"
-        echo -e "${YELLOW}  Installa tmux per usare questa funzione:${NC}"
-        echo -e "    ${WHITE}sudo apt-get install tmux${NC}  (Debian/Ubuntu)"
-        echo -e "    ${WHITE}brew install tmux${NC}          (macOS)"
-        echo ""
-        echo -ne "${WHITE}Premi INVIO per continuare...${NC}"
-        read
-        return
-    fi
-
-    echo -e "${GREEN}▶ Avvio visualizzazione split con tmux${NC}"
-    echo -e "${YELLOW}  Comandi tmux utili:${NC}"
-    echo -e "    Ctrl+B poi %  = Split verticale"
-    echo -e "    Ctrl+B poi \"  = Split orizzontale"
-    echo -e "    Ctrl+B poi o  = Switch tra pane"
-    echo -e "    Ctrl+B poi d  = Detach (ritorna al menu)"
-    echo ""
-    echo -e "${CYAN}  Avvio tra 3 secondi...${NC}"
-    sleep 3
-
-    # Crea sessione tmux con layout predefinito
-    tmux new-session -d -s hotelcolossus "tail -f $LOGS_DIR/rmiregistry.log"
-    tmux split-window -h "tail -f $LOGS_DIR/FrontDesk.log"
-    tmux split-window -v "tail -f $LOGS_DIR/Governante.log"
-    tmux select-layout tiled
-    tmux attach-session -t hotelcolossus
-}
 
 
 # Visualizza tutti i log interleaved
@@ -502,30 +466,27 @@ while true; do
             view_log_single "Manager"
             ;;
         5)
-            view_all_logs_split
-            ;;
-        6)
             view_all_logs_interleaved
             ;;
-        7)
+        6)
             search_in_logs
             ;;
-        8)
+        7)
             view_errors_only
             ;;
-        9)
+        8)
             view_warnings_only
             ;;
-        10)
+        9)
             view_info_only
             ;;
-        11)
+        10)
             show_log_statistics
             ;;
-        12)
+        11)
             clean_logs
             ;;
-        13)
+        12)
             export_logs
             ;;
         0)

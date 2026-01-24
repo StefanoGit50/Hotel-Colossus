@@ -118,7 +118,7 @@ public class CatalogoClienti implements Serializable {
                 }
             }
             if (params[2]) {
-                if (!Objects.equals(cliente.getSesso(), sesso)) {
+                if (!Objects.equals(cliente.getNazionalita(), nazionalita)) {
                     continue;
                 }
             }
@@ -128,7 +128,7 @@ public class CatalogoClienti implements Serializable {
                 }
             }
             if (params[4]) {
-                if (!Objects.equals(cliente.getNazionalita(),  nazionalita)) {
+                if (!Objects.equals(cliente.getSesso(), sesso)) {
                     continue;
                 }
             }
@@ -161,7 +161,7 @@ public class CatalogoClienti implements Serializable {
         Pattern namePattern = Pattern.compile("^[A-Za-z\\s]{0,49}$");
 
         // Verifica se tutti i campi sono nulli / vuoti (stringhe)
-        if ( (nome == null || nome.isBlank()) && (cognome == null || cognome.isBlank()) && (nazionalita == null || nazionalita.isBlank()) && (blackListed == null)){
+        if ( (nome == null || nome.isBlank()) && (cognome == null || cognome.isBlank()) && dataNascita==null && (nazionalita == null || nazionalita.isBlank()) && (blackListed == null)){
             throw new NullPointerException("Tutti i campi sono nulli o vuoti");
         }
 
