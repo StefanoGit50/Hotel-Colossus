@@ -46,8 +46,8 @@ public class TestCasesRegistraImpiegato {
                 10,                          // numeroCivico
                 "RSSMRA85M01H501Z",          // codiceFiscale
                 "1",           // telefono
-                Ruolo.FrontDesk,             // ruolo (mappato dal testo "Front desk")
-                1500.00,                     // stipendio
+                Ruolo.Manager,             // ruolo (mappato dal testo "Front desk")
+                2500.00,                     // stipendio
                 LocalDate.of(2024, 1, 15),   // dataAssunzione
                 LocalDate.of(2020, 1, 20),   // dataRilascio
                 "mario.rossi@HotelColossus.it", // emailAziendale
@@ -69,11 +69,12 @@ public class TestCasesRegistraImpiegato {
             Impiegato i = createBaseImpiegato(), campione = null;
             try {
                 manager.addImpiegato(i); // Registra l'impiegato
-                // Recuperalo per vedere che è stato effettivamente regostrato
+                // Recuperalo per vedere che è stato effettivamente registrato
                 campione = manager.filtroImpiegati(i.getNome(), i.getCognome(), i.getRuolo(), i.getSesso()).getFirst();
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
+            System.out.println(i.equals(campione));
             Assertions.assertEquals(i, campione);
         }
     }

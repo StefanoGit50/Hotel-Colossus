@@ -180,21 +180,22 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
                 String cf1 = (String) resultSet.getObject(1);
-               String nome = (String) resultSet.getObject(2);
-               String cognome = (String) resultSet.getObject(3);
-               String  cap = (String) resultSet.getObject(4);
-               String comune = (String) resultSet.getObject(5);
-               Integer civico = (Integer) resultSet.getObject(6);
-               String provincia = (String) resultSet.getObject(7);
-               String via = (String) resultSet.getObject(8);
-               String email = (String) resultSet.getObject(9);
-               String  sesso = (String) resultSet.getObject(10);
-               String  telefono = (String) resultSet.getObject(11);
-               String  cittadinazione = (String) resultSet.getObject(12);
-               Date date1 = (Date) resultSet.getObject(13);
-               LocalDate date = date1.toLocalDate();
-               Boolean  isBackListed = (Boolean) resultSet.getObject(14);
-               clientes.add(new Cliente(nome,cognome,cittadinazione,provincia,comune,via,civico,Integer.parseInt(cap),telefono,sesso,date,cf1,email));
+
+                String nome = (String) resultSet.getObject(2);
+                String cognome = (String) resultSet.getObject(3);
+                String  cap = (String) resultSet.getObject(4);
+                String comune = (String) resultSet.getObject(5);
+                Integer civico = (Integer) resultSet.getObject(6);
+                String provincia = (String) resultSet.getObject(7);
+                String via = (String) resultSet.getObject(8);
+                String email = (String) resultSet.getObject(9);
+                String  sesso = (String) resultSet.getObject(10);
+                String  telefono = (String) resultSet.getObject(11);
+                String  cittadinazione = (String) resultSet.getObject(13);
+                Date date1 = (Date) resultSet.getObject(14);
+                LocalDate date = date1.toLocalDate();
+                Boolean  isBackListed = (Boolean) resultSet.getObject(15);
+                clientes.add(new Cliente(nome,cognome,cittadinazione,provincia,comune,via,civico,Integer.parseInt(cap),telefono,sesso,date,cf1,email));
             }
             resultSet.close();
         }finally{
