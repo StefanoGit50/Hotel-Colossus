@@ -11,7 +11,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.List;
 
-//TODO: DA COMPLETARE --> METODO PER INIZIALIZZARE LA LISTA DELLE CAMERE DAL DATABASE
+//TODO  -->  runnare DB1.sql e insertDB.sql
 
 @DisplayName("TESTING: cambia stato camere")
 @Tag("cambiaStatoCamera")
@@ -51,6 +51,25 @@ public class TestCambiaStatoCamera {
         return null;
     }
 
+    /**
+     * Esegue i casi di test di successo.
+     * @param daCambiare lo stato iniziale della camera, quello da cambiare.
+     * @param cambiato lo stato della camera dopo il cambio.
+     * @throws RemoteException per le invocazioni dei metodi di governante.
+     */
+    public void executeTest(Stato daCambiare, Stato cambiato) throws RemoteException {
+        Camera camera = getCameraByStato(daCambiare), prova = null;
+        Assertions.assertNotNull(camera);
+        Assertions.assertEquals(daCambiare, camera.getStatoCamera());
+
+        camera.setStatoCamera(cambiato);
+        governante.aggiornaStatoCamera(camera);
+        prova = getCameraById(camera.getNumeroCamera());
+        Assertions.assertNotNull(prova);
+
+        Assertions.assertEquals(cambiato, prova.getStatoCamera());
+    }
+
     @BeforeAll
     public static void istantiateGovernante() throws RemoteException, NotBoundException, MalformedURLException {
         governante = (GovernanteInterface) Naming.lookup("rmi://localhost/GestoreCamere");
@@ -64,57 +83,37 @@ public class TestCambiaStatoCamera {
         @Test
         @DisplayName("TC1: [success] Out Of Order -> In pulizia")
         public void testCase1() throws RemoteException {
-            Camera camera = getCameraByStato(Stato.OutOfOrder), prova = null;
-            Assertions.assertNotNull(camera);
-
-            camera.setStatoCamera(Stato.InPulizia);
-            governante.aggiornaStatoCamera(camera);
-            prova = getCameraById(camera.getNumeroCamera());
-            Assertions.assertNotNull(prova);
-
-            Assertions.assertEquals(Stato.InPulizia, prova.getStatoCamera());
+            executeTest(Stato.OutOfOrder, Stato.InPulizia);
         }
 
         @Test
         @DisplayName("TC2: [success] Out Of Order -> In servizio")
         public void testCase2() throws RemoteException {
-            Camera camera = governante.getListCamere().getFirst();
-            camera.setStatoCamera(Stato.InServizio);
-            governante.aggiornaStatoCamera(camera);
-            Assertions.assertEquals(Stato.InPulizia, camera.getStatoCamera());
+            executeTest(Stato.OutOfOrder, Stato.InServizio);
         }
 
         @Test
         @DisplayName("TC3: [success] In pulizia -> Out of order")
         public void testCase3() throws RemoteException {
-            Camera camera = governante.getListCamere().getFirst();
-            camera.setStatoCamera(Stato.OutOfOrder);
-            governante.aggiornaStatoCamera(camera);
-            Assertions.assertEquals(Stato.InPulizia, camera.getStatoCamera());
+            executeTest(Stato.InPulizia, Stato.OutOfOrder);
         }
 
         @Test
         @DisplayName("TC4: [success] In pulizia -> In servizio")
         public void testCase4() throws RemoteException {
-            Camera camera = governante.getListCamere().getFirst();
-            camera.setStatoCamera(Stato.InServizio);
-            governante.aggiornaStatoCamera(camera);
+            executeTest(Stato.InPulizia, Stato.InServizio);
         }
 
         @Test
         @DisplayName("TC5: [success] In servizio -> Out of Order")
         public void testCase5() throws RemoteException {
-            Camera camera = governante.getListCamere().getFirst();
-            camera.setStatoCamera(Stato.OutOfOrder);
-            governante.aggiornaStatoCamera(camera);
+            executeTest(Stato.InServizio, Stato.OutOfOrder);
         }
 
         @Test
         @DisplayName("TC6: [success] In servizio -> In pulizia")
         public void testCase6() throws RemoteException {
-            Camera camera = governante.getListCamere().getFirst();
-            camera.setStatoCamera(Stato.InPulizia);
-            governante.aggiornaStatoCamera(camera);
+            executeTest(Stato.InServizio, Stato.InPulizia);
         }
     }
 
@@ -128,9 +127,7 @@ public class TestCambiaStatoCamera {
         @Test
         @DisplayName("TF7: [error] Database offline - Lo stato non deve cambiare")
         public void testCaseTF7() throws RemoteException {
-            Camera camera = governante.getListCamere().getFirst();
-            camera.setStatoCamera(Stato.OutOfOrder);
-            governante.aggiornaStatoCamera(camera);
+            Assertions.assertThrows(RemoteException.class, () -> governante.getListCamere());
         }
     }
 }

@@ -9,7 +9,13 @@ INSERT INTO Camera VALUES
                        (102,4,'Camera familiare','Prenotata',150.00),
                        (103,2,'Camera matrimoniale','Occupata',80.00),
                        (104,4,'Camera familiare','InPulizia',150.00),
-                       (105,4,'Camera familiare','OutOfOrder',150.00);
+                       (105,4,'Camera familiare','OutOfOrder',150.00),
+                       (201,2,'Camera matrimoniale','Libera',80.00),
+                       (202,4,'Camera familiare','Prenotata',150.00),
+                       (203,2,'Camera matrimoniale','Occupata',80.00),
+                       (204,4,'Camera familiare','InPulizia',150.00),
+                       (205,4,'Camera familiare','OutOfOrder',150.00);
+
 
 -- PRENOTAZIONI
 INSERT INTO Prenotazione VALUES

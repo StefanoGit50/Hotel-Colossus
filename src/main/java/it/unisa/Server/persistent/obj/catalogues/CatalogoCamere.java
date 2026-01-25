@@ -3,7 +3,6 @@ package it.unisa.Server.persistent.obj.catalogues;
 import it.unisa.Common.Camera;
 import it.unisa.Server.ObserverCamereInterface;
 import it.unisa.Server.SubjectCamereInterface;
-import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Server.persistent.util.Util;
 
 import java.io.Serializable;
