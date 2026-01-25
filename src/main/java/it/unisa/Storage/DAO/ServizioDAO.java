@@ -37,17 +37,21 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
     @Override
     public synchronized void doDelete(Servizio servizio) throws SQLException
     {
-        Connection connection = ConnectionStorage.getConnection();
-        String query = "DELETE FROM Servizio WHERE Nome = ?";
+        if(servizio != null && servizio.getNome() != null){
+            Connection connection = ConnectionStorage.getConnection();
+            String query = "DELETE FROM Servizio WHERE Nome = ?";
 
-        try (PreparedStatement stmt = connection.prepareStatement(query))
-        {
-            stmt.setString(1, servizio.getNome());
-            stmt.executeUpdate();
-        }finally {
-            if(connection != null){
-                ConnectionStorage.releaseConnection(connection);
+            try (PreparedStatement stmt = connection.prepareStatement(query))
+            {
+                stmt.setString(1, servizio.getNome());
+                stmt.executeUpdate();
+            }finally {
+                if(connection != null){
+                    ConnectionStorage.releaseConnection(connection);
+                }
             }
+        }else{
+            throw new SQLException("servizio o è uguale a null oppure la chiave di servizio è uguale a null");
         }
     }
 

@@ -50,7 +50,7 @@ public class TrattamentoDAOTesting{
 
     @Test
     @Tag("True")
-    @DisplayName("doDelete() quando va tutto a buon fine")
+    @DisplayName("doDelete(Trattamento trattamento) quando va tutto a buon fine")
     public void doDeleteAllTrue() throws SQLException {
         when(connection.prepareStatement("DELETE FROM Trattamento WHERE Nome = ?")).thenReturn(preparedStatement);
         when(preparedStatement.executeUpdate()).thenReturn(1);
@@ -62,7 +62,7 @@ public class TrattamentoDAOTesting{
 
     @Tags({@Tag("Exception"),@Tag("Error")})
     @Test
-    @DisplayName("doDelete() quando va in eccezione")
+    @DisplayName("doDelete(Trattamento trattamento) quando va in eccezione")
     public void doDeleteExecuteUpdateUgualeAZero()throws SQLException{
         when(connection.prepareStatement("DELETE FROM Trattamento WHERE Nome = ?")).thenReturn(preparedStatement);
         when(preparedStatement.executeUpdate()).thenReturn(0);
@@ -72,7 +72,7 @@ public class TrattamentoDAOTesting{
 
     @Tags({@Tag("Exception"),@Tag("Error")})
     @Test
-    @DisplayName("doDelete() quando va in eccezione")
+    @DisplayName("doDelete(Trattamento trattamento) quando va in eccezione")
     public void doDeleteExecuteUpdate(){
         assertThrows(SQLException.class,()->trattamentoDAO.doDelete(null));
     }
@@ -80,7 +80,7 @@ public class TrattamentoDAOTesting{
 
     @Test
     @Tag("True")
-    @DisplayName("doRetriveByKeyAllTrue() quando va tutto a buon fine")
+    @DisplayName("doRetriveByKey(Object nome) quando va tutto a buon fine")
     public void doRetriveByKeyAllTrue() throws SQLException {
         when(connection.prepareStatement("SELECT * FROM Trattamento WHERE Nome = ?")).thenReturn(preparedStatement);
         doNothing().when(preparedStatement).setString(1,"Mezza Pensione");
@@ -94,7 +94,7 @@ public class TrattamentoDAOTesting{
 
     @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
-    @DisplayName("doRetriveByKey() quando resultSet restituisce false")
+    @DisplayName("doRetriveByKey(Object nome) quando resultSet restituisce false")
     public void doRetriveByKeyResultSetFalse() throws SQLException {
         when(connection.prepareStatement("SELECT * FROM Trattamento WHERE Nome = ?")).thenReturn(preparedStatement);
         doNothing().when(preparedStatement).setString(1,"Pensione Intera");
@@ -106,14 +106,14 @@ public class TrattamentoDAOTesting{
 
     @Tags({@Tag("Exception"),@Tag("Error")})
     @Test
-    @DisplayName("doRetriveByKey() quando passi un parametro diverso da una stringa")
+    @DisplayName("doRetriveByKey(Object nome) quando passi un parametro diverso da una stringa")
     public void doRetriveByKeyParametroDiversoStringa(){
         assertThrows(NoSuchElementException.class,()->trattamentoDAO.doRetriveByKey(123));
     }
 
     @Tag("True")
     @Test
-    @DisplayName("doRetriveByKey() quando va tutto bene ")
+    @DisplayName("doRetriveAll(String order) quando va tutto bene ")
     public void doRetriveAllAllTrue() throws SQLException {
         when(connection.createStatement()).thenReturn(statement);
         when(statement.executeQuery("SELECT * FROM Trattamento ORDER BY Nome DESC ")).thenReturn(resultSet);
@@ -131,7 +131,7 @@ public class TrattamentoDAOTesting{
 
     @Tag("False")
     @Test
-    @DisplayName("doRetriveAll() quando tutto è falso")
+    @DisplayName("doRetriveAll(String order) quando tutto è falso")
     public void doRetriveAllAllFalse() throws SQLException {
         when(connection.createStatement()).thenReturn(statement);
         when(statement.executeQuery("SELECT * FROM Trattamento ORDER BY Nome ASC")).thenReturn(resultSet);
@@ -145,7 +145,7 @@ public class TrattamentoDAOTesting{
 
     @Tag("True")
     @Test
-    @DisplayName("doUpdate() quando va tutto bene")
+    @DisplayName("doUpdate(Trattamento trattamento) quando va tutto bene")
     public void doUpdate() throws SQLException {
         when(connection.prepareStatement("UPDATE Trattamento SET Prezzo = ? WHERE Nome = ?")).thenReturn(preparedStatement);
         doNothing().when(preparedStatement).setDouble(anyInt(),anyDouble());
@@ -157,7 +157,7 @@ public class TrattamentoDAOTesting{
 
     @Tags({@Tag("Exception"),@Tag("Error")})
     @Test
-    @DisplayName("doUpdate() quando tira una eccezione")
+    @DisplayName("doUpdate(Trattamento trattamento) quando tira una eccezione")
     public void doUpdateException(){
         assertThrows(SQLException.class,()->trattamentoDAO.doUpdate(null));
     }
@@ -184,9 +184,19 @@ public class TrattamentoDAOTesting{
     @Tags({@Tag("Exception"),@Tag("Error")})
     @Test
     @DisplayName("doRetriveByAttribute() se resultSet.next() ritorna false")
-    public void doRetirveByAttributeResultSetReturnFalse() throws SQLException {
+    public void doRetriveByAttributeResultSetReturnFalse() throws SQLException {
         when(connection.prepareStatement("SELECT * FROM trattamento where " + anyString() + " = ?")).thenReturn(preparedStatement);
+        doNothing().when(preparedStatement).setObject(1,"Mezza Pensione");
+        when(preparedStatement.executeQuery()).thenReturn(resultSet);
+        when(resultSet.next()).thenReturn(false);
 
+        assertThrows(NoSuchElementException.class,()->trattamentoDAO.doRetriveByAttribute("Nome","Mezza Pensione"));
     }
 
+    @Tags({@Tag("Exception"),@Tag("Error")})
+    @Test
+    @DisplayName("doRetriveByAttribute(String attribute,Object value) se attribute è uguale a false e se value è uguale a null")
+    public void doRetriveByAttributeAttributeisNull(){
+        assertThrows(RuntimeException.class,()->trattamentoDAO.doRetriveByAttribute(null,null));
+    }
 }
