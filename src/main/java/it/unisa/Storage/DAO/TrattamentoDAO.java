@@ -36,17 +36,23 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
     @Override
     public synchronized void doDelete(Trattamento trattamento) throws SQLException
     {
-        Connection connection = ConnectionStorage.getConnection();
-        String query = "DELETE FROM Trattamento WHERE Nome = ?";
+        if(trattamento != null && trattamento.getNome() != null){
+            Connection connection = ConnectionStorage.getConnection();
+            String query = "DELETE FROM Trattamento WHERE Nome = ?";
 
-        try (PreparedStatement stmt = connection.prepareStatement(query))
-        {
-            stmt.setString(1, trattamento.getNome());
-            stmt.executeUpdate();
-        }finally {
-            if(connection != null){
-                ConnectionStorage.releaseConnection(connection);
+            try (PreparedStatement stmt = connection.prepareStatement(query))
+            {
+                stmt.setString(1, trattamento.getNome());
+                if(stmt.executeUpdate() == 0){
+                    throw new NoSuchElementException("elemento non trovato");
+                }
+            }finally {
+                if(connection != null){
+                    ConnectionStorage.releaseConnection(connection);
+                }
             }
+        }else{
+            throw new SQLException("");
         }
     }
 

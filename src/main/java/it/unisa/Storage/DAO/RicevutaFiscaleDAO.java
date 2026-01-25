@@ -204,22 +204,30 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
 
         if(attribute != null && !attribute.isEmpty() && value != null){
             connection = ConnectionStorage.getConnection();
-            selectSQL = "SELECT * FROM hotelcolossus.ricevutafiscale WHERE " + attribute + " = ?";
+            selectSQL = "SELECT * FROM ricevutafiscale WHERE " + attribute + " = ?";
                 try{
                     preparedStatement = connection.prepareStatement(selectSQL);
                     preparedStatement.setObject(1, value);
                     ResultSet resultSet = preparedStatement.executeQuery();
 
                     RicevutaFiscale ricevuta;
+                    PreparedStatement preparedStatement1 = connection.prepareStatement("SELECT PrezzoCamera FROM cameraricevuta WHERE IDRicevutaFiscale = ?");
+                    ResultSet resultSet1 = null;
                     while (resultSet.next()) {
                         ricevuta = new RicevutaFiscale();
                         ricevuta.setIDRicevutaFiscale(resultSet.getInt("IDRicevutaFiscale"));
+                        if(resultSet1 == null){
+                            preparedStatement1.setInt(1,ricevuta.getIDRicevutaFiscale());
+                            resultSet1 = preparedStatement1.executeQuery();
+                        }
                         ricevuta.setIDPrenotazione(resultSet.getInt("IDPrenotazione"));
-                        ricevuta.setTotale(resultSet.getDouble("Totale"));
+                        ricevuta.setTotale(resultSet.getDouble("PrezzoTrattamento") + resultSet1.getDouble("PrezzoCamera"));
+                        ricevuta.setDataPrenotazione(resultSet.getDate("DataPrenotazione").toLocalDate());
                         ricevuta.setDataEmissione(resultSet.getDate("DataEmissione").toLocalDate());
+                        ricevuta.setMetodoPagamento(resultSet.getString("metodoPagamento"));
+                        ricevuta.setTipoTrattamento(resultSet.getString("TipoTrattamento"));
                         lista.add(ricevuta);
                     }
-
                 }finally{
                     if(connection != null){
                         if (preparedStatement != null) {

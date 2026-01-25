@@ -233,7 +233,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
             try(PreparedStatement preparedStatement = connection.prepareStatement(
                     "UPDATE Cliente SET nome = ?, cognome = ?, Cap = ?, comune = ?, " +
                             "civico = ?, provincia = ?, via = ?, Email = ?, Sesso = ?, " +
-                            "telefono = ?, MetodoDiPagamento = ?, Cittadinanza = ?, " +
+                            "telefono = ?, Cittadinanza = ?, " +
                             "DataDiNascita = ?, IsBackListed = ? WHERE CF = ?")){
 
                 preparedStatement.setString(1, o.getNome());
