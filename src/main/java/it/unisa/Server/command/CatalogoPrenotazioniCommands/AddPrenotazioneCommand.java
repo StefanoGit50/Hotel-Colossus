@@ -5,6 +5,7 @@ import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
 import it.unisa.Server.persistent.obj.catalogues.CatalogueUtils;
 import it.unisa.Storage.DAO.PrenotazioneDAO;
+import it.unisa.Storage.DuplicateKeyEntry;
 import it.unisa.Storage.FrontDeskStorage;
 
 import java.sql.SQLException;
@@ -58,8 +59,9 @@ public class AddPrenotazioneCommand implements Command {
         frontDeskStorage = new PrenotazioneDAO();
         try {
             frontDeskStorage.doSave(prenotazione);
-        }catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException e){
+            if (e.getErrorCode() == 1062)
+                throw new DuplicateKeyEntry();
         }
     }
 

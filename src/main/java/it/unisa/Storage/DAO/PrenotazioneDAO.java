@@ -562,7 +562,17 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
     }
 
 
-    public ArrayList<Prenotazione> doFilter(String nome,String cognome, LocalDate dataInizio, LocalDate dataFine, Integer numeroCamera, String elementOrder)
+    /**
+     * Metodo per recupero tramite filtro delle prenotazioni
+     * @param nome  nome del cliente intestatario.
+     * @param cognome  cognome del cliente intestatario.
+     * @param dataInizio
+     * @param dataFine
+     * @param numeroCamera
+     * @param elementOrder
+     * @return
+     */
+    public ArrayList<Prenotazione> doFilter(String nome, String cognome, LocalDate dataInizio, LocalDate dataFine, Integer numeroCamera, String elementOrder)
     {
             try{
                         Connection connection = ConnectionStorage.getConnection();

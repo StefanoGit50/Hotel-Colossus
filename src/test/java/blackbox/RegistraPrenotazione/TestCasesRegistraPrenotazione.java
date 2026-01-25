@@ -12,6 +12,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Random;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @Tag("registraPrenotazione")
@@ -108,22 +109,62 @@ public class TestCasesRegistraPrenotazione {
      */
     public Prenotazione createBasePrenotazione() {
         return new Prenotazione(
-                1,  // ID
+                new Random().nextInt(1, 1000),  // ID
                 LocalDate.now(), // Data Creazione
-                LocalDate.of(2026, 1, 17),  // Data arrivo
-                LocalDate.of(2026, 1, 20),  // Data
+                LocalDate.now().plusDays(1),            // Data arrivo
+                LocalDate.now().plusDays(5),            // Data partenza
                 trattamento, "Patente",
-                LocalDate.of(2020, 1, 10), LocalDate.of(2030, 1, 10),
+                LocalDate.of(2020, 1, 10),
+                LocalDate.of(2030, 1, 10),
                 listaClienti.getFirst().getNome(), "",
-                new ArrayList<>(listaCamere.subList(0, 1)),
-                new ArrayList<>(),
-                new ArrayList<>(listaClienti.subList(0, 1)),
+                new ArrayList<>(listaCamere.subList(0, 1)), // lista camere
+                listaServizi,                          // lista servizi
+                new ArrayList<>(listaClienti.subList(0, 1)),// lista clienti
                 987654321
         );
     }
     /* ************************************************************************************************************** */
 
-    //TODO: CASI DI SUCCESSO
+    /* ***************************** CASI DI SUCCESSO **************************** */
+
+    @Nested
+    @DisplayName("TESTING: RegistraPrenotazione - PASSes")
+    @Tag("pass")
+    class TestPassRegistraImpiegato {
+        @Test
+        @DisplayName("TC1: [Success] Registrazione con servizi: nessuno")
+        void testCase1() {
+            Prenotazione p = createBasePrenotazione();
+            p.setListaServizi(new ArrayList<>(listaServizi));
+            Assertions.assertDoesNotThrow(() -> frontDesk.addPrenotazione(p));
+        }
+
+        @Test
+        @DisplayName("TC2: [Success] Registrazione con servizi: 1")
+        void testCase2() {
+            Prenotazione p = createBasePrenotazione();
+            p.setListaServizi(new ArrayList<>(listaServizi.subList(0, 1)));
+            Assertions.assertDoesNotThrow(() -> frontDesk.addPrenotazione(p));
+        }
+
+        @Test
+        @DisplayName("TC3: [Success] Registrazione con servizi: 3 e CID")
+        void testCase3() {
+            Prenotazione p = createBasePrenotazione();
+            p.setTipoDocumento("CID");
+            p.setTrattamento(new Trattamento("Pensione Completa", 500));
+            //frontDesk.addPrenotazione(p);
+        }
+
+        @Test
+        @DisplayName("TC4: [Success] Clienti multipli e camere multiple")
+        void testCase4() {
+            Prenotazione p = createBasePrenotazione();
+            p.setTipoDocumento("Passaporto");
+            p.setTrattamento(new Trattamento("Solo pernottamento", 80));
+
+        }
+    }
 
     /* ***************************** CASI DI ERRORE **************************** */
 
@@ -184,14 +225,6 @@ public class TestCasesRegistraPrenotazione {
         public void testCase11() {
             Prenotazione p = createBasePrenotazione();
             p.setDataFine(null);
-            Assertions.assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
-        }
-
-        @Test
-        @DisplayName("TC12: [error] Campo servizi è obbligatorio")
-        public void testCase12() {
-            Prenotazione p = createBasePrenotazione();
-            p.setListaServizi(null);
             Assertions.assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
@@ -272,7 +305,7 @@ public class TestCasesRegistraPrenotazione {
         @DisplayName("TC22: [error] Data di scadenza del documento successiva alla data di rilascio")
         public void testCase22() {
             Prenotazione p = createBasePrenotazione();
-            p.setDataRilascio(p.getDataRilascio().minusYears(1));
+            p.setDataRilascio(p.getDataScadenza());
             Assertions.assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 

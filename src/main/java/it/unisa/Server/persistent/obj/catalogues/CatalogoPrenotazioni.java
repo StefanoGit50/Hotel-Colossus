@@ -157,24 +157,51 @@ public class CatalogoPrenotazioni implements Serializable {
         }
 
         // Lista di condizioni che possono lanciare un errore
-        if (
-            inizio.isBefore(LocalDate.now()) || // data di arrivo passata
-            fine.isBefore(inizio) ||        // data di partenza precedente a quella di arrivo
-            fine.isEqual(inizio) ||         // data di partenza uguale a quella di arrivo
-            fine.isBefore(LocalDate.now()) ||   // data di partenza passata
-            prenotazione.getListaCamere().isEmpty() ||  // Nessuna camera selezionata
-            prenotazione.getListaClienti().isEmpty() || // Nessun cliente selezionato
-            ( !documento.equalsIgnoreCase("carta d'identità") &&    /*  Tipo di     */
-            !documento.equalsIgnoreCase("passaporto") &&    /*  documento   */
-            !documento.equalsIgnoreCase("patente") ) ||     /*  non valido  */
-            nPostiCamere == 0 ||    // Nessun posto camera
-            nClienti == 0 ||        // Nessun cliente selezionato
-            nClienti != nPostiCamere ||     // Mismatch clienti/posti camera
-            rilascio.isAfter(LocalDate.now()) ||    // data rilascio documento futura
-            scadenza.isBefore(LocalDate.now()) ||   // data scadenza documento passata
-            scadenza.isBefore(rilascio)     // data scadenza è antecedente la data di rilascio
-        )
-            throw new InvalidInputException();
+        // 1. Data Arrivo Passata
+        if (inizio.isBefore(LocalDate.now()))
+            throw new InvalidInputException("Data di arrivo non può essere passata");
+
+        // 2. Data Partenza precedente alla data di Arrivo
+        if (fine.isBefore(inizio))
+            throw new InvalidInputException("Data di partenza deve essere successiva alla data di arrivo");
+
+        // 3. Data Partenza uguale alla data di Arrivo
+        if (fine.isEqual(inizio))
+            throw new InvalidInputException("Data di partenza deve essere successiva alla data di arrivo");
+
+        // 4. Data Partenza passata
+        if (fine.isBefore(LocalDate.now()))
+            throw new InvalidInputException("Data di partenza non può essere passata");
+
+        // 5. Nessuna Camera selezionata
+        if (prenotazione.getListaCamere().isEmpty() || nPostiCamere == 0)
+            throw new InvalidInputException("Almeno una camera deve essere selezionata");
+
+        // 6. Nessun Cliente selezionato
+        if (prenotazione.getListaClienti().isEmpty() || nClienti == 0)
+            throw new InvalidInputException("Almeno un cliente deve essere selezionato");
+
+        // 7. Tipo Documento non valido
+        if (!documento.equalsIgnoreCase("carta d'identità") &&
+                !documento.equalsIgnoreCase("passaporto") &&
+                !documento.equalsIgnoreCase("patente"))
+            throw new InvalidInputException("Tipo documento non valido");
+
+        // 8. Mismatch capacità (Clienti vs Posti Camera)
+        if (nClienti != nPostiCamere)
+            throw new InvalidInputException("Numero clienti non corrisponde alla capacità totale delle camere");
+
+        // 9. Data Rilascio Documento futura
+        if (rilascio.isAfter(LocalDate.now()))
+            throw new InvalidInputException("Data rilascio documento non può essere futura");
+
+        // 10. Data Scadenza Documento passata
+        if (scadenza.isBefore(LocalDate.now()))
+            throw new InvalidInputException("Data scadenza documento non può essere passata");
+
+        // 11. Data Scadenza antecedente o uguale alla data di Rilascio
+        if (scadenza.isBefore(rilascio) || scadenza.isEqual(rilascio))
+            throw new InvalidInputException("Data scadenza documento deve essere successi");
 
     }
 }

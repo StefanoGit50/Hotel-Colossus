@@ -11,7 +11,7 @@ import java.util.Map;
 public interface ManagerInterface extends Remote
 {
     // I valori omessi vanno inseriti come null
-    List<Impiegato> filtroImpiegati(String nome, String cognome, Ruolo ruolo, String sesso) throws RemoteException;
+    List<Impiegato> filtroImpiegati(String nome, String sesso, Ruolo ruolo, String orderBy) throws RemoteException;
 
     // Comandi impiegato
     void addImpiegato(Impiegato i) throws RemoteException;

@@ -212,6 +212,7 @@ public class CatalogoImpiegati implements Serializable {
 
         // 20, 21, 22. Validazione Data Scadenza Documento
         if (scadenzaDocumento.isBefore(LocalDate.now()) ||
+                scadenzaDocumento.isEqual(LocalDate.now()) ||
                 scadenzaDocumento.isBefore(rilascioDocumento) ||
                 scadenzaDocumento.isEqual(rilascioDocumento)) {
             throw new InvalidInputException("[Data Scadenza Documento] errato");

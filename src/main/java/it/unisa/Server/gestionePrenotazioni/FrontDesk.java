@@ -8,6 +8,7 @@ import it.unisa.Server.command.CatalogoImpiegatiCommands.*;
 import it.unisa.Server.command.CatalogoPrenotazioniCommands.*;
 import it.unisa.Server.persistent.obj.catalogues.*;
 import it.unisa.Storage.DAO.ClienteDAO;
+import it.unisa.Storage.DAO.PrenotazioneDAO;
 import it.unisa.interfacce.FrontDeskInterface;
 
 import java.rmi.Naming;
@@ -16,6 +17,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -177,6 +179,28 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
             e.printStackTrace();
         }
         return clienteDAO.doFilter(nome, cognome, nazionalita, dataNascita, blackListed, orderBy);
+    }
+
+    /**
+     * @param nome nome del cliente intestatario.
+     * @param cognome cognome del cliente intestatario.
+     * @param nazionalita nazionalità del cliente intestatario.
+     * @param dataNascita data di nascita del cliente intestatario.
+     * @param blackListed stato di ban del cliente intestatario.
+     * @return lista di prenotazioni.
+     * @throws RemoteException
+     */
+    @Override
+    public List<Prenotazione> filterPrenotazioni(String nome, String cognome, String nazionalita, LocalDate dataNascita, Boolean blackListed, String orderBy) throws RemoteException {
+       PrenotazioneDAO prenotazioneDAO = null;
+       Collection<Prenotazione> prenotazioni = null;
+       try {
+            prenotazioneDAO = new PrenotazioneDAO();
+            prenotazioni = prenotazioneDAO.doFilter(nome, cognome, nazionalita, dataNascita, blackListed, orderBy);
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
+       return (List<Prenotazione>) prenotazioni;
     }
 
 

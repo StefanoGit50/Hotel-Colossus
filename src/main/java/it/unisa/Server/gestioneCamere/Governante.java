@@ -3,6 +3,7 @@ package it.unisa.Server.gestioneCamere;
 import it.unisa.Common.Camera;
 import it.unisa.Server.ObserverCamereInterface;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
+import it.unisa.Storage.DAO.CameraDAO;
 import it.unisa.interfacce.GovernanteInterface;
 
 import java.rmi.Naming;
@@ -10,6 +11,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -48,11 +50,14 @@ public class Governante extends UnicastRemoteObject implements GovernanteInterfa
     public static void main(String[] args) throws RemoteException
     {
         logger.info("Ottengo le camere...");
-
-        for(int i=101; i<600; i++)
-        {
-           //  stanze.add(new Stanza(i));
-           // IO.println(stanze.toString());
+        CameraDAO dao = new CameraDAO();
+        ArrayList<Camera> listaCamere = null;
+        try {
+            listaCamere = (ArrayList<Camera>) dao.doRetriveAll("decrescente");
+            CatalogoCamere.addCamere(listaCamere);
+            System.out.println(CatalogoCamere.getListaCamere().size());
+        } catch (SQLException e) {
+            throw new RemoteException("Try istantiate \"Governate\" again!");
         }
 
         logger.info("Camere ottenute!");
