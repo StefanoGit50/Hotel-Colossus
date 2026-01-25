@@ -1,6 +1,5 @@
-package it.unisa.Storage;
+package it.unisa.Storage.Interfacce;
 
-import it.unisa.Common.Impiegato;
 import it.unisa.Server.persistent.util.Ruolo;
 
 import java.sql.SQLException;
