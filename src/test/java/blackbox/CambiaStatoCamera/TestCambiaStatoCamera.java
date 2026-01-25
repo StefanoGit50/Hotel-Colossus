@@ -27,7 +27,6 @@ public class TestCambiaStatoCamera {
      */
     public Camera getCameraByStato(Stato stato) throws RemoteException{
         List<Camera> camere = governante.getListCamere();
-        System.out.println(camere.size());
         for (Camera c : camere){
             if (c.getStatoCamera().equals(stato)){
                 return c;

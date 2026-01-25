@@ -31,8 +31,7 @@ public class Governante extends UnicastRemoteObject implements GovernanteInterfa
 
     @Override
     public List<Camera> getListCamere(){
-        List<Camera> camere = new ArrayList<>();
-        return camere;
+        return CatalogoCamere.getListaCamere();
     }
 
     @Override
