@@ -3,7 +3,6 @@ package it.unisa.Server.persistent.obj.catalogues;
 import it.unisa.Common.Camera;
 import it.unisa.Server.ObserverCamereInterface;
 import it.unisa.Server.SubjectCamereInterface;
-import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Server.persistent.util.Util;
 
 import java.io.Serializable;
@@ -47,17 +46,6 @@ public class CatalogoCamere implements SubjectCamereInterface, Serializable {
     }
 
     public CatalogoCamere(){}
-
-   static {
-       camereList.add(new Camera(112, Stato.Libera, 2,50,""));
-       camereList.add(new Camera(113, Stato.Libera, 3, 80, ""));
-       camereList.add(new Camera(114, Stato.Libera, 4, 123,"renato ti massaggia"));
-       camereList.add(new Camera(115, Stato.Libera, 5,80, "Andrea"));
-       camereList.add(new Camera(116, Stato.Libera, 6, 60, ""));
-       camereList.add(new Camera(117, Stato.Libera, 7,98,""));
-       camereList.add(new Camera(118, Stato.Libera, 8, 78, ""));
-       camereList.add(new Camera(119, Stato.Libera, 9, 56,""));
-   }
 
 
     /**

@@ -2,7 +2,7 @@ package it.unisa.Storage.DAO;
 
 import it.unisa.Common.Trattamento;
 import it.unisa.Storage.ConnectionStorage;
-import it.unisa.Storage.FrontDeskStorage;
+import it.unisa.Storage.Interfacce.FrontDeskStorage;
 
 import java.sql.*;
 import java.time.LocalDate;

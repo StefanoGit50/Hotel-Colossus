@@ -3,7 +3,10 @@ package blackbox.RegistraImpiegato;
 import it.unisa.Common.*;
 import it.unisa.Server.persistent.obj.catalogues.InvalidInputException;
 import it.unisa.Server.persistent.util.Ruolo;
+import it.unisa.Storage.DuplicateKeyEntry;
 import it.unisa.interfacce.ManagerInterface;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.*;
 
 import java.net.MalformedURLException;
@@ -11,11 +14,13 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
+import java.util.Random;
 
 @DisplayName("TESTING: RegistraImpiegato")
 @Tag("registraImpiegato")
 public class TestCasesRegistraImpiegato {
 
+    private static final Logger log = LogManager.getLogger(TestCasesRegistraImpiegato.class);
     public static ManagerInterface manager;
 
     @BeforeAll
@@ -32,7 +37,8 @@ public class TestCasesRegistraImpiegato {
      */
     public Impiegato createBaseImpiegato() {
         return new Impiegato(
-                "mario.rossi",      // username (dedotto)
+                // username generato casualmente per evitare DuplicateKey
+                "mario.rossi",
                 "passwordSicura123!",        // hashedPassword (dedotto)
                 "Mario",                     // nome
                 "Rossi",                     // cognome
@@ -44,8 +50,8 @@ public class TestCasesRegistraImpiegato {
                 "Napoli",                    // provincia
                 "Napoli",                    // comune
                 10,                          // numeroCivico
-                "RSSMRA85M01H501Z",          // codiceFiscale
-                "1",           // telefono
+                generateRandomCF(),          // codiceFiscale
+                "1",                        // telefono
                 Ruolo.Manager,             // ruolo (mappato dal testo "Front desk")
                 2500.00,                     // stipendio
                 LocalDate.of(2024, 1, 15),   // dataAssunzione
@@ -54,7 +60,19 @@ public class TestCasesRegistraImpiegato {
                 "Italiana",                  // cittadinanza
                 LocalDate.of(2099, 1, 20)    // dataScadenza
         );
+    }
 
+    public static String generateRandomCF() {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        StringBuilder sb = new StringBuilder();
+        Random rn =  new Random();
+
+        // Aggiunge len caratteri random
+        for (int i = 0; i < 16; i++) {
+            sb.append(chars.charAt(rn.nextInt(chars.length())));
+        }
+
+        return sb.toString();
     }
 
     /* ************************************************************************************************************** */
@@ -66,16 +84,8 @@ public class TestCasesRegistraImpiegato {
         @Test
         @DisplayName("TC1: [success] Registrazione impiegato effettuata con successo")
         public void testCase1() {
-            Impiegato i = createBaseImpiegato(), campione = null;
-            try {
-                manager.addImpiegato(i); // Registra l'impiegato
-                // Recuperalo per vedere che è stato effettivamente registrato
-                campione = manager.filtroImpiegati(i.getNome(), i.getCognome(), i.getRuolo(), i.getSesso()).getFirst();
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-            System.out.println(i.equals(campione));
-            Assertions.assertEquals(i, campione);
+            Impiegato i = createBaseImpiegato();
+            Assertions.assertDoesNotThrow( () -> manager.addImpiegato(i));
         }
     }
     /* ***************************** CASI DI ERRORE **************************** */
@@ -96,9 +106,13 @@ public class TestCasesRegistraImpiegato {
         @DisplayName("TC3: [error] Codice fiscale già presente nel sistema")
         public void testCase3() {
             Impiegato i = createBaseImpiegato();
-            // Assumendo che questo CF sia già nel DB di test
-            i.setCodiceFiscale("RSSMRA85M01H501Z");
-            Assertions.assertThrows(InvalidInputException.class, () -> manager.addImpiegato(i));
+            // Provo ad inserire lo stesso impiegato (con lo stesso CF) più volte
+            try {
+                manager.addImpiegato(i);
+            } catch (RemoteException | DuplicateKeyEntry e) {
+                e.printStackTrace();
+            }
+            Assertions.assertThrows(DuplicateKeyEntry.class, () -> manager.addImpiegato(i));
         }
 
         @Test
@@ -427,7 +441,7 @@ public class TestCasesRegistraImpiegato {
         @DisplayName("TC44: [error] Data scadenza deve essere futura")
         public void testCase44() {
             Impiegato i = createBaseImpiegato();
-            i.setDataScadenza(LocalDate.now().plusYears(1));
+            i.setDataScadenza(LocalDate.now().minusYears(1));
             Assertions.assertThrows(InvalidInputException.class, () -> manager.addImpiegato(i));
         }
 

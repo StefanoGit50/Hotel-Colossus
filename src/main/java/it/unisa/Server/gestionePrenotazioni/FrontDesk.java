@@ -8,14 +8,17 @@ import it.unisa.Server.command.CatalogoImpiegatiCommands.*;
 import it.unisa.Server.command.CatalogoPrenotazioniCommands.*;
 import it.unisa.Server.persistent.obj.catalogues.*;
 import it.unisa.Storage.DAO.ClienteDAO;
+import it.unisa.Storage.DAO.PrenotazioneDAO;
 import it.unisa.interfacce.FrontDeskInterface;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -57,24 +60,17 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     {
         try
         {
-            logger.info("Avvio RMI Registry sulla porta " + RMI_PORT + "...");
+           // logger.info("Avvio RMI Registry sulla porta " + RMI_PORT + "...");
 
-            try {
-                // Prova a creare un nuovo registry
-                LocateRegistry.createRegistry(RMI_PORT);
-                logger.info("✓ RMI Registry creato con successo!");
-            } catch (RemoteException e) {
-                // Se esiste già, ottieni il riferimento
-                LocateRegistry.getRegistry(RMI_PORT);
-                logger.info("✓ Connesso a RMI Registry esistente");
-            }
+            Registry registry = LocateRegistry.getRegistry("localhost", RMI_PORT);
+            logger.info("✓ Connesso a RMI Registry esistente");
 
             logger.info("Genero il gestore prenotazioni...");
             FrontDesk gp = new FrontDesk();
             logger.info("✓ Gestore prenotazioni creato");
 
             logger.info("Effettuo il rebind di gestione prenotazioni...");
-            Naming.rebind("rmi://localhost:" + RMI_PORT + "/GestionePrenotazioni", gp);
+            registry.rebind("rmi://localhost:" + RMI_PORT + "/GestionePrenotazioni", gp);
             logger.info("✓ Gestore prenotazioni registrato con successo!");
             logger.info("✓ Servizio 'GestionePrenotazioni' pronto");
             logger.info("Server in attesa di connessioni...");
@@ -177,6 +173,28 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
             e.printStackTrace();
         }
         return clienteDAO.doFilter(nome, cognome, nazionalita, dataNascita, blackListed, orderBy);
+    }
+
+    /**
+     * @param nome nome del cliente intestatario.
+     * @param cognome cognome del cliente intestatario.
+     * @param nazionalita nazionalità del cliente intestatario.
+     * @param dataNascita data di nascita del cliente intestatario.
+     * @param blackListed stato di ban del cliente intestatario.
+     * @return lista di prenotazioni.
+     * @throws RemoteException
+     */
+    @Override
+    public List<Prenotazione> filterPrenotazioni(String nome, String cognome, String nazionalita, LocalDate dataNascita, Boolean blackListed, String orderBy) throws RemoteException {
+       PrenotazioneDAO prenotazioneDAO = null;
+       Collection<Prenotazione> prenotazioni = null;
+       try {
+            prenotazioneDAO = new PrenotazioneDAO();
+            prenotazioni = prenotazioneDAO.doFilter(nome, cognome, nazionalita, dataNascita, blackListed, orderBy);
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
+       return (List<Prenotazione>) prenotazioni;
     }
 
 

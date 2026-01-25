@@ -80,7 +80,7 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
     private Invoker invoker = new Invoker();
 
     @Override
-    public List<Impiegato> filtroImpiegati(String nome, String cognome, Ruolo ruolo, String sesso) throws RemoteException {
+    public List<Impiegato> filtroImpiegati(String nome, String sesso, Ruolo ruolo, String orderBy) throws RemoteException {
         ImpiegatoDAO impDao = new ImpiegatoDAO();
         List<Impiegato> impiegati = null;
         try{

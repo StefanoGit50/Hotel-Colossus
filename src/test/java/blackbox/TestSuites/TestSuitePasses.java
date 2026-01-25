@@ -7,7 +7,7 @@ import org.junit.platform.suite.api.SuiteDisplayName;
 
 @Suite
 @SuiteDisplayName("Test suite: flitro clienti")
-@SelectPackages({"blackbox.RegistraImpiegato", "blackbox.RegistraPrenotazione"})
+@SelectPackages({"blackbox.RegistraImpiegato", "blackbox.RegistraPrenotazione", "blackbox.CambiaStatoCamera"})
 @IncludeTags({"pass"})
 public class TestSuitePasses {
 

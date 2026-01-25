@@ -21,8 +21,6 @@ NC='\033[0m' # No Color
 # --- DEFINIZIONE VARIABILI DI CONFIGURAZIONE ---
 RMI_PORT=1099
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-BIN_DIR="$PROJECT_ROOT/bin"
-LIB_DIR="$PROJECT_ROOT/lib"
 LOGS_DIR="$PROJECT_ROOT/logs"
 PID_DIR="$PROJECT_ROOT/pids"
 CONFIG_FILE="$PROJECT_ROOT/rmi.properties"
@@ -59,13 +57,11 @@ print_error()
 print_info "Creazione directory necessarie..."
 
 
-mkdir -p "$BIN_DIR"
-mkdir -p "$LIB_DIR"
 mkdir -p "$LOGS_DIR"
 mkdir -p "$PID_DIR"
 
 
-print_success "Directory create: bin/, lib/, logs/, pids/"
+print_success "Directory create: logs/, pids/"
 
 
 # Crea file di configurazione

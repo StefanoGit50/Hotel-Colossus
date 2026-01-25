@@ -19,10 +19,10 @@ public class CatalogueUtils {
             try {
                 field.setAccessible(true); // Rendili accessilibi temporaneamente
                 Object fieldValue = field.get(oggetto);
-                if (fieldValue == null) {
+                if (fieldValue == null && !field.getName().equals("noteAggiuntive")) {
                     throw new InvalidInputException("Campo: " + field.getName() + " è nullo");
                 }
-                if (field.getType().equals(String.class) && ((String) fieldValue).isBlank()) {
+                if (!field.getName().equals("noteAggiuntive") && field.getType().equals(String.class) && ((String) fieldValue).isBlank()) {
                     throw new InvalidInputException("Campo: " + field.getName() + " è vuoto");
                 }
                 field.setAccessible(false); // Rendili di nuovo non accessibili...

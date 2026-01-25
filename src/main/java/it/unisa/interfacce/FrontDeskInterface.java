@@ -27,8 +27,11 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
     void updateCliente(Cliente c) throws RemoteException;
     void banCliente(Cliente c) throws RemoteException;
     void unBanCliente(Cliente c) throws RemoteException;
-    // Filtro cliente
+    // Filtro clienti
     List<Cliente> filterClienti(String nome, String cognome, String nazionalita, LocalDate dataNascita, Boolean blackListed, String orderBy)
+            throws RemoteException;
+    // Filtro prenotazioni
+    List<Prenotazione> filterPrenotazioni(String nome, String cognome, String nazionalita, LocalDate dataNascita, Boolean blackListed, String orderBy)
             throws RemoteException;
 
     // Comando undo

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <File name="logTestingBlackbox" fileName="src/main/logging/logTestingBlackbox.log">
+            <PatternLayout pattern="%d{HH:mm:ss} %-5level %logger{1}: %msg%n"/>
+        </File>
+        <File name="HotelColossusLogger" fileName="src/main/logging/HotelColossusLogger.log">
+            <PatternLayout pattern="%d{HH:mm:ss} %-5level %logger{1}: %msg%n"/>
+        </File>
+    </Appenders>
+
+    <Loggers>
+        <!-- Tutte le classi nel package com.mio.progetto.abc scrivono su abc.log -->
+        <Logger name="blackbox" level="info" additivity="false">
+            <AppenderRef ref="logTestingBlackbox"/>
+        </Logger>
+
+        <Root level="info">
+            <AppenderRef ref="HotelColossusLogger"/>
+        </Root>
+    </Loggers>
+</Configuration>

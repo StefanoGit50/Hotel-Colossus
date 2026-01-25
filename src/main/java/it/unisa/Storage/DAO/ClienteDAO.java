@@ -2,7 +2,7 @@ package it.unisa.Storage.DAO;
 
 import it.unisa.Common.Cliente;
 import it.unisa.Storage.ConnectionStorage;
-import it.unisa.Storage.FrontDeskStorage;
+import it.unisa.Storage.Interfacce.FrontDeskStorage;
 
 import java.sql.*;
 import java.sql.Date;
@@ -16,7 +16,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
     private Cliente cliente=null;
     private  ResultSet resultSet;
 
-    public static final String TABLE_NAME = "Cliente";
+
     private static final String[] whitelist = {
             "CF",
             "Stipedio",
@@ -165,7 +165,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
 
     @Override
     public synchronized Collection<Cliente> doRetriveAll(String order) throws SQLException {
-        Connection connection = ConnectionStorage.getConnection();
+        con = ConnectionStorage.getConnection();
         ArrayList<Cliente> clientes = new ArrayList<>();
 
         String sql =  "SELECT * FROM Cliente ORDER BY ? ";
@@ -175,12 +175,11 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
             sql+= "ASC";
         }
 
-        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+        try(PreparedStatement preparedStatement = con.prepareStatement(sql)){
             preparedStatement.setString(1,"CF");
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
                 String cf1 = (String) resultSet.getObject(1);
-
                 String nome = (String) resultSet.getObject(2);
                 String cognome = (String) resultSet.getObject(3);
                 String  cap = (String) resultSet.getObject(4);
@@ -191,19 +190,21 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                 String email = (String) resultSet.getObject(9);
                 String  sesso = (String) resultSet.getObject(10);
                 String  telefono = (String) resultSet.getObject(11);
-                String  cittadinazione = (String) resultSet.getObject(13);
-                Date date1 = (Date) resultSet.getObject(14);
+                String  cittadinazione = (String) resultSet.getObject(12);
+                Date date1 = (Date) resultSet.getObject(13);
                 LocalDate date = date1.toLocalDate();
-                Boolean  isBackListed = (Boolean) resultSet.getObject(15);
-                clientes.add(new Cliente(nome,cognome,cittadinazione,provincia,comune,via,civico,Integer.parseInt(cap),telefono,sesso,date,cf1,email));
+                Boolean  isBackListed = (Boolean) resultSet.getObject(14);
+
+                cliente = new Cliente(nome,cognome,cittadinazione,provincia,comune,via,civico,Integer.parseInt(cap),telefono,sesso,date,cf1,email);
+                cliente.setBlacklisted(isBackListed);
+                clientes.add(cliente);
             }
             resultSet.close();
         }finally{
-            if(connection != null){
-                ConnectionStorage.releaseConnection(connection);
+            if(con != null){
+                ConnectionStorage.releaseConnection(con);
             }
         }
-
         return clientes;
     }
 
@@ -227,10 +228,9 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
     @Override
     public synchronized void doUpdate(Cliente o) throws SQLException
     {
-        if(o != null)
-        {
-            Connection connection = ConnectionStorage.getConnection();
-            try(PreparedStatement preparedStatement = connection.prepareStatement(
+        if(o != null && o.getCf() != null){
+            con = ConnectionStorage.getConnection();
+            try(PreparedStatement preparedStatement = con.prepareStatement(
                     "UPDATE Cliente SET nome = ?, cognome = ?, Cap = ?, comune = ?, " +
                             "civico = ?, provincia = ?, via = ?, Email = ?, Sesso = ?, " +
                             "telefono = ?, Cittadinanza = ?, " +
@@ -254,9 +254,9 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
             }
             finally
             {
-                if(connection != null)
+                if(con != null)
                 {
-                    ConnectionStorage.releaseConnection(connection);
+                    ConnectionStorage.releaseConnection(con);
                 }
             }
         }
@@ -268,16 +268,15 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
 
     @Override
     public synchronized Collection<Cliente> doRetriveByAttribute(String attribute, Object value) throws SQLException {
-        Connection connection;
         PreparedStatement preparedStatement = null;
         ArrayList<Cliente> lista = new ArrayList<>();
         String selectSQL;
 
         if(attribute != null && !attribute.isEmpty() && value != null){
-            connection = ConnectionStorage.getConnection();
-            selectSQL = "SELECT * FROM "+ ClienteDAO.TABLE_NAME + " WHERE " + attribute + " = ?";
+            con= ConnectionStorage.getConnection();
+            selectSQL = "SELECT * FROM Cliente WHERE " + attribute + " = ?";
             try{
-                preparedStatement = connection.prepareStatement(selectSQL);
+                preparedStatement = con.prepareStatement(selectSQL);
                 preparedStatement.setObject(1, value);
                 ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -286,11 +285,10 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                     cliente.setCf(resultSet.getString("CF"));
                     cliente.setNome(resultSet.getString("nome"));
                     cliente.setCognome(resultSet.getString("cognome"));
-                    cliente.setCognome(resultSet.getString("civico"));
+                    cliente.setNumeroCivico(resultSet.getInt("civico"));
                     cliente.setCAP(resultSet.getInt("Cap"));
                     cliente.setComune(resultSet.getString("Comune"));
                     cliente.setCittadinanza(resultSet.getString("Cittadinanza"));
-                    cliente.setNumeroCivico(resultSet.getInt("civico"));
                     cliente.setProvincia(resultSet.getString("provincia"));
                     cliente.setVia(resultSet.getString("Via"));
                     cliente.setEmail(resultSet.getString("Email"));
@@ -302,18 +300,18 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                 }
 
             }finally{
-                if(connection != null){
+                if(con!= null){
                     if (preparedStatement != null) {
                         preparedStatement.close();
                     }
-                    ConnectionStorage.releaseConnection(connection);
+                    ConnectionStorage.releaseConnection(con);
                 }
             }
         }else{
             throw new RuntimeException("Attributo e/o valore non valido/i");
         }
 
-        if(lista.isEmpty()) throw new NoSuchElementException("Nessuna cliente con " + attribute + " = " + value + "!");
+        if(lista.isEmpty()) throw new NoSuchElementException("Nessun cliente con " + attribute + " = " + value + "!");
 
         return lista;
     }
@@ -322,7 +320,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
     // Filtro clienti
     @Override
     public List<Cliente> doFilter(String nome, String cognome, String nazionalita, LocalDate dataNascita, Boolean blackListed, String orderBy) {
-        Connection conn = null;
+        con = null;
         PreparedStatement preparedStatement = null;
         List<Cliente> lista = new ArrayList<>();
         String selectSQL = "";
@@ -346,7 +344,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
         }
         // Il numero di AND della query è pari a count - 1
 
-        selectSQL += "SELECT * FROM " + ClienteDAO.TABLE_NAME + " WHERE ";
+        selectSQL += "SELECT * FROM Cliente WHERE";
         // Il cliclo serve per inserire gli AND correttamente
         for (int i = 0, j = count; i < params.length; i++) {
             if (i == 0 && params[0]) { // Se la flag è vera allora il parametro è presente ed è usato come criterio per la query di ricerca
@@ -376,11 +374,11 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
         }
         System.out.println(selectSQL);
         try{
-            conn = ConnectionStorage.getConnection();
+            con = ConnectionStorage.getConnection();
             ResultSet resultSet = null;
 
             try{
-                preparedStatement = conn.prepareStatement(selectSQL);
+                preparedStatement = con.prepareStatement(selectSQL);
                 int counter = 1;
                 if (params[0]) {
                     preparedStatement.setString(counter, nome);
@@ -425,7 +423,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
             } finally {
                 if (preparedStatement != null)
                     preparedStatement.close();
-                ConnectionStorage.releaseConnection(conn);
+                ConnectionStorage.releaseConnection(con);
             }
         } catch (SQLException e) {
             e.printStackTrace();
