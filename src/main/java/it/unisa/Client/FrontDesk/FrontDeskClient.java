@@ -4,14 +4,10 @@ import it.unisa.Common.Camera;
 
 import it.unisa.Common.Prenotazione;
 import it.unisa.Server.command.CatalogoClientiCommands.AddClienteCommand;
-import it.unisa.Server.command.CatalogoClientiCommands.BanCommand;
 import it.unisa.Server.command.CatalogoClientiCommands.UnBanCommand;
-import it.unisa.Server.gestionePrenotazioni.FrontDesk;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.DAO.CameraDAO;
-import it.unisa.Storage.FrontDeskStorage;
-import it.unisa.interfacce.GovernanteInterface;
 import it.unisa.interfacce.FrontDeskInterface;
 import it.unisa.Server.gestioneClienti.Cliente;
 

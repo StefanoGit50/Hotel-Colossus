@@ -5,7 +5,6 @@ import it.unisa.Server.command.CatalogoPrenotazioniCommands.AddPrenotazioneComma
 import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.DAO.PrenotazioneDAO;
-import it.unisa.Storage.FrontDeskStorage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

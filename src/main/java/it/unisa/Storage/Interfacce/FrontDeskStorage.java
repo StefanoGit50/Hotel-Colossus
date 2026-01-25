@@ -1,8 +1,7 @@
-package it.unisa.Storage;
+package it.unisa.Storage.Interfacce;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collection;
 
 public interface FrontDeskStorage<T>

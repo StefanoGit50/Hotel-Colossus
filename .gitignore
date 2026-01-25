@@ -42,3 +42,6 @@ build/
 pids/
 *.log
 logs/
+*.pid
+.idea/
+*.class

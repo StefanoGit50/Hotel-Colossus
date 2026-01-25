@@ -3,8 +3,8 @@ package it.unisa.Storage.DAO;
 import it.unisa.Common.Camera;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.ConnectionStorage;
-import it.unisa.Storage.FrontDeskStorage;
-import it.unisa.Storage.GovernanteStorage;
+import it.unisa.Storage.Interfacce.FrontDeskStorage;
+import it.unisa.Storage.Interfacce.GovernanteStorage;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,7 +13,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Camera>{

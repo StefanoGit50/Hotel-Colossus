@@ -1,4 +1,4 @@
-package it.unisa.Storage.DAO.PrenotazioneDR;
+package it.unisa.Storage.DAO;
 
 import it.unisa.Common.*;
 
