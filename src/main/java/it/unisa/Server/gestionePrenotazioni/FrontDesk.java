@@ -14,6 +14,7 @@ import it.unisa.interfacce.FrontDeskInterface;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -59,24 +60,17 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     {
         try
         {
-            logger.info("Avvio RMI Registry sulla porta " + RMI_PORT + "...");
+           // logger.info("Avvio RMI Registry sulla porta " + RMI_PORT + "...");
 
-            try {
-                // Prova a creare un nuovo registry
-                LocateRegistry.createRegistry(RMI_PORT);
-                logger.info("✓ RMI Registry creato con successo!");
-            } catch (RemoteException e) {
-                // Se esiste già, ottieni il riferimento
-                LocateRegistry.getRegistry(RMI_PORT);
-                logger.info("✓ Connesso a RMI Registry esistente");
-            }
+            Registry registry = LocateRegistry.getRegistry("localhost", RMI_PORT);
+            logger.info("✓ Connesso a RMI Registry esistente");
 
             logger.info("Genero il gestore prenotazioni...");
             FrontDesk gp = new FrontDesk();
             logger.info("✓ Gestore prenotazioni creato");
 
             logger.info("Effettuo il rebind di gestione prenotazioni...");
-            Naming.rebind("rmi://localhost:" + RMI_PORT + "/GestionePrenotazioni", gp);
+            registry.rebind("rmi://localhost:" + RMI_PORT + "/GestionePrenotazioni", gp);
             logger.info("✓ Gestore prenotazioni registrato con successo!");
             logger.info("✓ Servizio 'GestionePrenotazioni' pronto");
             logger.info("Server in attesa di connessioni...");

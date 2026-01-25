@@ -11,14 +11,13 @@ $RMI_PORT = 1099
 $RMI_HOST = "localhost"
 
 # Directory
-$BUILD_DIR = Join-Path $PROJECT_ROOT "build\classes"
-$LIB_DIR = Join-Path $PROJECT_ROOT "lib"
+
 $LOGS_DIR = Join-Path $PROJECT_ROOT "logs"
 $PID_DIR = Join-Path $PROJECT_ROOT "pids"
 $CONFIG_DIR = Join-Path $PROJECT_ROOT "config"
 
 # Crea le directory se non esistono
-@($LOGS_DIR, $PID_DIR, $BUILD_DIR) | ForEach-Object {
+@($LOGS_DIR, $PID_DIR) | ForEach-Object {
     if (-not (Test-Path $_)) {
         New-Item -ItemType Directory -Path $_ -Force | Out-Null
     }
@@ -27,16 +26,11 @@ $CONFIG_DIR = Join-Path $PROJECT_ROOT "config"
 # Classpath
 if (Test-Path (Join-Path $PROJECT_ROOT "target\classes")) {
     $CLASSPATH = Join-Path $PROJECT_ROOT "target\classes"
-    Write-Host "  CLASSPATH: target\classes (Maven)" -ForegroundColor Gray
 } elseif (Test-Path (Join-Path $PROJECT_ROOT "out\production")) {
     $CLASSPATH = Join-Path $PROJECT_ROOT "out\production"
-    Write-Host "  CLASSPATH: out\production (IntelliJ)" -ForegroundColor Gray
-} elseif (Test-Path $BUILD_DIR) {
-    $CLASSPATH = $BUILD_DIR
-    Write-Host "  CLASSPATH: build\classes" -ForegroundColor Gray
 } else {
     Write-Warning "Classi compilate non trovate!"
-    $CLASSPATH = $BUILD_DIR
+    $CLASSPATH = Join-Path $PROJECT_ROOT "target\classes"
 }
 
 # Opzioni JVM
