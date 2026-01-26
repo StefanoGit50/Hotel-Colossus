@@ -195,7 +195,7 @@ public class ServizioDAOTesting{
     }
     @Test
     @DisplayName("doRetriveByAttribute() quando da un Eccezione ")
-    @Tags({@Tag(""),@Tag("")})
+    @Tags({@Tag("Error"),@Tag("Exception")})
     public void doRetriveByAttributeException(){
         assertThrows(RuntimeException.class,()->servizioDAO.doRetriveByAttribute(null,"Piscina"));
     }

@@ -1,6 +1,6 @@
 package it.unisa.Storage.DAO;
 
-import it.unisa.Common.RicevutaFiscale;
+import it.unisa.Common.*;
 import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.Interfacce.FrontDeskStorage;
 
@@ -8,6 +8,7 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.NoSuchElementException;
 
 public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
@@ -20,17 +21,62 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
         Connection conn = ConnectionStorage.getConnection();
         PreparedStatement ps = null;
         String insertSQL = "insert into RicevutaFiscale VALUES (?,?,?,?,?,?,?)";
-
+        String insertSQl1 = "insert into CameraRicevuta Values(?,?,?)";
+        String insertSQL2 = "insert into clientiricevuta values(?,?,?,?,?)";
+        String insertSQL3 = "insert into serviziricevuta values(?,?,?,?)";
+        PreparedStatement ps1 = null;
+        PreparedStatement ps2 = null;
+        PreparedStatement ps3 = null;
+        String intestatario = o.getPrenotazione().getIntestatario();
         try{
+            ps2 = conn.prepareStatement(insertSQL2);
+            ps1 = conn.prepareStatement(insertSQl1);
             ps = conn.prepareStatement(insertSQL);
+            ps3 = conn.prepareStatement(insertSQL3);
             ps.setInt(1, o.getIDRicevutaFiscale());
-            ps.setInt(2, o.getIDPrenotazione());
+            ps.setInt(2, o.getPrenotazione().getIDPrenotazione());
             ps.setDate(3, Date.valueOf(o.getDataEmissione()));
             ps.setString(4,o.getMetodoPagamento());
             ps.setDate(5,Date.valueOf(o.getDataPrenotazione()));
             ps.setDouble(6,o.getPrezzoTrattamento());
             ps.setString(7,o.getTipoTrattamento());
             ps.executeUpdate();
+
+            for(Camera camera: o.getCameras()){
+                ps1.setInt(1,o.getIDRicevutaFiscale());
+                ps1.setInt(2,camera.getNumeroCamera());
+                ps1.setDouble(3,camera.getPrezzoCamera());
+            }
+
+            for(Cliente cliente: o.getClientes()){
+                ps2.setInt(2,o.getIDRicevutaFiscale());
+                ps2.setString(1,cliente.getCf());
+                ps2.setString(3,cliente.getNome());
+                ps2.setString(4,cliente.getCognome());
+                if(intestatario.equalsIgnoreCase(cliente.getCf())){
+                    ps2.setBoolean(5,true);
+                }else{
+                    ps2.setBoolean(5,false);
+                }
+            }
+            ArrayList<Servizio> occorenze = new ArrayList<>();
+
+            for(Servizio servizio: o.getServizi()){
+                if(!occorenze.contains(servizio)){
+                    occorenze.add(servizio);
+                    int n = Collections.frequency(o.getServizi(),servizio);
+                    ServizioRicevutaDAO servizioRicevutaDAO = new ServizioRicevutaDAO();
+                    servizioRicevutaDAO.doSave(servizio,o.getIDRicevutaFiscale(),n);
+                }
+            }
+
+            for(Servizio servizio: o.getServizi()){
+                ps3.setInt(1,o.getIDRicevutaFiscale());
+                ps3.setString(2,servizio.getNome());
+                ps3.set
+            }
+
+
         }finally{
             if(ps != null)
                 ps.close();
