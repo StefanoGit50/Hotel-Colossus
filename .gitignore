@@ -10,6 +10,8 @@ bin
 lib
 pids
 env.sh
+rmi.properties
+rmi.properties.*
 
 ### IntelliJ IDEA ###
 .idea/modules.xml

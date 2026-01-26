@@ -11,10 +11,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.NoSuchElementException;
 
-public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
+public class RicevutaFiscaleDAO //implements FrontDeskStorage<RicevutaFiscale>
 {
 
-    private static final String[] attributes = {"IDRicevutaFiscale", "IDPrenotazione", "Totale", "DataEmissione"};
+    /*private static final String[] attributes = {"IDRicevutaFiscale", "IDPrenotazione", "Totale", "DataEmissione"};
 
     @Override
     public synchronized void doSave(RicevutaFiscale o) throws SQLException {
@@ -73,7 +73,7 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
             for(Servizio servizio: o.getServizi()){
                 ps3.setInt(1,o.getIDRicevutaFiscale());
                 ps3.setString(2,servizio.getNome());
-                ps3.set
+
             }
 
 
@@ -106,7 +106,7 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
 
     /**
      * NON SUPPORTATO
-     */
+
     public RicevutaFiscale doRetriveByKey(Object oggetto) throws SQLException {
         // Attaccati al tram
         return null;
@@ -293,9 +293,9 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
     /**
      *
      * NON è SUPPORTATA
-     */
+
     @Override
     public Collection<RicevutaFiscale> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, Boolean blacklisted, String orderBy) throws SQLException{
         throw new UnsupportedOperationException("Not supported yet.");
-    }
+    }*/
 }

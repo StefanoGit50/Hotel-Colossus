@@ -35,7 +35,14 @@ Script:
    stop-rmi.sh: Da utilizzare in ambienti Linux/Unix (Bash).
    stop-rmi.ps1: Da utilizzare in ambienti Windows (PowerShell).
 
-4. configurazione (uc3)
+4. CONFIGURAZIONE (UC3: Configurazione sistema)
+   File: configuration-rmi.sh / configuration-rmi.ps1
+   Descrizione: Gestisce tutta la configurazione di rmi e per l'accesso
+   al database. Tramite esso possiamo, modificare configurazione, resettare
+   i valori precedenti, generare l'env.sh e anche importare ed esportare
+   la configurazione in formato pdf.
+   configuration-rmi.sh: Da utilizzare in ambienti Linux/Unix (Bash).
+   configuration-rmi.ps1: Da utilizzare in ambienti Windows (PowerShell).
 
 5. MANUTENZIONE PROGRAMMATA (UC4: Avviso di manutenzione al sistema)
    File: maintenance-rmi.sh / maintenance-rmi.ps1
