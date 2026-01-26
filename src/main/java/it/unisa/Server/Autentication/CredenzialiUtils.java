@@ -42,11 +42,8 @@ public class CredenzialiUtils {
         return false;
     }
 
-    public static String HashToken(String token){
-        token=token.trim();
-        return BCrypt.withDefaults().hashToString(12, token.toCharArray());
-        //TODO : chiamare il doUpdate di Impiegato sul valore di ritorno
-    }
+
+    //TODO : chiamare il doUpdate di Impiegato sul valore di ritorno
     // TODO: bisogna ricordarsi prima di mettere la nuova password di rendere null sia campo expire sia il campo token nel DB
 
 }

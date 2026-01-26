@@ -15,14 +15,31 @@ public class TokenGenerator {
         TokenGenerator.token = token;
     }
 
+    public  TokenGenerator create() {
+        String token = generateToken();
+        return new TokenGenerator(token);
+    }
+
+
     public static String generateToken() {
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[24];
         random.nextBytes(salt);
         String randomPart = Base64.getUrlEncoder().withoutPadding().encodeToString(salt);
 
-        String token = "PWD-PASS-" + randomPart;
+        return "PWD-TMP-" + randomPart;
+    }
+
+    public static boolean isExpired(Instant expiresAt) {
+        return Instant.now().isAfter(expiresAt);
+    }
+    // Getters
+    public static String getToken() {
         return token;
+    }
+
+    public static Instant getExpiresAt() {
+        return expiresAt;
     }
 
 

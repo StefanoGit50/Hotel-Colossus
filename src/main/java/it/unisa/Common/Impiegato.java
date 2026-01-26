@@ -3,6 +3,7 @@ package it.unisa.Common;
 import it.unisa.Server.persistent.util.Ruolo;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -12,6 +13,42 @@ import java.util.Objects;
  */
 public class Impiegato extends Utente implements Cloneable, Serializable {
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setExpires(Instant expires) {
+        this.expires = expires;
+    }
+
+    public void setChange(boolean change) {
+        this.change = change;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public Instant getExpires() {
+        return expires;
+    }
+
+    public boolean isChange() {
+        return change;
+    }
+
+    private String username;
+    private String password;
+    private Instant expires;
+    private boolean change;
     /**
      * Nome dell'impiegato.
      */
