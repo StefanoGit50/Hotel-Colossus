@@ -12,37 +12,7 @@ set -e  # Blocca l'esecuzione dello script in caso di errore in qualsiasi comand
 
 # Carica environment
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-# METODO 1: Usa il nuovo script load-config.sh
-if [ -f "$SCRIPT_DIR/load-config.sh" ]; then
-    source "$SCRIPT_DIR/load-config.sh"
-
-# METODO 2: Fallback su env.sh generato da SystemManager
-elif [ -f "$SCRIPT_DIR/env.sh" ]; then
-    source "$SCRIPT_DIR/env.sh"
-
-# METODO 3: Configurazione manuale (compatibilità all'indietro)
-else
-    echo "⚠ File di configurazione non trovato, uso valori predefiniti"
-
-    # Valori di default
-    export RMI_PORT=1099
-    export RMI_HOST=localhost
-    export PROJECT_ROOT="$SCRIPT_DIR"
-    export LOGS_DIR="$PROJECT_ROOT/logs"
-    export PID_DIR="$PROJECT_ROOT/pids"
-
-    # Classpath discovery
-    if [ -d "target/classes" ]; then
-        export CLASSPATH="$PROJECT_ROOT/target/classes"
-    elif [ -d "out/production" ]; then
-        export CLASSPATH="$PROJECT_ROOT/out/production"
-    elif [ -d "bin" ]; then
-        export CLASSPATH="$PROJECT_ROOT/bin"
-    fi
-
-    export JAVA_OPTS="-Djava.rmi.server.hostname=localhost"
-fi
+source "$SCRIPT_DIR/env.sh"
 
 
 # --- CONFIGURAZIONE COLORI PER OUTPUT TERMINALE ---
