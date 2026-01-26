@@ -8,8 +8,9 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class PrenotazioneBuilder{    private final Prenotazione prenotazione;
+public class PrenotazioneBuilder{
 
+    private final Prenotazione prenotazione;
     // Map per evitare duplicati (lookup O(1) invece di O(n))
     private final Map<String, Cliente> clientiMap = new LinkedHashMap<>();
     private final Map<Integer, Camera> camereMap = new LinkedHashMap<>();

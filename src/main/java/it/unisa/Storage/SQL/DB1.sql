@@ -113,9 +113,14 @@ create table Trattamento(
 );
 
 create table Impiegato(
+    IDImpiegato int not null auto_increment,
 	CF char(16) not null,
     Stipedio double not null,
-	Nome varchar(50) not null,
+    UserName varchar(50) not null,
+    HashPasword varchar(50) not null,
+	isTempurali boolean not null Default false,
+    dataScadenzaToken TIMESTAMP not null,
+    Nome varchar(50) not null,
     Cognome varchar(50) not null,
     Cap char(5) not null,
     DataAssunzione date not null,
@@ -132,7 +137,8 @@ create table Impiegato(
     Civico int not null,
     NumeroDocumento char(9) not null,
     DataScadenza date not null,
+    IDImpiegato1 int null DEFAULT 0,
     CF1 char(16) null DEFAULT null,
-    primary key(CF),
-   foreign key(CF1) references Impiegato(CF) on delete cascade on update cascade
+    primary key(IDImpiegato,CF),
+   foreign key(IDImpiegato1,CF1) references Impiegato(IDImpiegato,CF) on delete cascade on update cascade
 );
