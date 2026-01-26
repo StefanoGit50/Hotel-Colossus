@@ -6,11 +6,11 @@
 # Descrizione: Visualizza i log dei servizi RMI in tempo reale con opzioni
 #              avanzate di filtraggio e ricerca
 # Autore: Hotel Colossus Team
-# Versione: 2.0
 #==============================================================================
 
 
-set -e
+# NON uscire in caso di errori - gestiamo tutto manualmente
+set +e
 
 
 # Carica environment
@@ -43,17 +43,41 @@ GRAY='\033[0;90m'
 NC='\033[0m' # No Color
 
 
-# ============================================================================
+# =============================
+# GESTIRE CTRL+C
+# ===================================
+
+# Variabile globale per il PID del processo tail
+TAIL_PID=""
+
+# Funzione chiamata quando si preme Ctrl+C
+handle_interrupt()
+{
+    if [ -n "$TAIL_PID" ]; then
+        kill $TAIL_PID 2>/dev/null
+        wait $TAIL_PID 2>/dev/null
+        TAIL_PID=""
+    fi
+    echo ""
+    echo -e "${YELLOW}Tornando al menu...${NC}"
+    sleep 1
+}
+
+# Imposta il trap per SIGINT (Ctrl+C)
+trap handle_interrupt SIGINT
+
+
+# ==================================
 # FUNZIONI DI UTILITÀ
-# ============================================================================
+# ========================================
 
 
 print_header()
 {
     clear
-    echo -e "${BLUE}════════════════════════════════════════════════════${NC}"
+    echo -e "${BLUE}============================================================${NC}"
     echo -e "${BLUE}     Hotel Colossus - Visualizzazione Log          ${NC}"
-    echo -e "${BLUE}════════════════════════════════════════════════════${NC}"
+    echo -e "${BLUE}============================================================${NC}"
     echo ""
 }
 
@@ -66,20 +90,22 @@ print_menu()
     echo -e "  ${GREEN}2)${NC} FrontDesk Server"
     echo -e "  ${GREEN}3)${NC} Governante Server"
     echo -e "  ${GREEN}4)${NC} Manager Server"
+    echo -e "  ${GREEN}5)${NC} Maintenance (manutenzione)"
     echo ""
     echo -e "${CYAN}Visualizzazione multipla:${NC}"
-    echo -e "  ${GREEN}5)${NC} Tutti i servizi (interleaved)"
+    echo -e "  ${GREEN}6)${NC} Tutti i servizi (interleaved)"
     echo ""
     echo -e "${CYAN}Filtri e ricerca:${NC}"
-    echo -e "  ${YELLOW}6)${NC} Cerca nel log (grep)"
-    echo -e "  ${YELLOW}7)${NC} Solo ERRORI"
-    echo -e "  ${YELLOW}8)${NC} Solo WARNING"
-    echo -e "  ${YELLOW}9)${NC} Solo INFO"
+    echo -e "  ${YELLOW}7)${NC} Cerca nel log (grep)"
+    echo -e "  ${YELLOW}8)${NC} Solo ERRORI"
+    echo -e "  ${YELLOW}9)${NC} Solo WARNING"
+    echo -e "  ${YELLOW}10)${NC} Solo INFO"
     echo ""
     echo -e "${CYAN}Utilità:${NC}"
-    echo -e "  ${MAGENTA}10)${NC} Statistiche log"
-    echo -e "  ${MAGENTA}11)${NC} Pulisci log"
-    echo -e "  ${MAGENTA}12)${NC} Esporta log"
+    echo -e "  ${MAGENTA}11)${NC} Statistiche log"
+    echo -e "  ${MAGENTA}12)${NC} Pulisci log"
+    echo -e "  ${MAGENTA}13)${NC} Esporta log"
+    echo -e "  ${MAGENTA}14)${NC} Mostra file log disponibili"
     echo ""
     echo -e "  ${RED}0)${NC} Esci"
     echo ""
@@ -96,7 +122,7 @@ check_log_exists()
         echo -e "${RED}✗ Log non trovato: $log_file${NC}"
         echo -e "${YELLOW}  Il servizio potrebbe non essere stato ancora avviato.${NC}"
         echo ""
-        echo -ne "${WHITE}Premi INVIO per continuare...${NC}"
+        echo -ne "${WHITE}Premi INVIO per tornare al menu...${NC}"
         read
         return 1
     fi
@@ -113,16 +139,25 @@ show_file_info()
     if [ -f "$log_file" ]; then
         local size=$(du -h "$log_file" | cut -f1)
         local lines=$(wc -l < "$log_file")
-        local modified=$(stat -f "%Sm" -t "%Y-%m-%d %H:%M:%S" "$log_file" 2>/dev/null || stat -c "%y" "$log_file" 2>/dev/null | cut -d'.' -f1)
+        local modified=$(stat -c "%y" "$log_file" 2>/dev/null | cut -d'.' -f1 || stat -f "%Sm" -t "%Y-%m-%d %H:%M:%S" "$log_file" 2>/dev/null)
 
-        echo -e "${GRAY}┌────────────────────────────────────────────────────┐${NC}"
-        echo -e "${GRAY}│${NC} ${CYAN}Servizio:${NC} $service_name"
-        echo -e "${GRAY}│${NC} ${CYAN}File:${NC}     $log_file"
-        echo -e "${GRAY}│${NC} ${CYAN}Dimensione:${NC} $size (${lines} righe)"
-        echo -e "${GRAY}│${NC} ${CYAN}Modificato:${NC} $modified"
-        echo -e "${GRAY}└────────────────────────────────────────────────────┘${NC}"
+        echo -e "${GRAY}----------------------------------------------------${NC}"
+        echo -e "${GRAY}|${NC} ${CYAN}Servizio:${NC} $service_name"
+        echo -e "${GRAY}|${NC} ${CYAN}File:${NC}     $log_file"
+        echo -e "${GRAY}|${NC} ${CYAN}Dimensione:${NC} $size (${lines} righe)"
+        echo -e "${GRAY}|${NC} ${CYAN}Modificato:${NC} $modified"
+        echo -e "${GRAY}----------------------------------------------------${NC}"
         echo ""
     fi
+}
+
+
+# Torna al menu
+return_to_menu()
+{
+    echo ""
+    echo -ne "${WHITE}Premi INVIO per tornare al menu...${NC}"
+    read
 }
 
 
@@ -135,7 +170,12 @@ show_file_info()
 view_log_single()
 {
     local service_name="$1"
-    local log_file="$LOGS_DIR/${service_name}.log"
+    local log_file="$LOGS_DIR/${service_name}"
+
+    # Se non ha estensione, aggiungi .log
+    if [[ ! "$log_file" =~ \.(log|notify)$ ]]; then
+        log_file="${log_file}.log"
+    fi
 
     print_header
     show_file_info "$log_file" "$service_name"
@@ -143,13 +183,13 @@ view_log_single()
     check_log_exists "$log_file" || return
 
     echo -e "${GREEN}▶ Visualizzazione log in tempo reale${NC}"
-    echo -e "${YELLOW}  (Premi Ctrl+C per uscire)${NC}"
+    echo -e "${YELLOW}  (Premi Ctrl+C per tornare al menu)${NC}"
     echo ""
-    echo -e "${GRAY}════════════════════════════════════════════════════${NC}"
+    echo -e "${GRAY}============================================================${NC}"
     echo ""
 
     # Tail con colorazione automatica
-    tail -f "$log_file" | while IFS= read -r line; do
+    tail -f "$log_file" 2>/dev/null | while IFS= read -r line; do
         # Colora in base al livello di log
         if echo "$line" | grep -qi "error\|exception\|failed"; then
             echo -e "${RED}$line${NC}"
@@ -159,14 +199,17 @@ view_log_single()
             echo -e "${GREEN}$line${NC}"
         elif echo "$line" | grep -qi "debug"; then
             echo -e "${GRAY}$line${NC}"
-        elif echo "$line" | grep -qi "success\|✓\|completed"; then
+        elif echo "$line" | grep -qi "success\|completed"; then
             echo -e "${CYAN}$line${NC}"
         else
             echo "$line"
         fi
-    done
-}
+    done &
 
+    TAIL_PID=$!
+    wait $TAIL_PID 2>/dev/null
+    TAIL_PID=""
+}
 
 
 # Visualizza tutti i log interleaved
@@ -175,7 +218,7 @@ view_all_logs_interleaved()
     print_header
 
     echo -e "${GREEN}▶ Visualizzazione tutti i log (interleaved)${NC}"
-    echo -e "${YELLOW}  (Premi Ctrl+C per uscire)${NC}"
+    echo -e "${YELLOW}  (Premi Ctrl+C per tornare al menu)${NC}"
     echo ""
 
     # Usa tail multipli con prefix
@@ -183,6 +226,7 @@ view_all_logs_interleaved()
         "$LOGS_DIR/rmiregistry.log" \
         "$LOGS_DIR/FrontDesk.log" \
         "$LOGS_DIR/Governante.log" \
+        "$LOGS_DIR/maintenance.notify" \
         2>/dev/null | \
     while IFS= read -r line; do
         # Aggiungi timestamp se mancante
@@ -197,6 +241,8 @@ view_all_logs_interleaved()
             echo -e "${GREEN}[FRONTDESK]${NC} $line"
         elif echo "$line" | grep -q "Governante"; then
             echo -e "${MAGENTA}[GOVERNANTE]${NC} $line"
+        elif echo "$line" | grep -q "maintenance"; then
+            echo -e "${CYAN}[MAINTENANCE]${NC} $line"
         else
             # Colora in base al livello
             if echo "$line" | grep -qi "error"; then
@@ -207,7 +253,11 @@ view_all_logs_interleaved()
                 echo "$line"
             fi
         fi
-    done
+    done &
+
+    TAIL_PID=$!
+    wait $TAIL_PID 2>/dev/null
+    TAIL_PID=""
 }
 
 
@@ -228,7 +278,7 @@ search_in_logs()
 
     if [ -z "$search_term" ]; then
         echo -e "${RED}✗ Termine di ricerca vuoto${NC}"
-        sleep 2
+        return_to_menu
         return
     fi
 
@@ -238,13 +288,13 @@ search_in_logs()
 
     local found=0
 
-    for log in "$LOGS_DIR"/*.log; do
+    for log in "$LOGS_DIR"/*.log "$LOGS_DIR"/*.notify "$LOGS_DIR"/*.status; do
         if [ -f "$log" ]; then
             local matches=$(grep -i "$search_term" "$log" 2>/dev/null)
 
             if [ -n "$matches" ]; then
                 found=1
-                echo -e "${CYAN}═══ $(basename $log) ═══${NC}"
+                echo -e "${CYAN}=== $(basename $log) ===${NC}"
                 echo "$matches" | while IFS= read -r line; do
                     # Evidenzia il termine cercato
                     echo "$line" | sed "s/$search_term/${YELLOW}${search_term}${NC}/gi"
@@ -258,9 +308,7 @@ search_in_logs()
         echo -e "${YELLOW}Nessun risultato trovato per '${search_term}'${NC}"
     fi
 
-    echo ""
-    echo -ne "${WHITE}Premi INVIO per continuare...${NC}"
-    read
+    return_to_menu
 }
 
 
@@ -274,15 +322,19 @@ filter_by_level()
     print_header
 
     echo -e "${color}▶ Visualizzazione ${level_name}${NC}"
-    echo -e "${YELLOW}  (Premi Ctrl+C per uscire)${NC}"
+    echo -e "${YELLOW}  (Premi Ctrl+C per tornare al menu)${NC}"
     echo ""
 
     # Tail tutti i log e filtra per livello
-    tail -f "$LOGS_DIR"/*.log 2>/dev/null | \
+    tail -f "$LOGS_DIR"/*.log "$LOGS_DIR"/*.notify 2>/dev/null | \
     grep -i "$level" | \
     while IFS= read -r line; do
         echo -e "${color}$line${NC}"
-    done
+    done &
+
+    TAIL_PID=$!
+    wait $TAIL_PID 2>/dev/null
+    TAIL_PID=""
 }
 
 
@@ -307,9 +359,174 @@ view_info_only()
 }
 
 
-# ============================================================================
+# ===========================================
 # FUNZIONI UTILITÀ
-# ============================================================================
+# ====================================
+
+
+# Mostra file log disponibili
+show_log_files()
+{
+    while true; do
+        print_header
+
+        echo -e "${CYAN}File di Log Disponibili${NC}"
+        echo ""
+
+        local count=0
+        declare -a log_files
+
+        for log in "$LOGS_DIR"/*.log "$LOGS_DIR"/*.notify "$LOGS_DIR"/*.status; do
+            if [ -f "$log" ]; then
+                ((count++))
+                log_files[$count]="$log"
+
+                local name=$(basename "$log")
+                local size=$(du -h "$log" | cut -f1)
+                local lines=$(wc -l < "$log")
+                local modified=$(stat -c "%y" "$log" 2>/dev/null | cut -d'.' -f1 || stat -f "%Sm" -t "%Y-%m-%d %H:%M:%S" "$log" 2>/dev/null)
+
+                echo -e "${WHITE}[$count]${NC} ${GREEN}$name${NC}"
+                echo -e "    Path:       $log"
+                echo -e "    Dimensione: $size ($lines righe)"
+                echo -e "    Modificato: $modified"
+                echo ""
+            fi
+        done
+
+        if [ $count -eq 0 ]; then
+            echo -e "${YELLOW}Nessun file di log trovato${NC}"
+            echo ""
+            return_to_menu
+            return
+        fi
+
+        echo -e "${CYAN}Totale file: $count${NC}"
+        echo ""
+        echo -e "${YELLOW}Opzioni:${NC}"
+        echo -e "  ${GREEN}1-$count)${NC} Visualizza contenuto file"
+        echo -e "  ${RED}0)${NC} Torna al menu principale"
+        echo ""
+        echo -ne "${WHITE}Scelta: ${NC}"
+
+        read file_choice
+
+        # Torna al menu principale
+        if [ "$file_choice" = "0" ]; then
+            return
+        fi
+
+        # Verifica che sia un numero valido
+        if ! [[ "$file_choice" =~ ^[0-9]+$ ]] || [ "$file_choice" -lt 1 ] || [ "$file_choice" -gt $count ]; then
+            echo -e "${RED}✗ Scelta non valida${NC}"
+            sleep 1
+            continue
+        fi
+
+        # Visualizza il file selezionato
+        display_log_file "${log_files[$file_choice]}"
+    done
+}
+
+# Visualizza il contenuto di un file di log
+display_log_file()
+{
+    local log_file="$1"
+    local log_name=$(basename "$log_file")
+
+    print_header
+
+    echo -e "${CYAN}Contenuto di: ${GREEN}$log_name${NC}"
+    echo -e "${GRAY}Path: $log_file${NC}"
+    echo ""
+
+    local size=$(du -h "$log_file" | cut -f1)
+    local lines=$(wc -l < "$log_file")
+
+    echo -e "${CYAN}Dimensione:${NC} $size (${lines} righe)"
+    echo ""
+    echo -e "${YELLOW}Modalità di visualizzazione:${NC}"
+    echo -e "  ${GREEN}1)${NC} Visualizza tutto (cat)"
+    echo -e "  ${GREEN}2)${NC} Visualizza in tempo reale (tail -f)"
+    echo -e "  ${GREEN}3)${NC} Visualizza con scorrimento (less)"
+    echo -e "  ${RED}0)${NC} Torna alla lista file"
+    echo ""
+    echo -ne "${WHITE}Scelta: ${NC}"
+
+    read view_choice
+
+    case $view_choice in
+        1)
+            # Visualizza tutto il contenuto
+            print_header
+            echo -e "${CYAN}=== Contenuto completo di $log_name ===${NC}"
+            echo ""
+            echo -e "${GRAY}----------------------------------------------------${NC}"
+
+            cat "$log_file" | while IFS= read -r line; do
+                # Colora in base al contenuto
+                if echo "$line" | grep -qi "error\|exception\|failed"; then
+                    echo -e "${RED}$line${NC}"
+                elif echo "$line" | grep -qi "warning\|warn"; then
+                    echo -e "${YELLOW}$line${NC}"
+                elif echo "$line" | grep -qi "info"; then
+                    echo -e "${GREEN}$line${NC}"
+                elif echo "$line" | grep -qi "success\|completed"; then
+                    echo -e "${CYAN}$line${NC}"
+                else
+                    echo "$line"
+                fi
+            done
+
+            echo ""
+            echo -e "${GRAY}----------------------------------------------------${NC}"
+            echo ""
+            echo -ne "${WHITE}Premi INVIO per tornare...${NC}"
+            read
+            ;;
+
+        2)
+            # Visualizza in tempo reale
+            print_header
+            echo -e "${CYAN}=== Visualizzazione in tempo reale di $log_name ===${NC}"
+            echo -e "${YELLOW}(Premi Ctrl+C per tornare)${NC}"
+            echo ""
+            echo -e "${GRAY}----------------------------------------------------${NC}"
+            echo ""
+
+            tail -f "$log_file" 2>/dev/null | while IFS= read -r line; do
+                if echo "$line" | grep -qi "error\|exception\|failed"; then
+                    echo -e "${RED}$line${NC}"
+                elif echo "$line" | grep -qi "warning\|warn"; then
+                    echo -e "${YELLOW}$line${NC}"
+                elif echo "$line" | grep -qi "info"; then
+                    echo -e "${GREEN}$line${NC}"
+                else
+                    echo "$line"
+                fi
+            done &
+
+            TAIL_PID=$!
+            wait $TAIL_PID 2>/dev/null
+            TAIL_PID=""
+            ;;
+
+        3)
+            # Visualizza con less
+            less "$log_file"
+            ;;
+
+        0)
+            # Torna alla lista
+            return
+            ;;
+
+        *)
+            echo -e "${RED}✗ Scelta non valida${NC}"
+            sleep 1
+            ;;
+    esac
+}
 
 
 # Statistiche log
@@ -320,16 +537,17 @@ show_log_statistics()
     echo -e "${CYAN}Statistiche Log${NC}"
     echo ""
 
-    for log in "$LOGS_DIR"/*.log; do
+    for log in "$LOGS_DIR"/*.log "$LOGS_DIR"/*.notify; do
         if [ -f "$log" ]; then
             local name=$(basename "$log" .log)
+            name=$(basename "$name" .notify)
             local size=$(du -h "$log" | cut -f1)
             local lines=$(wc -l < "$log")
             local errors=$(grep -ci "error\|exception" "$log" 2>/dev/null || echo 0)
             local warnings=$(grep -ci "warning\|warn" "$log" 2>/dev/null || echo 0)
             local infos=$(grep -ci "info" "$log" 2>/dev/null || echo 0)
 
-            echo -e "${WHITE}━━━ $name ━━━${NC}"
+            echo -e "${WHITE}=== $name ===${NC}"
             echo -e "  Dimensione:    ${size}"
             echo -e "  Righe totali:  ${lines}"
             echo -e "  ${RED}Errori:${NC}        ${errors}"
@@ -344,8 +562,7 @@ show_log_statistics()
     echo -e "${CYAN}Spazio totale occupato: ${total_size}${NC}"
     echo ""
 
-    echo -ne "${WHITE}Premi INVIO per continuare...${NC}"
-    read
+    return_to_menu
 }
 
 
@@ -373,16 +590,16 @@ clean_logs()
         local backup_dir="$LOGS_DIR/backup_$(date +%Y%m%d_%H%M%S)"
         mkdir -p "$backup_dir"
 
-        for log in "$LOGS_DIR"/*.log; do
+        for log in "$LOGS_DIR"/*.log "$LOGS_DIR"/*.notify; do
             if [ -f "$log" ]; then
-                cp "$log" "$backup_dir/"
+                cp "$log" "$backup_dir/" 2>/dev/null
             fi
         done
 
         echo -e "${GREEN}✓ Backup creato in: $backup_dir${NC}"
 
         # Svuota i log (non cancellare, per evitare problemi con servizi attivi)
-        for log in "$LOGS_DIR"/*.log; do
+        for log in "$LOGS_DIR"/*.log "$LOGS_DIR"/*.notify; do
             if [ -f "$log" ]; then
                 > "$log"  # Truncate file
                 echo -e "${GREEN}✓ Pulito: $(basename $log)${NC}"
@@ -391,11 +608,11 @@ clean_logs()
 
         echo ""
         echo -e "${GREEN}✓ Pulizia completata!${NC}"
-        sleep 2
     else
         echo -e "${YELLOW}Operazione annullata${NC}"
-        sleep 1
     fi
+
+    return_to_menu
 }
 
 
@@ -429,8 +646,7 @@ export_logs()
         echo -e "${RED}✗ Errore durante l'esportazione${NC}"
     fi
 
-    echo -ne "${WHITE}Premi INVIO per continuare...${NC}"
-    read
+    return_to_menu
 }
 
 
@@ -466,28 +682,34 @@ while true; do
             view_log_single "Manager"
             ;;
         5)
-            view_all_logs_interleaved
+            view_log_single "maintenance.notify"
             ;;
         6)
-            search_in_logs
+            view_all_logs_interleaved
             ;;
         7)
-            view_errors_only
+            search_in_logs
             ;;
         8)
-            view_warnings_only
+            view_errors_only
             ;;
         9)
-            view_info_only
+            view_warnings_only
             ;;
         10)
-            show_log_statistics
+            view_info_only
             ;;
         11)
-            clean_logs
+            show_log_statistics
             ;;
         12)
+            clean_logs
+            ;;
+        13)
             export_logs
+            ;;
+        14)
+            show_log_files
             ;;
         0)
             clear
