@@ -1,6 +1,5 @@
 package it.unisa.Client.GUI.components;
 
-
 import it.unisa.Client.GUI.BookingFilter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,12 +13,6 @@ import java.util.Comparator;
 
 /**
  * DashboardView - Vista principale della dashboard.
- * Contiene: statistiche, filtri e lista prenotazioni.
- *
- * Design Pattern: MVC - questa è la View
- *
- * @author Team Hotel Colossus
- * @version 1.0
  */
 public class Dashboard extends VBox {
 
@@ -76,12 +69,15 @@ public class Dashboard extends VBox {
      * Setup del layout
      */
     private void setupLayout() {
-        this.setSpacing(20);
-        this.setPadding(new Insets(30));
+        // ✅ Ridotto spacing generale da 20 a 12
+        this.setSpacing(12);
+        // ✅ Ridotto padding da 30 a 20
+        this.setPadding(new Insets(20));
 
         HBox sectionTitleBox = createSectionTitle();
-        VBox.setMargin(sectionTitleBox, new Insets(10, 0, 3, 0));
-        VBox.setMargin(filtersSection, new Insets(0, 0, 2, 0));
+        // ✅ Ridotti i margini
+        VBox.setMargin(sectionTitleBox, new Insets(7, 0, 2, 0));  // ← Aumentato margine sopra da 5 a 15
+        VBox.setMargin(filtersSection, new Insets(-4, 0, 5, 0));
 
         this.getChildren().addAll(
                 statsGrid,
@@ -107,8 +103,9 @@ public class Dashboard extends VBox {
      */
     private GridPane createStatsGrid() {
         GridPane grid = new GridPane();
-        grid.setHgap(15);
-        grid.setVgap(15);
+        // ✅ Ridotto gap da 15 a 10
+        grid.setHgap(10);
+        grid.setVgap(10);
         grid.getStyleClass().add("stats-grid");
 
         // Crea le stat cards
@@ -117,11 +114,11 @@ public class Dashboard extends VBox {
         checkoutsCard = new StatCard(8, "Check-out Oggi");
         availableRoomsCard = new StatCard(15, "Camere Libere");
 
-        // Aggiungi margini
-        GridPane.setMargin(occupiedRoomsCard, new Insets(0, 0, 15, 0));
-        GridPane.setMargin(checkinsCard, new Insets(0, 0, 15, 0));
-        GridPane.setMargin(checkoutsCard, new Insets(0, 0, 15, 0));
-        GridPane.setMargin(availableRoomsCard, new Insets(0, 0, 15, 0));
+        // ✅ Ridotto margine da 15 a 8
+        GridPane.setMargin(occupiedRoomsCard, new Insets(0, 0, 10, 0));
+        GridPane.setMargin(checkinsCard, new Insets(0, 0, 10, 0));
+        GridPane.setMargin(checkoutsCard, new Insets(0, 0, 10, 0));
+        GridPane.setMargin(availableRoomsCard, new Insets(0, 0, 10, 0));
 
         // Aggiungi alla grid
         grid.add(occupiedRoomsCard, 0, 0);
@@ -143,7 +140,7 @@ public class Dashboard extends VBox {
      * Crea il titolo della sezione con decorazioni
      */
     private HBox createSectionTitle() {
-        HBox sectionTitleBox = new HBox(15);
+        HBox sectionTitleBox = new HBox(16);
         sectionTitleBox.setAlignment(Pos.CENTER);
 
         Label leftDecor = new Label("◈───           ");
@@ -166,7 +163,7 @@ public class Dashboard extends VBox {
     private VBox createFiltersSection() {
         VBox section = new VBox(3);
         section.getStyleClass().add("filters-section");
-        section.setPadding(new Insets(12, 25, 2, 25));
+        section.setPadding(new Insets(2, 20, 2, 20));
 
         // Titolo filtri
         Label filtersTitle = new Label("🔍 Filtri di Ricerca");
@@ -174,8 +171,9 @@ public class Dashboard extends VBox {
 
         // Grid dei filtri
         GridPane filtersGrid = new GridPane();
-        filtersGrid.setHgap(15);
-        filtersGrid.setVgap(10);
+
+        filtersGrid.setHgap(12);
+        filtersGrid.setVgap(8);
 
         // Filtro Nome
         Label nameLabel = new Label("Nome Cliente");
@@ -275,7 +273,8 @@ public class Dashboard extends VBox {
 
         bookingsContainer = new VBox(15);
         bookingsContainer.getStyleClass().add("bookings-container");
-        bookingsContainer.setPadding(new Insets(10, 0, 10, 0));
+        // ✅ Ridotto padding da 10,0,10,0 a 5,0,5,0
+        bookingsContainer.setPadding(new Insets(5, 0, 5, 0));
 
         scrollPane.setContent(bookingsContainer);
 
@@ -284,9 +283,6 @@ public class Dashboard extends VBox {
 
     // ===== LOGICA FILTRI =====
 
-    /**
-     * Applica i filtri alle prenotazioni
-     */
     private void applyFilters() {
         filteredBookings.clear();
 
@@ -309,7 +305,6 @@ public class Dashboard extends VBox {
             }
         }
 
-        // Ordina
         if (isAscending) {
             filteredBookings.sort(Comparator.comparing(BookingFilter::getCheckIn));
         } else {
@@ -319,9 +314,6 @@ public class Dashboard extends VBox {
         updateBookingsList();
     }
 
-    /**
-     * Resetta tutti i filtri
-     */
     private void resetFilters() {
         nameFilter.clear();
         startDateFilter.setValue(null);
@@ -332,9 +324,6 @@ public class Dashboard extends VBox {
         applyFilters();
     }
 
-    /**
-     * Aggiorna la lista visuale delle prenotazioni
-     */
     private void updateBookingsList() {
         bookingsContainer.getChildren().clear();
 
@@ -352,19 +341,12 @@ public class Dashboard extends VBox {
         }
     }
 
-    /**
-     * Gestisce il click su una booking card
-     */
     private void onBookingCardClick(BookingFilter booking) {
         System.out.println("🎯 Dettagli prenotazione: " + booking);
-        // Qui puoi aprire una finestra di dettaglio, ecc.
     }
 
     // ===== METODI PUBBLICI =====
 
-    /**
-     * Imposta i dati delle prenotazioni
-     */
     public void setBookings(ObservableList<BookingFilter> bookings) {
         this.allBookings = bookings;
         this.filteredBookings.clear();
@@ -372,9 +354,6 @@ public class Dashboard extends VBox {
         applyFilters();
     }
 
-    /**
-     * Aggiorna le statistiche
-     */
     public void updateStats(int occupied, int checkins, int checkouts, int available) {
         occupiedRoomsCard.setNumber(occupied);
         checkinsCard.setNumber(checkins);
@@ -382,9 +361,6 @@ public class Dashboard extends VBox {
         availableRoomsCard.setNumber(available);
     }
 
-    /**
-     * Ottiene la lista di tutte le prenotazioni
-     */
     public ObservableList<BookingFilter> getAllBookings() {
         return allBookings;
     }

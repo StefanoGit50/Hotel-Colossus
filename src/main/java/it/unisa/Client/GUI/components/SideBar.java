@@ -25,7 +25,7 @@ public class SideBar extends VBox{
     public static final String ROOMS = "Camere";
     public static final String CHECKOUT = "Check-out";
     public static final String CONTO_ECONOMICO = "Conto Economico";  // ← AGGIUNTO
-
+    public static final String BOOKING_DETAILS = "Booking Details";
 
     // ===== ATTRIBUTI =====
     private VBox selectedNavItem = null;
@@ -60,12 +60,14 @@ public class SideBar extends VBox{
         VBox planningItem = createNavItem("📅", PLANNING, false);
         VBox roomsItem = createNavItem("🛏️", ROOMS, false);
         VBox contoEconomicoItem = createNavItem("💰", CONTO_ECONOMICO, false);
+        VBox BookingDetail = createNavItem(BOOKING_DETAILS, BOOKING_DETAILS, false);
         // Salva i riferimenti
         navItems.put(DASHBOARD, dashboardItem);
         navItems.put(GUEST_MANAGEMENT, guestItem);
         navItems.put(PLANNING, planningItem);
         navItems.put(ROOMS, roomsItem);
         navItems.put(CONTO_ECONOMICO, contoEconomicoItem);
+        navItems.put(BOOKING_DETAILS, BookingDetail);
 
         // Aggiungi alla sidebar
         this.getChildren().addAll(
@@ -73,7 +75,8 @@ public class SideBar extends VBox{
                 guestItem,
                 planningItem,
                 roomsItem,
-                contoEconomicoItem
+                contoEconomicoItem,
+                BookingDetail
         );
     }
 

@@ -8,18 +8,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 /**
  * Componente TopBar - Barra superiore dell'applicazione.
- * Contiene: Logo, Titolo, User Info e Menu utente.
- *
- *
- * @author Team Hotel Colossus
-  */
+ */
 public class TopBar extends HBox {
     private ImageView logoImage;
     private Label titleLabel;
@@ -28,45 +23,24 @@ public class TopBar extends HBox {
     private VBox avatarBox;
     private ContextMenu userMenu;
 
-    // ===== COSTRUTTORE =====
+    private Runnable logoutCallback;
+
+    // ===== COSTRUTTORI =====
+
     public TopBar() {
+        this("Receptionist1", "Front Desk", null);
+    }
+
+    public TopBar(String username, String role, Runnable logoutCallback) {
+        this.logoutCallback = logoutCallback;
         initializeComponents();
         setupLayout();
         setupStyling();
         setupEventHandlers();
-    }
 
-    /**
-     * Setup del layout
-     */
-    private void setupLayout() {
-        this.setSpacing(15);
-        this.setPadding(new Insets(21, 30, 21, 30));
-        this.setAlignment(Pos.CENTER);
-
-        // Spacer per spingere user info a destra
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-
-        // User Box
-        HBox userBox = createUserBox();
-
-        // Aggiungi tutto alla TopBar
-        this.getChildren().addAll(logoImage, titleLabel, spacer, userBox);
-    }
-
-    /**
-     * Crea il box con le informazioni utente
-     */
-    private HBox createUserBox() {
-        HBox userBox = new HBox(10);
-        userBox.setAlignment(Pos.CENTER_RIGHT);
-        userBox.getStyleClass().add("user-box");
-        userBox.setPadding(new Insets(0, 20, 0, 0));
-
-        userBox.getChildren().addAll(userNameLabel, avatarBox);
-
-        return userBox;
+        setUserName(username);
+        setUserRole(role);
+        updateAvatar(username);
     }
 
     /**
@@ -82,12 +56,18 @@ public class TopBar extends HBox {
             logoImage.setFitWidth(120);
             logoImage.setPreserveRatio(true);
         } catch (Exception e) {
-            System.err.println(" Impossibile caricare il logo: " + e.getMessage());
+            System.err.println("⚠️ Impossibile caricare il logo: " + e.getMessage());
         }
 
-        // Title Label
+        // ✅ Title Label - GRANDE E CENTRATO
         titleLabel = new Label("HOTEL COLOSSUS");
         titleLabel.getStyleClass().add("logo");
+        titleLabel.setStyle(
+                "-fx-font-size: 42px; " +           // ✅ Più grande
+                        "-fx-font-weight: bolder; " +
+                        "-fx-text-fill: #660f04; " +        // ✅ Colore richiesto
+                        "-fx-letter-spacing: 4px;"
+        );
 
         // User Info
         userNameLabel = new Label("Receptionist1");
@@ -112,7 +92,46 @@ public class TopBar extends HBox {
         userMenu = createUserMenu();
     }
 
+    /**
+     * Setup del layout
+     */
+    private void setupLayout() {
+        this.setSpacing(15);
+        this.setPadding(new Insets(21, 30, 21, 30));
+        this.setAlignment(Pos.CENTER);
 
+        // ✅ Spacer sinistro per centrare il titolo
+        Region leftSpacer = new Region();
+        HBox.setHgrow(leftSpacer, Priority.ALWAYS);
+
+        // ✅ Spacer destro per centrare il titolo
+        Region rightSpacer = new Region();
+        HBox.setHgrow(rightSpacer, Priority.ALWAYS);
+
+        // User Box
+        HBox userBox = createUserBox();
+
+        // ✅ NUOVO ORDINE: logo - spacer - TITOLO CENTRATO - spacer - userBox
+        this.getChildren().addAll(logoImage, leftSpacer, titleLabel, rightSpacer, userBox);
+    }
+
+    /**
+     * Crea il box con le informazioni utente
+     */
+    private HBox createUserBox() {
+        HBox userBox = new HBox(10);
+        userBox.setAlignment(Pos.CENTER_RIGHT);
+        userBox.getStyleClass().add("user-box");
+        userBox.setPadding(new Insets(0, 20, 0, 0));
+
+        VBox userInfo = new VBox(2);
+        userInfo.setAlignment(Pos.CENTER_RIGHT);
+        userInfo.getChildren().addAll(userNameLabel, userRoleLabel);
+
+        userBox.getChildren().addAll(userInfo, avatarBox);
+
+        return userBox;
+    }
 
     /**
      * Setup dello styling CSS
@@ -120,8 +139,6 @@ public class TopBar extends HBox {
     private void setupStyling() {
         this.getStyleClass().add("top-bar");
     }
-
-
 
     /**
      * Crea il context menu dell'utente
@@ -133,10 +150,8 @@ public class TopBar extends HBox {
         MenuItem logoutItem = new MenuItem("🚪 Logout");
 
         profileItem.setStyle("-fx-font-size: 13px; -fx-padding: 8 15;");
-
         logoutItem.setStyle("-fx-font-size: 13px; -fx-padding: 8 15;");
 
-        // Actions
         profileItem.setOnAction(e -> onProfileClick());
         logoutItem.setOnAction(e -> onLogoutClick());
 
@@ -149,8 +164,8 @@ public class TopBar extends HBox {
      * Setup degli event handlers
      */
     private void setupEventHandlers() {
-        // Click su user box mostra menu
-        HBox userBox = (HBox) this.getChildren().get(3); // L'ultimo elemento
+        // ✅ Aggiornato indice - userBox è ora il 5° elemento (indice 4)
+        HBox userBox = (HBox) this.getChildren().get(4);
 
         userBox.setOnMouseClicked(e -> {
             if (!userMenu.isShowing()) {
@@ -163,26 +178,23 @@ public class TopBar extends HBox {
         });
     }
 
-    // ===== EVENT HANDLERS (da sovrascrivere o collegare) =====
+    // ===== EVENT HANDLERS =====
 
-    /**
-     * Chiamato quando si clicca su Profilo
-     */
     protected void onProfileClick() {
         System.out.println("📋 Profilo cliccato");
-        // Qui puoi aggiungere logica custom
     }
 
-
-    /**
-     * Chiamato quando si clicca su Logout
-     */
     protected void onLogoutClick() {
         System.out.println("🚪 Logout cliccato");
-        // Qui puoi aggiungere logica custom
+
+        if (logoutCallback != null) {
+            logoutCallback.run();
+        } else {
+            System.out.println("⚠️ Nessun callback di logout impostato");
+        }
     }
 
-    //  GETTER/SETTER
+    // ===== GETTER/SETTER =====
 
     public void setUserName(String name) {
         this.userNameLabel.setText(name);
@@ -195,5 +207,24 @@ public class TopBar extends HBox {
     public String getUserName() {
         return userNameLabel.getText();
     }
-}
 
+    private void updateAvatar(String username) {
+        if (username == null || username.isEmpty()) {
+            username = "?";
+        }
+
+        if (avatarBox.getChildren().size() > 0) {
+            Label avatarText = (Label) avatarBox.getChildren().get(0);
+
+            String initials = username.length() >= 2
+                    ? username.substring(0, 2).toUpperCase()
+                    : username.toUpperCase();
+
+            avatarText.setText(initials);
+        }
+    }
+
+    public void setLogoutCallback(Runnable callback) {
+        this.logoutCallback = callback;
+    }
+}
