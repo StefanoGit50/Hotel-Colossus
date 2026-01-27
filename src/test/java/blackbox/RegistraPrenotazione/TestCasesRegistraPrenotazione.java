@@ -26,7 +26,7 @@ public class TestCasesRegistraPrenotazione {
 
     @BeforeAll
     public static void istantiateFrontDesk() throws RemoteException, NotBoundException, MalformedURLException {
-        frontDesk = (FrontDeskInterface) Naming.lookup("rmi://localhost/GestionePrenotazioni");
+        frontDesk = (FrontDeskInterface) Naming.lookup("rmi://localhost:1099/GestionePrenotazioni");
 
         // Lista clienti
 

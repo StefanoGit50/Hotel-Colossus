@@ -92,6 +92,15 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
         connection.close();
     }
 
+    /**
+     * @param list
+     * @throws SQLException
+     */
+    @Override
+    public void doSaveAll(List<Prenotazione> list) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     @Override
     public synchronized void doDelete(Prenotazione p) throws SQLException {
         Connection connection = ConnectionStorage.getConnection();

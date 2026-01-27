@@ -8,6 +8,7 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
@@ -33,6 +34,16 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
             }
         }
     }
+
+    /**
+     * @param list
+     * @throws SQLException
+     */
+    @Override
+    public void doSaveAll(List<Trattamento> list) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     @Override
     public synchronized void doDelete(Trattamento trattamento) throws SQLException
     {
