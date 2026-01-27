@@ -4,6 +4,15 @@ target/
 !**/src/test/**/target/
 .kotlin
 
+### cartelle log, config...
+logs
+bin
+lib
+pids
+env.sh
+rmi.properties
+rmi.properties.*
+
 ### IntelliJ IDEA ###
 .idea/modules.xml
 .idea/jarRepositories.xml

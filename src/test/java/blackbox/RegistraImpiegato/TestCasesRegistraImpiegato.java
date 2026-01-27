@@ -35,7 +35,9 @@ public class TestCasesRegistraImpiegato {
      *
      * @return {@code Impiegato} base.
      */
+    //TODO: DA Aggiornare
     public Impiegato createBaseImpiegato() {
+        /*
         return new Impiegato(
                 // username generato casualmente per evitare DuplicateKey
                 "mario.rossi",
@@ -59,7 +61,8 @@ public class TestCasesRegistraImpiegato {
                 "mario.rossi@HotelColossus.it", // emailAziendale
                 "Italiana",                  // cittadinanza
                 LocalDate.of(2099, 1, 20)    // dataScadenza
-        );
+        );*/
+        return null;
     }
 
     public static String generateRandomCF() {

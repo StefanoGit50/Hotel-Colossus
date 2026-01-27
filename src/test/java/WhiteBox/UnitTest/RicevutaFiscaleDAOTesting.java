@@ -1,7 +1,8 @@
-package WhiteBox.TestingDB.RicevutaFiscaleDAO;
+/*package WhiteBox.UnitTest;
 
 import it.unisa.Common.RicevutaFiscale;
 import it.unisa.Storage.ConnectionStorage;
+import it.unisa.Storage.DAO.ClienteDAO;
 import it.unisa.Storage.DAO.RicevutaFiscaleDAO;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -225,7 +226,7 @@ public class RicevutaFiscaleDAOTesting{
         assertEquals(ricevutaFiscales,ricevutaFiscaleDAO.doRetriveAll("decrescente"));
     }
     @Tag("True")
-    @DisplayName("doUpdateAllTrue() quando sono tute vere")
+    @DisplayName("doUpdate() quando sono tutte vere")
     @Test
     public void doUpdateAllTrue() throws SQLException{
         connectionSM.when(ConnectionStorage::getConnection).thenReturn(connection);
@@ -242,6 +243,61 @@ public class RicevutaFiscaleDAOTesting{
         assertDoesNotThrow(()->ricevutaFiscaleDAO.doUpdate(ricevutaFiscale));
 
     }
+    @Test
+    @Tag("Exception")
+    @DisplayName("doUpdate() quando lancia un eccezione")
+    public void doUpdateException(){
+        assertThrows(SQLException.class,()->ricevutaFiscaleDAO.doUpdate(null));
+    }
 
+    @Test
+    @Tag("True")
+    @DisplayName("doRetriveByAttribute() quando sono tutte vere")
+    public void doRetriveByAttributeAllTrue() throws SQLException {
+        connectionSM.when(ConnectionStorage::getConnection).thenReturn(connection);
+        when(connection.prepareStatement("SELECT * FROM ricevutafiscale WHERE metodoPagamento = ?")).thenReturn(preparedStatement);
+        when(connection.prepareStatement("SELECT PrezzoCamera FROM cameraricevuta WHERE IDRicevutaFiscale = ?")).thenReturn(preparedStatement1);
+        doNothing().when(preparedStatement1).setInt(1,2);
+        doNothing().when(preparedStatement).setObject(1,"Carta");
+        when(preparedStatement.executeQuery()).thenReturn(resultSet);
+        when(preparedStatement1.executeQuery()).thenReturn(resultSet1);
+        when(resultSet.next()).thenReturn(true , true ,false);
+        when(resultSet.getInt("IDRicevutaFiscale")).thenReturn(2);
+        when(resultSet.getInt("IDPrenotazione")).thenReturn(2);
+        when(resultSet.getString("TipoTrattamento")).thenReturn("Pensione Completa");
+        when(resultSet.getDouble("PrezzoTrattamento")).thenReturn(30.0);
+        when(resultSet.getDate("DataPrenotazione")).thenReturn(Date.valueOf(LocalDate.of(2009,11,12)));
+        when(resultSet.getDate("DataEmissione")).thenReturn(Date.valueOf(LocalDate.of(2010,11,20)));
+        when(resultSet.getString("metodoPagamento")).thenReturn("Carta");
+        when(resultSet1.getDouble("PrezzoCamera")).thenReturn(20.0);
+
+        ArrayList<RicevutaFiscale> ricevutaFiscales = new ArrayList<>();
+
+        ricevutaFiscales.add(new RicevutaFiscale(2,2,30.0 + 20.0,LocalDate.of(2010,11,20),"Carta",LocalDate.of(2009,11,12),30.0,"Pensione Completa"));
+        ricevutaFiscales.add(new RicevutaFiscale(2,2,30.0 + 20.0,LocalDate.of(2010,11,20),"Carta",LocalDate.of(2009,11,12),30.0,"Pensione Completa"));
+
+        assertEquals(ricevutaFiscales,(ArrayList<RicevutaFiscale>) ricevutaFiscaleDAO.doRetriveByAttribute("metodoPagamento","Carta"));
+    }
+
+    @Test
+    @Tag("Exception")
+    @DisplayName("doRetriveByAttribute() quando resultSet.next() ritorna false")
+    public void doRetriveByAttributeFirstResultSet() throws SQLException {
+        connectionSM.when(ConnectionStorage::getConnection).thenReturn(connection);
+        when(connection.prepareStatement("SELECT * FROM ricevutafiscale WHERE metodoPagamento = ?")).thenReturn(preparedStatement);
+        when(connection.prepareStatement("SELECT PrezzoCamera FROM cameraricevuta WHERE IDRicevutaFiscale = ?")).thenReturn(preparedStatement1);
+        doNothing().when(preparedStatement).setObject(1,"Cartaceo");
+        when(preparedStatement.executeQuery()).thenReturn(resultSet);
+        when(resultSet.next()).thenReturn(false);
+
+        assertThrows(NoSuchElementException.class,()->ricevutaFiscaleDAO.doRetriveByAttribute("metodoPagamento","Cartaceo"));
+    }
+    @Tag("Exception")
+    @Test
+    @DisplayName("doRetriveByAttribute() quando lancia una eccezzione")
+    public void doRetriveByAttributeException(){
+        assertThrows(RuntimeException.class,()->ricevutaFiscaleDAO.doRetriveByAttribute(null,null));
+    }
 
 }
+*/

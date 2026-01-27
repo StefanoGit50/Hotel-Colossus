@@ -3,6 +3,7 @@ package it.unisa.Common;
 import it.unisa.Server.persistent.util.Ruolo;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -10,12 +11,20 @@ import java.util.Objects;
  * Rappresenta un Impiegato dell'hotel, che eredita le funzionalità di {@code Utente}.
  * Contiene i dati anagrafici, i dettagli lavorativi e le informazioni di contatto dell'impiegato.
  */
-public class Impiegato extends Utente implements Cloneable, Serializable {
+public class Impiegato implements Cloneable, Serializable {
 
     /**
      * Nome dell'impiegato.
      */
     private String nome;
+
+    private String userName;
+
+    private String hashPassword;
+
+    private boolean isTempurali;
+
+    private Instant dataScadenzaToken;
 
     /**
      * Cognome dell'impiegato.
@@ -133,11 +142,12 @@ public class Impiegato extends Utente implements Cloneable, Serializable {
      * @param cittadinanza Cittadinanza.
      * @param dataScadenza Data di scadenza del documento
      */
-    public Impiegato(String username, String hashedPassword, String nome, String cognome, String sesso, String tipoDocumento,
+    public Impiegato(String username, String hashedPassword,boolean isTempurali,Instant dataScadenzaToken, String nome, String cognome, String sesso, String tipoDocumento,
                      String numeroDocumento, int CAP, String via, String provincia, String comune, int numeroCivico,
                      String codiceFiscale, String telefono, Ruolo ruolo, double stipendio, LocalDate dataAssunzione,
                      LocalDate dataRilascio, String emailAziendale, String cittadinanza , LocalDate dataScadenza) {
-        super(username, hashedPassword);
+        this.userName = username;
+        this.hashPassword = hashedPassword;
         this.nome = nome;
         this.cognome = cognome;
         this.sesso = sesso;
@@ -160,7 +170,8 @@ public class Impiegato extends Utente implements Cloneable, Serializable {
     }
 
     public Impiegato(){
-
+        this.userName = "";
+        this.hashPassword = "";
         this.nome = "";
         this.cognome = "";
         this.sesso = "";
@@ -183,6 +194,22 @@ public class Impiegato extends Utente implements Cloneable, Serializable {
     }
 
     // --- Getter e Setter ---
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getHashPassword() {
+        return hashPassword;
+    }
+
+    public void setHashPassword(String hashPassword) {
+        this.hashPassword = hashPassword;
+    }
 
     public String getNome() {
         return nome;
@@ -333,6 +360,22 @@ public class Impiegato extends Utente implements Cloneable, Serializable {
     }
     public void setDataScadenza(LocalDate localDate){
         this.dataScadenza = localDate;
+    }
+
+    public boolean isTempurali() {
+        return isTempurali;
+    }
+
+    public void setTempurali(boolean tempurali) {
+        isTempurali = tempurali;
+    }
+
+    public Instant getDataScadenzaToken() {
+        return dataScadenzaToken;
+    }
+
+    public void setDataScadenzaToken(Instant dataScadenzaToken) {
+        this.dataScadenzaToken = dataScadenzaToken;
     }
 
     // --- Metodi Standard di Object ---

@@ -53,7 +53,7 @@ class AddPrenotazioneCommandTester
                 new ArrayList<>(List.of(camera201)),
                 new ArrayList<>(List.of(new Servizio("Aria Condizionata", 5.0))),
                 ospiti,
-                12345678
+                "12345678"
         );
 
         prenotazioneTest = p1;
@@ -143,7 +143,7 @@ class AddPrenotazioneCommandTester
                 new ArrayList<>(List.of(camera201)),
                 new ArrayList<>(List.of(new Servizio("Aria Condizionata", 5.0))),
                 ospiti,
-                12345678
+                "12345678"
         );
 
         // Act

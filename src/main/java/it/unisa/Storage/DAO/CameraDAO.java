@@ -166,7 +166,6 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
                 preparedStatement.setString(3, o.getStatoCamera().name());
                 preparedStatement.setDouble(4, o.getPrezzoCamera());
                 preparedStatement.setInt(5, o.getNumeroCamera());
-
                 preparedStatement.executeUpdate();
             }
             finally
@@ -217,8 +216,6 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
                     camera.setCapacità(resultSet.getInt("NumeroMaxOcc"));
                     lista.add(camera);
                 }
-
-
             }finally{
                 if(connection != null){
                     if (preparedStatement != null) {
@@ -241,7 +238,6 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
      * @param cognome;
      * @param nazionalita;
      * @param dataDiNascita;
-     * @param sesso;
      * @param orderBy;
      * @throws UnsupportedOperationException;
      */

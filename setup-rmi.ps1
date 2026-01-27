@@ -8,8 +8,6 @@ $ErrorActionPreference = "Stop"
 # --- CONFIGURAZIONE ---
 $RMI_PORT = 1099
 $PROJECT_ROOT = Split-Path -Parent $MyInvocation.MyCommand.Path
-$BUILD_DIR = Join-Path $PROJECT_ROOT "build\classes"
-$LIB_DIR = Join-Path $PROJECT_ROOT "lib"
 $LOGS_DIR = Join-Path $PROJECT_ROOT "logs"
 $PID_DIR = Join-Path $PROJECT_ROOT "pids"
 $CONFIG_DIR = Join-Path $PROJECT_ROOT "config"
@@ -52,7 +50,7 @@ Write-Host ""
 
 Write-Info "Creazione directory necessarie..."
 
-$directories = @($BUILD_DIR, $LIB_DIR, $LOGS_DIR, $PID_DIR, $CONFIG_DIR)
+$directories = @($LOGS_DIR, $PID_DIR, $CONFIG_DIR)
 
 foreach ($dir in $directories) {
     if (-not (Test-Path $dir)) {
@@ -60,7 +58,7 @@ foreach ($dir in $directories) {
     }
 }
 
-Write-Success "Directory create: build\classes, lib, logs, pids, config"
+Write-Success "Directory create: logs, pids, config"
 
 # ============================================================================
 # CREAZIONE FILE DI CONFIGURAZIONE
@@ -139,15 +137,6 @@ if (Test-Path "$PROJECT_ROOT\target\classes") {
 } elseif (Test-Path "$PROJECT_ROOT\out\production") {
     Write-Success "Classi trovate in out\production (IntelliJ)"
     $CLASSPATH = "$PROJECT_ROOT\out\production"
-} elseif (Test-Path $BUILD_DIR) {
-    $classFiles = Get-ChildItem -Path $BUILD_DIR -Recurse -Filter "*.class" -ErrorAction SilentlyContinue
-    if ($classFiles) {
-        Write-Success "Classi trovate in build\classes"
-        $CLASSPATH = $BUILD_DIR
-    } else {
-        Write-Warning "Directory build\classes esiste ma e' vuota"
-        $CLASSPATH = $BUILD_DIR
-    }
 } else {
     Write-ErrorMsg "Classi non trovate! Compilare il progetto prima."
     Write-Host ""
@@ -176,7 +165,6 @@ $entriesToAdd = @(
     "pids/",
     "*.log",
     "*.pid",
-    "build/",
     "target/",
     ".idea/",
     "*.class"
@@ -200,13 +188,27 @@ if ($updated) {
 # VERIFICA JAVA
 # ============================================================================
 
-Write-Info "Verifica installazione Java..."
 
 try {
-    $javaVersion = (java -version 2>&1 | Select-Object -First 1)
-    Write-Success "Java trovato: $javaVersion"
+    # Cattura STDERR come stringa (java -version scrive su stderr)
+    $ErrorActionPreference = "Continue"
+    $javaOutput = cmd /c "java -version 2>&1"
+    $ErrorActionPreference = "Stop"
+
+    if ($javaOutput -match "version") {
+        $javaVersion = ($javaOutput | Select-Object -First 1)
+        Write-Success "Java trovato: $javaVersion"
+
+        # Verifica se è Java 8 (incompatibile con classi compilate in Java 25)
+        if ($javaVersion -match "1\.8|version `"8") {
+            Write-Warning "Java 8 rilevato! Le classi sono compilate con Java 25"
+            Write-Host "   Aggiorna PATH per usare Java 25" -ForegroundColor Yellow
+        }
+    } else {
+        throw "Java non risponde correttamente"
+    }
 } catch {
-    Write-Warning "Java non trovato da Powershell, controllare la variabile d'ambiente. Installare JDK 17 o superiore"
+    Write-Warning "Java non trovato da PowerShell, controllare la variabile d'ambiente. Installare JDK 17 o superiore"
     Write-Host ""
     Write-Host "   Download JDK:" -ForegroundColor Yellow
     Write-Host "   https://adoptium.net/"
@@ -221,11 +223,34 @@ try {
     Write-Warning "javac non trovato - verificare installazione JDK"
 }
 
+# Verifica che java e javac usino la stessa versione
 try {
-    rmiregistry -help 2>&1 | Out-Null
-    Write-Success "rmiregistry trovato"
+    $javaRuntimeVersion = cmd /c "java -version 2>&1" | Select-String "version" | ForEach-Object { $_.Line }
+    $javacCompilerVersion = (javac -version 2>&1)
+
+    if ($javaRuntimeVersion -match "1\.8" -and $javacCompilerVersion -match "javac 2[0-9]") {
+        Write-Host ""
+        Write-Warning "ATTENZIONE: Versioni Java incompatibili!"
+        Write-Host "  Runtime (java):      $javaRuntimeVersion" -ForegroundColor Yellow
+        Write-Host "  Compilatore (javac): $javacCompilerVersion" -ForegroundColor Yellow
+        Write-Host ""
+        Write-Host "  Il codice compilato con Java 25 NON funzionera' con runtime Java 8!" -ForegroundColor Red
+        Write-Host "  Soluzione: Aggiorna PATH per usare Java 25 anche per 'java'" -ForegroundColor Cyan
+        Write-Host ""
+    }
 } catch {
-    Write-Warning "rmiregistry non trovato - verificare PATH Java"
+    Write-Warning "versioni diverse tra compilatore e jdk"
+}
+
+if ($env:JAVA_HOME) {
+    $rmiRegistryPath = Join-Path $env:JAVA_HOME "bin\rmiregistry.exe"
+    if (Test-Path $rmiRegistryPath) {
+        Write-Success "rmiregistry trovato in JAVA_HOME: $rmiRegistryPath"
+    } else {
+        Write-Warning "rmiregistry non trovato in JAVA_HOME: $env:JAVA_HOME"
+    }
+} else {
+    Write-Warning "JAVA_HOME non impostato - impossibile verificare rmiregistry"
 }
 
 # ============================================================================
@@ -288,7 +313,6 @@ Write-Host "  * config\rmi.properties - Configurazione"
 Write-Host "  * env.ps1               - Variabili ambiente"
 Write-Host "  * logs\                 - Directory log"
 Write-Host "  * pids\                 - File PID processi"
-Write-Host "  * build\classes\        - Classi compilate"
 Write-Host ""
 
 Write-Info "Configurazione:"

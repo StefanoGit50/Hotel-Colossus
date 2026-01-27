@@ -30,7 +30,7 @@ public class ClienteDAOTesting {
     private final String stringSQLDoDelete= "DELETE FROM Cliente WHERE CF = ?";
     private final String stringSQLDoUpdate= "UPDATE Cliente SET nome = ?, cognome = ?, Cap = ?, comune = ?, " +
             "civico = ?, provincia = ?, via = ?, Email = ?, Sesso = ?, " +
-            "telefono = ?, MetodoDiPagamento = ?, Cittadinanza = ?, " +
+            "telefono = ?, Cittadinanza = ?, " +
             "DataDiNascita = ?, IsBackListed = ? WHERE CF = ?";
     private final String stringSQLDoUpdateAttribute = "SELECT * FROM Cliente WHERE " + attribute + " = ?";
 

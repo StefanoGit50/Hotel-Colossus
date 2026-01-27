@@ -3,6 +3,7 @@ package it.unisa.Storage.Interfacce;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Objects;
 
 public interface FrontDeskStorage<T>
 {
