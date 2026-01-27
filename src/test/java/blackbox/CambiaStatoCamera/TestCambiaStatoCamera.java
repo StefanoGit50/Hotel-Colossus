@@ -76,8 +76,8 @@ public class TestCambiaStatoCamera {
     }
 
     @Nested
-    @DisplayName("TESTING: CambiaStatoCamere - PASSes")
-    @Tag("pass")
+    @DisplayName("TESTING: CambiaStatoCamere")
+    @Tag("success")
     class TestPassCambiaStatoCamera {
 
         @Test
@@ -120,8 +120,8 @@ public class TestCambiaStatoCamera {
     /* ***************************** CASI DI ERRORE **************************** */
 
     @Nested
-    @DisplayName("TESTING: CambiaStatoCamera - FAILs")
-    @Tag("fail")
+    @DisplayName("TESTING: CambiaStatoCamera - [error]")
+    @Tag("error")
     class TestFailCambioStatoCamera {
 
         @Test

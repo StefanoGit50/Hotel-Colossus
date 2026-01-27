@@ -78,8 +78,8 @@ public class TestCasesRegistraImpiegato {
     /* ************************************************************************************************************** */
 
     @Nested
-    @DisplayName("TESTING: RegistraImpiegato - PASSes")
-    @Tag("pass")
+    @DisplayName("TESTING: RegistraImpiegato")
+    @Tag("success")
     class TestRegistraImpiegato {
         @Test
         @DisplayName("TC1: [success] Registrazione impiegato effettuata con successo")
@@ -91,8 +91,8 @@ public class TestCasesRegistraImpiegato {
     /* ***************************** CASI DI ERRORE **************************** */
 
     @Nested
-    @DisplayName("TESTING: RegistraImpiegato - FAILs")
-    @Tag("fail")
+    @DisplayName("TESTING: RegistraImpiegato - [error]")
+    @Tag("error")
     class TestFailRegistraImpiegato {
         @Test
         @DisplayName("TC2: [error] Codice fiscale deve essere di 16 caratteri")
