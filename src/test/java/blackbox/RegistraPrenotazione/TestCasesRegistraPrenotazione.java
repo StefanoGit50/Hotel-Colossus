@@ -26,7 +26,7 @@ public class TestCasesRegistraPrenotazione {
 
     @BeforeAll
     public static void istantiateFrontDesk() throws RemoteException, NotBoundException, MalformedURLException {
-        frontDesk = (FrontDeskInterface) Naming.lookup("rmi://localhost/GestionePrenotazioni");
+        frontDesk = (FrontDeskInterface) Naming.lookup("rmi://localhost:1099/GestionePrenotazioni");
 
         // Lista clienti
 
@@ -128,8 +128,8 @@ public class TestCasesRegistraPrenotazione {
     /* ***************************** CASI DI SUCCESSO **************************** */
 
     @Nested
-    @DisplayName("TESTING: RegistraPrenotazione - PASSes")
-    @Tag("pass")
+    @DisplayName("TESTING: RegistraPrenotazione")
+    @Tag("success")
     class TestPassRegistraImpiegato {
         @Test
         @DisplayName("TC1: [Success] Registrazione con servizi: nessuno")
@@ -169,8 +169,8 @@ public class TestCasesRegistraPrenotazione {
     /* ***************************** CASI DI ERRORE **************************** */
 
     @Nested
-    @DisplayName("TESTING: RegistraPrenotazione - FAILs")
-    @Tag("fail")
+    @DisplayName("TESTING: RegistraPrenotazione - [error]")
+    @Tag("error")
     class TestFailRegistraImpiegato {
         @Test
         @DisplayName("TC5: [error] Formato data arrivo non valido")

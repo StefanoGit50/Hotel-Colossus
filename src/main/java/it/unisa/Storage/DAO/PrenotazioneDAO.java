@@ -107,6 +107,15 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
 
     }
 
+    /**
+     * @param list
+     * @throws SQLException
+     */
+    @Override
+    public void doSaveAll(List<Prenotazione> list) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     @Override
     public synchronized void doDelete(Prenotazione p) throws SQLException {
         Connection connection = ConnectionStorage.getConnection();
@@ -577,20 +586,19 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
 
 
     /**
-     * Metodo per recupero tramite filtro delle prenotazioni
+     * Metodo per recuperare tramite filtro delle prenotazioni.
      * @param nome  nome del cliente intestatario.
      * @param cognome  cognome del cliente intestatario.
-     * @param dataInizio
-     * @param dataFine
-     * @param numeroCamera
-     * @param elementOrder
-     * @return
+     * @param dataInizio data di inizio del soggiorno del cliente.
+     * @param dataFine data di fine del soggiorno del cliente.
+     * @param elementOrder ordine dei risultati per data.
+     * @return lista di elementi che rispettano di parametri
      */
-    public ArrayList<Prenotazione> doFilter(String nome, String cognome, LocalDate dataInizio, LocalDate dataFine, Integer numeroCamera, String elementOrder)
+    public ArrayList<Prenotazione> doFilter(String nome, String cognome, LocalDate dataInizio, LocalDate dataFine, String elementOrder)
     {
             try{
                         Connection connection = ConnectionStorage.getConnection();
-                        boolean [] booleans = new boolean[5];
+                        boolean [] booleans = new boolean[4];
                         PreparedStatement preparedStatement = connection.prepareStatement("CREATE or replace view PrenotaIS as\n" +
                                 "SELECT  p.*, t.Nome as TrattamentoNome, t.Prezzo as TrattamentoPrezzo,\n" +
                                 "        c.CF, c.nome as ClienteNome, c.cognome as ClienteCognome,   c.Email, c.telefono, c.Sesso, c.DataDiNascita, c.Cittadinanza,\n" +
@@ -610,15 +618,15 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                         booleans[1] = cognome != null && !cognome.isEmpty();
                         booleans[2] = dataInizio != null;
                         booleans[3] = dataFine != null;
-                        booleans[4] = numeroCamera != null;
+
                         int count = -1;
-                        for(int i = 0;i < booleans.length;i++){
+                        for(int i = 0;i < booleans.length; i++){
                             if(booleans[i]){
                                 count++;
                             }
                         }
 
-                        for(int i = 0;i < 5;i++){
+                        for(int i = 0;i < booleans.length; i++){
                             boolean f = false;
                             if(i == 0 && booleans[i]){
                                 sqlBello += " ClienteNome = ?";
@@ -632,12 +640,8 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                                 sqlBello += " DataArrivoCliente >= ? ";
                                 f = true;
                             }
-                            if(i == 3 && booleans[i]){
+                            if(i == 3 && booleans[i]) {
                                 sqlBello += " DataPartenzaCliente <= ? ";
-                                f = true;
-                            }
-                            if(i == 4 && booleans[i]){
-                                sqlBello += " NumeroCamera = ? ";
                                 f = true;
                             }
                             if(f && count != 0){
@@ -645,10 +649,8 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                                 count--;
                             }
                         }
-                        if(elementOrder != null && !elementOrder.isEmpty()){
-                            if(DaoUtils.checkWhitelist(whitelist,elementOrder)){
-                                sqlBello += " ORDER BY " + elementOrder;
-                            }
+                        if(elementOrder != null && !elementOrder.isBlank()){
+                            sqlBello += " ORDER BY DataArrivoCliente " + elementOrder;
                         }
                         PreparedStatement preparedStatement1 = connection.prepareStatement(sqlBello);
                         int counter = 1;
@@ -666,10 +668,6 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                         }
                         if(booleans[3]){
                             preparedStatement1.setDate(counter,Date.valueOf(dataFine));
-                            counter++;
-                        }
-                        if(booleans[4]){
-                            preparedStatement1.setInt(counter,numeroCamera);
                             counter++;
                         }
                         if(elementOrder != null){

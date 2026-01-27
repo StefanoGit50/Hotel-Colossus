@@ -60,17 +60,25 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     {
         try
         {
-           // logger.info("Avvio RMI Registry sulla porta " + RMI_PORT + "...");
+            // IMPORTANTE: Avvia l'RMI registry programmaticamente
+            logger.info("Avvio RMI Registry sulla porta " + RMI_PORT + "...");
 
-            Registry registry = LocateRegistry.getRegistry("localhost", RMI_PORT);
-            logger.info("✓ Connesso a RMI Registry esistente");
+            try {
+                // Prova a creare un nuovo registry
+                LocateRegistry.createRegistry(RMI_PORT);
+                logger.info("✓ RMI Registry creato con successo!");
+            } catch (RemoteException e) {
+                // Se esiste già, ottieni il riferimento
+                LocateRegistry.getRegistry(RMI_PORT);
+                logger.info("✓ Connesso a RMI Registry esistente");
+            }
 
             logger.info("Genero il gestore prenotazioni...");
             FrontDesk gp = new FrontDesk();
             logger.info("✓ Gestore prenotazioni creato");
 
             logger.info("Effettuo il rebind di gestione prenotazioni...");
-            registry.rebind("rmi://localhost:" + RMI_PORT + "/GestionePrenotazioni", gp);
+            Naming.rebind("rmi://localhost:" + RMI_PORT + "/GestionePrenotazioni", gp);
             logger.info("✓ Gestore prenotazioni registrato con successo!");
             logger.info("✓ Servizio 'GestionePrenotazioni' pronto");
             logger.info("Server in attesa di connessioni...");
@@ -113,6 +121,23 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     public void updatePrenotazione(Prenotazione p) throws RemoteException {
         UpdatePrenotazioneCommand command = new UpdatePrenotazioneCommand(catalogoPrenotazioni, p);
         invoker.executeCommand(command);
+    }
+
+    /**
+     * Metodo per recuperare tramite filtro delle prenotazioni.
+     * @param nome  nome del cliente intestatario.
+     * @param cognome  cognome del cliente intestatario.
+     * @param dataInizioSoggiorno data di inizio del soggiorno del cliente.
+     * @param dataFineSoggiorno data di fine del soggiorno del cliente.
+     * @param elementOrder ordine dei risultati per data.
+     * @return lista di prenotazione che rispettano i criteri di ricerca.
+     * @throws RemoteException .
+     */
+    @Override
+    public List<Prenotazione> filterPrenotazioni(String nome, String cognome, LocalDate dataInizioSoggiorno, LocalDate dataFineSoggiorno, String elementOrder) throws RemoteException {
+        CatalogoPrenotazioni.checkFiltroPrenotazione(nome, cognome, dataInizioSoggiorno, dataFineSoggiorno, elementOrder);
+        PrenotazioneDAO dao = new PrenotazioneDAO();
+        return dao.doFilter(nome, cognome, dataInizioSoggiorno, dataFineSoggiorno, elementOrder);
     }
 
     // COMANDI CLIENTE
@@ -173,28 +198,6 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
             e.printStackTrace();
         }
         return clienteDAO.doFilter(nome, cognome, nazionalita, dataNascita, blackListed, orderBy);
-    }
-
-    /**
-     * @param nome nome del cliente intestatario.
-     * @param cognome cognome del cliente intestatario.
-     * @param nazionalita nazionalità del cliente intestatario.
-     * @param dataNascita data di nascita del cliente intestatario.
-     * @param blackListed stato di ban del cliente intestatario.
-     * @return lista di prenotazioni.
-     * @throws RemoteException
-     */
-    @Override
-    public List<Prenotazione> filterPrenotazioni(String nome, String cognome, String nazionalita, LocalDate dataNascita, Boolean blackListed, String orderBy) throws RemoteException {
-       PrenotazioneDAO prenotazioneDAO = null;
-       Collection<Prenotazione> prenotazioni = null;
-       try {
-            prenotazioneDAO = new PrenotazioneDAO();
-            prenotazioni = prenotazioneDAO.doFilter(nome, cognome, nazionalita, dataNascita, blackListed, orderBy);
-       } catch (Exception e) {
-           e.printStackTrace();
-       }
-       return (List<Prenotazione>) prenotazioni;
     }
 
 

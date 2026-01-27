@@ -77,6 +77,15 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
     }
 
     /**
+     * @param list
+     * @throws SQLException
+     */
+    @Override
+    public void doSaveAll(List<Cliente> list) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /**
      * @param oggetto è un oggetto (rappresenta la chiave del );
      * @return Cliente;
      * @throws SQLException;

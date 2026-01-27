@@ -7,6 +7,7 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 
@@ -32,6 +33,15 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
                 ConnectionStorage.releaseConnection(connection);
             }
         }
+    }
+
+    /**
+     * @param list
+     * @throws SQLException
+     */
+    @Override
+    public void doSaveAll(List<Servizio> list) throws SQLException {
+        throw new  UnsupportedOperationException("Not supported yet.");
     }
 
     @Override

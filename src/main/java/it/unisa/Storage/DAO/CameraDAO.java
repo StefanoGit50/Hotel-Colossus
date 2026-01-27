@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Camera>{
@@ -88,6 +89,46 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
             preparedStatement.executeUpdate();
 
         }finally{
+            if(connection != null){
+                ConnectionStorage.releaseConnection(connection);
+            }
+        }
+    }
+    // Mock front desk, mock oggetti che chiamano il frontDesk e che vengono chiamati dal frontDesk
+    // Oggetti che passati come parametri NON devono essere mock-ati
+
+    @Override
+    public synchronized void doSaveAll(List<Camera> listCamera) throws SQLException {
+        StringBuilder insertSQL = new StringBuilder();
+        String values = " (?, ?, ?, ?, ?) ";
+        insertSQL.append("INSERT INTO " + CameraDAO.TABLE_NAME + " VALUES ");
+        int numCamere = listCamera.size(); // numCamere * 5 = numCampi ?
+
+        // Crea la query con i
+        for(int i = 1; i <= numCamere; i++){
+            insertSQL.append(values);
+            if(i == numCamere){
+                insertSQL.append(";");
+            } else {
+                insertSQL.append(",");
+            }
+        }
+
+        // Riempi la query
+        connection = ConnectionStorage.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(insertSQL.toString());
+        for (int i = 0; i < numCamere; i++) {
+            Camera c = listCamera.get(i);
+            preparedStatement.setInt(1 + 5*i, c.getNumeroCamera());
+            preparedStatement.setInt(2 + 5*i, c.getCapacità());
+            preparedStatement.setString(3 + 5*i, c.getNoteCamera());
+            preparedStatement.setObject(4 + 5*i, c.getStatoCamera().name());
+            preparedStatement.setDouble(5 + 5*i, c.getPrezzoCamera());
+        }
+
+        try{
+            preparedStatement.executeUpdate();
+        } finally {
             if(connection != null){
                 ConnectionStorage.releaseConnection(connection);
             }
