@@ -53,7 +53,7 @@ class RemovePrenotazioneCommandTester
                 new ArrayList<>(List.of(camera201)),
                 new ArrayList<>(List.of(new Servizio("Aria Condizionata", 5.0))),
                 ospiti,
-                12345678
+                "12345678"
         );
 
         command = new RemovePrenotazioneCommand(catalogue, prenotazioneTest);
@@ -142,7 +142,7 @@ class RemovePrenotazioneCommandTester
                 new ArrayList<>(List.of(camera201)),
                 new ArrayList<>(List.of(new Servizio("Aria Condizionata", 5.0))),
                 ospiti,
-                12345678
+                "12345678"
         );
 
         // Act

@@ -38,7 +38,7 @@ create table Prenotazione(
     NoteAggiuntive varchar(1000) not null,
     Intestatario varchar(50) not null,
     dataScadenza date not null,
-    numeroDocumento int not null,
+    numeroDocumento char(8) not null,
     DataRilascio date not null,
     TipoDocumento varchar(50) not null,
     Stato boolean not null,

@@ -38,7 +38,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
         preparedStatement.setString(4,p.getNoteAggiuntive());
         preparedStatement.setString(5 , p.getIntestatario());
         preparedStatement.setDate(6, Date.valueOf(p.getDataScadenza()));
-        preparedStatement.setInt(7,p.getNumeroDocumento());
+        preparedStatement.setString(7,p.getNumeroDocumento());
         preparedStatement.setDate(8,Date.valueOf(p.getDataRilascio()));
         preparedStatement.setString(9,p.getTipoDocumento());
         preparedStatement.setBoolean(11,p.getStatoPrenotazione());
@@ -220,7 +220,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                             (ArrayList<Camera>) camere,
                             (ArrayList<Servizio>) servizi,
                             (ArrayList<Cliente>) clienti,
-                            rs.getInt("numeroDocumento"),
+                            rs.getString("numeroDocumento"),
                             rs.getBoolean("Stato"),
                             rs.getBoolean("ChekIn")
                     );
@@ -349,7 +349,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                         (ArrayList<Camera>) camere,
                         (ArrayList<Servizio>) servizi,
                         (ArrayList<Cliente>) clienti,
-                        rs.getInt("numeroDocumento"),
+                        rs.getString("numeroDocumento"),
                         rs.getBoolean("Stato"),
                         rs.getBoolean("CheckIn")
                 );
@@ -401,7 +401,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                 preparedStatement.setString(4, p.getNoteAggiuntive());
                 preparedStatement.setString(5, p.getIntestatario());
                 preparedStatement.setDate(6, Date.valueOf(p.getDataScadenza()));
-                preparedStatement.setInt(7, p.getNumeroDocumento());
+                preparedStatement.setString(7, p.getNumeroDocumento());
                 preparedStatement.setDate(8, Date.valueOf(p.getDataRilascio()));
                 preparedStatement.setString(9, p.getTipoDocumento());
                 preparedStatement.setInt(10, p.getIDPrenotazione());

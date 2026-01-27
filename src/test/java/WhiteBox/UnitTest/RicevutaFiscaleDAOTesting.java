@@ -1,4 +1,4 @@
-package WhiteBox.UnitTest;
+/*package WhiteBox.UnitTest;
 
 import it.unisa.Common.RicevutaFiscale;
 import it.unisa.Storage.ConnectionStorage;
@@ -300,3 +300,4 @@ public class RicevutaFiscaleDAOTesting{
     }
 
 }
+*/

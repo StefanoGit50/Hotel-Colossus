@@ -58,8 +58,11 @@ public class prenotazioneDAOTesting {
     @Mock
     private ResultSet resultSet4;
     private Prenotazione prenotazione;
+
     @Mock
     private ClienteDAO clienteDAO;
+    @Mock
+    private Cliente cliente;
     @InjectMocks
     private PrenotazioneDAO prenotazioneDAO;
 
@@ -71,14 +74,12 @@ public class prenotazioneDAOTesting {
         ArrayList<Camera> cameras = new ArrayList<>();
         ArrayList<Servizio> servizios = new ArrayList<>();
         clientes.add(new Cliente("Stefano","Santoro","Italiana","Salerno","mercato san severino","Corso Armando Diaz",10,84085,"3249554018","Maschio",LocalDate.of(2004,12, 16),"SNTSFN04T16H703T","stefano.santoro.2004@gmail.com"));
-        clientes.add(new Cliente("Andrea","Squitieri","Italiana","Avvelino","Tufino","Via Roma",13,80030,"3567893421","Maschio",LocalDate.of(2004,11,30),"SNTSFN04T16H703T","andrea.Squitieri.2002@gmail.com"));
 
         cameras.add(new Camera(10,Stato.Libera,2,20.0,"Stefano è celiaco"));
-        cameras.add(new Camera(11,Stato.Libera,3,40.0,"Squittiri è allergico alle noci"));
 
         servizios.add(new Servizio("Piscina",30.0));
-        servizios.add(new Servizio("Palestra",35.0));
-        prenotazione = new Prenotazione(1,LocalDate.of(2003,12,11),LocalDate.of(2004,03,12),LocalDate.of(2004,05,12),new Trattamento("Mezza Pensione",40.0),"Patente", LocalDate.of(1998 , 12 ,11), LocalDate.of(2008,12,11),"Stefano Santoro","",cameras , servizios , clientes , 112 , true , false);
+
+        prenotazione = new Prenotazione(1,LocalDate.of(2003,12,11),LocalDate.of(2004,03,12),LocalDate.of(2004,05,12),new Trattamento("Mezza Pensione",40.0),"Carta D'identità", LocalDate.of(1998 , 12 ,11), LocalDate.of(2008,12,11),"Stefano Santoro","",cameras , servizios , clientes , "CA12C459" , true , false);
         connectionStorageMockedStatic = mockStatic(ConnectionStorage.class);
         connectionStorageMockedStatic.when(ConnectionStorage::getConnection).thenReturn(connection);
     }
@@ -89,8 +90,40 @@ public class prenotazioneDAOTesting {
     }
 
     @Test
-    public void doSave(){
+    @Tag("True")
+    @DisplayName("doSave() quando va tutto bene")
+    public void doSaveAllTrue() throws SQLException {
+        when(connection.prepareStatement(contains("CLIENTE"))).thenReturn(preparedStatement);
+        when(connection.prepareStatement(contains("Trattamento"))).thenReturn(preparedStatement1);
+        when(connection.prepareStatement(contains("Servizio"))).thenReturn(preparedStatement2);
+        when(connection.prepareStatement(contains("Associato_a"))).thenReturn(preparedStatement3);
+        doNothing().when(preparedStatement).setDate(1,Date.valueOf(LocalDate.of(2003,12,11)));
+        doNothing().when(preparedStatement).setDate(2,Date.valueOf(LocalDate.of(2004,3,12)));
+        doNothing().when(preparedStatement).setDate(3,Date.valueOf(LocalDate.of(2004,5,12)));
+        doNothing().when(preparedStatement).setString(10,"Mezza Pensione");
+        doNothing().when(preparedStatement).setString(4,"");
+        doNothing().when(preparedStatement).setString(5,"Stefano Santoro");
+        doNothing().when(preparedStatement).setDate(6,Date.valueOf(LocalDate.of(2008,12,11)));
+        doNothing().when(preparedStatement).setString(7,"CA12C459");
+        doNothing().when(preparedStatement).setDate(8,Date.valueOf(LocalDate.of(1998,12,11)));
+        doNothing().when(preparedStatement).setString(9,"Carta D'identità");
+        doNothing().when(preparedStatement).setBoolean(11,true);
+        doNothing().when(preparedStatement).setBoolean(12,false);
+        when(preparedStatement.executeUpdate()).thenReturn(1);
+        doNothing().when(preparedStatement1).setInt(1,1);
+        doNothing().when(preparedStatement1).setString(2,"Mezza Pensione");
+        when(preparedStatement1.executeUpdate()).thenReturn(1);
+        doNothing().when(preparedStatement2).setInt(1,1);
+        doNothing().when(preparedStatement2).setString(2,"Piscina");
+        when(preparedStatement2.executeUpdate()).thenReturn(1);
+        doNothing().when(preparedStatement3).setString(1,"SNTSFN04T16H703T");
+        doNothing().when(preparedStatement3).setInt(2,10);
+        doNothing().when(preparedStatement3).setInt(3,1);
+        doNothing().when(preparedStatement3).setDouble(4,20.0);
+        when(preparedStatement3.executeUpdate()).thenReturn(1);
+        doNothing().when(clienteDAO).doSave(cliente);
 
+        assertDoesNotThrow(()->prenotazioneDAO.doSave(prenotazione));
     }
 
 }

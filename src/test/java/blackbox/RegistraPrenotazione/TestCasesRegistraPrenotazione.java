@@ -120,7 +120,7 @@ public class TestCasesRegistraPrenotazione {
                 new ArrayList<>(listaCamere.subList(0, 1)), // lista camere
                 listaServizi,                          // lista servizi
                 new ArrayList<>(listaClienti.subList(0, 1)),// lista clienti
-                987654321
+                "987654321"
         );
     }
     /* ************************************************************************************************************** */

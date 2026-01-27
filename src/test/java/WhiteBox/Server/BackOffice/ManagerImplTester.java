@@ -1,5 +1,6 @@
 package WhiteBox.Server.BackOffice;
 
+import com.google.protobuf.Internal;
 import it.unisa.Common.*;
 import it.unisa.Server.BackOffice.ManagerImpl;
 import it.unisa.Server.persistent.util.Ruolo;
@@ -13,6 +14,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -39,6 +42,8 @@ class ManagerImplTest {
         impiegatoTest = new Impiegato(
                 "mrossi",
                 "hashedPassword123",
+                false,
+                Instant.now(),
                 "Mario",
                 "Rossi",
                 "M",
@@ -66,6 +71,8 @@ class ManagerImplTest {
         listaImpiegatiTest.add(new Impiegato(
                 "lbianchi",
                 "hashedPassword456",
+                false,
+                Instant.now(),
                 "Laura",
                 "Bianchi",
                 "F",

@@ -34,8 +34,8 @@ public class CredenzialiUtils {
             return false;
         }
 
-        if (checkPassword(password, impiegato.getHashedPassword())) {
-            if(impiegato.getUsername().equals(username)) {
+        if (checkPassword(password, impiegato.getHashPassword())) {
+            if(impiegato.getUserName().equals(username)) {
                 return true;
             }
         }

@@ -201,7 +201,7 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
                 LocalDate.of(2030, 5, 20),
                 cliente.getNome() + " " + cliente.getCognome(),
                 "renato ti massaggiA",
-                c, listaServizi, clist, 34569);
+                c, listaServizi, clist, "CA345C69");
         p1.setStatoPrenotazione(false);
 
         CatalogoPrenotazioni catalogoPrenotazioni = new CatalogoPrenotazioni();
@@ -246,6 +246,8 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
         ricavi.addChild(prenotazioni);
 
 // PASSIVITA
+        //TODO da aggiornare
+        /**
         List<Impiegato> listaImpiegati = new ArrayList<>();
         listaImpiegati.add(new Impiegato(
                 "mrossi", "hashedPassword123", "Mario", "Rossi", "M", "Carta d'identità", "AB13334", 83734, "ViaRoma",
@@ -255,8 +257,8 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
                 "mario.rossi@hotel.it",              // emailAziendale
                 "Italiana",                           // cittadinanza
                 LocalDate.of(2021, 3, 15)            // dataScadenza documento
-        ));
-
+        ));*/
+    /*
         listaImpiegati.add(new Impiegato(
                 "lbianchi",
                 "hashedPassword456",
@@ -280,20 +282,22 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
                 "Italiana",                          // cittadinanza
                 LocalDate.of(2033, 3, 15)           // dataScadenza documento
         ));
+     */
+
 
 // creo il composite stipendi
-        ContoEconomicoComposite stipendi = creaNodoeFoglie(
+        /* ContoEconomicoComposite stipendi = creaNodoeFoglie(
                 "Stipendi Personale",
                 listaImpiegati,
                 Impiegato::getNome,  //uso di method reference syntax
                 Impiegato::getStipendio,
                 i -> TipoVoce.STIPENDI
-        );
+        );*/
 
         ContoEconomicoLeaf manutenzione = new ContoEconomicoLeaf("Manutenzione Camere", 540, TipoVoce.ALTRO);
 
         ContoEconomicoComponentAbstract passivita = new ContoEconomicoComposite("PASSIVITA");
-        passivita.addChild(stipendi);
+        //passivita.addChild(stipendi);
         passivita.addChild(manutenzione);
 
 // CONTO ECONOMICO COMPLETO
