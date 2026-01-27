@@ -21,26 +21,26 @@ import java.util.ArrayList;
 public class Main {
     static void main(){
         CameraDAO cameraDAO = new CameraDAO();
-
+        CatalogoCamere catalogoCamere = new CatalogoCamere();
         try{
-            ArrayList<Camera> cameras = CatalogoCamere.getListaCamere();
+            ArrayList<Camera> cameras = catalogoCamere.getListaCamere();
             ArrayList<Camera> cameras1 = new ArrayList<>();
             cameras1 = (ArrayList<Camera>) cameraDAO.doRetriveAll("decrescente");
-            CatalogoCamere.addCamere(cameras1);
+            catalogoCamere.addCamere(cameras1);
             System.out.println(cameras);
-            System.out.println(CatalogoCamere.getListaCamere());
+            System.out.println(catalogoCamere.getListaCamere());
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
         }
 
 
         try{
-            cameraDAO.doDelete(CatalogoCamere.getListaCamere().getFirst());
+            cameraDAO.doDelete(catalogoCamere.getListaCamere().getFirst());
             ArrayList<Camera> cameras = new ArrayList<>();
             cameras = (ArrayList<Camera>) cameraDAO.doRetriveAll("decrescente");
-            CatalogoCamere.addCamere(cameras);
+            catalogoCamere.addCamere(cameras);
             System.out.println(cameras);
-            System.out.println(CatalogoCamere.getListaCamere());
+            System.out.println(catalogoCamere.getListaCamere());
         }catch (SQLException sqlException){
             sqlException.printStackTrace();
         }

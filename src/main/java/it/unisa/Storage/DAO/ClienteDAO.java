@@ -122,7 +122,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
             }
 
             Pattern regex = Pattern.compile("^[0-9]*$");
-            System.out.println(cap);
+
 
                 if(cap!=null) {
                     if (regex.matcher(cap).matches()) {
@@ -372,7 +372,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
             if(DaoUtils.checkWhitelist(whitelist, orderBy))
                 selectSQL +=  " ORDER BY " + orderBy;
         }
-        System.out.println(selectSQL);
+
         try{
             con = ConnectionStorage.getConnection();
             ResultSet resultSet = null;

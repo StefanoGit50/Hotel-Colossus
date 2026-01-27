@@ -20,7 +20,7 @@ public class Governante extends UnicastRemoteObject implements GovernanteInterfa
     private static final long serialVersionUID = -34234234L;
     static Logger logger = Logger.getLogger("global");
     private static final int RMI_PORT = 1099;
-
+    private static CatalogoCamere catalogoCamere;
 
     private Camera camera;
 
@@ -31,7 +31,7 @@ public class Governante extends UnicastRemoteObject implements GovernanteInterfa
 
     @Override
     public List<Camera> getListCamere(){
-        return CatalogoCamere.getListaCamere();
+        return catalogoCamere.getListaCamere();
     }
 
     @Override
@@ -53,8 +53,8 @@ public class Governante extends UnicastRemoteObject implements GovernanteInterfa
         ArrayList<Camera> listaCamere = null;
         try {
             listaCamere = (ArrayList<Camera>) dao.doRetriveAll("decrescente");
-            CatalogoCamere.addCamere(listaCamere);
-            System.out.println(CatalogoCamere.getListaCamere().size());
+            catalogoCamere.addCamere(listaCamere);
+            System.out.println(catalogoCamere.getListaCamere().size());
         } catch (SQLException e) {
             throw new RemoteException("Try istantiate \"Governate\" again!");
         }

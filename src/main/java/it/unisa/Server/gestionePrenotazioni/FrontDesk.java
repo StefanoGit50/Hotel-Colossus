@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface {
     static Logger logger = Logger.getLogger("global");
     private static final int RMI_PORT = 1099;
-
+    private static CatalogoCamere catalogoCamere;
     private List<Prenotazione> prenotazioni = new ArrayList<>();
     private CatalogoCamere camList = new CatalogoCamere();
 
@@ -34,7 +34,7 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     }
 
     public List<Camera> getCamere(){
-       return CatalogoCamere.getListaCamere();
+       return catalogoCamere.getListaCamere();
     }
 
     @Override
