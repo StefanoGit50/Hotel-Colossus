@@ -102,7 +102,7 @@ public class Cliente implements Cloneable, Serializable {
      * @param cf il codice fiscale del cliente
      * @param email l'email del cliente
      */
-    public Cliente(String nome, String cognome, String cittadinanza, String provincia, String comune, String via, Integer numeroCivico, Integer CAP, String numeroTelefono, String sesso, LocalDate dataNascita ,String cf , String email) {
+    public Cliente(String nome, String cognome, String cittadinanza, String provincia, String comune, String via, Integer numeroCivico, Integer CAP, String numeroTelefono, String sesso, LocalDate dataNascita ,String cf , String email,String nazionalità) {
         this.nome = nome;
         this.cognome = cognome;
         this.cittadinanza = cittadinanza;
@@ -117,6 +117,7 @@ public class Cliente implements Cloneable, Serializable {
         this.dataNascita = dataNascita;
         this.cf = cf;
         this.email = email;
+        this.nazionalità = nazionalità;
     }
 
     /**

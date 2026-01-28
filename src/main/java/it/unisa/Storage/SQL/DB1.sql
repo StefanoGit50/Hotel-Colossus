@@ -15,6 +15,7 @@ create table Cliente(
     Sesso varchar(40) not null,
     telefono char(15) not null,
     Cittadinanza varchar(50) not null,
+    Nazionalità varchar(50) not null,
     DataDiNascita date not null,
     IsBackListed boolean not null,
 	primary key(CF)

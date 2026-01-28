@@ -20,7 +20,7 @@ import java.util.Objects;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension .class)
+@ExtendWith(MockitoExtension.class)
 public class ClienteDAOTesting {
 
     private String attribute="";
@@ -71,7 +71,7 @@ public class ClienteDAOTesting {
     @Test
     @Tag("true")
     @DisplayName("Retrieve: Branch2: oggetto ==String")
-    public void DoRetrievebyKeyTesttrue() throws SQLException {
+    public void DoRetrievebyKeyTesttrue() throws SQLException{
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
         when(resultSet.next()).thenReturn(true, false);
         when(preparedStatement.getResultSet()).thenReturn(resultSet);

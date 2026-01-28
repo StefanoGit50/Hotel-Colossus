@@ -100,6 +100,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
             Integer civico = null;
             LocalDate date = null;
             Boolean isBlackListed = false;
+            String nazionalità = null;
             try(PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM Cliente WHERE CF = ?")){
                 preparedStatement.setString(1,cf);
                 preparedStatement.executeQuery();
@@ -121,6 +122,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                     Date date1 = (Date) resultSet.getObject(13);
                     date = date1.toLocalDate();
                     isBlackListed = (Boolean) resultSet.getObject(14);
+                    nazionalità =  resultSet.getString("Nazionalità");
                 }
                 resultSet.close();
 
@@ -135,15 +137,15 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
 
                 if(cap!=null) {
                     if (regex.matcher(cap).matches()) {
-                        cliente = new Cliente(nome, cognome, cittadinanza, provincia, comune, via, civico, Integer.parseInt(cap), telefono, sesso, date, cf1, email);
+                        cliente = new Cliente(nome, cognome, cittadinanza, provincia, comune, via, civico, Integer.parseInt(cap), telefono, sesso, date, cf1, email,nazionalità);
                         cliente.setBlacklisted(isBlackListed);
                     } else {
-                        cliente = new Cliente(nome, cognome, cittadinanza, provincia, comune, via, civico, null, telefono, sesso, date, cf1, email);
+                        cliente = new Cliente(nome, cognome, cittadinanza, provincia, comune, via, civico, null, telefono, sesso, date, cf1, email,nazionalità);
                         cliente.setBlacklisted(isBlackListed);
                     }
 
                 }else{
-                    cliente = new Cliente(nome, cognome, cittadinanza, provincia, comune, via, civico, null, telefono, sesso, date, cf1, email);
+                    cliente = new Cliente(nome, cognome, cittadinanza, provincia, comune, via, civico, null, telefono, sesso, date, cf1, email,nazionalità);
                     cliente.setBlacklisted(isBlackListed);
                 }
 
@@ -203,8 +205,8 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                 Date date1 = (Date) resultSet.getObject(13);
                 LocalDate date = date1.toLocalDate();
                 Boolean  isBackListed = (Boolean) resultSet.getObject(14);
-
-                cliente = new Cliente(nome,cognome,cittadinazione,provincia,comune,via,civico,Integer.parseInt(cap),telefono,sesso,date,cf1,email);
+                String nazionalità = resultSet.getString("Nazionalità");
+                cliente = new Cliente(nome,cognome,cittadinazione,provincia,comune,via,civico,Integer.parseInt(cap),telefono,sesso,date,cf1,email,nazionalità);
                 cliente.setBlacklisted(isBackListed);
                 clientes.add(cliente);
             }

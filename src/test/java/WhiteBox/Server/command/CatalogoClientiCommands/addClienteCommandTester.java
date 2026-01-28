@@ -30,7 +30,7 @@ class AddClienteCommandTester{
     void setUp() {
         catalogue = mock(CatalogoClienti.class);
 
-        clienteTest = new Cliente("Valeria", "Bianchi", "Francese", "MI", "Milano", "Via Dante", 42, 20121, "3479876543", "F", LocalDate.of(1985, 12, 02), "BNCVLR85T42F205Z", "valeria.b@provider.it");
+        clienteTest = new Cliente("Valeria", "Bianchi", "Francese", "MI", "Milano", "Via Dante", 42, 20121, "3479876543", "F", LocalDate.of(1985, 12, 02), "BNCVLR85T42F205Z", "valeria.b@provider.it","Italiana");
 
         command = new AddClienteCommand(catalogue, clienteTest);
     }
@@ -92,7 +92,7 @@ class AddClienteCommandTester{
     @Test
     void testSetClienteUpdatesValue() {
         // Arrange
-        Cliente newCliente = new Cliente("Mario", "Rossi", "Italiana", "Roma", "Roma", "Via del Corso", 10, 18600, "3331234567", "M", LocalDate.of(1990, 5, 15), "RSSMRA90E15H501Z", "mario.rossi@email.com");
+        Cliente newCliente = new Cliente("Mario", "Rossi", "Italiana", "Roma", "Roma", "Via del Corso", 10, 18600, "3331234567", "M", LocalDate.of(1990, 5, 15), "RSSMRA90E15H501Z", "mario.rossi@email.com","Italiana");
 
         // Act
         command.setCliente(newCliente);

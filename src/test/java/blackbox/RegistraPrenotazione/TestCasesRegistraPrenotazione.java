@@ -34,21 +34,22 @@ public class TestCasesRegistraPrenotazione {
                 "Giulia", "Verdi", "Italiana", "Milano", "Milano",
                 "Corso Vittorio Emanuele", 22, 20121, "3479876543", "F",
                 LocalDate.of(1992, 8, 15), "VRDGLI92M55F205W",
-                "giulia.verdi@gmail.com"
+                "giulia.verdi@gmail.com",
+                "Italiana"
         );
 
         Cliente cliente2 = new Cliente(
                 "Marco", "Neri", "Italiana", "Roma", "Roma",
                 "Via dei Condotti", 5, 11187, "3351122334", "M",
                 LocalDate.of(1978, 11, 3), "NREMRA78S03H501U",
-                "m.neri@provider.it"
+                "m.neri@provider.it","Italiana"
         );
 
         Cliente cliente3 = new Cliente(
                 "Sofia", "Bruno", "Italiana", "Firenze", "Firenze",
                 "Piazza della Signoria", 1, 50122, "3294455667", "F",
                 LocalDate.of(2001, 1, 25), "BRNSFO01A65D612Y",
-                "sofia.bruno@studio.it"
+                "sofia.bruno@studio.it","Italiana"
         );
 
         listaClienti.add(cliente1);

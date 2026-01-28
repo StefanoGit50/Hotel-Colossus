@@ -73,7 +73,7 @@ public class prenotazioneDAOTesting {
         ArrayList<Cliente> clientes = new ArrayList<>();
         ArrayList<Camera> cameras = new ArrayList<>();
         ArrayList<Servizio> servizios = new ArrayList<>();
-        clientes.add(new Cliente("Stefano","Santoro","Italiana","Salerno","mercato san severino","Corso Armando Diaz",10,84085,"3249554018","Maschio",LocalDate.of(2004,12, 16),"SNTSFN04T16H703T","stefano.santoro.2004@gmail.com"));
+        clientes.add(new Cliente("Stefano","Santoro","Italiana","Salerno","mercato san severino","Corso Armando Diaz",10,84085,"3249554018","Maschio",LocalDate.of(2004,12, 16),"SNTSFN04T16H703T","stefano.santoro.2004@gmail.com","Italiana"));
 
         cameras.add(new Camera(10,Stato.Libera,2,20.0,"Stefano è celiaco"));
 
@@ -232,6 +232,18 @@ public class prenotazioneDAOTesting {
        doNothing().when(preparedStatement).setInt(1,1);
        when(preparedStatement.executeQuery()).thenReturn(resultSet);
        when(resultSet.next()).thenReturn(true);
+       when(resultSet.getInt("IDPrenotazione")).thenReturn(1);
+       when(resultSet.getDate("DataPrenotazione")).thenReturn(Date.valueOf("2003-12-11"));
+       when(resultSet.getDate("DataArrivoCliente")).thenReturn(Date.valueOf("2004-3-12"));
+       when(resultSet.getDate("DataPartenzaCliente")).thenReturn(Date.valueOf("2004-5-12"));
+       when(resultSet.getString("TipoDocumento")).thenReturn("Carta D'identità");
+       when(resultSet.getDate("DataRilascio")).thenReturn(Date.valueOf("1998-12-11"));
+       when(resultSet.getDate("dataScadenza")).thenReturn(Date.valueOf("2008-12-11"));
+       when(resultSet.getString("Intestatario")).thenReturn("Stefano Santoro");
+       when(resultSet.getString("NoteAggiuntive")).thenReturn("");
+       when(resultSet.getString("numeroDocumento")).thenReturn("CA12C459");
+       when(resultSet.getBoolean("Stato")).thenReturn(true);
+       when(resultSet.getBoolean("CheckIn")).thenReturn(false);
 
        doNothing().when(preparedStatement1).setInt(1,1);
        when(preparedStatement1.executeQuery()).thenReturn(resultSet1);
@@ -241,21 +253,59 @@ public class prenotazioneDAOTesting {
 
        doNothing().when(preparedStatement2).setInt(1,1);
        when(preparedStatement2.executeQuery()).thenReturn(resultSet2);
-       when(resultSet2.next()).thenReturn(true,true);
+       when(resultSet2.next()).thenReturn(true,true ,false);
        when(resultSet2.getString("Nome")).thenReturn("Piscina");
        when(resultSet2.getDouble("Prezzo")).thenReturn(30.0);
 
        doNothing().when(preparedStatement3).setInt(1,1);
        when(preparedStatement3.executeQuery()).thenReturn(resultSet3);
+       when(resultSet3.next()).thenReturn(true , false);
        when(resultSet3.getInt("NumeroCamera")).thenReturn(10);
        when(resultSet3.getString("Stato")).thenReturn(Stato.Libera.name());
        when(resultSet3.getInt("NumeroMaxOcc")).thenReturn(2);
        when(resultSet3.getDouble("Prezzo")).thenReturn(20.0);
-       when(resultSet3.getString("NoteCamera")).thenReturn("");
+       when(resultSet3.getString("NoteCamera")).thenReturn("Stefano è celiaco");
 
        doNothing().when(preparedStatement4).setInt(1,1);
-       when(resultSet4.getString("Nome")).thenReturn("");
+       when(preparedStatement4.executeQuery()).thenReturn(resultSet4);
+       when(resultSet4.next()).thenReturn(true , false);
+       when(resultSet4.getString("nome")).thenReturn("Stefano");
+       when(resultSet4.getString("cognome")).thenReturn("Santoro");
+       when(resultSet4.getString("Cittadinanza")).thenReturn("Italiana");
+       when(resultSet4.getString("provincia")).thenReturn("Salerno");
+       when(resultSet4.getString("comune")).thenReturn("mercato san severino");
+       when(resultSet4.getString("via")).thenReturn("Corso Armando Diaz");
+       when(resultSet4.getInt("civico")).thenReturn(10);
+       when(resultSet4.getInt("Cap")).thenReturn(84085);
+       when(resultSet4.getString("telefono")).thenReturn("3249554018");
+       when(resultSet4.getString("Sesso")).thenReturn("Maschio");
+       when(resultSet4.getDate("DataDiNascita")).thenReturn(Date.valueOf("2004-12-16"));
+       when(resultSet4.getString("CF")).thenReturn("SNTSFN04T16H703T");
+       when(resultSet4.getString("Email")).thenReturn("stefano.santoro.2004@gmail.com");
+       when(resultSet4.getString("Nazionalità")).thenReturn("Italiana");
 
+       ArrayList<Servizio> servizios = new ArrayList<>();
+       servizios.add(new Servizio("Piscina",30.0));
+       servizios.add(new Servizio("Piscina",30.0));
+
+       prenotazione.setListaServizi(servizios);
        assertEquals(prenotazione,prenotazioneDAO.doRetriveByKey(1));
     }
+
+    @Test
+    @Tags({@Tag("Exception"),@Tag("Error")})
+    @DisplayName("doRetriveByKey() quando va in errore")
+    public void doRetriveByKey() throws SQLException {
+        when(connection.prepareStatement("SELECT * FROM Prenotazione WHERE IDPrenotazione = ?")).thenReturn(preparedStatement);
+        doNothing().when(preparedStatement).setInt(1,1);
+        when(preparedStatement.executeQuery()).thenReturn(resultSet);
+        when(resultSet.next()).thenReturn(false);
+
+        assertThrows(NoSuchElementException.class,()->prenotazioneDAO.doRetriveByKey(1));
+    }
+
+    public void doRetriveByKeyAllFalseTranne(){
+
+    }
+
 }
