@@ -22,14 +22,15 @@ import java.util.logging.Logger;
 public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface {
     static Logger logger = Logger.getLogger("global");
     private static final int RMI_PORT = 1099;
-    private CatalogoCamere camList = new CatalogoCamere();
+    private static CatalogoCamere catalogoCamere;
+   private CatalogoCamere camList = new CatalogoCamere();
 
     public FrontDesk() throws RemoteException {
         super();
     }
 
     public List<Camera> getCamere(){
-       return CatalogoCamere.getListaCamere();
+       return catalogoCamere.getListaCamere();
     }
 
     @Override
