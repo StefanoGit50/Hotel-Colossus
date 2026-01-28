@@ -14,19 +14,14 @@ import it.unisa.interfacce.FrontDeskInterface;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
 public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface {
     static Logger logger = Logger.getLogger("global");
     private static final int RMI_PORT = 1099;
-
-    private List<Prenotazione> prenotazioni = new ArrayList<>();
     private CatalogoCamere camList = new CatalogoCamere();
 
     public FrontDesk() throws RemoteException {
