@@ -1,13 +1,12 @@
 package it.unisa.Server.persistent.obj.catalogues;
 
 import it.unisa.Common.Impiegato;
+import it.unisa.Common.Prenotazione;
 import it.unisa.Server.persistent.util.Ruolo;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -68,11 +67,15 @@ public class CatalogoImpiegati implements Serializable {
      * @param cognome Il cognome dell'impiegato da cercare (può essere {@code null}).
      * @param sesso La nazionalità (o cittadinanza) dell'impiegato (può essere {@code null}).
      * @param ruolo {@code Ruolo} Ruolo dell'impiegato (può essere {@code null}).
+     * @param attributoOrdinamento nome dell'attributo usato per l'ordinamento
+     * @param sort {@code true} per l'ordinamento in ordine ASC, {@code false} per l'ordinamento in ordine DESC.
      * @return Una deep copy dell'ArrayList contenente tutti gli impiegati che corrispondono ai criteri di ricerca.
      * @throws CloneNotSupportedException Se il metodo clone non è supportato dalla classe {@code Impiegato}
      */
-    public ArrayList<Impiegato> cercaimpiegati(String nome, String cognome, String sesso, Ruolo ruolo) {
+    public ArrayList<Impiegato> cercaImpiegati(String nome, String cognome, String sesso, Ruolo ruolo,
+                                               String attributoOrdinamento, Boolean sort) throws CloneNotSupportedException {
         ArrayList<Impiegato> risultati = new ArrayList<>();
+        List<String> paramNames = List.of("nome", "cognome", "sesso", "ruolo");
 
         // Flags per verificare se almeno un parametro è stato fornito
         boolean[] params = new boolean[4];
@@ -87,17 +90,17 @@ public class CatalogoImpiegati implements Serializable {
         for (Impiegato impiegato : listaImpiegati) {
 
             if (params[0]) { // Se la flag è vera allora il parametro è presente ed è usato come criterio per la ricerca
-                if (!Objects.equals(impiegato.getNome(), nome)) { // Il criterio non è rispettato
+                if (!impiegato.getNome().toLowerCase().startsWith(nome.toLowerCase())) { // Il criterio non è rispettato
                     continue; // L'oggetto Impiegato non viene aggiunto
                 }
             }
             if (params[1]) {
-                if (!Objects.equals(impiegato.getCognome(), cognome)) {
+                if (!impiegato.getCognome().toLowerCase().startsWith(cognome.toLowerCase())) {
                     continue;
                 }
             }
             if (params[2]) {
-                if (!Objects.equals(impiegato.getSesso(), sesso)) {
+                if (!impiegato.getNome().toLowerCase().startsWith(sesso.toLowerCase())) {
                     continue;
                 }
             }
@@ -111,6 +114,45 @@ public class CatalogoImpiegati implements Serializable {
                 risultati.add(impiegato.clone());
             } catch (CloneNotSupportedException e) { // Non succede perchè impiegato supporta clone
                 e.printStackTrace();
+            }
+        }
+
+
+        if (attributoOrdinamento == null || attributoOrdinamento.isBlank())
+            return risultati;
+        if (sort == null) sort = true; // true = default
+
+        // Ordinamento degli elementi
+        // Nome impiegato
+        if (attributoOrdinamento.trim().equalsIgnoreCase(paramNames.getFirst()) )  {
+            if (sort) {
+                risultati.sort(Comparator.comparing(Impiegato::getNome));
+            } else  {
+                risultati.sort(Comparator.comparing(Impiegato::getNome).reversed());
+            }
+        }
+        // Cognome impiegato
+        if (attributoOrdinamento.trim().equalsIgnoreCase(paramNames.get(1)) )  {
+            if (sort) {
+                risultati.sort(Comparator.comparing(Impiegato::getCognome));
+            } else  {
+                risultati.sort(Comparator.comparing(Impiegato::getCognome).reversed());
+            }
+        }
+        // Sesso impiegato
+        if (attributoOrdinamento.trim().equalsIgnoreCase(paramNames.get(2)) )  {
+            if (sort) {
+                risultati.sort(Comparator.comparing(Impiegato::getSesso));
+            } else  {
+                risultati.sort(Comparator.comparing(Impiegato::getSesso).reversed());
+            }
+        }
+        // Ruolo dell'impiegato
+        if (attributoOrdinamento.trim().equalsIgnoreCase(paramNames.getLast()) )  {
+            if (sort) {
+                risultati.sort(Comparator.comparing(Impiegato::getRuolo));
+            } else  {
+                risultati.sort(Comparator.comparing(Impiegato::getRuolo).reversed());
             }
         }
 

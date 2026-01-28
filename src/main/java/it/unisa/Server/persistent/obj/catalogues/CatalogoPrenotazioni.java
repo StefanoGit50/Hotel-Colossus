@@ -1,10 +1,13 @@
 package it.unisa.Server.persistent.obj.catalogues;
 import it.unisa.Common.Camera;
+import it.unisa.Common.Cliente;
 import it.unisa.Common.Prenotazione;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -39,14 +42,16 @@ public class CatalogoPrenotazioni implements Serializable {
      * @param numeroCamera Numero (una delle/a) camera registrata con la prenotazione.
      * @param dataInizio Data prevista per il check-in.
      * @param dataFine Data prevista per il check-out.
-     * @param sort Parametro per indicare l'ordine rispetto la data (ASC=true or DESC=false). Per ASC si intende dalla
-     *             data meno imminente a quella più imminente rispetto la data odierna metre il contrario vale per DESC.
+     * @param attributoOrdinamento nome dell'attributo usato per l'ordinamento
+     * @param sort {@code true} per l'ordinamento in ordine ASC, {@code false} per l'ordinamento in ordine DESC.
+     *             Per ASC (data) si intende dalla data meno imminente a quella più imminente rispetto la data odierna metre il contrario vale per DESC.
      * @return Una deep copy dell'ArrayList contenente tutte le prenotazioni che corrispondono ai criteri di ricerca.
      * @throws CloneNotSupportedException Se il metodo clone non è supportato dalla classe {@code Prenotazione}
      */
-    public ArrayList<Prenotazione> cercaPrenotazioni(String nominativoCliente, int numeroCamera,
-                                           LocalDate dataInizio, LocalDate dataFine, boolean sort) throws CloneNotSupportedException{
+    public ArrayList<Prenotazione> cercaPrenotazioni(String nominativoCliente, int numeroCamera, LocalDate dataInizio,
+                                                     LocalDate dataFine, String attributoOrdinamento, Boolean sort) throws CloneNotSupportedException{
         ArrayList<Prenotazione> risultati = new ArrayList<>();
+        List<String> paramNames = List.of("nominativoCliente", "dataInizio", "dataFine");
 
         // Flags per verificare se almeno un parametro è stato fornito
         boolean[] params = new boolean[4];
@@ -61,7 +66,7 @@ public class CatalogoPrenotazioni implements Serializable {
         for (Prenotazione prenotazione : listaPrenotazioni) {
 
             if (params[0]) { // Se la flag è vera allora il parametro è presente ed è usato come criterio per la ricerca
-                if (!Objects.equals(prenotazione.getIntestatario(), nominativoCliente)) { // Il criterio non è rispettato
+                if (!prenotazione.getIntestatario().toLowerCase().startsWith(nominativoCliente.toLowerCase())) { // Il criterio non è rispettato
                     continue; // L'oggetto cliente non viene aggiunto
                 }
             }
@@ -70,6 +75,7 @@ public class CatalogoPrenotazioni implements Serializable {
                 for (Camera c : prenotazione.getListaCamere()) {
                     if (Objects.equals(c.getNumeroCamera(), numeroCamera)) {
                         flag = true;
+                        break;
                     }
                 }
                 if (!flag) {
@@ -80,17 +86,49 @@ public class CatalogoPrenotazioni implements Serializable {
                 if ( !(prenotazione.getDataInizio().isAfter(dataInizio) && prenotazione.getDataFine().isBefore(dataFine)) ) {
                     continue;
                 }
+            } else {
+                if (params[2]) {
+                    if (!prenotazione.getDataInizio().isAfter(dataInizio)) {
+                        continue;
+                    }
+                } else {
+                    if (!prenotazione.getDataFine().isBefore(dataFine)) {
+                        continue;
+                    }
+                }
             }
 
             risultati.add(prenotazione.clone());
         }
 
-        if (sort) {
-            // ASC
-            risultati.sort((p1, p2) -> p1.getDataInizio().compareTo(p2.getDataInizio()));
-        } else {
-            // DESC
-            risultati.sort((p1, p2) -> p2.getDataInizio().compareTo(p1.getDataInizio()));
+        if (attributoOrdinamento == null || attributoOrdinamento.isBlank())
+            return risultati;
+        if (sort == null) sort = true; // true = default
+
+        // Ordinamento degli elementi
+        // Nome cliente intestatario
+        if (attributoOrdinamento.trim().equalsIgnoreCase(paramNames.getFirst()) )  {
+            if (sort) {
+                risultati.sort(Comparator.comparing(Prenotazione::getIntestatario));
+            } else  {
+                risultati.sort(Comparator.comparing(Prenotazione::getIntestatario).reversed());
+            }
+        }
+        // Data inizio prenotazione
+        if (attributoOrdinamento.trim().equalsIgnoreCase(paramNames.get(1)) )  {
+            if (sort) {
+                risultati.sort(Comparator.comparing(Prenotazione::getDataInizio));
+            } else  {
+                risultati.sort(Comparator.comparing(Prenotazione::getDataInizio).reversed());
+            }
+        }
+        // Data fine prenotazione
+        if (attributoOrdinamento.trim().equalsIgnoreCase(paramNames.getLast()) )  {
+            if (sort) {
+                risultati.sort(Comparator.comparing(Prenotazione::getDataFine));
+            } else  {
+                risultati.sort(Comparator.comparing(Prenotazione::getDataFine).reversed());
+            }
         }
         return risultati;
     }
