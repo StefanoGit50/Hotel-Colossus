@@ -1,5 +1,6 @@
 package it.unisa.Storage.DAO;
 
+import it.unisa.Common.Camera;
 import it.unisa.Common.Servizio;
 import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.Interfacce.FrontDeskStorage;
@@ -216,6 +217,11 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
 
     @Override
     public Collection<Servizio> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, Boolean blackListed, String orderBy) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void doSaveAll(List<Camera> listCamera) throws SQLException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

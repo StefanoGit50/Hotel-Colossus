@@ -2,12 +2,14 @@ package it.unisa.Server.persistent.obj.catalogues;
 
 import it.unisa.Common.Cliente;
 import it.unisa.Server.persistent.util.Util;
+import it.unisa.Storage.DAO.ClienteDAO;
+import it.unisa.Storage.Interfacce.FrontDeskStorage;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -21,12 +23,82 @@ public class CatalogoClienti implements Serializable {
     /**
      * Lista interna contenente tutti gli oggetti {@link Cliente}.
      */
-    private static ArrayList<Cliente> listaClienti = new ArrayList<>();
+    private static FrontDeskStorage<Cliente> frontDeskStorage = new ClienteDAO();
+    private static ArrayList<Cliente> listaClienti ;
 
     /**
      * Lista interna contenente gli oggetti {@link Cliente} bannati.
      */
     private static ArrayList<Cliente> listaClientiBannati = new ArrayList<>();
+
+    static {
+        try {
+            listaClienti= (ArrayList<Cliente>)frontDeskStorage.doRetriveAll("decrescente");
+        }catch (SQLException e){
+            throw  new RuntimeException(e);
+        }
+        for( Cliente c : listaClienti){
+            if(c.isBlacklisted())
+                listaClientiBannati.add(c);
+        }
+    }
+
+
+    private boolean updateCliente(Cliente cliente){
+         boolean flag=false;
+         if(listaClienti.contains(cliente)){
+            Iterator<Cliente> it = listaClienti.iterator();
+            while (it.hasNext()) {
+                Cliente c = it.next();
+                if (c.getCf().equals(cliente.getCf()) && !c.equals(cliente)) {
+                    try{
+                        frontDeskStorage.doUpdate(cliente);
+                    }catch (SQLException e){
+                        e.printStackTrace();
+                    }
+                    it.remove();                  // rimuove in sicurezza
+                    listaClienti.add(cliente);  // aggiunge cliente modificato
+                    flag=true;
+                        if(cliente.isBlacklisted())
+                            listaClientiBannati.add(cliente);
+                }
+            }
+        }
+         return flag;
+    }
+
+    public boolean aggiungiCliente(Cliente cliente){
+        if(!listaClienti.contains(cliente)){
+            try{
+                frontDeskStorage.doSave(cliente);
+            }catch (SQLException e){
+                e.printStackTrace();
+                return false;
+            }
+            listaClienti.add(cliente);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeCliente(Cliente cliente){
+        if(listaClienti.contains(cliente)){
+            try {
+                frontDeskStorage.doDelete(cliente);
+            }catch (SQLException e){
+                e.printStackTrace();
+                return false;
+            }
+            listaClienti.remove(cliente);
+            listaClientiBannati.remove(cliente);
+        }
+        return true;
+    }
+
+
+
+
+
 
 
 
@@ -89,16 +161,12 @@ public class CatalogoClienti implements Serializable {
      * @param nazionalita La nazionalità (o cittadinanza) del cliente (può essere {@code null}).
      * @param dataNascita La data di nascita del cliente (può essere {@code null}).
      * @param sesso Il sesso del cliente (può essere {@code null}).
-     * @param attributoOrdinamento nome dell'attributo usato per l'ordinamento
-     * @param sort {@code true} per l'ordinamento in ordine ASC, {@code false} per l'ordinamento in ordine DESC,
      * @return Una deep copy dell'ArrayList contenente tutti i clienti che corrispondono ai criteri di ricerca.
      * @throws CloneNotSupportedException Se il metodo clone non è supportato dalla classe {@code Client}
      */
-    public ArrayList<Cliente> cercaClienti(String nome, String cognome, String nazionalita, LocalDate dataNascita, String sesso,
-                                           String attributoOrdinamento, Boolean sort)
+    public ArrayList<Cliente> cercaClienti(String nome, String cognome, String nazionalita, LocalDate dataNascita, String sesso)
             throws CloneNotSupportedException{
         ArrayList<Cliente> risultati = new ArrayList<>();
-        List<String> paramNames = List.of("nome", "cognome", "nazionalita", "dataNascita",  "sesso");
 
         // Flags per verificare se almeno un parametro è stato fornito
         boolean[] params = new boolean[5];
@@ -114,77 +182,32 @@ public class CatalogoClienti implements Serializable {
         for (Cliente cliente : listaClienti) {
 
             if (params[0]) { // Se la flag è vera allora il parametro è presente ed è usato come criterio per la ricerca
-                if (!cliente.getNome().toLowerCase().startsWith(nome)) { // Il criterio non è rispettato
+                if (!Objects.equals(cliente.getNome(), nome)) { // Il criterio non è rispettato
                     continue; // L'oggetto cliente non viene aggiunto
-                } // Se il criterio è rispettato non fai continue
+                }
             }
             if (params[1]) {
-                if (!cliente.getCognome().toLowerCase().startsWith(cognome.toLowerCase())) {
+                if (!Objects.equals(cliente.getCognome(), cognome)) {
                     continue;
                 }
             }
             if (params[2]) {
-                if (!cliente.getSesso().toLowerCase().startsWith(sesso.toLowerCase())) {
+                if (!Objects.equals(cliente.getSesso(), sesso)) {
                     continue;
                 }
             }
             if (params[3]) {
-                if (!(cliente.getDataNascita().isAfter(dataNascita) || cliente.getDataNascita().isEqual(dataNascita))) {
+                if (cliente.getDataNascita().isAfter(dataNascita) || cliente.getDataNascita().isEqual(dataNascita)) {
                     continue;
                 }
             }
             if (params[4]) {
-                if (!cliente.getNazionalita().toLowerCase().startsWith(nazionalita.toLowerCase())) {
+                if (!Objects.equals(cliente.getNazionalita(),  nazionalita)) {
                     continue;
                 }
             }
+
             risultati.add(cliente.clone());
-        }
-
-        if (attributoOrdinamento == null || attributoOrdinamento.isBlank())
-            return risultati;
-        if (sort == null) sort = true; // true = default
-
-        // Ordinamento degli elementi
-        // Nome
-        if (attributoOrdinamento.trim().equalsIgnoreCase(paramNames.getFirst()) )  {
-            if (sort) {
-                risultati.sort(Comparator.comparing(Cliente::getNome));
-            } else  {
-                risultati.sort(Comparator.comparing(Cliente::getNome).reversed());
-            }
-        }
-        // Cognome
-        if (attributoOrdinamento.trim().equalsIgnoreCase(paramNames.get(1)) )  {
-            if (sort) {
-                risultati.sort(Comparator.comparing(Cliente::getCognome));
-            } else  {
-                risultati.sort(Comparator.comparing(Cliente::getCognome).reversed());
-            }
-        }
-        // Nazionalità
-        if (attributoOrdinamento.trim().equalsIgnoreCase(paramNames.get(2)) )  {
-            if (sort) {
-                risultati.sort(Comparator.comparing(Cliente::getNazionalita));
-            } else  {
-                risultati.sort(Comparator.comparing(Cliente::getNazionalita).reversed());
-            }
-        }
-        // dataNascita
-        if (attributoOrdinamento.trim().equalsIgnoreCase(paramNames.get(3)) )  {
-            if (sort) {
-                risultati.sort(Comparator.comparing(Cliente::getDataNascita));
-            } else  {
-                risultati.sort(Comparator.comparing(Cliente::getDataNascita).reversed());
-            }
-        }
-        // sesso
-        if (attributoOrdinamento.trim().equalsIgnoreCase(paramNames.getLast()) )  {
-            if (sort) {
-                risultati.sort(Comparator.comparing(Cliente::getSesso));
-            } else  {
-                risultati.sort(Comparator.comparing(Cliente::getSesso).reversed());
-            }
         }
         return risultati;
     }

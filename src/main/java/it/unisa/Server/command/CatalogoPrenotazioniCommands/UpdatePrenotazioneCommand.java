@@ -56,8 +56,7 @@ public class UpdatePrenotazioneCommand implements Command {
     public void execute() {
         try {
             Prenotazione p = catalogue.getPrenotazione(prenotazione.getIDPrenotazione());
-            ArrayList<Prenotazione> lp = CatalogoPrenotazioni.getListaPrenotazioni();
-
+            ArrayList<Prenotazione> lp = catalogue.getListaPrenotazioni();
             Iterator<Prenotazione> it = lp.iterator(); // Evita di modificare l'array metre lo si itera
             Prenotazione pren;
             while (it.hasNext()) {
@@ -82,17 +81,20 @@ public class UpdatePrenotazioneCommand implements Command {
     @Override
     public void undo() {
         try {
-            Prenotazione p = catalogue.getPrenotazione(prenotazione.getIDPrenotazione());
-            ArrayList<Prenotazione> lp = CatalogoPrenotazioni.getListaPrenotazioni();
+            ArrayList<Prenotazione> p =new ArrayList<>();
+            p.add(catalogue.getPrenotazione(prenotazione.getIDPrenotazione()));
+            ArrayList<Prenotazione> lp = catalogue.getListaPrenotazioni();
 
             Iterator<Prenotazione> it = lp.iterator(); // Evita di modificare l'array metre lo si itera
             Prenotazione pren;
             while (it.hasNext()) {
                 pren = it.next();
 
-                if(pren.getIDPrenotazione() == p.getIDPrenotazione()) {
-                    lp.remove(p); // rimuovi il prenotazione 'non modificato' dalla lista dei prenotazioni
-                    lp.add(prenotazioneNonModificata); // aggiungi il prenotazione 'modificato' alla lista dei prenotazioni
+                if(pren.getIDPrenotazione() == p.getFirst().getIDPrenotazione()) {
+                    catalogue.removePrenotazioni(p); // rimuovi il prenotazione 'non modificato' dalla lista dei prenotazioni
+                    ArrayList<Prenotazione> prenotazione =  new ArrayList<>();
+                    prenotazione.add(prenotazioneNonModificata);
+                    catalogue.addPrenotazioni(prenotazione); // aggiungi il prenotazione 'modificato' alla lista dei prenotazioni
                     break;
                 }
             }

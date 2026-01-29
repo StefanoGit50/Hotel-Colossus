@@ -1,10 +1,16 @@
 package it.unisa.Server.persistent.obj.catalogues;
 
+import it.unisa.Common.Cliente;
 import it.unisa.Common.Impiegato;
-import it.unisa.Common.Prenotazione;
+import it.unisa.Server.gestionePrenotazioni.FrontDesk;
 import it.unisa.Server.persistent.util.Ruolo;
+import it.unisa.Storage.DAO.ClienteDAO;
+import it.unisa.Storage.DAO.ImpiegatoDAO;
+import it.unisa.Storage.Interfacce.BackofficeStorage;
+import it.unisa.Storage.Interfacce.FrontDeskStorage;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -17,7 +23,20 @@ public class CatalogoImpiegati implements Serializable {
     /**
      * Lista di tutti gli impiegati del sistema.
      */
-    private static ArrayList<Impiegato> listaImpiegati = new ArrayList<>();
+    private static ArrayList<Impiegato> listaImpiegati;
+    private static BackofficeStorage<Impiegato> backOfficeStorage = new ImpiegatoDAO();
+
+
+    static {
+        try{
+            backOfficeStorage.doRetriveAll("decrescente");
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    public CatalogoImpiegati() {
+    }
 
     // Getters - Setters
 
@@ -38,8 +57,59 @@ public class CatalogoImpiegati implements Serializable {
             }
 
         }
-
     }
+
+
+    public  boolean aggiungiImpiegato(Impiegato imp) {
+        if (listaImpiegati.contains(imp)){
+            try {
+                backOfficeStorage.doSave(imp);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
+            listaImpiegati.remove(imp);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean eliminaImpiegato(Impiegato imp){
+        if(listaImpiegati.contains(imp)){
+            try{
+                backOfficeStorage.doDelete(imp);
+            }catch (SQLException e){
+                e.printStackTrace();
+                return false;
+            }
+            listaImpiegati.remove(imp);
+            return true;
+        }
+        return false;
+    }
+    public boolean updateImpiegato(Impiegato imp){
+        if(listaImpiegati.contains(imp)){
+            try{
+                backOfficeStorage.doUpdate(imp);
+            }catch (SQLException e){
+                e.printStackTrace();
+                return false;
+            }
+                boolean flag=false;
+                Iterator<Impiegato> it = listaImpiegati.iterator();
+                while (it.hasNext()){
+                    Impiegato i =  it.next();
+                    if(i.getCodiceFiscale().equals(imp.getCodiceFiscale()) && !i.equals(imp)){
+                        it.remove();
+                        listaImpiegati.add(imp);
+                        return true;
+                    }
+                }
+
+        }
+        return false;
+    }
+
 
     // Metodi interfaccia publica
 
@@ -67,15 +137,11 @@ public class CatalogoImpiegati implements Serializable {
      * @param cognome Il cognome dell'impiegato da cercare (può essere {@code null}).
      * @param sesso La nazionalità (o cittadinanza) dell'impiegato (può essere {@code null}).
      * @param ruolo {@code Ruolo} Ruolo dell'impiegato (può essere {@code null}).
-     * @param attributoOrdinamento nome dell'attributo usato per l'ordinamento
-     * @param sort {@code true} per l'ordinamento in ordine ASC, {@code false} per l'ordinamento in ordine DESC.
      * @return Una deep copy dell'ArrayList contenente tutti gli impiegati che corrispondono ai criteri di ricerca.
      * @throws CloneNotSupportedException Se il metodo clone non è supportato dalla classe {@code Impiegato}
      */
-    public ArrayList<Impiegato> cercaImpiegati(String nome, String cognome, String sesso, Ruolo ruolo,
-                                               String attributoOrdinamento, Boolean sort) throws CloneNotSupportedException {
+    public ArrayList<Impiegato> cercaimpiegati(String nome, String cognome, String sesso, Ruolo ruolo) {
         ArrayList<Impiegato> risultati = new ArrayList<>();
-        List<String> paramNames = List.of("nome", "cognome", "sesso", "ruolo");
 
         // Flags per verificare se almeno un parametro è stato fornito
         boolean[] params = new boolean[4];
@@ -90,17 +156,17 @@ public class CatalogoImpiegati implements Serializable {
         for (Impiegato impiegato : listaImpiegati) {
 
             if (params[0]) { // Se la flag è vera allora il parametro è presente ed è usato come criterio per la ricerca
-                if (!impiegato.getNome().toLowerCase().startsWith(nome.toLowerCase())) { // Il criterio non è rispettato
+                if (!Objects.equals(impiegato.getNome(), nome)) { // Il criterio non è rispettato
                     continue; // L'oggetto Impiegato non viene aggiunto
                 }
             }
             if (params[1]) {
-                if (!impiegato.getCognome().toLowerCase().startsWith(cognome.toLowerCase())) {
+                if (!Objects.equals(impiegato.getCognome(), cognome)) {
                     continue;
                 }
             }
             if (params[2]) {
-                if (!impiegato.getNome().toLowerCase().startsWith(sesso.toLowerCase())) {
+                if (!Objects.equals(impiegato.getSesso(), sesso)) {
                     continue;
                 }
             }
@@ -114,45 +180,6 @@ public class CatalogoImpiegati implements Serializable {
                 risultati.add(impiegato.clone());
             } catch (CloneNotSupportedException e) { // Non succede perchè impiegato supporta clone
                 e.printStackTrace();
-            }
-        }
-
-
-        if (attributoOrdinamento == null || attributoOrdinamento.isBlank())
-            return risultati;
-        if (sort == null) sort = true; // true = default
-
-        // Ordinamento degli elementi
-        // Nome impiegato
-        if (attributoOrdinamento.trim().equalsIgnoreCase(paramNames.getFirst()) )  {
-            if (sort) {
-                risultati.sort(Comparator.comparing(Impiegato::getNome));
-            } else  {
-                risultati.sort(Comparator.comparing(Impiegato::getNome).reversed());
-            }
-        }
-        // Cognome impiegato
-        if (attributoOrdinamento.trim().equalsIgnoreCase(paramNames.get(1)) )  {
-            if (sort) {
-                risultati.sort(Comparator.comparing(Impiegato::getCognome));
-            } else  {
-                risultati.sort(Comparator.comparing(Impiegato::getCognome).reversed());
-            }
-        }
-        // Sesso impiegato
-        if (attributoOrdinamento.trim().equalsIgnoreCase(paramNames.get(2)) )  {
-            if (sort) {
-                risultati.sort(Comparator.comparing(Impiegato::getSesso));
-            } else  {
-                risultati.sort(Comparator.comparing(Impiegato::getSesso).reversed());
-            }
-        }
-        // Ruolo dell'impiegato
-        if (attributoOrdinamento.trim().equalsIgnoreCase(paramNames.getLast()) )  {
-            if (sort) {
-                risultati.sort(Comparator.comparing(Impiegato::getRuolo));
-            } else  {
-                risultati.sort(Comparator.comparing(Impiegato::getRuolo).reversed());
             }
         }
 

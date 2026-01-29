@@ -476,6 +476,11 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
         return List.of();
     }
 
+    @Override
+    public void doSaveAll(List<Camera> listCamera) throws SQLException {
+        throw new  UnsupportedOperationException("Not supported yet.");
+    }
+
     /**
      * @param attribute;
      * @param value;

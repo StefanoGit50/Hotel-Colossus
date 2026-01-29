@@ -1,5 +1,6 @@
 package it.unisa.Storage.DAO;
 
+import it.unisa.Common.Camera;
 import it.unisa.Common.Trattamento;
 import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.Interfacce.FrontDeskStorage;
@@ -11,9 +12,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
-{
-    private static final String TABLE_NAME = "hot.Trattamento2";
+public class TrattamentoDAO implements FrontDeskStorage<Trattamento>{
+    private static final String TABLE_NAME = "Trattamento";
 
     @Override
     public synchronized void doSave(Trattamento trattamento) throws SQLException
@@ -49,7 +49,7 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
     {
         if(trattamento != null && trattamento.getNome() != null){
             Connection connection = ConnectionStorage.getConnection();
-            String query = "DELETE FROM hot.trattamento2 WHERE Nome = ?";
+            String query = "DELETE FROM Trattamento WHERE Nome = ?";
 
             try (PreparedStatement stmt = connection.prepareStatement(query))
             {
@@ -72,7 +72,7 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
     {
         if(nome instanceof String){
             Connection connection = ConnectionStorage.getConnection();
-            String query = "SELECT * FROM hot.trattamento2 WHERE Nome = ?";
+            String query = "SELECT * FROM Trattamento WHERE Nome = ?";
 
             try (PreparedStatement stmt = connection.prepareStatement(query))
             {
@@ -101,7 +101,7 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
     public synchronized Collection<Trattamento> doRetriveAll(String order) throws SQLException
     {
         Connection connection = ConnectionStorage.getConnection();
-        String query = "SELECT * FROM hot.trattamento2";
+        String query = "SELECT * FROM Trattamento";
         if (order.equalsIgnoreCase("decrescente"))
         {
             query += " ORDER BY Nome DESC ";
@@ -152,7 +152,7 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
         if(trattamento != null)
         {
             Connection connection = ConnectionStorage.getConnection();
-            String query = "UPDATE hot.trattamento2 SET Prezzo = ? WHERE Nome = ?";
+            String query = "UPDATE Trattamento SET Prezzo = ? WHERE Nome = ?";
 
             try (PreparedStatement stmt = connection.prepareStatement(query))
             {
@@ -195,6 +195,7 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
                     trattamento = new Trattamento();
                     trattamento.setNome(resultSet.getString("Nome"));
                     trattamento.setPrezzo(resultSet.getDouble("Prezzo"));
+
                     lista.add(trattamento);
                 }
 
@@ -217,6 +218,11 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
 
     @Override
     public Collection<Trattamento> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, Boolean blackListed, String orderBy) throws SQLException{
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void doSaveAll(List<Camera> listCamera) throws SQLException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }
