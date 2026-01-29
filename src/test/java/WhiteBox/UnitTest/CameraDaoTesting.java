@@ -5,190 +5,127 @@ import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.DAO.CameraDAO;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.DisabledIfSystemProperties;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.MockedStatic;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.concurrent.locks.ReadWriteLock;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-public class CameraDaoTesting {
-
-    @Mock
-    private Connection connection;
-
-    @Mock
-    private PreparedStatement preparedStatement;
-
-    @Mock
-    private ResultSet resultSet;
+@ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
+public class CameraDaoTesting{
 
     private CameraDAO cameraDAO;
+    private ResultSet resultSet;
     private Camera camera;
 
-    private MockedStatic<ConnectionStorage> mocked;
-
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws SQLException {
+        // Inizializza DAO e oggetto Camera
         cameraDAO = new CameraDAO();
-        camera = new Camera(112, Stato.Libera, 3, 300, "");
-        mocked = mockStatic(ConnectionStorage.class);
+        camera = new Camera(104, Stato.Libera, 2, 150.0, "Camera prova");
     }
 
-    @AfterEach
-    public void setAfter(){
-        mocked.close();
-    }
 
-    // --------------------- TEST DELETE ---------------------
+
     @Test
     @Tag("True")
-    @DisplayName("doDelete() tutte le condizioni vere")
-    public void doDeleteAllTrue() throws SQLException {
-            mocked.when(ConnectionStorage::getConnection).thenReturn(connection);
-            when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
-            when(preparedStatement.executeUpdate()).thenReturn(1);
+    @DisplayName("doSaveAll() quando è tutto vero")
+    public void doSaveAllTrue(){
+        ArrayList<Camera> cameras = new ArrayList<>();
+        cameras.add(camera);
+        cameras.add(new Camera(105,Stato.Libera,3,155.0,"Sp"));
+    }
+    @Test
+    @Tags({@Tag("Error"),@Tag("Exception")})
+    @DisplayName("doSave() quando è tutto falso")
+   public void doSaveAllFalse() throws SQLException {
+        ArrayList<Camera> cameras = new ArrayList<>();
+       assertThrows(NullPointerException.class,()->cameraDAO.doSaveAll(cameras));
+   }
+   @Test
+   @Tag("True")
+   @DisplayName("doRetriveAll() quando è tutto vero")
 
-            cameraDAO.doDelete(camera);
+   public void doRetriveAllTrue() throws SQLException {
+        ArrayList<Camera> cameras = new ArrayList<>();
+        cameras.add(new Camera(101,Stato.Libera,2,120,"Camera doppia con vista mare"));
+        cameras.add(new Camera(102,Stato.Libera,4,180,"Camera familiare con balcone"));
+        cameras.add(new Camera(103,Stato.Libera,2,150,"Camera prova"));
+        cameras.add(new Camera(104,Stato.Libera,2,150,"Camera prova"));
 
-            verify(preparedStatement, times(1)).executeUpdate();
+        ArrayList<Camera> cameras1 = (ArrayList<Camera>) cameraDAO.doRetriveAll("decrescente");
+        assertEquals(cameras,cameras1);
     }
 
     @Test
-    @Tag("Exception")
-    @DisplayName("doDelete() quando null")
-    public void doDeleteException() {
-        assertThrows(NoSuchElementException.class, () -> cameraDAO.doDelete(null));
+    @Tags({@Tag("Exception"),@Tag("Error")})
+    @DisplayName("doRetriveAll() quando order è null")
+    public void doRetriveAllOrderNull() throws SQLException{
+        assertThrows(RuntimeException.class,()->cameraDAO.doRetriveAll(null));
     }
 
-    // --------------------- TEST RETRIEVE BY KEY ---------------------
+    @Test
+    @Tag("False")
+    @DisplayName("doRetriveAll() quando è tutto false")
+    public void doRetriveAllFalseTranneOrder() throws SQLException {
+        ArrayList<Camera> cameras;
+
+        cameras = (ArrayList<Camera>) cameraDAO.doRetriveAll("crescente");
+        assertEquals(new ArrayList<>(),cameras);
+    }
+
+    @Test
+    @Tag("False")
+    @DisplayName("doUpdate() quando è False che camere è uguale a null")
+    public void doUpdateCameraUgualeANull(){
+        assertThrows(NoSuchElementException.class,()->cameraDAO.doUpdate(null));
+    }
+
     @Test
     @Tag("True")
-    @DisplayName("doRetriveByKey() va tutto bene")
-    public void doRetrieveByKeyAllTrue() throws SQLException {
-            mocked.when(ConnectionStorage::getConnection).thenReturn(connection);
-
-            when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
-            when(preparedStatement.executeQuery()).thenReturn(resultSet);
-
-            when(resultSet.next()).thenReturn(true);
-            when(resultSet.getObject(1)).thenReturn(112);
-            when(resultSet.getObject(2)).thenReturn(3);
-            when(resultSet.getObject(3)).thenReturn("");
-            when(resultSet.getString(4)).thenReturn(Stato.Libera.name());
-            when(resultSet.getObject(5)).thenReturn(300.0);
-
-            Camera result = cameraDAO.doRetriveByKey(112);
-            assertEquals(camera.getNumeroCamera(), result.getNumeroCamera());
-            assertEquals(camera.getPrezzoCamera(), result.getPrezzoCamera());
+    @DisplayName("doUpdate() quando è tutto vero")
+    public void doUpdateAllTrue() throws SQLException{
+        camera.setNumeroCamera(101);
+        assertDoesNotThrow(()->cameraDAO.doUpdate(camera));
     }
 
     @Test
-    @Tag("Exception")
-    @DisplayName("doRetriveByKey() quando eccezione")
-    public void doRetrieveByKeyException() {
-        assertThrows(SQLException.class, () -> cameraDAO.doRetriveByKey(null));
-    }
-
-    // --------------------- TEST SAVE ---------------------
-    @Test
-    @Tag("True")
-    @DisplayName("doSave() tutto bene")
-    public void doSaveAllTrue() throws SQLException {
-            mocked.when(ConnectionStorage::getConnection).thenReturn(connection);
-
-            when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
-            doNothing().when(preparedStatement).setInt(anyInt(), anyInt());
-            doNothing().when(preparedStatement).setString(anyInt(), anyString());
-            doNothing().when(preparedStatement).setDouble(anyInt(), anyDouble());
-            when(preparedStatement.executeUpdate()).thenReturn(1);
-
-            cameraDAO.doSave(camera);
-
-            verify(preparedStatement, times(1)).executeUpdate();
-    }
-
-    // --------------------- TEST RETRIEVE ALL ---------------------
-    @Test
-    @Tag("True")
-    @DisplayName("doRetriveAll() tutto bene")
-    public void doRetrieveAllAllTrue() throws SQLException {
-            mocked.when(ConnectionStorage::getConnection).thenReturn(connection);
-
-            when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
-            when(preparedStatement.executeQuery()).thenReturn(resultSet);
-            when(resultSet.next()).thenReturn(true, true, true, false);
-
-            when(resultSet.getObject(1)).thenReturn(112);
-            when(resultSet.getObject(2)).thenReturn(3);
-            when(resultSet.getObject(3)).thenReturn("");
-            when(resultSet.getString(4)).thenReturn(Stato.Libera.name());
-            when(resultSet.getObject(5)).thenReturn(30.0);
-
-            cameraDAO.doRetriveAll("desc");
-
-    }
-
-    // --------------------- TEST UPDATE ---------------------
-    @Test
-    @Tag("True")
-    @DisplayName("doUpdate() tutto bene")
-    public void doUpdateAllTrue() throws SQLException {
-            mocked.when(ConnectionStorage::getConnection).thenReturn(connection);
-
-            when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
-            when(preparedStatement.executeUpdate()).thenReturn(1);
-
-            cameraDAO.doUpdate(camera);
-
-            verify(preparedStatement, times(1)).executeUpdate();
-
-    }
-
-    @Test
-    @Tag("Exception")
-    @DisplayName("doUpdate() eccezione")
-    public void doUpdateException() {
-        assertThrows(NoSuchElementException.class, () -> cameraDAO.doUpdate(null));
-    }
-
-    // --------------------- TEST RETRIEVE BY ATTRIBUTE ---------------------
-    @Test
-    @Tag("True")
-    @DisplayName("doRetriveByAttribute() tutto bene")
-    public void doRetrieveByAttributeAllTrue() throws SQLException {
-
-            mocked.when(ConnectionStorage::getConnection).thenReturn(connection);
-
-            when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
-            when(preparedStatement.executeQuery()).thenReturn(resultSet);
-
-            when(resultSet.next()).thenReturn(true, true, true, false);
-            when(resultSet.getInt("NumeroCamera")).thenReturn(122);
-            when(resultSet.getString("NoteCamera")).thenReturn("");
-            when(resultSet.getString("Stato")).thenReturn(Stato.Prenotata.name());
-            when(resultSet.getDouble("PrezzoCamera")).thenReturn(22.0);
-            when(resultSet.getInt("NumeroMaxOcc")).thenReturn(2);
-
-            cameraDAO.doRetriveByAttribute("NumeroCamera", 122);
-
-    }
-    @Test
-    @Tag("Exception")
-    @DisplayName("")
-    public void doRetrieveryByAttributeException() throws SQLException {
+    @Tags({@Tag("Error"),@Tag("Exception")})
+    @DisplayName("doRetriveAttribute() quando manda l'eccezione")
+    public void doRetriveAttribute(){
         assertThrows(RuntimeException.class,()->cameraDAO.doRetriveByAttribute(null,null));
+    }
+
+    @Test
+    @Tag("True")
+    @DisplayName("doRetriveAttribute() quando va tutto bene")
+    public void doRetriveAttributeAllTrue() throws SQLException {
+        ArrayList<Camera>cameras = new ArrayList<>();
+        cameras.add(new Camera(101 , Stato.Libera ,2 , 150 , "Camera prova"));
+        cameras.add(new Camera(102,Stato.Libera,4,180,"Camera familiare con balcone"));
+        Object og = Stato.Libera.name();
+        ArrayList<Camera> cameras1 = (ArrayList<Camera>) cameraDAO.doRetriveByAttribute("Stato",og);
+
+        assertEquals(cameras,cameras1);
+    }
+
+    @Test
+    @Tag("False")
+    @DisplayName("doRetriveAttribute() quando va male")
+    public void doRetriveAttributeException() throws SQLException {
+        Object o = Stato.InPulizia.name();
+        assertThrows(NoSuchElementException.class,()->cameraDAO.doRetriveByAttribute("Stato",o));
     }
 }

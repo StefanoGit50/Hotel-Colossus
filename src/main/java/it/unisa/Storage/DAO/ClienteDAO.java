@@ -48,7 +48,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
 
         try{
                 con= ConnectionStorage.getConnection();
-                PreparedStatement preparedStatement = con.prepareStatement("INSERT INTO CLIENTE(\n" +
+                PreparedStatement preparedStatement = con.prepareStatement("INSERT INTO cliente2(\n" +
                         "CF, nome, cognome, Cap, comune, civico, provincia, via,\n" +
                         "Email, Sesso, telefono, Cittadinanza,\n" +
                         "DataDiNascita, IsBackListed\n" +
@@ -69,7 +69,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                 preparedStatement.setDate(13,date);
                 preparedStatement.setBoolean(14,o.isBlacklisted());
                 preparedStatement.executeUpdate();
-            }finally {
+            }finally{
                 if(con != null){
                     ConnectionStorage.releaseConnection(con);
                 }
@@ -101,7 +101,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
             LocalDate date = null;
             Boolean isBlackListed = false;
             String nazionalità = null;
-            try(PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM Cliente WHERE CF = ?")){
+            try(PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM cliente2 WHERE CF = ?")){
                 preparedStatement.setString(1,cf);
                 preparedStatement.executeQuery();
                 resultSet =  preparedStatement.getResultSet();
@@ -160,7 +160,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
 
         if(o != null && o.getCf() != null){
             Connection connection = ConnectionStorage.getConnection();
-            try(PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Cliente WHERE CF = ?")){
+            try(PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM cliente2 WHERE CF = ?")){
                 preparedStatement.setString(1,o.getCf());
                 if(preparedStatement.executeUpdate()==0)
                     throw new NoSuchElementException("elemento non trovato");
@@ -242,7 +242,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
         if(o != null && o.getCf() != null){
             con = ConnectionStorage.getConnection();
             try(PreparedStatement preparedStatement = con.prepareStatement(
-                    "UPDATE Cliente SET nome = ?, cognome = ?, Cap = ?, comune = ?, " +
+                    "UPDATE cliente2 SET nome = ?, cognome = ?, Cap = ?, comune = ?, " +
                             "civico = ?, provincia = ?, via = ?, Email = ?, Sesso = ?, " +
                             "telefono = ?, Cittadinanza = ?, " +
                             "DataDiNascita = ?, IsBackListed = ? WHERE CF = ?")){

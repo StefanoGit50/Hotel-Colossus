@@ -21,6 +21,7 @@ create table Cliente2(
 	primary key(CF)
 );
 
+
 create table Camera2(
 	NumeroCamera int not null,
 	NumeroMaxOcc int not null,
@@ -29,6 +30,7 @@ create table Camera2(
     Prezzo double not null,
     primary key(NumeroCamera)
 );
+
 
 create table Prenotazione2(
 	IDPrenotazione int not null auto_increment,
