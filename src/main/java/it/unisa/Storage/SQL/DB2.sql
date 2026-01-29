@@ -142,6 +142,7 @@ create table Impiegato2(
     DataScadenza date not null,
     IDImpiegato1 int null DEFAULT 0,
     CF1 char(16) null DEFAULT null,
+    UNIQUE(CF),
     primary key(IDImpiegato,CF),
    foreign key(IDImpiegato1,CF1) references Impiegato2(IDImpiegato,CF) on delete cascade on update cascade
 );
