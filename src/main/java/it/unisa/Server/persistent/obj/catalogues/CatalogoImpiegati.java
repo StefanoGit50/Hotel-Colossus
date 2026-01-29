@@ -1,13 +1,18 @@
 package it.unisa.Server.persistent.obj.catalogues;
 
+import it.unisa.Common.Cliente;
 import it.unisa.Common.Impiegato;
+import it.unisa.Server.gestionePrenotazioni.FrontDesk;
 import it.unisa.Server.persistent.util.Ruolo;
+import it.unisa.Storage.DAO.ClienteDAO;
+import it.unisa.Storage.DAO.ImpiegatoDAO;
+import it.unisa.Storage.Interfacce.BackofficeStorage;
+import it.unisa.Storage.Interfacce.FrontDeskStorage;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -18,7 +23,20 @@ public class CatalogoImpiegati implements Serializable {
     /**
      * Lista di tutti gli impiegati del sistema.
      */
-    private static ArrayList<Impiegato> listaImpiegati = new ArrayList<>();
+    private static ArrayList<Impiegato> listaImpiegati;
+    private static BackofficeStorage<Impiegato> backOfficeStorage = new ImpiegatoDAO();
+
+
+    static {
+        try{
+            backOfficeStorage.doRetriveAll("decrescente");
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    public CatalogoImpiegati() {
+    }
 
     // Getters - Setters
 
@@ -39,8 +57,59 @@ public class CatalogoImpiegati implements Serializable {
             }
 
         }
-
     }
+
+
+    public  boolean aggiungiImpiegato(Impiegato imp) {
+        if (listaImpiegati.contains(imp)){
+            try {
+                backOfficeStorage.doSave(imp);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
+            listaImpiegati.remove(imp);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean eliminaImpiegato(Impiegato imp){
+        if(listaImpiegati.contains(imp)){
+            try{
+                backOfficeStorage.doDelete(imp);
+            }catch (SQLException e){
+                e.printStackTrace();
+                return false;
+            }
+            listaImpiegati.remove(imp);
+            return true;
+        }
+        return false;
+    }
+    public boolean updateImpiegato(Impiegato imp){
+        if(listaImpiegati.contains(imp)){
+            try{
+                backOfficeStorage.doUpdate(imp);
+            }catch (SQLException e){
+                e.printStackTrace();
+                return false;
+            }
+                boolean flag=false;
+                Iterator<Impiegato> it = listaImpiegati.iterator();
+                while (it.hasNext()){
+                    Impiegato i =  it.next();
+                    if(i.getCodiceFiscale().equals(imp.getCodiceFiscale()) && !i.equals(imp)){
+                        it.remove();
+                        listaImpiegati.add(imp);
+                        return true;
+                    }
+                }
+
+        }
+        return false;
+    }
+
 
     // Metodi interfaccia publica
 

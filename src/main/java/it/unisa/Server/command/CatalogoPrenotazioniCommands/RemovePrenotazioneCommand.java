@@ -51,20 +51,14 @@ public class RemovePrenotazioneCommand implements Command {
 
     @Override
     public void execute() {
-        try {
-            Prenotazione p = catalogue.getPrenotazione(prenotazione.getIDPrenotazione());
-            ArrayList<Prenotazione> lp = CatalogoPrenotazioni.getListaPrenotazioni();
-            lp.remove(p);
-            FrontDeskStorage<Prenotazione> frontDeskStorage = new PrenotazioneDAO();
-            frontDeskStorage.doDelete(p);
-        } catch (CloneNotSupportedException | SQLException e) {
-            e.printStackTrace();
-        }
+            ArrayList<Prenotazione> prenotazioni = new ArrayList<>();
+            prenotazioni.add(prenotazione);
+            catalogue.removePrenotazioni(prenotazioni);
     }
 
     @Override
     public void undo() {
-        ArrayList<Prenotazione> lp = CatalogoPrenotazioni.getListaPrenotazioni();
+        ArrayList<Prenotazione> lp = catalogue.getListaPrenotazioni();
         lp.add(prenotazione);
         try{
             PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO();

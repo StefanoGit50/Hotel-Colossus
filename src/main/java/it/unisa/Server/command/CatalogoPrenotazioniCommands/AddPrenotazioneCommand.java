@@ -52,28 +52,20 @@ public class AddPrenotazioneCommand implements Command {
 
     @Override
     public void execute() {
-        ArrayList<Prenotazione> lp = CatalogoPrenotazioni.getListaPrenotazioni();
-        lp.add(prenotazione);
-        FrontDeskStorage<Prenotazione> frontDeskStorage = null;
-        frontDeskStorage = new PrenotazioneDAO();
-        try {
-            frontDeskStorage.doSave(prenotazione);
-        } catch (SQLException e){
-            if (e.getErrorCode() == 1062)
-                throw new DuplicateKeyEntry();
-        }
+        ArrayList<Prenotazione> p = new ArrayList<>();
+        p.add(prenotazione);
+        catalogue.addPrenotazioni(p);
     }
 
     @Override
     public void undo() {
         try {
             Prenotazione p = catalogue.getPrenotazione(prenotazione.getIDPrenotazione());
-            ArrayList<Prenotazione> lp = CatalogoPrenotazioni.getListaPrenotazioni();
-            lp.remove(p);
-            PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO();
-            prenotazioneDAO.doDelete(p);
-        } catch (CloneNotSupportedException | SQLException sqlException) {
-            sqlException.printStackTrace();
+            ArrayList<Prenotazione> p1 = new ArrayList<>();
+            p1.add(p);
+            catalogue.removePrenotazioni(p1);
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
         }
     }
 }

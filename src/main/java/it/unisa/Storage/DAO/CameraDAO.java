@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Camera>{
@@ -21,6 +22,12 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
     private Connection connection;
     private PreparedStatement preparedStatement;
     private ResultSet resultSet;
+
+    @Override
+    public void doSave(Camera o) throws SQLException {
+        throw new NoSuchElementException("no");
+    }
+
     @Override
     public synchronized void doDelete(Camera o) throws SQLException {
         if(o != null){
@@ -76,18 +83,40 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
     }
 
     @Override
-    public synchronized void doSave(Camera o) throws SQLException {
-        connection = ConnectionStorage.getConnection();
-        try{
-            preparedStatement = connection.prepareStatement("INSERT INTO CAMERA VALUES (?,?,?,?,?)");
-            preparedStatement.setInt(1,o.getNumeroCamera());
-            preparedStatement.setInt(2,o.getCapacità());
-            preparedStatement.setString(3,o.getNoteCamera());
-            preparedStatement.setString(4,o.getStatoCamera().name());
-            preparedStatement.setDouble(5,o.getPrezzoCamera());
-            preparedStatement.executeUpdate();
+    public synchronized void doSaveAll(List<Camera> listCamera) throws SQLException {
+        StringBuilder insertSQL = new StringBuilder();
+        String values = " (?, ?, ?, ?, ?) ";
+        insertSQL.append("INSERT INTO " + CameraDAO.TABLE_NAME + " VALUES ");
+        int numCamere = listCamera.size(); // numCamere * 5 = numCampi ?
 
-        }finally{
+        // Crea la query con i
+        for(int i = 1; i <= numCamere; i++){
+            insertSQL.append(values);
+            if(i == numCamere){
+                insertSQL.append(";");
+            } else {
+                insertSQL.append(",");
+            }
+        }
+
+        System.out.println(insertSQL.toString());
+
+        // Riempi la query
+        connection = ConnectionStorage.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(insertSQL.toString());
+        for (int i = 0; i < numCamere; i++) {
+            Camera c = listCamera.get(i);
+            System.out.println(c.toString());
+            preparedStatement.setInt(1 + 5*i, c.getNumeroCamera());
+            preparedStatement.setInt(2 + 5*i, c.getCapacità());
+            preparedStatement.setString(3 + 5*i, c.getNoteCamera());
+            preparedStatement.setObject(4 + 5*i, c.getStatoCamera().name());
+            preparedStatement.setDouble(5 + 5*i, c.getPrezzoCamera());
+        }
+
+        try{
+            preparedStatement.executeUpdate();
+        } finally {
             if(connection != null){
                 ConnectionStorage.releaseConnection(connection);
             }
@@ -95,40 +124,47 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
     }
 
     @Override
-    public synchronized Collection<Camera> doRetriveAll(String order) throws SQLException{
-        connection = ConnectionStorage.getConnection();
-        String sql = "SELECT * FROM Camera ORDER BY ? ";
-            if(order != null){
-                if(order.equalsIgnoreCase("decrescente")){
-                    sql += "DESC";
-                }else{
-                    sql += "ASC";
-                }
-            }else{
-                throw new RuntimeException();
-            }
+    public synchronized Collection<Camera> doRetriveAll(String order) {
+          connection = ConnectionStorage.getConnection();
+          String sql = "SELECT * FROM Camera ORDER BY ? ";
+          if (order != null) {
+              if (order.equalsIgnoreCase("decrescente")) {
+                  sql += "DESC";
+              } else {
+                  sql += "ASC";
+              }
+          } else {
+              throw new RuntimeException();
+          }
 
         ArrayList<Camera> cameras = new ArrayList<>();
 
-        try{
-            preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1,"NumeroCamera");
-            resultSet = preparedStatement.executeQuery();
+        try {
+            try{
+                preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setString(1, "NumeroCamera");
+                resultSet = preparedStatement.executeQuery();
 
-                while(resultSet.next()){
-                   Integer numeroCamera = (Integer) resultSet.getObject(1);
-                   Integer numeroMaxOcc = (Integer) resultSet.getObject(2);
+                while (resultSet.next()) {
+                    Integer numeroCamera = (Integer) resultSet.getObject(1);
+                    Integer numeroMaxOcc = (Integer) resultSet.getObject(2);
                     String noteCamera = (String) resultSet.getObject(3);
                     String c = resultSet.getString(4);
-                   Stato stato =  Stato.valueOf(c);
-                   Double prezzo = (Double) resultSet.getObject(5);
-                   cameras.add(new Camera(numeroCamera,stato, numeroMaxOcc ,prezzo,noteCamera));
+                    Stato stato = Stato.valueOf(c);
+                    Double prezzo = (Double) resultSet.getObject(5);
+                    cameras.add(new Camera(numeroCamera, stato, numeroMaxOcc, prezzo, noteCamera));
                 }
-            resultSet.close();
+                resultSet.close();
+            }catch(SQLException e){
 
+            }
         }finally{
             if(connection != null){
-                ConnectionStorage.releaseConnection(connection);
+                try {
+                    ConnectionStorage.releaseConnection(connection);
+                }catch (SQLException e){
+
+                }
             }
         }
         return cameras;

@@ -1,5 +1,6 @@
 package it.unisa.Storage.DAO;
 
+import it.unisa.Common.Camera;
 import it.unisa.Common.Trattamento;
 import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.Interfacce.FrontDeskStorage;
@@ -8,10 +9,10 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.NoSuchElementException;
 
-public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
-{
+public class TrattamentoDAO implements FrontDeskStorage<Trattamento>{
     private static final String TABLE_NAME = "Trattamento";
 
     @Override
@@ -207,6 +208,11 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
 
     @Override
     public Collection<Trattamento> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, Boolean blackListed, String orderBy) throws SQLException{
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void doSaveAll(List<Camera> listCamera) throws SQLException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

@@ -1,10 +1,16 @@
 package it.unisa.Server.persistent.obj.catalogues;
 import it.unisa.Common.Camera;
 import it.unisa.Common.Prenotazione;
+import it.unisa.Storage.DAO.PrenotazioneDAO;
+import it.unisa.Storage.DuplicateKeyEntry;
+import it.unisa.Storage.Interfacce.FrontDeskStorage;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Objects;
 
 /**
@@ -12,7 +18,17 @@ import java.util.Objects;
  * la ricerca e la rimozione delle stesse.
  */
 public class CatalogoPrenotazioni implements Serializable {
-    private static ArrayList<Prenotazione> listaPrenotazioni;
+
+    private static FrontDeskStorage<Prenotazione>fds;
+    private static Collection<Prenotazione> listaPrenotazioni;
+
+    static {
+        try {
+            listaPrenotazioni = fds.doRetriveAll("discendente");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     /**
      * Costruttore della classe CatalogoPrenotazioni.
@@ -20,6 +36,7 @@ public class CatalogoPrenotazioni implements Serializable {
      */
     public CatalogoPrenotazioni(ArrayList<Prenotazione> listaPrenotazioni) {
         CatalogoPrenotazioni.listaPrenotazioni = listaPrenotazioni;
+         fds = new PrenotazioneDAO();
     }
 
     /**
@@ -45,6 +62,7 @@ public class CatalogoPrenotazioni implements Serializable {
      */
     public ArrayList<Prenotazione> cercaPrenotazioni(String nominativoCliente, int numeroCamera,
                                            LocalDate dataInizio, LocalDate dataFine, boolean sort) throws CloneNotSupportedException{
+
         ArrayList<Prenotazione> risultati = new ArrayList<>();
 
         // Flags per verificare se almeno un parametro è stato fornito
@@ -99,22 +117,75 @@ public class CatalogoPrenotazioni implements Serializable {
     /**
      * Restituisce la lista di tutte le prenotazioni nel catalogo.
      */
-    public synchronized static ArrayList<Prenotazione> getListaPrenotazioni() {
-        return listaPrenotazioni;
+    public synchronized  ArrayList<Prenotazione> getListaPrenotazioni() {
+        return (ArrayList<Prenotazione>) listaPrenotazioni;
     }
 
     /**
      * Imposta o sostituisce l'intera lista delle prenotazioni.
      */
-    public synchronized static void addPrenotazioni(ArrayList<Prenotazione> listaPrenotazioni1) {
-        try {
+    public synchronized boolean addPrenotazioni(ArrayList<Prenotazione> listaPrenotazioni1) {
+        if(listaPrenotazioni1.isEmpty())
+            return false;
+        int n = listaPrenotazioni.size();
             for (Prenotazione p : listaPrenotazioni1) {
-                listaPrenotazioni.add(p.clone());
+                FrontDeskStorage<Prenotazione> fd = new PrenotazioneDAO();
+                try{
+                    fd.doSave(p);
+                } catch (SQLException e) {
+                if (e.getErrorCode() == 1062)
+                    throw new DuplicateKeyEntry();
+                }
+                listaPrenotazioni.add(p);
             }
-        } catch (CloneNotSupportedException cloneNotSupportedException) {
-            cloneNotSupportedException.printStackTrace();
-        }
+        if(listaPrenotazioni.size()==n)
+            return false;
+        else
+            return true;
     }
+
+    public synchronized boolean removePrenotazioni(ArrayList<Prenotazione> listaPrenotazioni1) {
+        if(listaPrenotazioni1.isEmpty())
+            return false;
+        int n = listaPrenotazioni.size();
+        for (Prenotazione p : listaPrenotazioni1) {
+                FrontDeskStorage<Prenotazione> fd = new PrenotazioneDAO();
+                try{
+                    fd.doDelete(p);
+                } catch (SQLException e) {
+                    if (e.getErrorCode() == 1062)
+                        throw new DuplicateKeyEntry();
+                }
+                listaPrenotazioni.remove(p);
+        }
+
+        if(listaPrenotazioni.size()==n)
+            return false;
+        else
+            return true;
+    }
+    public synchronized boolean UpdatePrenotazioni(ArrayList<Prenotazione> listaPrenotazioni1) {
+        if(listaPrenotazioni1.isEmpty())
+            return false;
+        Iterator<Prenotazione> it = listaPrenotazioni.iterator(); // Evita di modificare l'array metre lo si itera
+        while(it.hasNext()) {
+            Prenotazione p = it.next();
+            for(Prenotazione p1 : listaPrenotazioni) {
+                if(p.getIDPrenotazione().equals(p1.getIDPrenotazione())){
+                    it.remove();
+                    listaPrenotazioni.add(p1);
+                    try {
+                        fds.doUpdate(p1);
+                    }catch (SQLException e) {
+                        e.printStackTrace();
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
 
     /**
      * Recupera lo storico delle prenotazioni effettuate da un cliente specifico.

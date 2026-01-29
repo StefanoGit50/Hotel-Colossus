@@ -19,31 +19,31 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Main {
-    static void main(){
-        CameraDAO cameraDAO = new CameraDAO();
+    static void main() {
+      /*  CameraDAO cameraDAO = new CameraDAO();
 
         try{
-            ArrayList<Camera> cameras = CatalogoCamere.getListaCamere();
+            //ArrayList<Camera> cameras = CatalogoCamere.getListaCamere();
             ArrayList<Camera> cameras1 = new ArrayList<>();
             cameras1 = (ArrayList<Camera>) cameraDAO.doRetriveAll("decrescente");
-            CatalogoCamere.addCamere(cameras1);
-            System.out.println(cameras);
-            System.out.println(CatalogoCamere.getListaCamere());
-        }catch(SQLException sqlException){
-            sqlException.printStackTrace();
-        }
+            //CatalogoCamere.addCamere(cameras1);
+            //System.out.println(cameras);
+           // System.out.println(CatalogoCamere.getListaCamere());
+        //}catch(SQLException sqlException){
+         //   sqlException.printStackTrace();
+       // }
 
 
         try{
-            cameraDAO.doDelete(CatalogoCamere.getListaCamere().getFirst());
+         //  cameraDAO.doDelete(CatalogoCamere.getListaCamere().getFirst());
             ArrayList<Camera> cameras = new ArrayList<>();
             cameras = (ArrayList<Camera>) cameraDAO.doRetriveAll("decrescente");
-            CatalogoCamere.addCamere(cameras);
+           // CatalogoCamere.addCamere(cameras);
             System.out.println(cameras);
-            System.out.println(CatalogoCamere.getListaCamere());
-        }catch (SQLException sqlException){
-            sqlException.printStackTrace();
-        }
+            //System.out.println(CatalogoCamere.getListaCamere());
+       // }catch (SQLException sqlException){
+          //  sqlException.printStackTrace();
+        //}
 
         ClienteDAO clienteDAO = new ClienteDAO();
         try{
@@ -106,3 +106,5 @@ public class Main {
         }
     }
 }
+       */
+    }}

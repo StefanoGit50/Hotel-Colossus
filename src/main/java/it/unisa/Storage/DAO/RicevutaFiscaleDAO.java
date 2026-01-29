@@ -337,4 +337,9 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
     public Collection<RicevutaFiscale> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, Boolean blacklisted, String orderBy) throws SQLException{
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    @Override
+    public void doSaveAll(List<Camera> listCamera) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

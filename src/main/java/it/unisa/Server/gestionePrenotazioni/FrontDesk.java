@@ -34,7 +34,7 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     }
 
     public List<Camera> getCamere(){
-       return CatalogoCamere.getListaCamere();
+       return camList.getListaCamere();
     }
 
     @Override
@@ -46,20 +46,17 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     // manda al client la camera ricevuta dall'update e il client dovrà aggiornare la sua lista da mostrare.
     @Override
     public Camera update() throws RemoteException {
-        return CatalogoCamere.getLastModified();
+        return camList.getLastModified();
     }
 
     @Override
-    public List<Prenotazione> getPrenotazioni() throws RemoteException
-    {
-        return CatalogoPrenotazioni.getListaPrenotazioni();
+    public List<Prenotazione> getPrenotazioni() throws RemoteException {
+        return catalogoPrenotazioni.getListaPrenotazioni();
     }
 
 
-    public static void main(String[] args)
-    {
-        try
-        {
+    public static void main(String[] args) {
+        try{
            // logger.info("Avvio RMI Registry sulla porta " + RMI_PORT + "...");
 
             Registry registry = LocateRegistry.getRegistry("localhost", RMI_PORT);
@@ -78,8 +75,7 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
             // Mantieni il server in esecuzione
             Thread.currentThread().join();
         }
-        catch(Exception e)
-        {
+        catch(Exception e){
             logger.severe("Errore durante l'avvio del server: " + e.getMessage());
             e.printStackTrace();
         }

@@ -1,5 +1,6 @@
 package it.unisa.Storage.DAO;
 
+import it.unisa.Common.Camera;
 import it.unisa.Common.Cliente;
 import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.Interfacce.FrontDeskStorage;
@@ -430,6 +431,11 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
         }
 
         return lista;
+    }
+
+    @Override
+    public void doSaveAll(List<Camera> listCamera) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }
