@@ -35,7 +35,7 @@ create table Prenotazione(
     DataPrenotazione date not null,
     DataArrivoCliente date not null,
     DataPartenzaCliente date not null,
-    NomeTrattamento varchar(50) not null,
+    NomeTrattamento varchar(50) null,
     NoteAggiuntive varchar(1000) not null,
     Intestatario varchar(50) not null,
     dataScadenza date not null,

@@ -1,4 +1,4 @@
-package whitebox.UnitTest;
+package WhiteBox.UnitTest;
 
-public class FrontDeskTesting {
+public class FrontDeskTesting{
 }

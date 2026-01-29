@@ -1,6 +1,7 @@
 package WhiteBox.UnitTest;
 
 
+import it.unisa.Common.Cliente;
 import it.unisa.Common.Trattamento;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.ConnectionStorage;
@@ -22,41 +23,21 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class TrattamentoDAOTesting{
 
-    @Mock
-    private Connection connection;
-    @Mock
-    private PreparedStatement preparedStatement;
-    @Mock
-    private ResultSet resultSet;
     private Trattamento trattamento;
-
-    @Mock
-    private Statement statement;
-
-    @InjectMocks
     private TrattamentoDAO trattamentoDAO;
 
-    private MockedStatic<ConnectionStorage> connectionSM;
+
     @BeforeEach
     public void setUP(){
-        trattamento = new Trattamento("Mezza Pensione",30);
-        connectionSM = mockStatic(ConnectionStorage.class);
-        connectionSM.when(ConnectionStorage::getConnection).thenReturn(connection);
-    }
-    @AfterEach
-    public void setAfter(){
-        connectionSM.close();
+        trattamento = new Trattamento("Mezza Pensione",10);
+        trattamentoDAO = new TrattamentoDAO();
     }
 
     @Test
     @Tag("True")
     @DisplayName("doDelete(Trattamento trattamento) quando va tutto a buon fine")
     public void doDeleteAllTrue() throws SQLException {
-        when(connection.prepareStatement("DELETE FROM Trattamento WHERE Nome = ?")).thenReturn(preparedStatement);
-        when(preparedStatement.executeUpdate()).thenReturn(1);
-       doNothing().when(preparedStatement).setString(1,"Mezza Pensione");
-
-       assertDoesNotThrow(()->trattamentoDAO.doDelete(trattamento));
+      assertDoesNotThrow(()->trattamentoDAO.doDelete(trattamento));
     }
 
 
@@ -64,10 +45,7 @@ public class TrattamentoDAOTesting{
     @Test
     @DisplayName("doDelete(Trattamento trattamento) quando va in eccezione")
     public void doDeleteExecuteUpdateUgualeAZero()throws SQLException{
-        when(connection.prepareStatement("DELETE FROM Trattamento WHERE Nome = ?")).thenReturn(preparedStatement);
-        when(preparedStatement.executeUpdate()).thenReturn(0);
-
-        assertThrows(NoSuchElementException.class,()->trattamentoDAO.doDelete(trattamento));
+      assertThrows( NoSuchElementException.class,()->trattamentoDAO.doDelete(new Trattamento("",20.0)));
     }
 
     @Tags({@Tag("Exception"),@Tag("Error")})
@@ -82,64 +60,53 @@ public class TrattamentoDAOTesting{
     @Tag("True")
     @DisplayName("doRetriveByKey(Object nome) quando va tutto a buon fine")
     public void doRetriveByKeyAllTrue() throws SQLException {
-        when(connection.prepareStatement("SELECT * FROM Trattamento WHERE Nome = ?")).thenReturn(preparedStatement);
-        doNothing().when(preparedStatement).setString(1,"Mezza Pensione");
-        when(preparedStatement.executeQuery()).thenReturn(resultSet);
-        when(resultSet.next()).thenReturn(true);
-        when(resultSet.getString("Nome")).thenReturn("Mezza Pensione");
-        when(resultSet.getDouble("Prezzo")).thenReturn(30.0);
-
-        assertEquals(new Trattamento("Mezza Pensione",30.0),trattamentoDAO.doRetriveByKey("Mezza Pensione"));
+        Trattamento trattamento1 = new Trattamento("Pensione Completa",50);
+        Trattamento trattamento2 = trattamentoDAO.doRetriveByKey("Pensione Completa");
+        assertEquals(trattamento1,trattamento2);
     }
 
     @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
     @DisplayName("doRetriveByKey(Object nome) quando resultSet restituisce false")
     public void doRetriveByKeyResultSetFalse() throws SQLException {
-        when(connection.prepareStatement("SELECT * FROM Trattamento WHERE Nome = ?")).thenReturn(preparedStatement);
-        doNothing().when(preparedStatement).setString(1,"Pensione Intera");
-        when(preparedStatement.executeQuery()).thenReturn(resultSet);
-        when(resultSet.next()).thenReturn(false);
-
-        assertThrows(NoSuchElementException.class,()->trattamentoDAO.doRetriveByKey("Pensione Intera"));
+        assertThrows(NoSuchElementException.class,()->trattamentoDAO.doRetriveByKey("Mezza Pensione"));
     }
 
     @Tags({@Tag("Exception"),@Tag("Error")})
     @Test
     @DisplayName("doRetriveByKey(Object nome) quando passi un parametro diverso da una stringa")
     public void doRetriveByKeyParametroDiversoStringa(){
-        assertThrows(NoSuchElementException.class,()->trattamentoDAO.doRetriveByKey(123));
+        assertThrows(NoSuchElementException.class,()->trattamentoDAO.doRetriveByKey(new Cliente()));
     }
 
     @Tag("True")
     @Test
     @DisplayName("doRetriveAll(String order) quando va tutto bene ")
     public void doRetriveAllAllTrue() throws SQLException {
-        when(connection.createStatement()).thenReturn(statement);
-        when(statement.executeQuery("SELECT * FROM Trattamento ORDER BY Nome DESC ")).thenReturn(resultSet);
-        when(resultSet.next()).thenReturn(true , true , true , false);
-        when(resultSet.getString("Nome")).thenReturn("Mezza Pensione");
-        when(resultSet.getDouble("Prezzo")).thenReturn(20.0);
-        ArrayList<Trattamento> trattamentos = new ArrayList<>();
-
-        trattamentos.add(new Trattamento("Mezza Pensione",20.0));
-        trattamentos.add(new Trattamento("Mezza Pensione",20.0));
-        trattamentos.add(new Trattamento("Mezza Pensione",20.0));
-
-        assertEquals(trattamentos,trattamentoDAO.doRetriveAll("decrescente"));
+      ArrayList<Trattamento> trattamento1 = (ArrayList<Trattamento>) trattamentoDAO.doRetriveAll("decrescente");
+      ArrayList<Trattamento> trattamentos = new ArrayList<>();
+      trattamentos.add(new Trattamento("Pensione Completa",50.0));
+      assertEquals(trattamento1,trattamentos);
     }
+
 
     @Tag("False")
     @Test
     @DisplayName("doRetriveAll(String order) quando tutto è falso")
-    public void doRetriveAllAllFalse() throws SQLException {
-        when(connection.createStatement()).thenReturn(statement);
-        when(statement.executeQuery("SELECT * FROM Trattamento ORDER BY Nome ASC")).thenReturn(resultSet);
-        when(resultSet.next()).thenReturn(false);
-
+    public void doRetriveAllFalse() throws SQLException {
         ArrayList<Trattamento> trattamentos = new ArrayList<>();
+        ArrayList<Trattamento> trattamentos1 = (ArrayList<Trattamento>) trattamentoDAO.doRetriveAll("crescente");
+        trattamentos.add(new Trattamento("Pensione Completa",50.0));
+        assertEquals(trattamentos,trattamentos1);
+    }
 
-        assertEquals(trattamentos,trattamentoDAO.doRetriveAll("crescente"));
+    @Test
+    @Tag("False")
+    @DisplayName("doRetriveAll(String order) quando resultSet ritorna false")
+    public void doRetriveAllResultSetFalse() throws SQLException{
+       ArrayList<Trattamento>  trattamento1 = new ArrayList<>();
+       ArrayList<Trattamento> tramentos = (ArrayList<Trattamento>) trattamentoDAO.doRetriveAll("crescente");
+       assertEquals(trattamento1,tramentos);
     }
 
 
@@ -147,12 +114,7 @@ public class TrattamentoDAOTesting{
     @Test
     @DisplayName("doUpdate(Trattamento trattamento) quando va tutto bene")
     public void doUpdate() throws SQLException {
-        when(connection.prepareStatement("UPDATE Trattamento SET Prezzo = ? WHERE Nome = ?")).thenReturn(preparedStatement);
-        doNothing().when(preparedStatement).setDouble(anyInt(),anyDouble());
-        doNothing().when(preparedStatement).setString(anyInt(),anyString());
-        when(preparedStatement.executeUpdate()).thenReturn(1);
-
-        trattamentoDAO.doUpdate(trattamento);
+        assertDoesNotThrow(()->trattamentoDAO.doUpdate(trattamento));
     }
 
     @Tags({@Tag("Exception"),@Tag("Error")})
@@ -165,32 +127,19 @@ public class TrattamentoDAOTesting{
     @Tag("True")
     @Test
     @DisplayName("doRetriveByAttribute() quando va tutto bene")
-    public void doRetriveByAttributeAllTrue() throws SQLException {
-        when(connection.prepareStatement("SELECT * FROM trattamento where " + anyString() + " = ?")).thenReturn(preparedStatement);
-        doNothing().when(preparedStatement).setObject(1,"Mezza Pensione");
-        when(preparedStatement.executeQuery()).thenReturn(resultSet);
-        when(resultSet.next()).thenReturn(true , true , true , false);
-        when(resultSet.getString("Nome")).thenReturn("Mezza Pensione");
-        when(resultSet.getDouble("Prezzo")).thenReturn(20.0);
-
-        ArrayList<Trattamento> trattamentos = new ArrayList<>();
-        trattamentos.add(new Trattamento("Mezza Pensione",20.0));
-        trattamentos.add(new Trattamento("Mezza Pensione",20.0));
-        trattamentos.add(new Trattamento("Mezza Pensione",20.0));
-
-        assertEquals(trattamentos,trattamentoDAO.doRetriveByAttribute("Nome","Mezza Pensione"));
+    public void doRetriveByAttributeAllTrue() throws SQLException{
+      Object o = 10;
+      ArrayList<Trattamento> trattamentos = (ArrayList<Trattamento>) trattamentoDAO.doRetriveByAttribute("Prezzo",o);
+      ArrayList<Trattamento> trattamentos1 = new ArrayList<>();
+      trattamentos1.add(new Trattamento("Mezza Pensione",10));
+      assertEquals(trattamentos,trattamentos1);
     }
 
     @Tags({@Tag("Exception"),@Tag("Error")})
     @Test
     @DisplayName("doRetriveByAttribute() se resultSet.next() ritorna false")
     public void doRetriveByAttributeResultSetReturnFalse() throws SQLException {
-        when(connection.prepareStatement("SELECT * FROM trattamento where " + anyString() + " = ?")).thenReturn(preparedStatement);
-        doNothing().when(preparedStatement).setObject(1,"Mezza Pensione");
-        when(preparedStatement.executeQuery()).thenReturn(resultSet);
-        when(resultSet.next()).thenReturn(false);
-
-        assertThrows(NoSuchElementException.class,()->trattamentoDAO.doRetriveByAttribute("Nome","Mezza Pensione"));
+       assertThrows(NoSuchElementException.class,()->trattamentoDAO.doRetriveByAttribute("Nome","Quarto di Pensione"));
     }
 
     @Tags({@Tag("Exception"),@Tag("Error")})
