@@ -188,7 +188,7 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
                 "3233452",
                 "m",
                 LocalDate.of(2022, 1, 6),
-                "SDFGANNSOLF", "Libero@asfnai");
+                "SDFGANNSOLF", "Libero@asfnai","Italiana");
         clist.add(cliente);
 
         Prenotazione p1 = new Prenotazione(1,

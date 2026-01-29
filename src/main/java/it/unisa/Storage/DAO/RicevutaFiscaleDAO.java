@@ -77,6 +77,15 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
         }
     }
 
+    /**
+     * @param list
+     * @throws SQLException
+     */
+    @Override
+    public void doSaveAll(List<RicevutaFiscale> list) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     @Override
     public synchronized void doDelete(RicevutaFiscale o) throws SQLException {
         Connection conn = ConnectionStorage.getConnection();

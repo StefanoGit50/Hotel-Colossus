@@ -24,8 +24,8 @@ public class TestFiltroClienti {
     /* *************************** CASI DI SUCCESSO *************************** */
 
     @Nested
-    @DisplayName("TESTING: FiltroClienti - PASSes")
-    @Tag("pass")
+    @DisplayName("TESTING: FiltroClienti")
+    @Tag("success")
     class TestPassFiltroClienti {
 
         @Test
@@ -43,8 +43,15 @@ public class TestFiltroClienti {
         }
 
         @Test
-        @DisplayName("TC3: [success] Ricerca parametri completi - Ordinamento Nazionalità")
+        @DisplayName("TC3: [success] Ricerca parametri completi - Ordinamento Nome")
         public void testCase3() throws RemoteException {
+            List<Cliente> result = frontDesk.filterClienti("Luca", "Bianchi", "Italiana", LocalDate.of(1990, 1, 20), true, "Nome DESC");
+            Assertions.assertNotNull(result);
+        }
+
+        @Test
+        @DisplayName("TC3: [success] Ricerca parametri completi - Ordinamento Nazionalità")
+        public void testCas3() throws RemoteException {
             List<Cliente> result = frontDesk.filterClienti("Luca", "Bianchi", "Italiana", LocalDate.of(1990, 1, 20), true, "Nazionalità DESC");
             Assertions.assertNotNull(result);
         }
@@ -67,8 +74,8 @@ public class TestFiltroClienti {
     /* ***************************** CASI DI ERRORE **************************** */
 
     @Nested
-    @DisplayName("TESTING: FiltroClienti - FAILs")
-    @Tag("fail")
+    @DisplayName("TESTING: FiltroClienti - [error]")
+    @Tag("error")
     class TestFailFiltroClienti {
 
         @Test

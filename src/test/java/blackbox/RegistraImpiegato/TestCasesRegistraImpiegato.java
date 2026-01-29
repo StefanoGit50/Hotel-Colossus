@@ -13,6 +13,7 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Random;
 
@@ -39,9 +40,13 @@ public class TestCasesRegistraImpiegato {
     public Impiegato createBaseImpiegato() {
         /*
         return new Impiegato(
-                // username generato casualmente per evitare DuplicateKey
+                "Mario",
+                "Rossi",
+                false,
+                Instant.now(),
+
                 "mario.rossi",
-                "passwordSicura123!",        // hashedPassword (dedotto)
+                "passwordSicura123!",        // hashedPassword
                 "Mario",                     // nome
                 "Rossi",                     // cognome
                 "Maschio",                   // sesso
@@ -61,7 +66,8 @@ public class TestCasesRegistraImpiegato {
                 "mario.rossi@HotelColossus.it", // emailAziendale
                 "Italiana",                  // cittadinanza
                 LocalDate.of(2099, 1, 20)    // dataScadenza
-        );*/
+        );
+         */
         return null;
     }
 
@@ -81,8 +87,8 @@ public class TestCasesRegistraImpiegato {
     /* ************************************************************************************************************** */
 
     @Nested
-    @DisplayName("TESTING: RegistraImpiegato - PASSes")
-    @Tag("pass")
+    @DisplayName("TESTING: RegistraImpiegato")
+    @Tag("success")
     class TestRegistraImpiegato {
         @Test
         @DisplayName("TC1: [success] Registrazione impiegato effettuata con successo")
@@ -94,8 +100,8 @@ public class TestCasesRegistraImpiegato {
     /* ***************************** CASI DI ERRORE **************************** */
 
     @Nested
-    @DisplayName("TESTING: RegistraImpiegato - FAILs")
-    @Tag("fail")
+    @DisplayName("TESTING: RegistraImpiegato - [error]")
+    @Tag("error")
     class TestFailRegistraImpiegato {
         @Test
         @DisplayName("TC2: [error] Codice fiscale deve essere di 16 caratteri")

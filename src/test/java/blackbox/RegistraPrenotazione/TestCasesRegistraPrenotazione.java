@@ -26,7 +26,7 @@ public class TestCasesRegistraPrenotazione {
 
     @BeforeAll
     public static void istantiateFrontDesk() throws RemoteException, NotBoundException, MalformedURLException {
-        frontDesk = (FrontDeskInterface) Naming.lookup("rmi://localhost/GestionePrenotazioni");
+        frontDesk = (FrontDeskInterface) Naming.lookup("rmi://localhost:1099/GestionePrenotazioni");
 
         // Lista clienti
 
@@ -34,21 +34,22 @@ public class TestCasesRegistraPrenotazione {
                 "Giulia", "Verdi", "Italiana", "Milano", "Milano",
                 "Corso Vittorio Emanuele", 22, 20121, "3479876543", "F",
                 LocalDate.of(1992, 8, 15), "VRDGLI92M55F205W",
-                "giulia.verdi@gmail.com"
+                "giulia.verdi@gmail.com",
+                "Italiana"
         );
 
         Cliente cliente2 = new Cliente(
                 "Marco", "Neri", "Italiana", "Roma", "Roma",
                 "Via dei Condotti", 5, 11187, "3351122334", "M",
                 LocalDate.of(1978, 11, 3), "NREMRA78S03H501U",
-                "m.neri@provider.it"
+                "m.neri@provider.it","Italiana"
         );
 
         Cliente cliente3 = new Cliente(
                 "Sofia", "Bruno", "Italiana", "Firenze", "Firenze",
                 "Piazza della Signoria", 1, 50122, "3294455667", "F",
                 LocalDate.of(2001, 1, 25), "BRNSFO01A65D612Y",
-                "sofia.bruno@studio.it"
+                "sofia.bruno@studio.it","Italiana"
         );
 
         listaClienti.add(cliente1);
@@ -128,8 +129,8 @@ public class TestCasesRegistraPrenotazione {
     /* ***************************** CASI DI SUCCESSO **************************** */
 
     @Nested
-    @DisplayName("TESTING: RegistraPrenotazione - PASSes")
-    @Tag("pass")
+    @DisplayName("TESTING: RegistraPrenotazione")
+    @Tag("success")
     class TestPassRegistraImpiegato {
         @Test
         @DisplayName("TC1: [Success] Registrazione con servizi: nessuno")
@@ -169,8 +170,8 @@ public class TestCasesRegistraPrenotazione {
     /* ***************************** CASI DI ERRORE **************************** */
 
     @Nested
-    @DisplayName("TESTING: RegistraPrenotazione - FAILs")
-    @Tag("fail")
+    @DisplayName("TESTING: RegistraPrenotazione - [error]")
+    @Tag("error")
     class TestFailRegistraImpiegato {
         @Test
         @DisplayName("TC5: [error] Formato data arrivo non valido")

@@ -49,11 +49,11 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
 
         try{
                 con= ConnectionStorage.getConnection();
-                PreparedStatement preparedStatement = con.prepareStatement("INSERT INTO CLIENTE(\n" +
+                PreparedStatement preparedStatement = con.prepareStatement("INSERT INTO hot.cliente2(\n" +
                         "CF, nome, cognome, Cap, comune, civico, provincia, via,\n" +
                         "Email, Sesso, telefono, Cittadinanza,\n" +
-                        "DataDiNascita, IsBackListed\n" +
-                        ")VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                        "DataDiNascita, IsBackListed,Nazionalità\n" +
+                        ")VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
                 preparedStatement.setString(1,o.getCf());
                 preparedStatement.setString(2,o.getNome());
                 preparedStatement.setString(3,o.getCognome());
@@ -69,12 +69,22 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                 Date date = Date.valueOf(o.getDataNascita());
                 preparedStatement.setDate(13,date);
                 preparedStatement.setBoolean(14,o.isBlacklisted());
+                preparedStatement.setString(15,o.getNazionalita());
                 preparedStatement.executeUpdate();
-            }finally {
+            }finally{
                 if(con != null){
                     ConnectionStorage.releaseConnection(con);
                 }
             }
+    }
+
+    /**
+     * @param list
+     * @throws SQLException
+     */
+    @Override
+    public void doSaveAll(List<Cliente> list) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /**
@@ -85,34 +95,36 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
 
     @Override
     public synchronized Cliente doRetriveByKey(Object oggetto) throws SQLException{
-        if (oggetto instanceof String) {
+        if (oggetto instanceof String){
             String cf = (String) oggetto;
             con = ConnectionStorage.getConnection();
             String cf1 = null,nome = null,cognome = null,comune = null,provincia = null,via = null,email = null,sesso = null,cittadinanza = null,telefono = null , cap = null;
             Integer civico = null;
             LocalDate date = null;
             Boolean isBlackListed = false;
-            try(PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM Cliente WHERE CF = ?")){
+            String nazionalità = null;
+            try(PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM hot.cliente2 WHERE CF = ?")){
                 preparedStatement.setString(1,cf);
                 preparedStatement.executeQuery();
                 resultSet =  preparedStatement.getResultSet();
 
                 if(resultSet.next()){
-                    cf1 = (String) resultSet.getObject(1);
-                    nome = (String) resultSet.getObject(2);
-                    cognome = (String) resultSet.getObject(3);
-                    cap = (String) resultSet.getObject(4);
-                    comune = (String) resultSet.getObject(5);
-                    civico = (Integer) resultSet.getObject(6);
-                    provincia = (String) resultSet.getObject(7);
-                    via = (String) resultSet.getObject(8);
-                    email = (String) resultSet.getObject(9);
-                    sesso = (String) resultSet.getObject(10);
-                    telefono = (String) resultSet.getObject(11);
-                    cittadinanza = (String) resultSet.getObject(12);
-                    Date date1 = (Date) resultSet.getObject(13);
+                    cf1 = (String) resultSet.getObject("CF");
+                    nome = (String) resultSet.getObject("nome");
+                    cognome = (String) resultSet.getObject("cognome");
+                    cap = (String) resultSet.getObject("Cap");
+                    comune = (String) resultSet.getObject("comune");
+                    civico = (Integer) resultSet.getObject("civico");
+                    provincia = (String) resultSet.getObject("provincia");
+                    via = (String) resultSet.getObject("via");
+                    email = (String) resultSet.getObject("Email");
+                    sesso = (String) resultSet.getObject("Sesso");
+                    telefono = (String) resultSet.getObject("telefono");
+                    cittadinanza = (String) resultSet.getObject("Cittadinanza");
+                    Date date1 = (Date) resultSet.getObject("DataDiNascita");
                     date = date1.toLocalDate();
-                    isBlackListed = (Boolean) resultSet.getObject(14);
+                    isBlackListed = (Boolean) resultSet.getObject("IsBackListed");
+                    nazionalità =  resultSet.getString("Nazionalità");
                 }
                 resultSet.close();
 
@@ -123,19 +135,19 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
             }
 
             Pattern regex = Pattern.compile("^[0-9]*$");
-            System.out.println(cap);
+
 
                 if(cap!=null) {
                     if (regex.matcher(cap).matches()) {
-                        cliente = new Cliente(nome, cognome, cittadinanza, provincia, comune, via, civico, Integer.parseInt(cap), telefono, sesso, date, cf1, email);
+                        cliente = new Cliente(nome, cognome, cittadinanza, provincia, comune, via, civico, Integer.parseInt(cap), telefono, sesso, date, cf1, email,nazionalità);
                         cliente.setBlacklisted(isBlackListed);
                     } else {
-                        cliente = new Cliente(nome, cognome, cittadinanza, provincia, comune, via, civico, null, telefono, sesso, date, cf1, email);
+                        cliente = new Cliente(nome, cognome, cittadinanza, provincia, comune, via, civico, null, telefono, sesso, date, cf1, email,nazionalità);
                         cliente.setBlacklisted(isBlackListed);
                     }
 
                 }else{
-                    cliente = new Cliente(nome, cognome, cittadinanza, provincia, comune, via, civico, null, telefono, sesso, date, cf1, email);
+                    cliente = new Cliente(nome, cognome, cittadinanza, provincia, comune, via, civico, null, telefono, sesso, date, cf1, email,nazionalità);
                     cliente.setBlacklisted(isBlackListed);
                 }
 
@@ -150,8 +162,9 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
 
         if(o != null && o.getCf() != null){
             Connection connection = ConnectionStorage.getConnection();
-            try(PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Cliente WHERE CF = ?")){
+            try(PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM hot.cliente2 WHERE CF = ?")){
                 preparedStatement.setString(1,o.getCf());
+
                 if(preparedStatement.executeUpdate()==0)
                     throw new NoSuchElementException("elemento non trovato");
             }finally{
@@ -169,34 +182,37 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
         con = ConnectionStorage.getConnection();
         ArrayList<Cliente> clientes = new ArrayList<>();
 
-        String sql =  "SELECT * FROM Cliente ORDER BY ? ";
-        if(order.equalsIgnoreCase("decrescente")){
-            sql += "DESC";
-        }else{
-            sql+= "ASC";
+        String sql =  "SELECT * FROM hot.cliente2 ORDER BY ? ";
+        if(order != null){
+            if(order.equalsIgnoreCase("decrescente")){
+                sql += "DESC";
+            }else{
+
+                sql+= "ASC";
+            }
         }
 
         try(PreparedStatement preparedStatement = con.prepareStatement(sql)){
             preparedStatement.setString(1,"CF");
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
-                String cf1 = (String) resultSet.getObject(1);
-                String nome = (String) resultSet.getObject(2);
-                String cognome = (String) resultSet.getObject(3);
-                String  cap = (String) resultSet.getObject(4);
-                String comune = (String) resultSet.getObject(5);
-                Integer civico = (Integer) resultSet.getObject(6);
-                String provincia = (String) resultSet.getObject(7);
-                String via = (String) resultSet.getObject(8);
-                String email = (String) resultSet.getObject(9);
-                String  sesso = (String) resultSet.getObject(10);
-                String  telefono = (String) resultSet.getObject(11);
-                String  cittadinazione = (String) resultSet.getObject(12);
-                Date date1 = (Date) resultSet.getObject(13);
+                String cf1 = (String) resultSet.getObject("CF");
+                String nome = (String) resultSet.getObject("Nome");
+                String cognome = (String) resultSet.getObject("Cognome");
+                String  cap = (String) resultSet.getObject("Cap");
+                String comune = (String) resultSet.getObject("comune");
+                Integer civico = (Integer) resultSet.getObject("civico");
+                String provincia = (String) resultSet.getObject("provincia");
+                String via = (String) resultSet.getObject("via");
+                String email = (String) resultSet.getObject("email");
+                String  sesso = (String) resultSet.getObject("Sesso");
+                String  telefono = (String) resultSet.getObject("telefono");
+                String  cittadinazione = (String) resultSet.getObject("Cittadinanza");
+                Date date1 = (Date) resultSet.getObject("DataDiNascita");
                 LocalDate date = date1.toLocalDate();
-                Boolean  isBackListed = (Boolean) resultSet.getObject(14);
-
-                cliente = new Cliente(nome,cognome,cittadinazione,provincia,comune,via,civico,Integer.parseInt(cap),telefono,sesso,date,cf1,email);
+                Boolean  isBackListed = (Boolean) resultSet.getObject("IsBackListed");
+                String nazionalità = resultSet.getString("Nazionalità");
+                cliente = new Cliente(nome,cognome,cittadinazione,provincia,comune,via,civico,Integer.parseInt(cap),telefono,sesso,date,cf1,email,nazionalità);
                 cliente.setBlacklisted(isBackListed);
                 clientes.add(cliente);
             }
@@ -232,7 +248,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
         if(o != null && o.getCf() != null){
             con = ConnectionStorage.getConnection();
             try(PreparedStatement preparedStatement = con.prepareStatement(
-                    "UPDATE Cliente SET nome = ?, cognome = ?, Cap = ?, comune = ?, " +
+                    "UPDATE hot.cliente2 SET nome = ?, cognome = ?, Cap = ?, comune = ?, " +
                             "civico = ?, provincia = ?, via = ?, Email = ?, Sesso = ?, " +
                             "telefono = ?, Cittadinanza = ?, " +
                             "DataDiNascita = ?, IsBackListed = ? WHERE CF = ?")){
@@ -275,7 +291,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
 
         if(attribute != null && !attribute.isEmpty() && value != null){
             con= ConnectionStorage.getConnection();
-            selectSQL = "SELECT * FROM Cliente WHERE " + attribute + " = ?";
+            selectSQL = "SELECT * FROM hot.cliente2 WHERE " + attribute + " = ?";
             try{
                 preparedStatement = con.prepareStatement(selectSQL);
                 preparedStatement.setObject(1, value);
@@ -297,6 +313,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                     cliente.setNumeroTelefono(resultSet.getString("telefono"));
                     cliente.setBlacklisted(resultSet.getBoolean("IsBackListed"));
                     cliente.setDataNascita(resultSet.getDate("DataDiNascita").toLocalDate());
+                    cliente.setNazionalita(resultSet.getString("Nazionalità"));
                     lista.add(cliente);
                 }
 
@@ -345,7 +362,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
         }
         // Il numero di AND della query è pari a count - 1
 
-        selectSQL += "SELECT * FROM Cliente WHERE";
+        selectSQL += "SELECT * FROM hot.cliente2 WHERE";
         // Il cliclo serve per inserire gli AND correttamente
         for (int i = 0, j = count; i < params.length; i++) {
             if (i == 0 && params[0]) { // Se la flag è vera allora il parametro è presente ed è usato come criterio per la query di ricerca
@@ -361,7 +378,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                 selectSQL += " DataDiNascita = ?";
             }
             if (i == 4 && params[4]) {
-                selectSQL += " IsBlackListed = ?";
+                selectSQL += " IsBackListed = ?";
             }
             if (j != 0 && params[i]){
                 selectSQL += " AND ";
@@ -373,7 +390,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
             if(DaoUtils.checkWhitelist(whitelist, orderBy))
                 selectSQL +=  " ORDER BY " + orderBy;
         }
-        System.out.println(selectSQL);
+
         try{
             con = ConnectionStorage.getConnection();
             ResultSet resultSet = null;
@@ -416,8 +433,12 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                     cliente.setSesso(resultSet.getString("Sesso"));
                     cliente.setNumeroTelefono(resultSet.getString("telefono"));
                     cliente.setCittadinanza(resultSet.getString("Cittadinanza"));
+                    cliente.setBlacklisted(resultSet.getBoolean("IsBackListed"));
+                    cliente.setNazionalita(resultSet.getString("Nazionalità"));
+                    cliente.setDataNascita(resultSet.getDate("DataDiNascita").toLocalDate());
 
                     lista.add(cliente);
+
                 }
             } catch (SQLException e) {
                 e.printStackTrace();

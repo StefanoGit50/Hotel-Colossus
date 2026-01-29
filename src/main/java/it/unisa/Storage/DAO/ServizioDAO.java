@@ -36,6 +36,15 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
         }
     }
 
+    /**
+     * @param list
+     * @throws SQLException
+     */
+    @Override
+    public void doSaveAll(List<Servizio> list) throws SQLException {
+        throw new  UnsupportedOperationException("Not supported yet.");
+    }
+
     @Override
     public synchronized void doDelete(Servizio servizio) throws SQLException
     {

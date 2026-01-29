@@ -1,6 +1,7 @@
 package WhiteBox.UnitTest;
 
 
+import it.unisa.Common.Camera;
 import it.unisa.Common.Cliente;
 import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.DAO.ClienteDAO;
@@ -13,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -20,384 +22,155 @@ import java.util.Objects;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension .class)
+@ExtendWith(MockitoExtension.class)
 public class ClienteDAOTesting {
 
-    private String attribute="";
-    private Object object = new Object();
-
-    private final String stringSQLRetrieveByKey = "SELECT * FROM Cliente WHERE CF = ?";
-    private final String stringSQLDoDelete= "DELETE FROM Cliente WHERE CF = ?";
-    private final String stringSQLDoUpdate= "UPDATE Cliente SET nome = ?, cognome = ?, Cap = ?, comune = ?, " +
-            "civico = ?, provincia = ?, via = ?, Email = ?, Sesso = ?, " +
-            "telefono = ?, Cittadinanza = ?, " +
-            "DataDiNascita = ?, IsBackListed = ? WHERE CF = ?";
-    private final String stringSQLDoUpdateAttribute = "SELECT * FROM Cliente WHERE " + attribute + " = ?";
-
-    @Mock
-    private Connection connection;
-    @Mock
-    private PreparedStatement preparedStatement;
-    @Mock
-    private ResultSet resultSet;
-
-    @Mock
+    private ClienteDAO clienteDAO;
     private Cliente cliente;
 
-    private MockedStatic<ConnectionStorage> mockedConnectionStorage;
-
-    @InjectMocks
-    ClienteDAO clienteDAO;
 
     @BeforeEach
     void setUp() throws SQLException {
-        mockedConnectionStorage = mockStatic(ConnectionStorage.class);
-        mockedConnectionStorage.when(ConnectionStorage::getConnection).thenReturn(connection);
-    }
-
-    @AfterEach
-    void shutdown() {
-        mockedConnectionStorage.close();
-        cliente = null;
+        clienteDAO = new ClienteDAO();
+        cliente = new Cliente("Mario","Rossi","Italiana","Salerno","Salerno","Via roma",10,84121,"3249554018","maschio",LocalDate.of(2020,12,11),"RSSMRA20T11H703F","Mario.Rossi@gmail.com","Italiana");
     }
 
     @Test
-    @Tag("exeception")
-    @DisplayName("Retrieve: Branch1: oggetto!=String")
-    public void DoRetrievebyKeyBranch1TestException() {
-        assertThrows(SQLException.class, () -> clienteDAO.doRetriveByKey(object));
+    @Tag("True")
+    @DisplayName("doSave() quando va tutto bene")
+    public void doSaveAllTrue() throws SQLException {
+        assertDoesNotThrow(()->clienteDAO.doSave(cliente));
     }
 
     @Test
-    @Tag("true")
-    @DisplayName("Retrieve: Branch2: oggetto ==String")
-    public void DoRetrievebyKeyTesttrue() throws SQLException {
-        when(preparedStatement.executeQuery()).thenReturn(resultSet);
-        when(resultSet.next()).thenReturn(true, false);
-        when(preparedStatement.getResultSet()).thenReturn(resultSet);
-        when(connection.prepareStatement(stringSQLRetrieveByKey)).thenReturn(preparedStatement);
-        when(preparedStatement.executeQuery()).thenReturn(resultSet);
+    @Tag("True")
+    @DisplayName("doRetriveByKey() quando va tutto bene")
 
-        when(resultSet.getObject(1)).thenReturn("cf");
-        when(resultSet.getObject(2)).thenReturn("viola");
-        when(resultSet.getObject(3)).thenReturn("verdana");
-        when(resultSet.getObject(4)).thenReturn("24432");
-        when(resultSet.getObject(5)).thenReturn("Valle Lunga");
-        when(resultSet.getObject(6)).thenReturn(234);
-        when(resultSet.getObject(7)).thenReturn("Roma");
-        when(resultSet.getObject(8)).thenReturn("via");
-        when(resultSet.getObject(9)).thenReturn("email");
-        when(resultSet.getObject(10)).thenReturn("M");
-        when(resultSet.getObject(11)).thenReturn("235254545");
-        when(resultSet.getObject(12)).thenReturn("marocchina");
-        when(resultSet.getObject(13)).thenReturn(Date.valueOf("2009-12-13"));
-        when(resultSet.getObject(14)).thenReturn(false);
-
-        object = "pippo";
-        cliente = clienteDAO.doRetriveByKey(object);
-        assertEquals("viola", cliente.getNome());
-        assertEquals("verdana", cliente.getCognome());
-        assertEquals("cf", cliente.getCf());
-        assertEquals(24432, cliente.getCAP());
-        assertEquals("Valle Lunga", cliente.getComune());
-        assertEquals(234, cliente.getNumeroCivico());
-        assertEquals("Roma", cliente.getProvincia());
-        assertEquals("via", cliente.getVia());
-        assertEquals("email", cliente.getEmail());
-        assertEquals("M", cliente.getSesso());
-        assertEquals("235254545", cliente.getNumeroTelefono());
-        assertEquals("marocchina", cliente.getCittadinanza());
-        assertEquals(Date.valueOf("2009-12-13").toLocalDate(), cliente.getDataNascita());
-        assertFalse(cliente.isBlacklisted());
-
+    public void doRetriveByKeyAllTrue(){
+        assertDoesNotThrow(()->clienteDAO.doRetriveByKey("RSSMRA20T11H703F"));
     }
 
     @Test
-    @DisplayName("Retrieve: Branch 2 e branch 3 false")
-    @Tags({@Tag("false"), @Tag("null")})
-
-    public void DoRetrievebyKeyCapNull() throws SQLException {
-        object = "pippo";
-        when(connection.prepareStatement(stringSQLRetrieveByKey)).thenReturn(preparedStatement);
-        when(preparedStatement.executeQuery()).thenReturn(resultSet);
-        when(preparedStatement.getResultSet()).thenReturn(resultSet);
-        when(preparedStatement.executeQuery()).thenReturn(resultSet);
-        when(resultSet.next()).thenReturn(false);
-
-        cliente = clienteDAO.doRetriveByKey(object);
-
-        assertNull(cliente.getCAP());
-    }
-
-
-    @Test
-    @DisplayName("Retrieve:branch 3 true cap not a number")
-    @Tag("false")
-    public void DoRetrievebyKeyTestCapFalse() throws SQLException {
-
-        when(connection.prepareStatement(stringSQLRetrieveByKey)).thenReturn(preparedStatement);
-        when(preparedStatement.executeQuery()).thenReturn(resultSet);
-        when(preparedStatement.getResultSet()).thenReturn(resultSet);
-        when(resultSet.next()).thenReturn(true, false);
-
-        when(resultSet.getObject(1)).thenReturn("cf");
-        when(resultSet.getObject(2)).thenReturn("viola");
-        when(resultSet.getObject(3)).thenReturn("verdana");
-        when(resultSet.getObject(4)).thenReturn("Cap no number");
-        when(resultSet.getObject(5)).thenReturn("Valle Lunga");
-        when(resultSet.getObject(6)).thenReturn(234);
-        when(resultSet.getObject(7)).thenReturn("Roma");
-        when(resultSet.getObject(8)).thenReturn("via");
-        when(resultSet.getObject(9)).thenReturn("email");
-        when(resultSet.getObject(10)).thenReturn("M");
-        when(resultSet.getObject(11)).thenReturn("235254545");
-        when(resultSet.getObject(12)).thenReturn("marocchina");
-        when(resultSet.getObject(13)).thenReturn(Date.valueOf("2009-12-13"));
-        when(resultSet.getObject(14)).thenReturn(false);
-
-        object = "pippo";
-        cliente = clienteDAO.doRetriveByKey(object);
-        assertEquals("viola", cliente.getNome());
-        assertEquals("verdana", cliente.getCognome());
-        assertEquals("cf", cliente.getCf());
-        assertNull( cliente.getCAP());
-        assertEquals("Valle Lunga", cliente.getComune());
-        assertEquals(234, cliente.getNumeroCivico());
-        assertEquals("Roma", cliente.getProvincia());
-        assertEquals("via", cliente.getVia());
-        assertEquals("email", cliente.getEmail());
-        assertEquals("M", cliente.getSesso());
-        assertEquals("235254545", cliente.getNumeroTelefono());
-        assertEquals("marocchina", cliente.getCittadinanza());
-        assertEquals(Date.valueOf("2009-12-13").toLocalDate(), cliente.getDataNascita());
-        assertFalse(cliente.isBlacklisted());
-    }
-
-
-    @Test
-    @DisplayName("Delete: Branch 1 cliente != null ")
-    @Tag("true")
-    public void DoDeleteTestTrue() throws SQLException{
-        when(cliente.getCf()).thenReturn("CF");
-        when(connection.prepareStatement(stringSQLDoDelete)).thenReturn(preparedStatement);
-        when(preparedStatement.executeUpdate()).thenReturn(1);
-
-        clienteDAO.doDelete(cliente);
-        verify(preparedStatement).setString(1,"CF");
-        verify(preparedStatement).executeUpdate();
+    @Tags({@Tag("Exception"),@Tag("Error")})
+    @DisplayName("doRetriveByKey() quando tira un eccezione")
+    public void doRetriveByKeyException(){
+        assertThrows(SQLException.class,()->clienteDAO.doRetriveByKey(cliente));
     }
 
     @Test
-    @DisplayName("Delete: Branch 1 cliente esiste elemento non trovato")
-    @Tag("exception")
-    public void DoDeleteTestNotFound() throws SQLException{
-        when(cliente.getCf()).thenReturn("CF");
-        when(connection.prepareStatement(stringSQLDoDelete)).thenReturn(preparedStatement);
-        when(preparedStatement.executeUpdate()).thenReturn(0);
-        assertThrows(NoSuchElementException.class, () ->  clienteDAO.doDelete(cliente));
-    }
-
-
-    @Test
-    @DisplayName("Delete: Branch 1 cliente == null ")
-    @Tag("exception")
-    public void DoDeleteTestFalse() throws SQLException{
-        Cliente c= null;
-        assertThrows(NoSuchElementException.class, () ->  clienteDAO.doDelete(c));
+    @Tag("False")
+    @DisplayName("doRetriveByKey() quando non trova niente")
+    public void doRetriveByKey() throws SQLException {
+      Cliente cliente1 = new Cliente();
+      final Cliente [] cliente2 = new Cliente[1];
+      assertDoesNotThrow(()->{cliente2[0] = clienteDAO.doRetriveByKey("RSSMRA20T11H703F");});
+      assertEquals(cliente1,cliente2[0]);
     }
 
     @Test
-    @DisplayName("RetrieveAll: branch 1 e branch 2 true")
-    @Tag("true")
-    public void DoRetrieveAll() throws SQLException{
-       String order = "decrescente";
-        when(connection.prepareStatement(contains("Cliente ORDER BY"))).thenReturn(preparedStatement);
-        when(preparedStatement.executeQuery()).thenReturn(resultSet);
-        when(resultSet.next()).thenReturn(true, false);
-
-        when(resultSet.getObject(1)).thenReturn("cf");
-        when(resultSet.getObject(2)).thenReturn("viola");
-        when(resultSet.getObject(3)).thenReturn("verdana");
-        when(resultSet.getObject(4)).thenReturn("5678");
-        when(resultSet.getObject(5)).thenReturn("Valle Lunga");
-        when(resultSet.getObject(6)).thenReturn(234);
-        when(resultSet.getObject(7)).thenReturn("Roma");
-        when(resultSet.getObject(8)).thenReturn("via");
-        when(resultSet.getObject(9)).thenReturn("email");
-        when(resultSet.getObject(10)).thenReturn("M");
-        when(resultSet.getObject(11)).thenReturn("235254545");
-        when(resultSet.getObject(12)).thenReturn("marocchina");
-        when(resultSet.getObject(13)).thenReturn(Date.valueOf("2009-12-13"));
-        when(resultSet.getObject(14)).thenReturn(false);
-
-        Collection<Cliente> result = clienteDAO.doRetriveAll(order);
-        verify(connection).prepareStatement(contains("DESC"));
-        verify(preparedStatement).executeQuery();
-
-        assertEquals(1, result.size());
-        Cliente cliente = result.iterator().next();
-        assertEquals("viola", cliente.getNome());
-        assertEquals("verdana", cliente.getCognome());
-        assertEquals("cf", cliente.getCf());
-        assertEquals( 5678,cliente.getCAP());
-        assertEquals("Valle Lunga", cliente.getComune());
-        assertEquals(234, cliente.getNumeroCivico());
-        assertEquals("Roma", cliente.getProvincia());
-        assertEquals("via", cliente.getVia());
-        assertEquals("email", cliente.getEmail());
-        assertEquals("M", cliente.getSesso());
-        assertEquals("235254545", cliente.getNumeroTelefono());
-        assertEquals("marocchina", cliente.getCittadinanza());
-        assertEquals(Date.valueOf("2009-12-13").toLocalDate(), cliente.getDataNascita());
-        assertFalse(cliente.isBlacklisted());
-    }
-
-
-    @Test
-    @DisplayName("RetrieveAll: branch 1 e branch 2 false")
-    @Tag("false")
-    public void testDoRetrieveAll_emptyResultSet() throws SQLException {
-        String order = "crescente";
-        when(connection.prepareStatement(contains("Cliente ORDER BY"))).thenReturn(preparedStatement);
-        when(preparedStatement.executeQuery()).thenReturn(resultSet);
-        when(resultSet.next()).thenReturn( false);
-
-        // Simula resultSet vuoto
-        when(resultSet.next()).thenReturn(false);
-
-        Collection<Cliente> result = clienteDAO.doRetriveAll(order);
-
-        assertTrue(result.isEmpty());
+    @Tags({@Tag("Exception"),@Tag("Error")})
+    @DisplayName("doDelete() quando cliente è uguale null")
+    public void doDeleteException() throws SQLException{
+       assertThrows(NoSuchElementException.class,()->clienteDAO.doDelete(null));
     }
 
     @Test
-    @DisplayName("DoUpdate: branch 1 cliente != null o cliente cf !=null ")
-    @Tag("true")
-    public void testDoUpdateTrue() throws SQLException{
-        when(connection.prepareStatement(stringSQLDoUpdate)).thenReturn(preparedStatement);
-        when(preparedStatement.executeUpdate()).thenReturn(1);
-
-        when(cliente.getCf()).thenReturn("CF123");
-        when(cliente.getNome()).thenReturn("Mario");
-        when(cliente.getCognome()).thenReturn("Rossi");
-        when(cliente.getCAP()).thenReturn(12345);
-        when(cliente.getComune()).thenReturn("Roma");
-        when(cliente.getNumeroCivico()).thenReturn(10);
-        when(cliente.getProvincia()).thenReturn("RM");
-        when(cliente.getVia()).thenReturn("Via Roma");
-        when(cliente.getEmail()).thenReturn("mario@rossi.com");
-        when(cliente.getSesso()).thenReturn("M");
-        when(cliente.getNumeroTelefono()).thenReturn("123456789");
-        when(cliente.getCittadinanza()).thenReturn("Italiana");
-        when(cliente.getDataNascita()).thenReturn(LocalDate.of(2000,1,1));
-        when(cliente.isBlacklisted()).thenReturn(false);
-
-        clienteDAO.doUpdate(cliente);
-
-        verify(preparedStatement).setString(1, "Mario");
-        verify(preparedStatement).setString(2, "Rossi");
-        verify(preparedStatement).setInt(3, 12345);
-        verify(preparedStatement).setString(4, "Roma");
-        verify(preparedStatement).setInt(5, 10);
-        verify(preparedStatement).setString(6, "RM");
-        verify(preparedStatement).setString(7, "Via Roma");
-        verify(preparedStatement).setString(8, "mario@rossi.com");
-        verify(preparedStatement).setString(9, "M");
-        verify(preparedStatement).setString(10, "123456789");
-        verify(preparedStatement).setString(11, "Italiana");
-        verify(preparedStatement).setDate(12, Date.valueOf("2000-1-1"));
-        verify(preparedStatement).setBoolean(13, false);
-        verify(preparedStatement).setString(14,"CF123");
-
-        verify(preparedStatement).executeUpdate();
-        verify(connection).prepareStatement(contains("UPDATE Cliente SET"));
-
+    @Tags({@Tag("Exception"),@Tag("Error")})
+    @DisplayName("doDelete() quando non cancella nulla")
+    public void doDelete(){
+        assertThrows(NoSuchElementException.class,()->clienteDAO.doDelete(cliente));
     }
 
     @Test
-    @DisplayName("DoUpdate: branch 1 cliente == null o cliente cf ==null ")
-    @Tags({@Tag("exception"),@Tag("false")})
-    public void DoUpdateTestFalse() throws SQLException{
-        Cliente c= null;
-        assertThrows(NoSuchElementException.class, () ->  clienteDAO.doUpdate(c));
+    @Tag("True")
+    @DisplayName("doRetriveAll() quando True e quindi è decrescente")
+    public void doRetriveAllTrue() throws SQLException {
+        ArrayList<Cliente> clientes;
+        ArrayList<Cliente> clientes1 = new ArrayList<>();
+        clientes = (ArrayList<Cliente>) clienteDAO.doRetriveAll("decrescente");
+
+        clientes1.add(new Cliente("Mario","Rossi","Italiana","Napoli","Napoli","Via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana"));
+        clientes1.add(new Cliente("Laura","Verdi","Italiana","Roma","Roma","Via Milano",23,100,"3339876543","Femmina",LocalDate.of(1990,4,5),"VRDLRA90D45F839Y","laura.verdi@email.it","Italiana"));
+
+        assertEquals(clientes1,clientes);
     }
 
     @Test
-    @DisplayName("RetrieveAttribute: Branch 1 true Branch 2 true Branch 3 false")
-    @Tag("true")
-    public void testDoRetrieveAttributeTrue() throws SQLException{
-        Object value = "Rossi";
-        attribute="cognome";
-        when(connection.prepareStatement(contains(attribute))).thenReturn(preparedStatement);
-        when(preparedStatement.executeQuery()).thenReturn(resultSet);
-        when(resultSet.next()).thenReturn(true,false);
+    @Tag("False")
+    @DisplayName("doRetriveAll() quando viene inserito in senso crescente")
+    public void doRetriveAllFalse() throws SQLException{
+        ArrayList<Cliente> clientes;
+        ArrayList<Cliente> clientes1 = new ArrayList<>();
+        clientes = (ArrayList<Cliente>) clienteDAO.doRetriveAll("crescente");
 
-        when(resultSet.getString("CF")).thenReturn("RSSMRA80A01F205X");
-        when(resultSet.getString("nome")).thenReturn("Mario");
-        when(resultSet.getString("cognome")).thenReturn("Rossi");
-        when(resultSet.getInt("civico")).thenReturn(10);
-        when(resultSet.getInt("Cap")).thenReturn(80100);
-        when(resultSet.getString("Comune")).thenReturn("Napoli");
-        when(resultSet.getString("Cittadinanza")).thenReturn("Italiana");
-        when(resultSet.getString("provincia")).thenReturn("NA");
-        when(resultSet.getString("Via")).thenReturn("Via Roma");
-        when(resultSet.getString("Email")).thenReturn("mario@rossi.it");
-        when(resultSet.getString("Sesso")).thenReturn("M");
-        when(resultSet.getString("telefono")).thenReturn("3331234567");
-        when(resultSet.getBoolean("IsBackListed")).thenReturn(false);
-        when(resultSet.getDate("DataDiNascita"))
-                .thenReturn(Date.valueOf(LocalDate.of(1980,1,1)));
+        clientes1.add(new Cliente("Mario","Rossi","Italiana","Napoli","Napoli","Via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana"));
+        clientes1.add(new Cliente("Laura","Verdi","Italiana","Roma","Roma","Via Milano",23,100,"3339876543","Femmina",LocalDate.of(1990,4,5),"VRDLRA90D45F839Y","laura.verdi@email.it","Italiana"));
 
-        Collection<Cliente> result = assertDoesNotThrow(() ->
-                clienteDAO.doRetriveByAttribute(attribute, value)
-        );
-
-
-
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        cliente = result.iterator().next();
-        assertEquals("RSSMRA80A01F205X", cliente.getCf());
-        assertEquals("Mario", cliente.getNome());
-        assertEquals("Rossi", cliente.getCognome());
-        assertEquals(10, cliente.getNumeroCivico());
-        assertEquals(80100, cliente.getCAP());
-        assertEquals("Napoli", cliente.getComune());
-        assertEquals("Italiana", cliente.getCittadinanza());
-        assertEquals("NA", cliente.getProvincia());
-        assertEquals("Via Roma", cliente.getVia());
-        assertEquals("mario@rossi.it", cliente.getEmail());
-        assertEquals("M", cliente.getSesso());
-        assertEquals("3331234567", cliente.getNumeroTelefono());
-        assertFalse(cliente.isBlacklisted());
-        assertEquals(LocalDate.of(1980,1,1), cliente.getDataNascita());
-
-        verify(preparedStatement).setObject(1, value);
-        verify(preparedStatement).executeQuery();
+        assertEquals(clientes1,clientes);
     }
 
     @Test
-    @DisplayName("RetrieveAttribute: branch2 false")
-    @Tag("exception")@Tag("false")
-    public void testDoRetrieveAttributeFalse() throws SQLException{
-        Object value = "Mirko";
-        attribute="nome";
-        when(connection.prepareStatement(contains(attribute))).thenReturn(preparedStatement);
-        when(preparedStatement.executeQuery()).thenReturn(resultSet);
-        when(resultSet.next()).thenReturn(false);
+    @Tag("False")
+    @DisplayName("doRetriveAll() quando il resultSet.next() restituisce false")
+    public void doRetriveResultSet() throws SQLException {
+        ArrayList<Cliente> clientes1 = new ArrayList<>();
+        ArrayList<Cliente> clientes;
 
-        assertThrows(NoSuchElementException.class, () ->  clienteDAO.doRetriveByAttribute(attribute, value));
-        verify(resultSet).next();
-        verify(preparedStatement).setObject(1, value);
-        verify(preparedStatement).executeQuery();
+        clientes = (ArrayList<Cliente>) clienteDAO.doRetriveAll("decrescente");
+        assertEquals(clientes1,clientes);
     }
 
     @Test
-    @DisplayName("RetrieveAttribute: branch1 false")
-    @Tag("exception")@Tag("false")
-    public void testDoRetrieveAttributeFalse1() {
-        attribute="";
-        Object value= null;
-        assertThrows(RuntimeException.class, () ->  clienteDAO.doRetriveByAttribute(attribute, value));
+    @Tag("True")
+    @DisplayName("doUpdate() quando va tutto bene")
+    public void doUpdateAllTrue(){
+        assertDoesNotThrow(()->clienteDAO.doUpdate(cliente));
     }
+
+    @Test
+    @Tags({@Tag("Exception"),@Tag("Error")})
+    @DisplayName("doUpdate() quando lancia una eccezione")
+    public void doUpdateAllFalse(){
+        assertThrows(NoSuchElementException.class,()->clienteDAO.doUpdate(null));
+    }
+
+    @Test
+    @Tags({@Tag("Exception"),@Tag("Error")})
+    @DisplayName("doRetrivaByAttribute() quando viene mandata una eccezione")
+    public void doRetriveByAttributeException(){
+      assertThrows(RuntimeException.class,()->clienteDAO.doRetriveByAttribute(null,null));
+    }
+
+    @Test
+    @Tag("True")
+    @DisplayName("doRetriveByAttribute() quando va tutto bene")
+    public void doRetriveByAttributeAllTrue() throws SQLException {
+        ArrayList<Cliente> clientes = new ArrayList<>();
+        clientes.add(new Cliente("Mario","Rossi","Italiana","Napoli","Napoli","Via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana"));
+        clientes.add(new Cliente("Laura","Verdi","Italiana","Roma","Roma","Via Milano",23,100,"3339876543","Femmina",LocalDate.of(1990,4,5),"VRDLRA90D45F839Y","laura.verdi@email.it","Italiana"));
+        Object s = "Italiana" ;
+        ArrayList<Cliente> clientes1 = (ArrayList<Cliente>) clienteDAO.doRetriveByAttribute("Cittadinanza",s);
+        assertEquals(clientes,clientes1);
+    }
+
+    @Test
+    @Tags({@Tag("Exception"),@Tag("Error")})
+    @DisplayName("doRetriveByAttribute() quando va in eccezzione")
+    public void doRetriveByAttribute() throws SQLException{
+        Object s = "Australia";
+        assertThrows(NoSuchElementException.class,()->clienteDAO.doRetriveByAttribute("Cittadinanza",s));
+    }
+
+    @Test
+    @Tag("")
+    @DisplayName("")
+    public void doFilterAllTrue(){
+        ArrayList<Cliente> clientes1 = new ArrayList<>();
+        ArrayList<Cliente> clientes = (ArrayList<Cliente>) clienteDAO.doFilter("","","",LocalDate.of(1985,8,1),false,"Nome");
+        clientes1.add(new Cliente("Mario","Rossi","Italiana","Napoli","Napoli","Via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana"));
+        assertEquals(clientes,clientes1);
+    }
+
+
+
 }

@@ -385,6 +385,10 @@ public class Impiegato implements Cloneable, Serializable {
     public String toString() {
         return "Impiegato{" +
                 "nome='" + nome + '\'' +
+                ", userName='" + userName + '\'' +
+                ", hashPassword='" + hashPassword + '\'' +
+                ", isTempurali=" + isTempurali +
+                ", dataScadenzaToken=" + dataScadenzaToken +
                 ", cognome='" + cognome + '\'' +
                 ", sesso='" + sesso + '\'' +
                 ", tipoDocumento='" + tipoDocumento + '\'' +

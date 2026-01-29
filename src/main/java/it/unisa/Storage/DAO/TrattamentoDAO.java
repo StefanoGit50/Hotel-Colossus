@@ -34,6 +34,16 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>{
             }
         }
     }
+
+    /**
+     * @param list
+     * @throws SQLException
+     */
+    @Override
+    public void doSaveAll(List<Trattamento> list) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     @Override
     public synchronized void doDelete(Trattamento trattamento) throws SQLException
     {
