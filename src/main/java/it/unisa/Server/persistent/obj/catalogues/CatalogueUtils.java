@@ -1,6 +1,8 @@
 package it.unisa.Server.persistent.obj.catalogues;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CatalogueUtils {
 
@@ -14,15 +16,21 @@ public class CatalogueUtils {
     public static <T> void checkNull(T oggetto) throws InvalidInputException {
         Class<?> oggettoClass = oggetto.getClass();
         Field[] fields = oggettoClass.getDeclaredFields(); // Otteni tutti i campi della classe di appartenenza dell'oggetto
-
+        List<String> excludedFields = List.of(
+                "noteAggiuntive", "dataScadenzaToken"
+        );
         for (Field field : fields) {
             try {
                 field.setAccessible(true); // Rendili accessilibi temporaneamente
                 Object fieldValue = field.get(oggetto);
-                if (fieldValue == null && !field.getName().equals("noteAggiuntive")) {
+                if (excludedFields.contains(field.getName())) {
+                    field.setAccessible(false);
+                    continue;
+                }
+                if (fieldValue == null) {
                     throw new InvalidInputException("Campo: " + field.getName() + " è nullo");
                 }
-                if (!field.getName().equals("noteAggiuntive") && field.getType().equals(String.class) && ((String) fieldValue).isBlank()) {
+                if (field.getType().equals(String.class) && ((String) fieldValue).isBlank()) {
                     throw new InvalidInputException("Campo: " + field.getName() + " è vuoto");
                 }
                 field.setAccessible(false); // Rendili di nuovo non accessibili...

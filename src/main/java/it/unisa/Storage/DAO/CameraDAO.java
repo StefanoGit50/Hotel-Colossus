@@ -142,7 +142,7 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
     @Override
     public synchronized Collection<Camera> doRetriveAll(String order) throws SQLException{
         connection = ConnectionStorage.getConnection();
-        String sql = "SELECT * FROM hot.camera2 ORDER BY ? ";
+        String sql = "SELECT * FROM hotelcolossus.camera ORDER BY ? ";
             if(order != null){
                 if(order.equalsIgnoreCase("decrescente")){
                     sql += "DESC";

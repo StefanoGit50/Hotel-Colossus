@@ -36,21 +36,16 @@ public class TestCasesRegistraImpiegato {
      *
      * @return {@code Impiegato} base.
      */
-    //TODO: DA Aggiornare
     public Impiegato createBaseImpiegato() {
-        /*
         return new Impiegato(
-                "Mario",
-                "Rossi",
-                false,
-                Instant.now(),
-
-                "mario.rossi",
-                "passwordSicura123!",        // hashedPassword
-                "Mario",                     // nome
+                "mario.rossi",                  // username
+                "passwordSicura123!",      // hashedPassword
+                true,
+                Instant.now().plusSeconds(3600),
+                "Mario",               // nome
                 "Rossi",                     // cognome
                 "Maschio",                   // sesso
-                "CID",                   // tipoDocumento
+                "CID",                       // tipoDocumento
                 "AB1234567",                 // numeroDocumento
                 80100,                       // CAP
                 "Via Roma",                  // via
@@ -58,8 +53,8 @@ public class TestCasesRegistraImpiegato {
                 "Napoli",                    // comune
                 10,                          // numeroCivico
                 generateRandomCF(),          // codiceFiscale
-                "1",                        // telefono
-                Ruolo.Manager,             // ruolo (mappato dal testo "Front desk")
+                "1",                         // telefono
+                Ruolo.Manager,               // ruolo (mappato dal testo "Front desk")
                 2500.00,                     // stipendio
                 LocalDate.of(2024, 1, 15),   // dataAssunzione
                 LocalDate.of(2020, 1, 20),   // dataRilascio
@@ -67,8 +62,6 @@ public class TestCasesRegistraImpiegato {
                 "Italiana",                  // cittadinanza
                 LocalDate.of(2099, 1, 20)    // dataScadenza
         );
-         */
-        return null;
     }
 
     public static String generateRandomCF() {
@@ -94,6 +87,7 @@ public class TestCasesRegistraImpiegato {
         @DisplayName("TC1: [success] Registrazione impiegato effettuata con successo")
         public void testCase1() {
             Impiegato i = createBaseImpiegato();
+            System.out.println(i.toString());
             Assertions.assertDoesNotThrow( () -> manager.addImpiegato(i));
         }
     }

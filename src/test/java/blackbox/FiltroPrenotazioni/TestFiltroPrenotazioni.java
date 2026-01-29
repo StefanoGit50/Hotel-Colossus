@@ -34,7 +34,7 @@ public class TestFiltroPrenotazioni {
         @DisplayName("TC1: Ricerca per Mario Santaniello - Ordinamento Nome Crescente")
         public void testCase1() throws RemoteException {
             List<Prenotazione> result = frontDesk.filterPrenotazioni("Mario", "Santaniello",
-                    LocalDate.of(2026, 1, 27), LocalDate.of(2026, 2, 2),
+                    LocalDate.now().minusDays(30), LocalDate.now().plusDays(30),
                     "Nome ASC");
             Assertions.assertNotNull(result);
         }

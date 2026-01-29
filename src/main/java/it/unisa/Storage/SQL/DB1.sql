@@ -55,7 +55,7 @@ create table Associato_a(
 	foreign key(CF) references Cliente(CF) on delete cascade on update cascade,
     foreign key(NumeroCamera) references Camera(NumeroCamera) on delete cascade on update cascade,
     foreign key(IDPrenotazione) references Prenotazione(IDPrenotazione) on delete cascade on update cascade,
-    primary key(CF,NumeroCamera , IDPrenotazione)
+    primary key(CF, NumeroCamera, IDPrenotazione)
 );
 
 create table RicevutaFiscale(
@@ -115,7 +115,7 @@ create table Trattamento(
 
 create table Impiegato(
     IDImpiegato int not null auto_increment,
-	CF char(16) not null,
+	CF char(16) not null UNIQUE,
     Stipedio double not null,
     UserName varchar(50) not null,
     HashPasword varchar(50) not null,

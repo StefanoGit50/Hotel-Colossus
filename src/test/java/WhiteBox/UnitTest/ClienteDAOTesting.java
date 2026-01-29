@@ -1,4 +1,4 @@
-package WhiteBox.UnitTest;
+package whitebox.UnitTest;
 
 
 import it.unisa.Common.Camera;
@@ -39,7 +39,7 @@ public class ClienteDAOTesting {
     @Tag("True")
     @DisplayName("doSave() quando va tutto bene")
     public void doSaveAllTrue() throws SQLException {
-        assertDoesNotThrow(()->clienteDAO.doSave(cliente));
+        assertDoesNotThrow(() -> clienteDAO.doSave(cliente));
     }
 
     @Test
