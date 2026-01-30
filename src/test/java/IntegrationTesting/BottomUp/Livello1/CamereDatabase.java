@@ -37,17 +37,24 @@ public class CamereDatabase {
     @DisplayName("Bottom up: CameraDAO e aggiornamento stato camera da catalogo")
     @Tag("integration")
     public void aggiornaStatoCameraDB() throws RemoteException {
-        camera = new Camera(112, Stato.Libera,2,80,"");
+        camera = new Camera(101, Stato.Libera,2,80,"");
+        Camera camera1;
 
-        catalogoCamere.aggiornaStatoCamera(camera);
+        try {
+           camera1 = fds.doRetriveByKey(camera.getNumeroCamera());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        assertTrue(catalogoCamere.aggiornaStatoCamera(camera));
 
         //controllo se nel DB è cambiata la camera
         try {
-           camera=fds.doRetriveByKey(camera.getNumeroCamera());
+           camera = fds.doRetriveByKey(camera.getNumeroCamera());
         }catch(SQLException e){
                 e.printStackTrace();
         }
-        assertNotEquals(Stato.Libera,camera.getStatoCamera());
+        assertNotEquals(camera1.getStatoCamera(),camera.getStatoCamera());
         assertEquals(camera.getNumeroCamera(), catalogoCamere.getLastModified().getNumeroCamera());
 
     }
@@ -58,7 +65,7 @@ public class CamereDatabase {
     public void aggiuntaCameraDB() {
         ArrayList<Camera> camere = new ArrayList<>();
         camere.add(new Camera(114,Stato.Libera,3,89,""));
-        camere.add(new Camera(114,Stato.Libera,2,114,""));
+        camere.add(new Camera(104,Stato.Libera,2,114,""));
         catalogoCamere.addCamere(camere);
 
         Camera c1=null;

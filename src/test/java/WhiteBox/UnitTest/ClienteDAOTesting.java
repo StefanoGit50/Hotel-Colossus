@@ -162,12 +162,28 @@ public class ClienteDAOTesting {
     }
 
     @Test
-    @Tag("")
-    @DisplayName("")
+    @Tag("True")
+    @DisplayName("doFilter() quando va tutto bene")
     public void doFilterAllTrue(){
         ArrayList<Cliente> clientes1 = new ArrayList<>();
         ArrayList<Cliente> clientes = (ArrayList<Cliente>) clienteDAO.doFilter("","","",LocalDate.of(1985,8,1),false,"Nome");
         clientes1.add(new Cliente("Mario","Rossi","Italiana","Napoli","Napoli","Via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana"));
+        assertEquals(clientes,clientes1);
+    }
+
+    @Test
+    @Tags({@Tag("Exception"),@Tag("Error")})
+    @DisplayName("doFilter() quando va in eccezione")
+    public void doFilterException(){
+        assertThrows(RuntimeException.class,()->clienteDAO.doFilter(null,null,null,null,null,null));
+    }
+
+    @Test
+    @Tag("False")
+    @DisplayName("doFilter() quando resultSet restituisce falso")
+    public void doFilter(){
+        ArrayList<Cliente> clientes = new ArrayList<>();
+        ArrayList<Cliente> clientes1 = (ArrayList<Cliente>) clienteDAO.doFilter("Umberto",null,null,null,null,null);
         assertEquals(clientes,clientes1);
     }
 

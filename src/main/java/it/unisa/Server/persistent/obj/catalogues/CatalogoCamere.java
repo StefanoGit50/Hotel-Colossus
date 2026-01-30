@@ -54,7 +54,6 @@ public class CatalogoCamere implements SubjectCamereInterface, Serializable {
      */
     public CatalogoCamere(ArrayList<Camera> listaCamere) {
         this.camereList = Util.deepCopyArrayList(listaCamere);
-
     }
 
     public CatalogoCamere(){}

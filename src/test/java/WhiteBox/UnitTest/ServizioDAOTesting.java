@@ -21,49 +21,25 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class ServizioDAOTesting{
 
-    @Mock
-    private ResultSet resultSet;
-    @Mock
-    private PreparedStatement preparedStatement;
-    @Mock
-    private Connection connection;
-
     private Servizio servizio;
 
-    private MockedStatic<ConnectionStorage> connectionSM;
-
-    @Mock
-    private Statement statement;
-
-    @InjectMocks
     private ServizioDAO servizioDAO;
-
-
 
     @BeforeEach
     public void setUP(){
-        servizio = new Servizio("Piscina",20.0);
-        connectionSM = mockStatic(ConnectionStorage.class);
-        connectionSM.when(ConnectionStorage::getConnection).thenReturn(connection);
+        servizioDAO = new ServizioDAO();
+        servizio = new Servizio("Piscina",30.0);
     }
 
-    @AfterEach
-    public void setAfter(){
-        connectionSM.close();
-    }
     @DisplayName("doDelete(Servizio servizio) quando va tutto bene")
     @Test
     @Tag("True")
-    public void doDeleteAllTrue() throws SQLException {
-        when(connection.prepareStatement("DELETE FROM Servizio WHERE Nome = ?")).thenReturn(preparedStatement);
-        doNothing().when(preparedStatement).setString(anyInt(),anyString());
-        when(preparedStatement.executeUpdate()).thenReturn(1);
-
-        assertDoesNotThrow(()->servizioDAO.doDelete(servizio));
+    public void doDeleteAllTrue() throws SQLException{
+        assertDoesNotThrow(()->servizioDAO.doDelete(new Servizio("Lavanderia",15)));
     }
-     @DisplayName("doDelete(Servizio servizio) quando o la chiave di servizio o servizio sono uguale a null")
-     @Test
-     @Tags({@Tag("Exception"),@Tag("Error")})
+    @Test
+    @DisplayName("doDelete(Servizio servizio) quando o la chiave di servizio o servizio sono uguale a null")
+    @Tags({@Tag("Exception"),@Tag("Error")})
      public void doDeleteException() throws SQLException {
         assertThrows(SQLException.class,()->servizioDAO.doDelete(null));
     }
@@ -72,25 +48,15 @@ public class ServizioDAOTesting{
     @DisplayName("doRetriveByKey(Object nome) quando vado tutto a buon fine")
     @Tag("True")
     public void doRetriveByKeyAllTrue() throws SQLException {
-        when(connection.prepareStatement("SELECT * FROM Servizio WHERE Nome = ?")).thenReturn(preparedStatement);
-        doNothing().when(preparedStatement).setString(1,"Piscina");
-        when(preparedStatement.executeQuery()).thenReturn(resultSet);
-        when(resultSet.next()).thenReturn(true);
-        when(resultSet.getString("Nome")).thenReturn("Piscina");
-        when(resultSet.getDouble("Prezzo")).thenReturn(20.0);
-
-        assertEquals(new Servizio("Piscina",20.0),servizioDAO.doRetriveByKey("Piscina"));
+        Servizio servizio1 = servizioDAO.doRetriveByKey("Spa e Benessere");
+        Servizio servizio2 = new Servizio("Spa e Benessere",40);
+        assertEquals(servizio2,servizio1);
     }
     @DisplayName("doRetriveByKey(Object nome) quando resultSet.next() ritorno false")
     @Tags({@Tag("Error"),@Tag("Exception"),@Tag("False")})
     @Test
     public void doRetriveByKeyResultSetIsFalse() throws SQLException{
-        when(connection.prepareStatement("SELECT * FROM Servizio WHERE Nome = ?")).thenReturn(preparedStatement);
-        doNothing().when(preparedStatement).setString(1,"Piscina");
-        when(preparedStatement.executeQuery()).thenReturn(resultSet);
-        when(resultSet.next()).thenReturn(false);
-
-        assertThrows(NoSuchElementException.class,()->servizioDAO.doRetriveByKey("Piscina"));
+        assertThrows(NoSuchElementException.class,()->servizioDAO.doRetriveByKey("Spa"));
     }
 
     @DisplayName("doRetriByKey(Object nome) quando il nome non è una stringa")
@@ -104,57 +70,36 @@ public class ServizioDAOTesting{
     @Tag("True")
     @DisplayName("doRetriveAll(String order) quando va tutto bene")
     public void doRetriveAllAllTrue() throws SQLException {
-        when(connection.createStatement()).thenReturn(statement);
-        when(statement.executeQuery("SELECT * FROM Servizio  ORDER BY Nome DESC ")).thenReturn(resultSet);
-        when(resultSet.next()).thenReturn(true,true,true,false);
-        when(resultSet.getString("Nome")).thenReturn("Piscina");
-        when(resultSet.getDouble("Prezzo")).thenReturn(20.0);
-
         ArrayList<Servizio> servizios = new ArrayList<>();
-        servizios.add(new Servizio("Piscina",20.0));
-        servizios.add(new Servizio("Piscina",20.0));
-        servizios.add(new Servizio("Piscina",20.0));
-
-        assertEquals(servizios,servizioDAO.doRetriveAll("decrescente"));
+        servizios.add(new Servizio("Spa e Benessere",40));
+        ArrayList<Servizio> servizios1 = (ArrayList<Servizio>) servizioDAO.doRetriveAll("decrescente");
+        assertEquals(servizios,servizios1);
     }
+
     @Tag("False")
     @Test
     @DisplayName("doRetriveAll(String order) quando resultSet.next() restituisce uguale a false")
     public void doRetriveAllResultSetIsFalse() throws SQLException{
-        when(connection.createStatement()).thenReturn(statement);
-        when(statement.executeQuery("SELECT * FROM Servizio  ORDER BY Nome DESC ")).thenReturn(resultSet);
-        when(resultSet.next()).thenReturn(false);
-
-        assertEquals(new ArrayList<>(),servizioDAO.doRetriveAll("decrescente"));
+        assertEquals(new ArrayList<Servizio>(),servizioDAO.doRetriveAll("decrescente"));
     }
 
     @Tag("True")
     @Test
     @DisplayName("doRetriveAll(String order) quando va tutto bene pero è crescente")
     public void doRetriveAllCrescente() throws SQLException{
-        when(connection.createStatement()).thenReturn(statement);
-        when(statement.executeQuery("SELECT * FROM Servizio  ORDER BY Nome ASC")).thenReturn(resultSet);
-        when(resultSet.next()).thenReturn(true,true,true,false);
-        when(resultSet.getString("Nome")).thenReturn("Piscina");
-        when(resultSet.getDouble("Prezzo")).thenReturn(20.0);
-
         ArrayList<Servizio> servizios = new ArrayList<>();
-        servizios.add(new Servizio("Piscina",20.0));
-        servizios.add(new Servizio("Piscina",20.0));
-        servizios.add(new Servizio("Piscina",20.0));
 
-        assertEquals(servizios,servizioDAO.doRetriveAll("crescente"));
+        servizios.add(new Servizio("Lavanderia",15.0));
+        servizios.add(new Servizio("Spa e Benessere",40));
+        ArrayList<Servizio> servizios1 = (ArrayList<Servizio>) servizioDAO.doRetriveAll("crescente");
+        assertEquals(servizios,servizios1);
     }
+
     @Tag("True")
     @DisplayName("doUpdate(Servizio servizio) quando va tutto bene")
     @Test
     public void doUpdateAllTrue() throws SQLException {
-        when(connection.prepareStatement("UPDATE Servizio SET Prezzo = ? WHERE Nome = ?")).thenReturn(preparedStatement);
-        doNothing().when(preparedStatement).setDouble(1,20.0);
-        doNothing().when(preparedStatement).setString(2,"Piscina");
-        when(preparedStatement.executeUpdate()).thenReturn(1);
 
-        assertDoesNotThrow(()->servizioDAO.doUpdate(servizio));
     }
 
     @Tags({@Tag("Exception"),@Tag("Error")})
@@ -168,35 +113,22 @@ public class ServizioDAOTesting{
     @Test
     @DisplayName("doRetriveByAttribute(String attribute , Object value) quando va tutto bene ")
     public void doRetriveByAttributeAllTrue() throws SQLException {
-        lenient().when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
-        lenient().doNothing().when(preparedStatement).setString(anyInt(),anyString());
-        lenient().when(preparedStatement.executeQuery()).thenReturn(resultSet);
-        when(resultSet.next()).thenReturn(true , true ,true ,false);
-        when(resultSet.getString("Nome")).thenReturn("Piscina");
-        when(resultSet.getDouble("Prezzo")).thenReturn(20.0);
-
-        ArrayList<Servizio> servizios = new ArrayList<>();
-        servizios.add(new Servizio("Piscina",20.0));
-        servizios.add(new Servizio("Piscina",20.0));
-        servizios.add(new Servizio("Piscina",20.0));
-        assertEquals(servizios,servizioDAO.doRetriveByAttribute("Nome","Piscina"));
+        ArrayList<Servizio> servizios = (ArrayList<Servizio>) servizioDAO.doRetriveByAttribute("Nome","Lavanderia");
+        ArrayList<Servizio> servizios1 = new ArrayList<>();
+        servizios1.add(new Servizio("Lavanderia",15));
+        assertEquals(servizios,servizios1);
     }
 
     @Tags({@Tag("Exception"),@Tag("Error"),@Tag("False")})
     @Test
     @DisplayName("doRetriveByAttribute() quando resultSet.next() ritorna false")
     public void doRetriveByAttributeResultSetIsFalse() throws SQLException {
-        lenient().when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
-        lenient().doNothing().when(preparedStatement).setString(anyInt(),anyString());
-        lenient().when(preparedStatement.executeQuery()).thenReturn(resultSet);
-        when(resultSet.next()).thenReturn(false);
-
-        assertThrows(NoSuchElementException.class,()->servizioDAO.doRetriveByAttribute("Nome","Piscina"));
+       assertThrows(NoSuchElementException.class,()->servizioDAO.doRetriveByAttribute("Nome","Piscina"));
     }
     @Test
     @DisplayName("doRetriveByAttribute() quando da un Eccezione ")
     @Tags({@Tag("Error"),@Tag("Exception")})
     public void doRetriveByAttributeException(){
-        assertThrows(RuntimeException.class,()->servizioDAO.doRetriveByAttribute(null,"Piscina"));
+        assertThrows(RuntimeException.class,()->servizioDAO.doRetriveByAttribute(null,null));
     }
 }

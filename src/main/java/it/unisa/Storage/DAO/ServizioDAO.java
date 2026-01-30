@@ -14,13 +14,13 @@ import java.util.NoSuchElementException;
 
 public class ServizioDAO implements FrontDeskStorage<Servizio>
 {
-    private static final String TABLE_NAME= "Servizio";
+    private static final String TABLE_NAME= "hotelcolossus.Servizio";
 
     @Override
     public synchronized void doSave(Servizio servizio) throws SQLException
     {
         Connection connection = ConnectionStorage.getConnection();
-        String query = "INSERT INTO Servizio(Nome, Prezzo, IDPrenotazione) VALUES (?, ?, ?) ";
+        String query = "INSERT INTO hotelcolossus.Servizio(Nome, Prezzo, IDPrenotazione) VALUES (?, ?, ?) ";
 
         try (PreparedStatement stmt = connection.prepareStatement(query))
         {
@@ -41,16 +41,17 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
      * @throws SQLException
      */
     @Override
-    public void doSaveAll(List<Servizio> list) throws SQLException {
-        throw new  UnsupportedOperationException("Not supported yet.");
+    public void doSaveAll(List<Servizio> list) throws SQLException{
+        System.out.println("Ciao");
     }
+
 
     @Override
     public synchronized void doDelete(Servizio servizio) throws SQLException
     {
         if(servizio != null && servizio.getNome() != null){
             Connection connection = ConnectionStorage.getConnection();
-            String query = "DELETE FROM Servizio WHERE Nome = ?";
+            String query = "DELETE FROM hotelcolossus.servizio WHERE Nome = ?";
 
             try (PreparedStatement stmt = connection.prepareStatement(query))
             {
@@ -71,7 +72,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
     {
         if(nome instanceof String){
             Connection connection = ConnectionStorage.getConnection();
-            String query = "SELECT * FROM Servizio WHERE Nome = ?";
+            String query = "SELECT * FROM hotelcolossus.servizio WHERE Nome = ?";
 
             try (PreparedStatement stmt = connection.prepareStatement(query))
             {
@@ -101,7 +102,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
     public synchronized Collection<Servizio> doRetriveAll(String order) throws SQLException
     {
         Connection connection = ConnectionStorage.getConnection();
-        String query = "SELECT * FROM Servizio ";
+        String query = "SELECT * FROM hotelcolossus.servizio ";
         if(order.equalsIgnoreCase("decrescente")){
             query += " ORDER BY Nome DESC " ;
         }else{
@@ -152,7 +153,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
         if(servizio != null)
         {
             Connection connection = ConnectionStorage.getConnection();
-            String query = "UPDATE Servizio SET Prezzo = ? WHERE Nome = ?";
+            String query = "UPDATE hotelcolossus.servizio SET Prezzo = ? WHERE Nome = ?";
 
             try (PreparedStatement stmt = connection.prepareStatement(query))
             {
@@ -220,8 +221,4 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @Override
-    public void doSaveAll(List<Camera> listCamera) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }

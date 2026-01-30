@@ -89,7 +89,7 @@ public class CatalogoCamereTesting{
     @Tag("True")
     @DisplayName("aggiornaStatoCamera(Camera c) quando è tutto vero")
     public void AggiornaStatoCameraAllTrue() throws SQLException, RemoteException {
-        catalogoCamere = new CatalogoCamere(cameraDAO);
+       // catalogoCamere = new CatalogoCamere(cameraDAO);
         ArrayList<Camera> cameras = new ArrayList<>();
         Camera camera1 = new Camera(111, Stato.Libera,2,100.0,"");
         doNothing().when(cameraDAO).doUpdate(camera1);
@@ -105,7 +105,7 @@ public class CatalogoCamereTesting{
     @Tag("False")
     @DisplayName("aggiornaStatoCamera() quando tutto Falso")
     public void AggiornaStatoCameraAllFalse() throws RemoteException {
-        catalogoCamere = new CatalogoCamere(cameraDAO);
+        //catalogoCamere = new CatalogoCamere(cameraDAO);
         Camera camera1 = new Camera(111, Stato.Libera,2,100.0,"");
         assertFalse(catalogoCamere.aggiornaStatoCamera(camera1));
     }
