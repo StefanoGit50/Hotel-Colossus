@@ -44,7 +44,7 @@ public class CatalogoClienti implements Serializable {
     }
 
 
-    private boolean updateCliente(Cliente cliente){
+    public  boolean updateCliente(Cliente cliente){
          boolean flag=false;
          if(listaClienti.contains(cliente)){
             Iterator<Cliente> it = listaClienti.iterator();
@@ -81,7 +81,7 @@ public class CatalogoClienti implements Serializable {
         return false;
     }
 
-    public boolean removeCliente(Cliente cliente){
+    public  boolean removeCliente(Cliente cliente){
         if(listaClienti.contains(cliente)){
             try {
                 frontDeskStorage.doDelete(cliente);
@@ -107,7 +107,7 @@ public class CatalogoClienti implements Serializable {
      *
      * @return Un nuovo ArrayList contenente copie (cloni) di tutti gli oggetti Cliente.
      */
-    public synchronized static ArrayList<Cliente> getListaClienti() {
+    public synchronized ArrayList<Cliente> getListaClienti() {
         return listaClienti;
     }
 
@@ -116,7 +116,7 @@ public class CatalogoClienti implements Serializable {
      *
      * @return Uno nuovo ArrayList contenente copie (cloni) dei clienti bannati.
      */
-    public synchronized static ArrayList<Cliente> getListaClientiBannati() {
+    public synchronized  ArrayList<Cliente> getListaClientiBannati() {
         return listaClientiBannati;
     }
 

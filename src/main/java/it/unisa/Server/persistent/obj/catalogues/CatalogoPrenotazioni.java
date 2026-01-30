@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * Gestisce l'elenco complessivo delle prenotazioni, permettendo la registrazione,
@@ -121,68 +122,71 @@ public class CatalogoPrenotazioni implements Serializable {
         return (ArrayList<Prenotazione>) listaPrenotazioni;
     }
 
+    public synchronized Prenotazione getPrenotazione(Integer ID){
+        for(Prenotazione p : listaPrenotazioni){
+            if(p.getIDPrenotazione().equals(ID))
+                try {
+                    return p.clone();
+                }catch (CloneNotSupportedException e){
+                    e.printStackTrace();
+                }
+        }
+        return null;
+    }
+
     /**
      * Imposta o sostituisce l'intera lista delle prenotazioni.
      */
-    public synchronized boolean addPrenotazioni(ArrayList<Prenotazione> listaPrenotazioni1) {
-        if(listaPrenotazioni1.isEmpty())
+    public synchronized boolean addPrenotazioni(Prenotazione prenotazione) {
+        if(prenotazione == null|| listaPrenotazioni.contains(prenotazione)) {
             return false;
-        int n = listaPrenotazioni.size();
-            for (Prenotazione p : listaPrenotazioni1) {
+        }
                 FrontDeskStorage<Prenotazione> fd = new PrenotazioneDAO();
                 try{
-                    fd.doSave(p);
+                    fd.doSave(prenotazione);
                 } catch (SQLException e) {
                 if (e.getErrorCode() == 1062)
                     throw new DuplicateKeyEntry();
                 }
-                listaPrenotazioni.add(p);
-            }
-        if(listaPrenotazioni.size()==n)
-            return false;
-        else
+                listaPrenotazioni.add(prenotazione);
             return true;
     }
 
-    public synchronized boolean removePrenotazioni(ArrayList<Prenotazione> listaPrenotazioni1) {
-        if(listaPrenotazioni1.isEmpty())
+    public synchronized boolean removePrenotazioni(Prenotazione prenotazione) {
+        if(prenotazione == null|| !listaPrenotazioni.contains(prenotazione)) {
             return false;
-        int n = listaPrenotazioni.size();
-        for (Prenotazione p : listaPrenotazioni1) {
-                FrontDeskStorage<Prenotazione> fd = new PrenotazioneDAO();
-                try{
-                    fd.doDelete(p);
-                } catch (SQLException e) {
-                    if (e.getErrorCode() == 1062)
-                        throw new DuplicateKeyEntry();
-                }
-                listaPrenotazioni.remove(p);
         }
 
-        if(listaPrenotazioni.size()==n)
-            return false;
-        else
-            return true;
+        FrontDeskStorage<Prenotazione> fd = new PrenotazioneDAO();
+        try{
+            fd.doDelete(prenotazione);
+        } catch (SQLException e) {
+            if (e.getErrorCode() == 1062)
+                throw new DuplicateKeyEntry();
+        }
+        listaPrenotazioni.remove(prenotazione);
+        return true;
+
     }
-    public synchronized boolean UpdatePrenotazioni(ArrayList<Prenotazione> listaPrenotazioni1) {
-        if(listaPrenotazioni1.isEmpty())
+
+    public synchronized boolean UpdatePrenotazioni(Prenotazione prenotazione) {
+        if(prenotazione == null|| !listaPrenotazioni.contains(prenotazione)) {
             return false;
+        }
         Iterator<Prenotazione> it = listaPrenotazioni.iterator(); // Evita di modificare l'array metre lo si itera
         while(it.hasNext()) {
             Prenotazione p = it.next();
-            for(Prenotazione p1 : listaPrenotazioni) {
-                if(p.getIDPrenotazione().equals(p1.getIDPrenotazione())){
+                if(p.getIDPrenotazione().equals(prenotazione.getIDPrenotazione())){
                     it.remove();
-                    listaPrenotazioni.add(p1);
+                    listaPrenotazioni.add(prenotazione);
                     try {
-                        fds.doUpdate(p1);
+                        fds.doUpdate(prenotazione);
                     }catch (SQLException e) {
                         e.printStackTrace();
                         return false;
                     }
                 }
             }
-        }
         return true;
     }
 
@@ -273,6 +277,43 @@ public class CatalogoPrenotazioni implements Serializable {
         // 11. Data Scadenza antecedente o uguale alla data di Rilascio
         if (scadenza.isBefore(rilascio) || scadenza.isEqual(rilascio))
             throw new InvalidInputException("Data scadenza documento deve essere successi");
-
     }
+    /**
+
+     Metodo usato per controllare la validità dei campi passati al filtro delle prenotazioni.
+     @throws InvalidInputException se un campo presenta un valore errato.*/
+    public static void checkFiltroPrenotazione(String nome, String cognome, LocalDate dataInizioSoggiorno, LocalDate dataFineSoggiorno, String elementOrder) {
+        Pattern namePattern = Pattern.compile("^[A-Za-z\s]{0,49}$");
+
+        // Verifica se tutti i campi sono nulli / vuoti (stringhe)
+        if ( (nome == null || nome.isBlank()) && (cognome == null ||
+            cognome.isBlank()) && (dataInizioSoggiorno == null) && (dataFineSoggiorno == null)){
+            throw new NullPointerException("Tutti i campi sono nulli o vuoti");
+        }
+
+        // 1. Nome
+        if (nome != null && !namePattern.matcher(nome).matches()) {
+            throw new InvalidInputException("[Nome] errato");
+        }
+
+        // 2. Cognome
+        if (cognome != null && !namePattern.matcher(cognome).matches()) {
+            throw new InvalidInputException("[Cognome] errato");
+        }
+
+        // 3. Data di inizio del soggiorno
+        if (dataInizioSoggiorno != null && dataInizioSoggiorno.isBefore(LocalDate.now())) {
+            throw new InvalidInputException("[dataInizioSoggiorno] passata");
+        }
+
+        // 4. Data di fine del soggiorno
+        if (dataFineSoggiorno != null && dataFineSoggiorno.isBefore(LocalDate.now())) {
+            throw new InvalidInputException("[dataFineSoggiorno] passata");
+        }
+
+        if (dataFineSoggiorno != null && dataFineSoggiorno.isBefore(dataInizioSoggiorno)) {
+            throw new InvalidInputException("[dataFineSoggiorno] precedente a dataInizioSoggiorno");
+        }
+    }
+
 }

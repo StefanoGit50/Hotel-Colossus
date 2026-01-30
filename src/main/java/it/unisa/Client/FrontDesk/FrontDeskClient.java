@@ -157,4 +157,38 @@ public class FrontDeskClient
             e.printStackTrace();
         }
     }
+    public FrontDeskController(FrontDeskInterface server) {
+        this.server = server;
+    }
+
+    public List<Camera> getCamere() throws RemoteException {
+        return server.getCamere();
+    }
+
+    public boolean aggiornaStatoCamera(int numeroCamera, String nuovoStato) throws RemoteException {
+        List<Camera> camere = server.getCamere();
+
+        for (Camera c : camere) {
+            if (c.getNumeroCamera() == numeroCamera) {
+                c.setStatoCamera(nuovoStato);
+                return server.aggiornaStatoCamera(c);
+            }
+        }
+        return false;  // Camera non trovata
+    }
+
+    public Camera getUltimoAggiornamento() throws RemoteException {
+        return server.update();
+    }
+
+    public List<Prenotazione> getPrenotazioni() throws RemoteException {
+        return server.getPrenotazioni();
+    }
+
+    public void addPrenotazione(Prenotazione p) throws RemoteException {
+        server.addPrenotazione(p);
+    }
+}
+
+
 }

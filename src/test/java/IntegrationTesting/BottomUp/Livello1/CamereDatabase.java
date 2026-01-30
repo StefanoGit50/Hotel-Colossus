@@ -1,4 +1,4 @@
-package IntegrationTesting.BottomUp;
+package IntegrationTesting.BottomUp.Livello1;
 
 import it.unisa.Common.Camera;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;

@@ -52,18 +52,14 @@ public class AddPrenotazioneCommand implements Command {
 
     @Override
     public void execute() {
-        ArrayList<Prenotazione> p = new ArrayList<>();
-        p.add(prenotazione);
-        catalogue.addPrenotazioni(p);
+        catalogue.addPrenotazioni(prenotazione);
     }
 
     @Override
     public void undo() {
         try {
             Prenotazione p = catalogue.getPrenotazione(prenotazione.getIDPrenotazione());
-            ArrayList<Prenotazione> p1 = new ArrayList<>();
-            p1.add(p);
-            catalogue.removePrenotazioni(p1);
+            catalogue.removePrenotazioni(p);
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
