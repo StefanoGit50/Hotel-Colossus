@@ -31,8 +31,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
         this.clienteDAO =  new ClienteDAO();
     }
 
-    public PrenotazioneDAO(ClienteDAO clienteDAO){
-        this.clienteDAO = clienteDAO;
+    public PrenotazioneDAO(ClienteDAO clienteDAO){this.clienteDAO = clienteDAO;
     }
 
     @Override
@@ -45,13 +44,13 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
             preparedStatement.setDate(1,Date.valueOf(p.getDataCreazionePrenotazione()));
             preparedStatement.setDate(2,Date.valueOf(p.getDataInizio()));
             preparedStatement.setDate(3,Date.valueOf(p.getDataFine()));
-            preparedStatement.setString(10, p.getTrattamento().getNome());
-            preparedStatement.setString(4,p.getNoteAggiuntive());
-            preparedStatement.setString(5 , p.getIntestatario());
-            preparedStatement.setDate(6, Date.valueOf(p.getDataScadenza()));
-            preparedStatement.setString(7,p.getNumeroDocumento());
-            preparedStatement.setDate(8,Date.valueOf(p.getDataRilascio()));
-            preparedStatement.setString(9,p.getTipoDocumento());
+            preparedStatement.setString(4, p.getTrattamento().getNome());
+            preparedStatement.setString(5,p.getNoteAggiuntive());
+            preparedStatement.setString(6 , p.getIntestatario());
+            preparedStatement.setDate(7, Date.valueOf(p.getDataScadenza()));
+            preparedStatement.setString(8,p.getNumeroDocumento());
+            preparedStatement.setDate(9,Date.valueOf(p.getDataRilascio()));
+            preparedStatement.setString(10,p.getTipoDocumento());
             preparedStatement.setBoolean(11,p.getStatoPrenotazione());
             preparedStatement.setBoolean(12,p.isCheckIn());
             preparedStatement.executeUpdate();

@@ -53,43 +53,39 @@ public class prenotazioneDAOTesting {
     @Tag("False")
     @DisplayName("doSave() quando è tutto False")
     public void doSaveAllFalse() throws SQLException{
-
+        prenotazione.setListaServizi(new ArrayList<>());
+        prenotazione.setListaCamere(new ArrayList<>());
+        prenotazione.setListaClienti(new ArrayList<>());
+        assertDoesNotThrow(()->prenotazioneDAO.doSave(prenotazione));
     }
 
     @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
     @DisplayName("doSave() quando tira una eccezione")
     public void doSaveException(){
-
+       assertThrows(SQLException.class,()->prenotazioneDAO.doSave(null));
     }
 
     @Test
     @Tag("False")
     @DisplayName("doSave() quando la condizione del for del cliente è falsa")
     public void doSaveSecondoForCliente() throws SQLException {
-    }
-    @Test
-    @Tag("True")
-    @DisplayName("doDelete() quando è tutto vero")
-    public void doDeleteAllTrue() throws SQLException {
-    }
-
-    @Test
-    @Tag("False")
-    @DisplayName("doDelete() quando è tutto falso")
-    public void doDeleteAllFalse() throws SQLException{
+        prenotazione.setListaClienti(new ArrayList<>());
+        assertDoesNotThrow(()->prenotazioneDAO.doSave(prenotazione));
     }
 
     @Test
     @Tag("True")
     @DisplayName("doRetriveByKey() quando è tutto true")
     public void doRetriveByKeyAllTrue() throws SQLException {
+        Prenotazione prenotazione1 = prenotazioneDAO.doRetriveByKey();
     }
 
     @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
     @DisplayName("doRetriveByKey() quando va in errore")
-    public void doRetriveByKey() throws SQLException {
+    public void doRetriveByKeyReturnNull() throws SQLException {
+        assertNull(prenotazioneDAO.doRetriveByKey(" "));
     }
 
     public void doRetriveByKeyAllFalseTranne(){

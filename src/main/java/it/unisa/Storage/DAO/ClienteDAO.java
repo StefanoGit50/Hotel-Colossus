@@ -49,7 +49,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
 
         try{
                 con= ConnectionStorage.getConnection();
-                PreparedStatement preparedStatement = con.prepareStatement("INSERT INTO hotelcolossus.cliente(\n" +
+                PreparedStatement preparedStatement = con.prepareStatement("INSERT INTO hot.cliente2(\n" +
                         "CF, nome, cognome, Cap, comune, civico, provincia, via,\n" +
                         "Email, Sesso, telefono, Cittadinanza,\n" +
                         "DataDiNascita, IsBackListed,Nazionalità\n" +

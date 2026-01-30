@@ -13,7 +13,8 @@ INSERT INTO Camera (
     NumeroCamera, NumeroMaxOcc, NoteCamera, Stato, Prezzo
 ) VALUES (
              101, 2, 'Camera matrimoniale vista mare', 'Occupata', 120.00
-         );
+         ),
+      (102 , 3 , 'Camera per due persone','Libera',130.0);
 
 INSERT INTO Prenotazione (
     DataPrenotazione, DataArrivoCliente, DataPartenzaCliente,
