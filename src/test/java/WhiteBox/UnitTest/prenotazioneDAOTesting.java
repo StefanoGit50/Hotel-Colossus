@@ -36,15 +36,18 @@ public class prenotazioneDAOTesting {
         ArrayList<Cliente> clientes = new ArrayList<>();
         ArrayList<Camera> cameras = new ArrayList<>();
         ArrayList<Servizio> servizios = new ArrayList<>();
-        prenotazione = new Prenotazione();
-
+        clientes.add(new Cliente("Mario","Rossi","Italiana","Napoli","Napoli","via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana"));
+        servizios.add(new Servizio("Spa",50));
+        cameras.add(new Camera(101,Stato.Libera,2,120,"Camera matrimoniale vista mare"));
+        prenotazione = new Prenotazione(1,LocalDate.of(2026,2,1),LocalDate.of(2026,2,10),LocalDate.of(2026,2,15),new Trattamento("Pensione Completa",300),"CartaIDentità", LocalDate.of(2020,1,1),LocalDate.of(2026,2,9),"Mario Rossi","Nessuna nota",cameras,servizios,clientes,"AA123456");
+        prenotazioneDAO = new PrenotazioneDAO();
     }
 
     @Test
     @Tag("True")
     @DisplayName("doSave() quando va tutto bene")
     public void doSaveAllTrue() throws SQLException {
-
+        prenotazioneDAO.doSave(prenotazione);
     }
     @Test
     @Tag("False")
