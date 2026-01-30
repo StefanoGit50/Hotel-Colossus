@@ -37,9 +37,9 @@ public class prenotazioneDAOTesting {
         ArrayList<Camera> cameras = new ArrayList<>();
         ArrayList<Servizio> servizios = new ArrayList<>();
         clientes.add(new Cliente("Mario","Rossi","Italiana","Napoli","Napoli","via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana"));
-        servizios.add(new Servizio("Spa",50));
-        cameras.add(new Camera(101,Stato.Libera,2,120,"Camera matrimoniale vista mare"));
-        prenotazione = new Prenotazione(1,LocalDate.of(2026,2,1),LocalDate.of(2026,2,10),LocalDate.of(2026,2,15),new Trattamento("Pensione Completa",300),"CartaIDentità", LocalDate.of(2020,1,1),LocalDate.of(2026,2,9),"Mario Rossi","Nessuna nota",cameras,servizios,clientes,"AA123456");
+        servizios.add(new Servizio("Lavanderia",15.0));
+        cameras.add(new Camera(101,Stato.Libera,2,120,"Camera doppia con vista mare"));
+        prenotazione = new Prenotazione(1,LocalDate.of(2026,1,15),LocalDate.of(2026,2,1),LocalDate.of(2026,2,5),new Trattamento("Pensione Completa",50.0),"Carta Identità", LocalDate.of(2020,1,15),LocalDate.of(2030,1,1),"Mario Rossi","Richiesta camera silenziosa",cameras,servizios,clientes,"AX123456");
         prenotazioneDAO = new PrenotazioneDAO();
     }
 
@@ -78,7 +78,8 @@ public class prenotazioneDAOTesting {
     @Tag("True")
     @DisplayName("doRetriveByKey() quando è tutto true")
     public void doRetriveByKeyAllTrue() throws SQLException {
-        Prenotazione prenotazione1 = prenotazioneDAO.doRetriveByKey();
+        Prenotazione prenotazione1 = prenotazioneDAO.doRetriveByKey(1);
+        assertEquals(prenotazione,prenotazione1);
     }
 
     @Test

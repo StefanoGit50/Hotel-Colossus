@@ -247,7 +247,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                             (ArrayList<Cliente>) clienti,
                             rs.getString("numeroDocumento"),
                             rs.getBoolean("Stato"),
-                            rs.getBoolean("CheckIn")
+                            rs.getBoolean("ChekIn")
                     );
                 }
             }
