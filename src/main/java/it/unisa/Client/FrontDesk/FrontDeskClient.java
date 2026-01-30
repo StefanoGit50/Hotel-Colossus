@@ -9,7 +9,7 @@ import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.DAO.CameraDAO;
 import it.unisa.interfacce.FrontDeskInterface;
-import it.unisa.Server.gestioneClienti.Cliente;
+//import it.unisa.Server.gestioneClienti.Cliente;
 
 
 import java.rmi.Naming;
@@ -56,7 +56,7 @@ public class FrontDeskClient
                         
                         System.out.println("Inserisci nome cliente: ");
                         Scanner sc3 = new Scanner(System.in);
-                        Cliente c = new Cliente(sc3.nextLine());
+                      //  Cliente c = new Cliente(sc3.nextLine());
 
                         //String id = c.getNome() + "" + s.getNumero();
                         
@@ -72,7 +72,7 @@ public class FrontDeskClient
 
                         System.out.println("Inserisci nome cliente: ");
                         Scanner sc3 = new Scanner(System.in);
-                        Cliente c = new Cliente(sc3.nextLine());
+                       // Cliente c = new Cliente(sc3.nextLine());
 
                        // String id = c.getNome() + "" + s.getNumero();
                         

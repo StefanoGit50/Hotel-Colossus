@@ -68,7 +68,7 @@ public class PrenotazioniDatabase {
         ArrayList<Servizio> servizio=new ArrayList<>();
         servizio.add(new Servizio("Piscina",20));
         ArrayList<Cliente> cliente=new ArrayList<>();
-        cliente.add(new Cliente("mario","Rossi","Burundi","napoli","napoli","via napoli",12,45,"23453332","m",LocalDate.of(1998,12,1),"CF234rdfcfg","luca@gmail.com"));
+       // cliente.add(new Cliente("mario","Rossi","Burundi","napoli","napoli","via napoli",12,45,"23453332","m",LocalDate.of(1998,12,1),"CF234rdfcfg","luca@gmail.com"));
         ArrayList<Prenotazione> prenotazioni=new ArrayList<>();
 
         prenotazioni.add( new Prenotazione(1234, LocalDate.now(),LocalDate.now(),LocalDate.of(2026,02,01),new Trattamento("MEZZA PENSIONE", 60),"Passaporto",LocalDate.of(2012,03,11),LocalDate.of(2044,12,11),"Mario Biondi","",listcamera,servizio,cliente,"34532MC2"));

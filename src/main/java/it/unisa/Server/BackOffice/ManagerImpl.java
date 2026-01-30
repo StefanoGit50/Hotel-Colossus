@@ -210,8 +210,9 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
 
         ContoEconomicoComposite prenotazioni = new ContoEconomicoComposite("PRENOTAZIONI");
 
-        CatalogoPrenotazioni.getListaPrenotazioni().add(p1);
+        //CatalogoPrenotazioni.getListaPrenotazioni().add(p1);
         //mostra solo le prenotazioni completate
+        /*
         for (Prenotazione p : CatalogoPrenotazioni.getListaPrenotazioni()) {
             if (p.getStatoPrenotazione() == false) {
                 ContoEconomicoComposite prenotazioneComposite = new ContoEconomicoComposite("PRENOTAZIONE" + p.getIDPrenotazione() + " " + p.getIntestatario());
@@ -239,8 +240,10 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
                 // aggiunta della prenotazione al nodo prenotazioni
                 prenotazioni.addChild(prenotazioneComposite);
             }
-        }
 
+
+        }
+    */
 // RICAVI
         ContoEconomicoComponentAbstract ricavi = new ContoEconomicoComposite("RICAVI");
         ricavi.addChild(prenotazioni);

@@ -68,9 +68,10 @@ public class main {
 
         ContoEconomicoComposite prenotazioni = new ContoEconomicoComposite("PRENOTAZIONI");
 
-        CatalogoPrenotazioni.getListaPrenotazioni().add(p1);
+        //CatalogoPrenotazioni.getListaPrenotazioni().add(p1);
         //mostra solo le prenotazioni completate
-         for(Prenotazione p : CatalogoPrenotazioni.getListaPrenotazioni()){
+        /*
+        for(Prenotazione p : CatalogoPrenotazioni.getListaPrenotazioni()){
              if(!p.getStatoPrenotazione()){
                 ContoEconomicoComposite prenotazioneComposite = new ContoEconomicoComposite("PRENOTAZIONE"+p.getIDPrenotazione()+" "+p.getIntestatario());
 
@@ -98,6 +99,8 @@ public class main {
                  prenotazioni.addChild(prenotazioneComposite);
              }
          }
+
+         */
 
 // RICAVI
         ContoEconomicoComponentAbstract  ricavi = new ContoEconomicoComposite("RICAVI");

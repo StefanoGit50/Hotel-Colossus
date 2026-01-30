@@ -111,7 +111,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
      * @param list
      * @throws SQLException
      */
-    @Override
+
     public void doSaveAll(List<Prenotazione> list) throws SQLException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -474,11 +474,6 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
     @Override
     public Collection<Prenotazione> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, Boolean blackListed, String orderBy) throws SQLException {
         return List.of();
-    }
-
-    @Override
-    public void doSaveAll(List<Camera> listCamera) throws SQLException {
-        throw new  UnsupportedOperationException("Not supported yet.");
     }
 
     /**

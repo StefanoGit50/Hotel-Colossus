@@ -16,6 +16,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -40,15 +41,18 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     }
 
     // manda al client la camera ricevuta dall'update e il client dovrà aggiornare la sua lista da mostrare.
+
     @Override
     public Camera update() throws RemoteException {
-        return CatalogoCamere.getLastModified();
+    //    return CatalogoCamere.getLastModified();
+        return  new Camera();
     }
 
     @Override
     public List<Prenotazione> getPrenotazioni() throws RemoteException
     {
-        return CatalogoPrenotazioni.getListaPrenotazioni();
+      //  return CatalogoPrenotazioni.getListaPrenotazioni();
+        return new ArrayList<>();
     }
 
 
@@ -131,7 +135,7 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
      */
     @Override
     public List<Prenotazione> filterPrenotazioni(String nome, String cognome, LocalDate dataInizioSoggiorno, LocalDate dataFineSoggiorno, String elementOrder) throws RemoteException {
-        CatalogoPrenotazioni.checkFiltroPrenotazione(nome, cognome, dataInizioSoggiorno, dataFineSoggiorno, elementOrder);
+        //CatalogoPrenotazioni.checkFiltroPrenotazione(nome, cognome, dataInizioSoggiorno, dataFineSoggiorno, elementOrder);
         PrenotazioneDAO dao = new PrenotazioneDAO();
         return dao.doFilter(nome, cognome, dataInizioSoggiorno, dataFineSoggiorno, elementOrder);
     }
