@@ -106,7 +106,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
         if(order.equalsIgnoreCase("decrescente")){
             query += " ORDER BY Nome DESC " ;
         }else{
-            query += " ORDER BY Nome ASC" ;
+            query += " ORDER BY Nome ASC";
         }
 
         Collection<Servizio> servizi = new ArrayList<>();

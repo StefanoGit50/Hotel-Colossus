@@ -151,7 +151,6 @@ public class Prenotazione implements Cloneable, Serializable {
         this.statoPrenotazione = false;
     }
 
-
      /**
      * Aggiunge un cliente alla lista dei clienti.
      *

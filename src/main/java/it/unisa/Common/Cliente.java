@@ -1,5 +1,6 @@
 package it.unisa.Common;
 
+import java.awt.font.TextHitInfo;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -76,6 +77,8 @@ public class Cliente implements Cloneable, Serializable {
      */
     private String sesso;
 
+    private Camera camere;
+
     /**
      * Data di nascita del cliente.
      */
@@ -102,7 +105,7 @@ public class Cliente implements Cloneable, Serializable {
      * @param cf il codice fiscale del cliente
      * @param email l'email del cliente
      */
-    public Cliente(String nome, String cognome, String cittadinanza, String provincia, String comune, String via, Integer numeroCivico, Integer CAP, String numeroTelefono, String sesso, LocalDate dataNascita ,String cf , String email,String nazionalità) {
+    public Cliente(String nome, String cognome, String cittadinanza, String provincia, String comune, String via, Integer numeroCivico, Integer CAP, String numeroTelefono, String sesso, LocalDate dataNascita ,String cf , String email,String nazionalità,Camera camere) {
         this.nome = nome;
         this.cognome = cognome;
         this.cittadinanza = cittadinanza;
@@ -118,6 +121,7 @@ public class Cliente implements Cloneable, Serializable {
         this.cf = cf;
         this.email = email;
         this.nazionalità = nazionalità;
+        this.camere = camere;
     }
 
     /**
@@ -396,7 +400,13 @@ public class Cliente implements Cloneable, Serializable {
         return email;
     }
 
+    public Camera getCamere() throws CloneNotSupportedException {
+        return camere.clone();
+    }
 
+    public void setCamere(Camera camere){
+        this.camere = camere;
+    }
 
     @Override
     public String toString() {

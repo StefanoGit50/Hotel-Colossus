@@ -13,6 +13,7 @@ import it.unisa.interfacce.FrontDeskInterface;
 
 
 import java.rmi.Naming;
+import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,22 +24,21 @@ public class FrontDeskClient
 {
     static Logger logger = Logger.getLogger("global");
     
-    public static void main(String[] args)
-    {
+    public static void main(String[] args){
         try 
         {
             logger.info("Sto cercando gli oggetti remoti GestionePrenotazioni e Gestionecamere...");
             
             FrontDeskInterface frontDeskInterface = (FrontDeskInterface) Naming.lookup("rmi://localhost/GestionePrenotazioni");
-            logger.info("Trovato GestionePrenotazioni! RMI REGISTRY ...");
-            
-           // GovernanteInterface governanteInterface = (GovernanteInterface) Naming.lookup("rmi://localhost/GestoreCamere");
-           // logger.info("Trovato GestioneCamere! ...");
+            logger.info("T\n" +
+                    "           // GovernanteInterface governanteInterface = (GovernanteInterface) Naming.lookup(\"rmi://localhost/GestoreCamere\");\n" +
+                    "           // logger.info(\"Trovato GestioneCamere! ...\");\n" +
+                    "\n" +
+                    "            int x=0;\n" +
+                    "            \n" +
+                    "            while(x==0)\n" +
+                    "            {rovato GestionePrenotazioni! RMI REGISTRY ...");
 
-            int x=0;
-            
-            while(x==0)
-            {
                 System.out.println("Benvenuto nel Menu front desk! \nScegli un opzione:");
                 System.out.println("1. Effettua prenotazione\n2. Rimuovi prenotazione\n3. Ottieni lista prenotazioni \n4. modifica stato camera \n5. Visualizza lista attuale delle camere \n0. Esci");
                 
@@ -145,50 +145,48 @@ public class FrontDeskClient
                         unBanCommand.execute();
                     }
                     case 0:{
-                        x++;
+                        //x++;
                         break;
                     } default: {
                         System.err.println("Scelta errata!");
                     }
                 }
-            }
-        } 
-        catch(Exception e) {
+        }catch(Exception e) {
             e.printStackTrace();
         }
     }
-    public FrontDeskController(FrontDeskInterface server) {
-        this.server = server;
+    public void FrontDeskController(FrontDeskInterface server) {
+       //this.server = server;
     }
 
     public List<Camera> getCamere() throws RemoteException {
-        return server.getCamere();
+        //return server.getCamere();
+        return null;
     }
 
     public boolean aggiornaStatoCamera(int numeroCamera, String nuovoStato) throws RemoteException {
-        List<Camera> camere = server.getCamere();
+        //List<Camera> camere = server.getCamere();
 
-        for (Camera c : camere) {
-            if (c.getNumeroCamera() == numeroCamera) {
-                c.setStatoCamera(nuovoStato);
-                return server.aggiornaStatoCamera(c);
-            }
-        }
+        //for (Camera c : camere) {
+          //  if (c.getNumeroCamera() == numeroCamera) {
+            //    c.setStatoCamera(nuovoStato);
+              //  return server.aggiornaStatoCamera(c);
+            //}
+        //}
         return false;  // Camera non trovata
     }
 
     public Camera getUltimoAggiornamento() throws RemoteException {
-        return server.update();
+        //return server.update();
+        return null;
     }
 
     public List<Prenotazione> getPrenotazioni() throws RemoteException {
-        return server.getPrenotazioni();
+      //  return server.getPrenotazioni();
+        return null;
     }
 
     public void addPrenotazione(Prenotazione p) throws RemoteException {
-        server.addPrenotazione(p);
+       // server.addPrenotazione(p);
     }
-}
-
-
 }

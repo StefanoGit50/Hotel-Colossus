@@ -52,13 +52,14 @@ public class RemoveClienteCommand implements Command {
     public void execute() {
         try {
             // Riprendi il cliente come lo è attualmente nel catalogo
+            CatalogoClienti catalogoClienti = new CatalogoClienti();
             Cliente c = catalogue.getCliente(cliente.getCf());
             ArrayList<Cliente> lc;
             if(c.isBlacklisted()) {
-                lc = CatalogoClienti.getListaClientiBannati();
+                lc = catalogoClienti.getListaClientiBannati();
                 lc.remove(c);
             } else {
-                lc = CatalogoClienti.getListaClienti();
+                lc = catalogoClienti.getListaClienti();
                 lc.remove(c);
             }
 
@@ -74,8 +75,9 @@ public class RemoveClienteCommand implements Command {
     @Override
     public void undo() {
         ArrayList<Cliente> lc;
+        CatalogoClienti catalogoClienti = new CatalogoClienti();
         if(cliente.isBlacklisted()) {
-            lc = CatalogoClienti.getListaClientiBannati();
+            lc = catalogoClienti.getListaClientiBannati();
             lc.add(cliente);
             try{
                 ClienteDAO clienteDAO = new ClienteDAO();
@@ -84,7 +86,7 @@ public class RemoveClienteCommand implements Command {
                 sqlException.printStackTrace();
             }
         } else {
-            lc = CatalogoClienti.getListaClienti();
+            lc = catalogoClienti.getListaClienti();
             lc.add(cliente);
             try{
                 ClienteDAO clienteDAO = new ClienteDAO();

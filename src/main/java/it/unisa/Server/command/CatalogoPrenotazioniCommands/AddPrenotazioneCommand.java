@@ -57,11 +57,9 @@ public class AddPrenotazioneCommand implements Command {
 
     @Override
     public void undo() {
-        try {
+
             Prenotazione p = catalogue.getPrenotazione(prenotazione.getIDPrenotazione());
             catalogue.removePrenotazioni(p);
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
+
     }
 }
