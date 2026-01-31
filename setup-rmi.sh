@@ -9,6 +9,17 @@
 
 set -e  # Exit on error
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Carica configurazione
+if [ -f "$SCRIPT_DIR/load-config.sh" ]; then
+    source "$SCRIPT_DIR/load-config.sh"
+elif [ -f "$SCRIPT_DIR/env.sh" ]; then
+    source "$SCRIPT_DIR/env.sh"
+else
+    echo "⚠ Configurazione non trovata"
+    exit 1
+fi
 
 # --- CONFIGURAZIONE COLORI PER OUTPUT TERMINALE ---
 RED='\033[0;31m'

@@ -9,7 +9,16 @@
 
 # Carica environment
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/env.sh"
+
+# Carica configurazione
+if [ -f "$SCRIPT_DIR/load-config.sh" ]; then
+    source "$SCRIPT_DIR/load-config.sh"
+elif [ -f "$SCRIPT_DIR/env.sh" ]; then
+    source "$SCRIPT_DIR/env.sh"
+else
+    echo "⚠ Configurazione non trovata"
+    exit 1
+fi
 
 
 # Colori
