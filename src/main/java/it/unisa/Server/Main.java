@@ -23,7 +23,8 @@ public class Main {
         CameraDAO cameraDAO = new CameraDAO();
         CatalogoCamere catalogoCamere = new CatalogoCamere();
         CatalogoPrenotazioni catalogoPrenotazioni = new CatalogoPrenotazioni();
-
+        CatalogoClienti catalogoClienti = new CatalogoClienti();
+        
         try{
             ArrayList<Camera> cameras = catalogoCamere.getListaCamere();
             ArrayList<Camera> cameras1 = new ArrayList<>();
@@ -50,19 +51,19 @@ public class Main {
         ClienteDAO clienteDAO = new ClienteDAO();
         try{
             ArrayList<Cliente> clientes =(ArrayList<Cliente>) clienteDAO.doRetriveAll("decrescente");
-            CatalogoClienti.setListaClienti(clientes);
+            catalogoClienti.setListaClienti(clientes);
             System.out.println(clientes);
-            System.out.println(CatalogoClienti.getListaClienti());
+            System.out.println(catalogoClienti.getListaClienti());
         }catch (SQLException sqlException){
             sqlException.printStackTrace();
         }
 
         try{
-            clienteDAO.doDelete(CatalogoClienti.getListaClienti().getFirst());
+            clienteDAO.doDelete(catalogoClienti.getListaClienti().getFirst());
             ArrayList<Cliente> clientes = (ArrayList<Cliente>) clienteDAO.doRetriveAll("crescente");
-            CatalogoClienti.setListaClienti(clientes);
+            catalogoClienti.setListaClienti(clientes);
             System.out.println(clientes);
-            System.out.println(CatalogoClienti.getListaClienti());
+            System.out.println(catalogoClienti.getListaClienti());
         }catch (SQLException sqlException){
             sqlException.printStackTrace();
         }
@@ -90,7 +91,7 @@ public class Main {
         prenotazioneDAO = new PrenotazioneDAO();
         try{
             ArrayList<Prenotazione> prenotaziones = (ArrayList<Prenotazione>) prenotazioneDAO.doRetriveAll("IDPrenotazione");
-            catalogoPrenotazioni.addPrenotazioni(prenotaziones);
+//            catalogoPrenotazioni.addPrenotazioni(prenotaziones);
             System.out.println(prenotaziones);
             System.out.println(catalogoPrenotazioni.getListaPrenotazioni());
         }catch (SQLException sqlException){
@@ -100,7 +101,7 @@ public class Main {
         try{
            prenotazioneDAO.doDelete(catalogoPrenotazioni.getListaPrenotazioni().getFirst());
            ArrayList<Prenotazione> prenotaziones = (ArrayList<Prenotazione>) prenotazioneDAO.doRetriveAll("IDPrenotazione");
-           catalogoPrenotazioni.addPrenotazioni(prenotaziones);
+//           catalogoPrenotazioni.addPrenotazioni(prenotaziones);
            System.out.println(prenotaziones);
            System.out.println(catalogoPrenotazioni.getListaPrenotazioni());
         }catch(SQLException sqlException){

@@ -38,7 +38,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
     public synchronized void doSave(Prenotazione p) throws SQLException {
         if(p != null && p.getTrattamento() != null){
             Connection connection = ConnectionStorage.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO hot.prenotazione2(DataPrenotazione, DataArrivoCliente, DataPartenzaCliente, NomeTrattamento, NoteAggiuntive, Intestatario, dataScadenza, numeroDocumento, DataRilascio, TipoDocumento, Stato, ChekIn) " +
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO prenotazione(DataPrenotazione, DataArrivoCliente, DataPartenzaCliente, NomeTrattamento, NoteAggiuntive, Intestatario, dataScadenza, numeroDocumento, DataRilascio, TipoDocumento, Stato, ChekIn) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ? , ?, ? , ? , ? , ?)");
 
             preparedStatement.setDate(1,Date.valueOf(p.getDataCreazionePrenotazione()));
@@ -135,7 +135,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
 
         Connection connection = ConnectionStorage.getConnection();
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM hot.prenotazione2 WHERE IDPrenotazione = ?")) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM prenotazione WHERE IDPrenotazione = ?")) {
             preparedStatement.setInt(1, (Integer) codicePrenotazione);
 
             try (ResultSet rs = preparedStatement.executeQuery()) {
@@ -275,7 +275,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
     public synchronized Collection<Prenotazione> doRetriveAll(String order) throws SQLException {
         Connection connection = ConnectionStorage.getConnection();
 
-        String query = "SELECT * FROM hot.prenotazione2";
+        String query = "SELECT * FROM prenotazione";
         if (order != null && !order.trim().isEmpty()) {
             query += " ORDER BY " + order;
         }
@@ -451,7 +451,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
             Connection connection = ConnectionStorage.getConnection();
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(
-                    "UPDATE hot.prenotazione2 SET DataPrenotazione = ? , DataArrivoCliente = ?, DataPartenzaCliente = ? , " +
+                    "UPDATE prenotazione SET DataPrenotazione = ? , DataArrivoCliente = ?, DataPartenzaCliente = ? , " +
                             "NoteAggiuntive = ? ,Intestatario = ? , dataScadenza = ? , numeroDocumento = ? , DataRilascio = ? , TipoDocumento = ?," +
                             "Stato = ? , ChekIn = ? Where IDPrenotazione = ?")) {
 
@@ -518,7 +518,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
     @Override
     public Collection<Prenotazione> doRetriveByAttribute(String attribute, Object value) throws SQLException {
         Connection connection = ConnectionStorage.getConnection();
-        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM hot.prenotazione2 WHERE " + attribute + " = ?")) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM prenotazione WHERE " + attribute + " = ?")) {
             preparedStatement.setObject(1, value);
             Collection<Prenotazione> prenotaziones = new ArrayList<>();
             try (ResultSet rs = preparedStatement.executeQuery()){
@@ -676,7 +676,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                                 "        c.via, c.civico, c.comune, c.provincia, c.Cap, c.IsBackListed,\n" +
                                 "        cam.NumeroCamera, cam.NumeroMaxOcc, cam.NoteCamera, cam.Stato as CameraStato, cam.Prezzo\n" +
                                 "            as CameraPrezzo,s.Nome as ServizioNome, s.Prezzo as ServizioPrezzo\n" +
-                                "From  hot.prenotazione2 p\n" +
+                                "From  prenotazione p\n" +
                                 "          join hot.trattamento2 t ON p.NomeTrattamento = t.Nome\n" +
                                 "          join hot.associato_a2 a ON p.IDPrenotazione = a.IDPrenotazione\n" +
                                 "          JOIN hot.cliente2 c ON a.CF = c.CF\n" +
