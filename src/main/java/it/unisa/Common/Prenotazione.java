@@ -150,28 +150,7 @@ public class Prenotazione implements Cloneable, Serializable {
         this.intestatario = "";
         this.statoPrenotazione = false;
     }
-    public Prenotazione(int IDPrenotazione, LocalDate dataCreazionePrenotazione, LocalDate dataInizio, LocalDate dataFine,
-                        Trattamento trattamento, String tipoDocumento, LocalDate dataRilascio, LocalDate dataScadenza,
-                        String intestatario, String noteAggiuntive, ArrayList<Camera> listaCamere, ArrayList<Servizio> listaServizi,
-                        ArrayList<Cliente> listaClienti ,String numeroDocumento,boolean statoPrenotazione , boolean checkIn){
-        this.IDPrenotazione = IDPrenotazione;
-        this.dataCreazionePrenotazione = dataCreazionePrenotazione;
-        this.dataInizio = dataInizio;
-        this.dataFine = dataFine;
-        this.trattamento = trattamento;
-        this.tipoDocumento = tipoDocumento;
-        this.dataRilascio = dataRilascio;
-        this.dataScadenza = dataScadenza;
-        this.intestatario = intestatario;
-        this.noteAggiuntive = noteAggiuntive;
-        // Uso di deep copy per l'incapsulamento delle liste
-        this.listaCamere = Util.deepCopyArrayList(listaCamere);
-        this.listaServizi = Util.deepCopyArrayList(listaServizi);
-        this.listaClienti = Util.deepCopyArrayList(listaClienti);
-        this.numeroDocumento = numeroDocumento;
-        this.statoPrenotazione = statoPrenotazione;
-        this.checkIn = checkIn;
-    }
+
 
      /**
      * Aggiunge un cliente alla lista dei clienti.
@@ -436,85 +415,9 @@ public class Prenotazione implements Cloneable, Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if(o == null){
-            return false;
-        }
-        if(this == o){
-            return true;
-        }
-        if(o.getClass() != getClass()){
-            return false;
-        }
-        Prenotazione prenotazione = (Prenotazione) o;
-        ArrayList<Cliente> clientes = prenotazione.getListaClienti();
-        ArrayList<Camera> cameras = prenotazione.getListaCamere();
-        ArrayList<Servizio> servizios = prenotazione.getListaServizi();
-        int i = 0;
-        Boolean nsuCliente = null,nsuCamera = null,nsuServizio = null;
-
-        if(clientes.size() == listaClienti.size()){
-            for(Cliente cliente: clientes){
-                if(!listaClienti.get(i).equals(cliente)){
-                    nsuCliente = false;
-                    break;
-                }
-                i++;
-            }
-
-            if(nsuCliente == null){
-                nsuCliente = true;
-            }
-        }else{
-            nsuCliente = false;
-        }
-        i = 0;
-        if(cameras.size() == listaCamere.size()){
-            for(Camera camera: cameras){
-                if(!listaCamere.get(i).equals(camera)){
-                    nsuCamera = false;
-                    break;
-                }
-                i++;
-            }
-
-            if(nsuCamera == null){
-                nsuCamera = true;
-            }
-        }else{
-            nsuCamera = false;
-        }
-        i = 0;
-        if(servizios.size() == listaServizi.size()){
-               for(Servizio servizio: servizios){
-                   if(!listaServizi.get(i).equals(servizio)){
-                       nsuServizio = false;
-                       break;
-                   }
-                   i++;
-               }
-
-               if(nsuServizio == null){
-                   nsuServizio = true;
-               }
-        }else{
-            nsuServizio = false;
-        }
-        boolean tra = false;
-
-        if(trattamento == null && prenotazione.getTrattamento() == null){
-            tra = true;
-        }else{
-            if(trattamento.equals(prenotazione.getTrattamento())){
-                tra = true;
-            }else{
-                tra = false;
-            }
-        }
-
-
-        return nsuCliente && nsuCamera && nsuServizio && IDPrenotazione.equals(prenotazione.getIDPrenotazione()) && dataFine.equals(prenotazione.getDataFine()) && dataInizio.equals(prenotazione.getDataInizio()) &&
-                dataCreazionePrenotazione.equals(prenotazione.getDataCreazionePrenotazione()) && dataScadenza.equals(prenotazione.getDataScadenza()) && dataRilascio.equals(prenotazione.getDataRilascio()) && checkIn == prenotazione.isCheckIn() && statoPrenotazione == prenotazione.getStatoPrenotazione() &&
-                noteAggiuntive.equalsIgnoreCase(prenotazione.getNoteAggiuntive()) && intestatario.equalsIgnoreCase(prenotazione.getIntestatario()) && tipoDocumento.equalsIgnoreCase(prenotazione.getTipoDocumento()) && numeroDocumento.equalsIgnoreCase(prenotazione.getNumeroDocumento()) && tra;
+        if (o == null || getClass() != o.getClass()) return false;
+        Prenotazione that = (Prenotazione) o;
+        return numeroDocumento == that.numeroDocumento && statoPrenotazione == that.statoPrenotazione && checkIn == that.checkIn && Objects.equals(IDPrenotazione, that.IDPrenotazione) && Objects.equals(dataCreazionePrenotazione, that.dataCreazionePrenotazione) && Objects.equals(dataInizio, that.dataInizio) && Objects.equals(dataFine, that.dataFine) && Objects.equals(trattamento, that.trattamento) && Objects.equals(tipoDocumento, that.tipoDocumento) && Objects.equals(dataRilascio, that.dataRilascio) && Objects.equals(dataScadenza, that.dataScadenza) && Objects.equals(intestatario, that.intestatario) && Objects.equals(noteAggiuntive, that.noteAggiuntive) && Objects.equals(listaCamere, that.listaCamere) && Objects.equals(listaServizi, that.listaServizi) && Objects.equals(listaClienti, that.listaClienti);
     }
 
     @Override

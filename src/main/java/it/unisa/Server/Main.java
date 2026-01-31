@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Main {
+    /*
     static void main(){
         CameraDAO cameraDAO = new CameraDAO();
         CatalogoCamere catalogoCamere = new CatalogoCamere();
@@ -104,5 +105,5 @@ public class Main {
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
         }
-    }
+    }*/
 }

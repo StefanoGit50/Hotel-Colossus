@@ -9,6 +9,8 @@ import it.unisa.Storage.Interfacce.FrontDeskStorage;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * Comando per modificare i dati di una prenotazione (eccetto il codice identificativo, il quale viene
@@ -54,53 +56,42 @@ public class UpdatePrenotazioneCommand implements Command {
 
     @Override
     public void execute() {
-        try {
-            Prenotazione p = catalogue.getPrenotazione(prenotazione.getIDPrenotazione());
-            ArrayList<Prenotazione> lp = catalogue.getListaPrenotazioni();
-            Iterator<Prenotazione> it = lp.iterator(); // Evita di modificare l'array metre lo si itera
-            Prenotazione pren;
-            while (it.hasNext()) {
-                pren = it.next();
+       prenotazioneNonModificata = null;
 
-                if(pren.getIDPrenotazione() ==  p.getIDPrenotazione()) {
-                    prenotazioneNonModificata = pren;
-                    lp.remove(p); // rimuovi la prenotazione 'non modificata' dalla lista delle prenotazioni
-                    lp.add(prenotazione); // aggiungi la prenotazione 'modificata' alla lista delle prenotazioni
-                    FrontDeskStorage<Prenotazione> prenotazioneFrontDeskStorage = new PrenotazioneDAO();
-                    prenotazioneFrontDeskStorage.doUpdate(prenotazione);
-                    break;
+        ArrayList<Prenotazione> lp = catalogue.getListaPrenotazioni();
+
+        for (int i = 0; i < lp.size(); i++) {
+            Prenotazione corrente = lp.get(i);
+
+            if (corrente.getIDPrenotazione() == prenotazione.getIDPrenotazione()) {
+                try {
+                    prenotazioneNonModificata = corrente.clone();
+                }catch (CloneNotSupportedException c) {
+                    c.printStackTrace();
+                    return;
                 }
+                catalogue.UpdatePrenotazioni(prenotazione);
             }
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }catch (SQLException sqlException){
-
         }
+
+        throw new NoSuchElementException("Prenotazione non trovata");
     }
+
 
     @Override
     public void undo() {
-        try {
-            ArrayList<Prenotazione> p =new ArrayList<>();
-            p.add(catalogue.getPrenotazione(prenotazione.getIDPrenotazione()));
+
+        if(prenotazioneNonModificata != null) {
             ArrayList<Prenotazione> lp = catalogue.getListaPrenotazioni();
 
-            Iterator<Prenotazione> it = lp.iterator(); // Evita di modificare l'array metre lo si itera
-            Prenotazione pren;
-            while (it.hasNext()) {
-                pren = it.next();
-
-                if(pren.getIDPrenotazione() == p.getFirst().getIDPrenotazione()) {
-                    catalogue.removePrenotazioni(p); // rimuovi il prenotazione 'non modificato' dalla lista dei prenotazioni
-                    ArrayList<Prenotazione> prenotazione =  new ArrayList<>();
-                    prenotazione.add(prenotazioneNonModificata);
-                    catalogue.addPrenotazioni(prenotazione); // aggiungi il prenotazione 'modificato' alla lista dei prenotazioni
-                    break;
+            for (int i = 0; i < lp.size(); i++) {
+                if (Objects.equals(lp.get(i).getIDPrenotazione(), prenotazioneNonModificata.getIDPrenotazione())) {
+                    catalogue.UpdatePrenotazioni(prenotazioneNonModificata); // UNDO
+                    return;
                 }
             }
-
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
         }
+
     }
+
 }
