@@ -1,7 +1,11 @@
 package it.unisa.Storage.DAO;
 
 import it.unisa.Common.*;
+import it.unisa.Server.persistent.util.Stato;
+import it.unisa.Storage.ConnectionStorage;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -40,16 +44,41 @@ public class PrenotazioneBuilder{
      */
     public void addCliente(ResultSet rs) throws SQLException {
         String cf = rs.getString("CF");
-
+        Connection connection = ConnectionStorage.getConnection();
+        String q = "Select hot.camera2.* FROM (hot.associato_a2 join hot.camera2 " +
+                "on associato_a2.NumeroCamera = camera2.NumeroCamera) where CF = ?";
+        PreparedStatement p = connection.prepareStatement(q);
         // Controlla se il cliente è già stato aggiunto
-        if (!clientiMap.containsKey(cf)) {
+
+        ResultSet resultSet = p.executeQuery();
+        Camera camera = new Camera();
+        if(resultSet.next()){
+            camera.setCapacità(resultSet.getInt("NumeroMaxOcc"));
+            camera.setNumeroCamera(resultSet.getInt("NumeroCamera"));
+            camera.setNoteCamera(resultSet.getString("NoteCamera"));
+            camera.setStatoCamera(Stato.valueOf(resultSet.getString("Stato")));
+            camera.setPrezzoCamera(resultSet.getDouble("Prezzo"));
+        }
+
+        if (!clientiMap.containsKey(cf)){
             // Cliente nuovo - crealo e aggiungilo
             Cliente cliente = new Cliente();
             cliente.setCf(cf);
             cliente.setNome(rs.getString("ClienteNome"));
             cliente.setCognome(rs.getString("ClienteCognome"));
-            // ... altri campi
-
+            cliente.setDataNascita(rs.getDate("DataDiNascita").toLocalDate());
+            cliente.setBlacklisted(rs.getBoolean("IsBackListed"));
+            cliente.setNumeroTelefono(rs.getString("telefono"));
+            cliente.setEmail(rs.getString("Email"));
+            cliente.setProvincia(rs.getString("provincia"));
+            cliente.setVia(rs.getString("via"));
+            cliente.setNumeroCivico(rs.getInt("civico"));
+            cliente.setCognome(rs.getString("comune"));
+            cliente.setCAP(Integer.parseInt(rs.getString("Cap")));
+            cliente.setSesso(rs.getString("Sesso"));
+            cliente.setCittadinanza(rs.getString("Cittadinanza"));
+            cliente.setNazionalita(rs.getString("Nazionalità"));
+            cliente.setCamere(camera);
             clientiMap.put(cf, cliente);
         }
         // Se il cliente c'è già, NON fare nulla (evita duplicati)

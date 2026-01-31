@@ -15,8 +15,8 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
-import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -27,6 +27,15 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
 
     public FrontDesk() throws RemoteException {
         super();
+    }
+
+    //costruttore di Testing
+    public FrontDesk(Invoker invoker,CatalogoPrenotazioni catalogoPrenotazioni,CatalogoClienti catalogoClienti,CatalogoCamere catalogoCamere) throws RemoteException {
+        super();
+        this.invoker = invoker;
+        this.catalogoPrenotazioni = catalogoPrenotazioni;
+        this.catalogoClienti = catalogoClienti;
+        this.camList = catalogoCamere;
     }
 
     public List<Camera> getCamere(){
@@ -46,8 +55,7 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     }
 
     @Override
-    public List<Prenotazione> getPrenotazioni() throws RemoteException
-    {
+    public List<Prenotazione> getPrenotazioni() throws RemoteException{
         return catalogoPrenotazioni.getListaPrenotazioni();
     }
 
@@ -104,11 +112,13 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         CatalogueUtils.checkNull(p);                 // Lancia InvalidInputException
         CatalogoPrenotazioni.checkPrenotazione(p);   // Lancia InvalidInputException
         AddPrenotazioneCommand command = new AddPrenotazioneCommand(catalogoPrenotazioni, p);
-        invoker.executeCommand(command);
+            invoker.executeCommand(command);
+
     }
 
     @Override
     public void removePrenotazione(Prenotazione p) throws RemoteException {
+
         RemovePrenotazioneCommand command = new RemovePrenotazioneCommand(catalogoPrenotazioni, p);
         invoker.executeCommand(command);
     }
@@ -131,7 +141,7 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
      */
     @Override
     public List<Prenotazione> filterPrenotazioni(String nome, String cognome, LocalDate dataInizioSoggiorno, LocalDate dataFineSoggiorno, String elementOrder) throws RemoteException {
-        CatalogoPrenotazioni.checkFiltroPrenotazione(nome, cognome, dataInizioSoggiorno, dataFineSoggiorno, elementOrder);
+        //catalogoPrenotazioni.checkFiltroPrenotazione(nome, cognome, dataInizioSoggiorno, dataFineSoggiorno, elementOrder);
         PrenotazioneDAO dao = new PrenotazioneDAO();
         return dao.doFilter(nome, cognome, dataInizioSoggiorno, dataFineSoggiorno, elementOrder);
     }
@@ -141,8 +151,8 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     public void addCliente(Cliente c) throws RemoteException {
         AddClienteCommand command = new AddClienteCommand(catalogoClienti, c);
         invoker.executeCommand(command);
-        if(!CatalogoClienti.getListaClienti().isEmpty()){
-            CatalogoClienti.getListaClienti().forEach(o -> System.out.println(o.toString()));
+        if(!catalogoClienti.getListaClienti().isEmpty()){
+            catalogoClienti.getListaClienti().forEach(o -> System.out.println(o.toString()));
         } else {
             System.out.println("lista cliente vuoto");
         }
@@ -171,6 +181,7 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         UnBanCommand command = new UnBanCommand(catalogoClienti, c.getCf());
         invoker.executeCommand(command);
     }
+    //TODO: COMMAND PER RICEVERE LA LISTA UTENTI
 
     /**
      * @param nome nome del cliente.
@@ -201,9 +212,9 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     @Override
     public void undoCommand() throws RemoteException {
         invoker.undoCommand();
-        if(!CatalogoClienti.getListaClienti().isEmpty()){
+        if(!catalogoClienti.getListaClienti().isEmpty()){
             System.out.println("UNDO");
-            CatalogoClienti.getListaClienti().forEach(o -> System.out.println(o.toString()));
+            catalogoClienti.getListaClienti().forEach(o -> System.out.println(o.toString()));
         } else {
             System.out.println("UNDO: lista cliente vuoto");
         }
@@ -213,45 +224,11 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     @Override
     public void redoCommand() throws RemoteException {
         invoker.redo();
-        if(!CatalogoClienti.getListaClienti().isEmpty()){
+        if(!catalogoClienti.getListaClienti().isEmpty()){
             System.out.println("REDO");
-            CatalogoClienti.getListaClienti().forEach(o -> System.out.println(o.toString()));
+            catalogoClienti.getListaClienti().forEach(o -> System.out.println(o.toString()));
         } else {
             System.out.println("REDO: lista cliente vuoto");
         }
-    }
-
-    /**
-     * @param id della prenotazione.
-     * @return un oggetto {@code Prenotazione} se è presente una prenotazione con quell'Id sul database, {@code null} altrimenti.
-     * @throws RemoteException .
-     */
-    @Override
-    public Prenotazione getPrenotazioneById(int id) throws RemoteException {
-        PrenotazioneDAO dao = new PrenotazioneDAO();
-        Prenotazione p;
-        try {
-            p = dao.doRetriveByKey(id);
-        } catch (SQLException e) {
-            throw new RemoteException(e.getMessage());
-        }
-        return p;
-    }
-
-    /**
-     * @param CF del cliente.
-     * @return un oggetto {@code Cliente} se è presente una prenotazione con quel CF sul database, {@code null} altrimenti.
-     * @throws RemoteException .
-     */
-    @Override
-    public Cliente getClienteByCF(String CF) throws RemoteException {
-        ClienteDAO dao = new ClienteDAO();
-        Cliente c;
-        try {
-            c = dao.doRetriveByKey(CF);
-        } catch (SQLException e) {
-            throw new RemoteException(e.getMessage());
-        }
-        return c;
     }
 }

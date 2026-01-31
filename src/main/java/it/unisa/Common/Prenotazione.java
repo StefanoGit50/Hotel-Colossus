@@ -133,30 +133,7 @@ public class Prenotazione implements Cloneable, Serializable {
         this.statoPrenotazione = true;
         this.checkIn = false;
     }
-    public Prenotazione(int IDPrenotazione, LocalDate dataCreazionePrenotazione, LocalDate dataInizio, LocalDate dataFine,
-                        Trattamento trattamento, String tipoDocumento, LocalDate dataRilascio, LocalDate dataScadenza,
-                        String intestatario, String noteAggiuntive, ArrayList<Camera> listaCamere, ArrayList<Servizio> listaServizi,
-                        ArrayList<Cliente> listaClienti ,String numeroDocumento,boolean statoPrenotazione,boolean checkIn){
 
-        this.IDPrenotazione = IDPrenotazione;
-        this.dataCreazionePrenotazione = dataCreazionePrenotazione;
-        this.dataInizio = dataInizio;
-        this.dataFine = dataFine;
-        this.trattamento = trattamento;
-        this.tipoDocumento = tipoDocumento;
-        this.dataRilascio = dataRilascio;
-        this.dataScadenza = dataScadenza;
-        this.intestatario = intestatario;
-        this.noteAggiuntive = noteAggiuntive;
-        // Uso di deep copy per l'incapsulamento delle liste
-        this.listaCamere = Util.deepCopyArrayList(listaCamere);
-        this.listaServizi = Util.deepCopyArrayList(listaServizi);
-        this.listaClienti = Util.deepCopyArrayList(listaClienti);
-        this.numeroDocumento = numeroDocumento;
-        this.statoPrenotazione = statoPrenotazione;
-        this.checkIn = checkIn;
-
-    }
     public Prenotazione() {
         this.IDPrenotazione = 0;
         this.numeroDocumento = "";
@@ -173,7 +150,6 @@ public class Prenotazione implements Cloneable, Serializable {
         this.intestatario = "";
         this.statoPrenotazione = false;
     }
-
 
      /**
      * Aggiunge un cliente alla lista dei clienti.

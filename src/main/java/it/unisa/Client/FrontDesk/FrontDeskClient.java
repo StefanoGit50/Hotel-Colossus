@@ -1,17 +1,19 @@
 package it.unisa.Client.FrontDesk;
 
 import it.unisa.Common.Camera;
+
 import it.unisa.Common.Prenotazione;
-import it.unisa.Common.Cliente;
 import it.unisa.Server.command.CatalogoClientiCommands.AddClienteCommand;
 import it.unisa.Server.command.CatalogoClientiCommands.UnBanCommand;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.DAO.CameraDAO;
 import it.unisa.interfacce.FrontDeskInterface;
+//import it.unisa.Server.gestioneClienti.Cliente;
 
 
 import java.rmi.Naming;
+import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,22 +24,21 @@ public class FrontDeskClient
 {
     static Logger logger = Logger.getLogger("global");
     
-    public static void main(String[] args)
-    {
+    public static void main(String[] args){
         try 
         {
             logger.info("Sto cercando gli oggetti remoti GestionePrenotazioni e Gestionecamere...");
             
             FrontDeskInterface frontDeskInterface = (FrontDeskInterface) Naming.lookup("rmi://localhost/GestionePrenotazioni");
-            logger.info("Trovato GestionePrenotazioni! RMI REGISTRY ...");
-            
-           // GovernanteInterface governanteInterface = (GovernanteInterface) Naming.lookup("rmi://localhost/GestoreCamere");
-           // logger.info("Trovato GestioneCamere! ...");
+            logger.info("T\n" +
+                    "           // GovernanteInterface governanteInterface = (GovernanteInterface) Naming.lookup(\"rmi://localhost/GestoreCamere\");\n" +
+                    "           // logger.info(\"Trovato GestioneCamere! ...\");\n" +
+                    "\n" +
+                    "            int x=0;\n" +
+                    "            \n" +
+                    "            while(x==0)\n" +
+                    "            {rovato GestionePrenotazioni! RMI REGISTRY ...");
 
-            int x=0;
-            
-            while(x==0)
-            {
                 System.out.println("Benvenuto nel Menu front desk! \nScegli un opzione:");
                 System.out.println("1. Effettua prenotazione\n2. Rimuovi prenotazione\n3. Ottieni lista prenotazioni \n4. modifica stato camera \n5. Visualizza lista attuale delle camere \n0. Esci");
                 
@@ -55,7 +56,7 @@ public class FrontDeskClient
                         
                         System.out.println("Inserisci nome cliente: ");
                         Scanner sc3 = new Scanner(System.in);
-                        //Cliente c = new Cliente(sc3.nextLine());
+                      //  Cliente c = new Cliente(sc3.nextLine());
 
                         //String id = c.getNome() + "" + s.getNumero();
                         
@@ -71,7 +72,7 @@ public class FrontDeskClient
 
                         System.out.println("Inserisci nome cliente: ");
                         Scanner sc3 = new Scanner(System.in);
-                        //Cliente c = new Cliente(sc3.nextLine());
+                       // Cliente c = new Cliente(sc3.nextLine());
 
                        // String id = c.getNome() + "" + s.getNumero();
                         
@@ -137,23 +138,55 @@ public class FrontDeskClient
                     }
                     case 7:{
                         //frontDeskInterface.effettuaPrenotazione("7" , new Cliente("Stefano") , new Camera(4 ,Stato.Libera,4, 200.0 , ""));
-                        AddClienteCommand addClienteCommand = new AddClienteCommand(new CatalogoClienti() , new it.unisa.Common.Cliente("Francesco" , "Moretto" , "Italiano" , "Salerno" , "Capezzano" , "corso armando diaz " , 10 , 84054 , "324677894018" , "Maschio" , LocalDate.of(2016,12,30) , "MRTFCS16T30H703C"  ,"Cartaceo","Italiana"));
+                        AddClienteCommand addClienteCommand = new AddClienteCommand(new CatalogoClienti() , new it.unisa.Common.Cliente("Francesco" , "Moretto" , "Italiano" , "Salerno" , "Capezzano" , "corso armando diaz " , 10 , 84054 , "324677894018" , "Maschio" , LocalDate.of(2016,12,30) , "MRTFCS16T30H703C"  ,"Cartaceo","Italiana",new Camera()));
                         addClienteCommand.execute();
                         //BanCommand banCommand = new BanCommand(new CatalogoClienti() , "MRTFCS16T30H703C");
                         UnBanCommand unBanCommand = new UnBanCommand(new CatalogoClienti() , "MRTFCS16T30H703C");
                         unBanCommand.execute();
                     }
                     case 0:{
-                        x++;
+                        //x++;
                         break;
                     } default: {
                         System.err.println("Scelta errata!");
                     }
                 }
-            }
-        } 
-        catch(Exception e) {
+        }catch(Exception e) {
             e.printStackTrace();
         }
+    }
+    public void FrontDeskController(FrontDeskInterface server) {
+       //this.server = server;
+    }
+
+    public List<Camera> getCamere() throws RemoteException {
+        //return server.getCamere();
+        return null;
+    }
+
+    public boolean aggiornaStatoCamera(int numeroCamera, String nuovoStato) throws RemoteException {
+        //List<Camera> camere = server.getCamere();
+
+        //for (Camera c : camere) {
+          //  if (c.getNumeroCamera() == numeroCamera) {
+            //    c.setStatoCamera(nuovoStato);
+              //  return server.aggiornaStatoCamera(c);
+            //}
+        //}
+        return false;  // Camera non trovata
+    }
+
+    public Camera getUltimoAggiornamento() throws RemoteException {
+        //return server.update();
+        return null;
+    }
+
+    public List<Prenotazione> getPrenotazioni() throws RemoteException {
+      //  return server.getPrenotazioni();
+        return null;
+    }
+
+    public void addPrenotazione(Prenotazione p) throws RemoteException {
+       // server.addPrenotazione(p);
     }
 }
