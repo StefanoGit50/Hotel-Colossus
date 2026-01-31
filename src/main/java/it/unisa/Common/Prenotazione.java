@@ -67,7 +67,7 @@ public class Prenotazione implements Cloneable, Serializable {
     /**
      * Il numero del documento del cliente
      */
-    private int numeroDocumento;
+    private String numeroDocumento;
 
     /**
      * Lista delle camere incluse nella prenotazione.
@@ -107,7 +107,7 @@ public class Prenotazione implements Cloneable, Serializable {
     public Prenotazione(int IDPrenotazione, LocalDate dataCreazionePrenotazione, LocalDate dataInizio, LocalDate dataFine,
                         Trattamento trattamento, String tipoDocumento, LocalDate dataRilascio, LocalDate dataScadenza,
                         String intestatario, String noteAggiuntive, ArrayList<Camera> listaCamere, ArrayList<Servizio> listaServizi,
-                        ArrayList<Cliente> listaClienti ,int numeroDocumento) {
+                        ArrayList<Cliente> listaClienti ,String numeroDocumento) {
         this.IDPrenotazione = IDPrenotazione;
         this.dataCreazionePrenotazione = dataCreazionePrenotazione;
         this.dataInizio = dataInizio;
@@ -283,11 +283,11 @@ public class Prenotazione implements Cloneable, Serializable {
         this.noteAggiuntive = noteAggiuntive;
     }
 
-    public void setNumeroDocumento(int numeroDocumento){
+    public void setNumeroDocumento(String numeroDocumento){
         this.numeroDocumento = numeroDocumento;
     }
 
-    public int getNumeroDocumento(){
+    public String getNumeroDocumento(){
         return numeroDocumento;
     }
     /**

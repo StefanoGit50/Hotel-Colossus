@@ -91,6 +91,24 @@ public class Cliente implements Cloneable, Serializable {
      */
     private String nazionalità;
 
+    public void setCamera(Camera camera) {
+        this.camera = camera;
+    }
+
+    public void setNazionalità(String nazionalità) {
+        this.nazionalità = nazionalità;
+    }
+
+    public String getNazionalità() {
+        return nazionalità;
+    }
+
+    public Camera getCamera() {
+        return camera;
+    }
+
+    private Camera camera;
+
     /**
      * Costruttore completo per creare una nuova istanza di {@code Cliente}
      * (l'attributo {@code isBlacklisted} Flag che indica se il cliente è in lista nera di default {@code false}).
@@ -108,7 +126,7 @@ public class Cliente implements Cloneable, Serializable {
      * @param cf il codice fiscale del cliente
      * @param email l'email del cliente
      */
-    public Cliente(String nome, String cognome, String cittadinanza, String provincia, String comune, String via, int numeroCivico, int CAP, String numeroTelefono, String sesso, LocalDate dataNascita ,String cf , String email,String metodoDiPagamento) {
+    public Cliente(String nome, String cognome, String cittadinanza, String provincia, String comune, String via, int numeroCivico, int CAP, String numeroTelefono, String sesso, LocalDate dataNascita ,String cf , String email,Camera camera) {
         this.nome = nome;
         this.cognome = cognome;
         this.cittadinanza = cittadinanza;
@@ -123,7 +141,7 @@ public class Cliente implements Cloneable, Serializable {
         this.dataNascita = dataNascita;
         this.cf = cf;
         this.email = email;
-        this.metodoDiPagamento = metodoDiPagamento;
+        this.camera = camera;
     }
 
     /**

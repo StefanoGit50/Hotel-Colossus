@@ -9,6 +9,8 @@
     -light-gray: #f0f0f0;
     -text-dark: #1a202c;
     -text-gray: #666666;
+
+    -border-light: #e2e8f0;
 }
 
 
@@ -1340,324 +1342,7 @@ filters-section {
     -fx-background-color: rgba(212, 175, 55, 0.5);
 }
 
-/* ==================== BOOKING DETAIL VIEW ==================== */
 
-.booking-detail-view {
-    -fx-background-color: white;
-}
-
-/* Header */
-.booking-header {
-    -fx-background-color: linear-gradient(to right, #080707 0%, #440c09 25%, #310000 50%, #621003 75%, #641004 100%);
-    -fx-background-radius: 15;
-    -fx-border-color: rgba(212, 175, 55, 0.3);
-    -fx-border-width: 2 0 2 0;
-}
-
-.booking-header-title {
-    -fx-font-size: 26px;
-    -fx-font-weight: 300;
-    -fx-letter-spacing: 4px;
-    -fx-text-fill: #d4af37;
-}
-
-.booking-header-subtitle {
-    -fx-font-size: 13px;
-    -fx-text-fill: #f5e6d3;
-    -fx-opacity: 0.85;
-}
-
-.booking-code-box {
-    -fx-background-color: rgba(255, 255, 255, 0.1);
-    -fx-border-color: rgba(212, 175, 55, 0.4);
-    -fx-border-width: 2;
-    -fx-border-radius: 10;
-    -fx-background-radius: 10;
-}
-
-.booking-code-label {
-    -fx-font-size: 11px;
-    -fx-text-fill: rgba(255, 255, 255, 0.7);
-    -fx-text-alignment: center;
-}
-
-.booking-code-value {
-    -fx-font-size: 22px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #d4af37;
-    -fx-letter-spacing: 3px;
-}
-
-/* Check-in Button */
-.booking-checkin-btn {
-    -fx-font-size: 14px;
-    -fx-font-weight: 600;
-    -fx-letter-spacing: 1px;
-    -fx-border-width: 2;
-    -fx-border-radius: 10;
-    -fx-background-radius: 10;
-    -fx-cursor: hand;
-}
-
-.booking-checkin-complete {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #059669, #10b981);
-    -fx-text-fill: white;
-    -fx-border-color: #059669;
-}
-
-.booking-checkin-pending {
-    -fx-background-color: rgba(245, 158, 11, 0.15);
-    -fx-text-fill: #f59e0b;
-    -fx-border-color: #f59e0b;
-}
-
-.booking-checkin-btn:hover {
-    -fx-scale-x: 1.05;
-    -fx-scale-y: 1.05;
-}
-
-/* Client Info */
-.booking-client-info {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #fafafa 0%, white 100%);
-    -fx-border-color: #f5e6d3;
-    -fx-border-width: 2;
-    -fx-border-radius: 12;
-    -fx-background-radius: 12;
-}
-
-.client-info-label {
-    -fx-font-size: 11px;
-    -fx-font-weight: 600;
-    -fx-text-fill: #999;
-}
-
-.client-info-value {
-    -fx-font-size: 16px;
-    -fx-font-weight: 600;
-    -fx-text-fill: #333;
-}
-
-/* Section Titles */
-.section-title-booking {
-    -fx-font-size: 18px;
-    -fx-font-weight: 600;
-    -fx-text-fill: #6d1331;
-    -fx-letter-spacing: 1px;
-}
-
-/* Rooms Table */
-.booking-rooms-table {
-    -fx-border-color: #f5e6d3;
-    -fx-border-width: 2;
-    -fx-border-radius: 12;
-    -fx-background-radius: 12;
-}
-
-.booking-rooms-table .column-header {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #67112f 0%, #8b1538 100%);
-    -fx-text-fill: white;
-    -fx-font-size: 11px;
-    -fx-font-weight: 600;
-    -fx-letter-spacing: 0.5px;
-}
-
-.booking-rooms-table .column-header-background {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #6d1331 0%, #8b1538 100%);
-}
-
-.booking-rooms-table .table-row-cell {
-    -fx-background-color: #fafafa;
-    -fx-background-radius: 8;
-}
-
-.booking-rooms-table .table-row-cell:hover {
-    -fx-background-color: #f5e6d3;
-}
-
-.booking-badge-complete {
-    -fx-background-color: #10b981;
-    -fx-text-fill: white;
-    -fx-padding: 5px 10px;
-    -fx-background-radius: 12;
-    -fx-font-size: 11px;
-    -fx-font-weight: 600;
-}
-
-/* Service Cards */
-.booking-service-card {
-    -fx-background-color: white;
-    -fx-border-color: #f5e6d3;
-    -fx-border-width: 2;
-    -fx-border-radius: 10;
-    -fx-background-radius: 10;
-    -fx-cursor: hand;
-}
-
-.booking-service-card:hover {
-    -fx-border-color: #6d1331;
-    -fx-effect: dropshadow(gaussian, rgba(109, 19, 49, 0.1), 20, 0, 0, 5);
-    -fx-translate-y: -2;
-}
-
-.service-name {
-    -fx-font-size: 14px;
-    -fx-font-weight: 600;
-    -fx-text-fill: #333;
-}
-
-.service-desc {
-    -fx-font-size: 11px;
-    -fx-text-fill: #999;
-}
-
-.service-price {
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #6d1331;
-}
-
-.qty-btn {
-    -fx-min-width: 28px;
-    -fx-min-height: 28px;
-    -fx-max-width: 28px;
-    -fx-max-height: 28px;
-    -fx-border-color: #6d1331;
-    -fx-border-width: 2;
-    -fx-background-color: white;
-    -fx-background-radius: 6;
-    -fx-border-radius: 6;
-    -fx-text-fill: #6d1331;
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-cursor: hand;
-}
-
-.qty-btn:hover {
-    -fx-background-color: #6d1331;
-    -fx-text-fill: white;
-}
-
-.qty-value {
-    -fx-font-weight: bold;
-    -fx-font-size: 14px;
-    -fx-text-alignment: center;
-}
-
-/* Summary Box */
-.booking-summary-box {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #fafafa 0%, white 100%);
-    -fx-border-color: #f5e6d3;
-    -fx-border-width: 2;
-    -fx-border-radius: 12;
-    -fx-background-radius: 12;
-}
-
-.summary-line {
-    -fx-border-color: #f5e6d3;
-    -fx-border-width: 0 0 1 0;
-}
-
-.summary-line-total {
-    -fx-border-color: #6d1331;
-    -fx-border-width: 3 0 0 0;
-}
-
-.summary-label {
-    -fx-text-fill: #666;
-    -fx-font-size: 14px;
-}
-
-.summary-value {
-    -fx-font-weight: 600;
-    -fx-text-fill: #333;
-    -fx-font-size: 14px;
-}
-
-.summary-value-total {
-    -fx-font-weight: bold;
-    -fx-text-fill: #6d1331;
-    -fx-font-size: 22px;
-}
-
-/* Notes Box */
-.booking-notes-box {
-    -fx-background-color: #fafafa;
-    -fx-border-color: #f5e6d3;
-    -fx-border-width: 2;
-    -fx-border-radius: 12;
-    -fx-background-radius: 12;
-}
-
-.booking-notes-area {
-    -fx-background-color: white;
-    -fx-border-color: #f5e6d3;
-    -fx-border-width: 2;
-    -fx-border-radius: 10;
-    -fx-background-radius: 10;
-    -fx-font-size: 13px;
-}
-
-.booking-notes-area:focused {
-    -fx-border-color: #6d1331;
-}
-
-/* Action Buttons */
-.booking-btn-back {
-    -fx-background-color: white;
-    -fx-text-fill: #666;
-    -fx-border-color: #ddd;
-    -fx-border-width: 2;
-    -fx-border-radius: 10;
-    -fx-background-radius: 10;
-    -fx-padding: 14px 28px;
-    -fx-font-size: 14px;
-    -fx-font-weight: 600;
-    -fx-letter-spacing: 1px;
-    -fx-cursor: hand;
-}
-
-.booking-btn-back:hover {
-    -fx-border-color: #6d1331;
-    -fx-text-fill: #6d1331;
-}
-
-.booking-btn-delete {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #dc2626, #ef4444);
-    -fx-text-fill: white;
-    -fx-border-radius: 10;
-    -fx-background-radius: 10;
-    -fx-padding: 14px 28px;
-    -fx-font-size: 14px;
-    -fx-font-weight: 600;
-    -fx-letter-spacing: 1px;
-    -fx-cursor: hand;
-}
-
-.booking-btn-delete:hover {
-    -fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.4), 20, 0, 0, 8);
-    -fx-translate-y: -2;
-}
-
-.booking-btn-save {
-    -fx-background-color: linear-gradient(
-            from 0% 0% to 100% 100%,
-            #6d1331,
-            #8b1538
-    );
-    -fx-text-fill: white;
-    -fx-border-radius: 10;
-    -fx-background-radius: 10;
-    -fx-padding: 14px 28px;
-    -fx-font-size: 14px;
-    -fx-font-weight: 600;
-    -fx-letter-spacing: 1px;
-    -fx-cursor: hand;
-}
-
-.booking-btn-save:hover {
-    -fx-effect: dropshadow(gaussian, rgba(109, 19, 49, 0.5), 25, 0, 0, 8);
-    -fx-translate-y: -2;
-}
 
 /* ==================== ROOM DETAIL DIALOG ==================== */
 
@@ -1798,6 +1483,347 @@ filters-section {
 }
 
 
+/* ==================== BOOKING DETAIL VIEW ==================== */
+
+.booking-detail-view {
+    -fx-background-color: white;
+}
+
+/* Header */
+.booking-header {
+    -fx-background-color: linear-gradient(to right, #080707 0%, #440c09 25%, #310000 50%, #621003 75%, #641004 100%);
+    -fx-background-radius: 15;
+    -fx-border-color: rgba(212, 175, 55, 0.3);
+    -fx-border-width: 2 0 2 0;
+}
+
+.booking-header-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: 300;
+    -fx-letter-spacing: 4px;
+    -fx-text-fill: #d4af37;
+}
+
+.booking-header-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #f5e6d3;
+    -fx-opacity: 0.85;
+}
+
+.booking-code-box {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-border-color: rgba(212, 175, 55, 0.4);
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+.booking-code-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: rgba(255, 255, 255, 0.7);
+    -fx-text-alignment: center;
+}
+
+.booking-code-value {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #d4af37;
+    -fx-letter-spacing: 3px;
+}
+
+/* Check-in Button */
+.booking-checkin-btn {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: 1px;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+
+.booking-checkin-complete {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #059669, #10b981);
+    -fx-text-fill: white;
+    -fx-border-color: #059669;
+}
+
+.booking-checkin-pending {
+    -fx-background-color: rgba(245, 158, 11, 0.15);
+    -fx-text-fill: #f59e0b;
+    -fx-border-color: #f59e0b;
+}
+
+.booking-checkin-btn:hover {
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* Client Info */
+.booking-client-info {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #fafafa 0%, white 100%);
+    -fx-border-color: #f1e3c6;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+.client-info-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #999;
+}
+
+.client-info-value {
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #333333;
+}
+
+/* Section Titles */
+.section-title-booking {
+    -fx-font-size: 18px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #6d1331;
+    -fx-letter-spacing: 1px;
+}
+
+/* Rooms Table */
+.booking-rooms-table {
+    -fx-border-color: #f5e6d3;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+.booking-rooms-table .column-header {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #6d1331 0%, #8b1538 100%);
+    -fx-text-fill: white;
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: 0.5px;
+}
+
+.booking-rooms-table .column-header-background {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #6d1331 0%, #8b1538 100%);
+}
+
+.booking-rooms-table .table-row-cell {
+    -fx-background-color: #fafafa;
+    -fx-background-radius: 8;
+}
+
+.booking-rooms-table .table-row-cell:hover {
+    -fx-background-color: #f5e6d3;
+}
+
+.booking-badge-complete {
+    -fx-background-color: #10b981;
+    -fx-text-fill: white;
+    -fx-padding: 5px 10px;
+    -fx-background-radius: 12;
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+}
+
+/* Service Cards */
+.booking-service-card {
+    -fx-background-color: white;
+    -fx-border-color: #f5e6d3;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+
+.booking-service-card:hover {
+    -fx-border-color: #6d1331;
+    -fx-effect: dropshadow(gaussian, rgba(109, 19, 49, 0.1), 20, 0, 0, 5);
+    -fx-translate-y: -2;
+}
+
+.service-name {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #333;
+}
+
+.service-desc {
+    -fx-font-size: 11px;
+    -fx-text-fill: #999;
+}
+
+.service-price {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #6d1331;
+}
+
+.qty-btn {
+    /* 1. Rendi il bottone visibile */
+    -fx-background-color: white;       /* Sfondo bianco */
+    -fx-border-color: #e2e8f0;         /* Bordo grigio chiaro per definire la "casella" */
+    -fx-border-width: 1;
+    -fx-border-radius: 4;              /* Angoli leggermente arrotondati */
+    -fx-background-radius: 4;
+
+    /* 2. Forza una dimensione quadrata (Fondamentale!) */
+    -fx-min-width: 30px;
+    -fx-max-width: 30px;
+    -fx-min-height: 30px;
+    -fx-max-height: 30px;
+    -fx-padding: 0;                    /* Rimuovi il padding interno di JavaFX */
+
+    /* 3. Stile del testo (+) */
+    -fx-alignment: center;             /* Centra perfettamente il "+" */
+    -fx-text-fill: #6d1331;            /* Colore Burgundy */
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-cursor: hand;
+}
+
+/* Effetto quando passi sopra col mouse */
+.qty-btn:hover {
+    -fx-background-color: #faf5f5;     /* Sfondo leggermente rosato */
+    -fx-border-color: #6d1331;         /* Il bordo diventa Burgundy */
+}
+
+/* Effetto quando clicchi */
+.qty-btn:pressed {
+    -fx-background-color: #6d1331;     /* Diventa tutto rosso */
+    -fx-text-fill: white;              /* Il "+" diventa bianco */
+}
+
+.qty-value {
+    /* 1. Rendi il testo visibile */
+    -fx-text-fill: #1a202c;        /* Colore scuro (quasi nero) */
+    -fx-font-size: 16px;           /* Stessa grandezza dei simboli +/- */
+    -fx-font-weight: bold;
+
+    /* 2. Dagli spazio fisso così non "balla" quando cambi cifra */
+    -fx-min-width: 30px;
+    -fx-alignment: center;         /* Centra il numero nel suo spazio */
+
+    /* Opzionale: se vuoi vedere i bordi della label per debug, togli il commento sotto */
+    /* -fx-background-color: #f0f0f0; */
+}
 
 
+/* Service Subtotal */
+.service-subtotal {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #059669;
+}
 
+/* Summary Box */
+.booking-summary-box {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #fafafa 0%, white 100%);
+    -fx-border-color: #f5e6d3;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+.summary-line {
+    -fx-border-color: #f5e6d3;
+    -fx-border-width: 0 0 1 0;
+}
+
+.summary-line-total {
+    -fx-border-color: #6d1331;
+    -fx-border-width: 3 0 0 0;
+}
+
+.summary-label {
+    -fx-text-fill: #666;
+    -fx-font-size: 14px;
+}
+
+.summary-value {
+    -fx-font-weight: 600;
+    -fx-text-fill: #333;
+    -fx-font-size: 14px;
+}
+
+.summary-value-total {
+    -fx-font-weight: bold;
+    -fx-text-fill: #6d1331;
+    -fx-font-size: 22px;
+}
+
+/* Notes Box */
+.booking-notes-box {
+    -fx-background-color: #fafafa;
+    -fx-border-color: #f5e6d3;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+.booking-notes-area {
+    -fx-background-color: white;
+    -fx-border-color: #f5e6d3;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-font-size: 13px;
+}
+
+.booking-notes-area:focused {
+    -fx-border-color: #6d1331;
+}
+
+/* Action Buttons */
+.booking-btn-back {
+    -fx-background-color: white;
+    -fx-text-fill: #666;
+    -fx-border-color: #ddd;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 14px 28px;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: 1px;
+    -fx-cursor: hand;
+}
+
+.booking-btn-back:hover {
+    -fx-border-color: #6d1331;
+    -fx-text-fill: #6d1331;
+}
+
+.booking-btn-delete {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #dc2626, #ef4444);
+    -fx-text-fill: white;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 14px 28px;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: 1px;
+    -fx-cursor: hand;
+}
+
+.booking-btn-delete:hover {
+    -fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.4), 20, 0, 0, 8);
+    -fx-translate-y: -2;
+}
+
+.booking-btn-save {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #6d1331, #8b1538);;
+    -fx-text-fill: white;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 14px 28px;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: 1px;
+    -fx-cursor: hand;
+}
+
+.booking-btn-save:hover {
+    -fx-effect: dropshadow(gaussian, rgba(109, 19, 49, 0.5), 25, 0, 0, 8);
+    -fx-translate-y: -2;
+}

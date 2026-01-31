@@ -14,7 +14,7 @@ import java.util.*;
 
 public class Planning extends VBox {
     // ===== CONFIGURAZIONE =====
-    private static final int DAYS_TO_SHOW = 8;
+    private static final int DAYS_TO_SHOW = 13;
     private static final DateTimeFormatter DAY_FORMATTER = DateTimeFormatter.ofPattern("EEE");
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MMM");
 
@@ -122,6 +122,8 @@ public class Planning extends VBox {
         datesScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         datesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         HBox.setHgrow(datesScrollPane, Priority.ALWAYS);
+        datesScrollPane.setFitToWidth(true);
+        datesScrollPane.setFitToHeight(true);
 
         calendarContainer.getChildren().addAll(roomsColumn, datesScrollPane);
 
@@ -384,7 +386,7 @@ public class Planning extends VBox {
             StackPane dayCell = createDayCell(room, date, dates);
 
             if (bookingInfo != null && bookingInfo.isStart && bookingInfo.span > 1) {
-                // ✅ IMPOSTA COLUMN SPAN per celle multiple
+                //  IMPOSTA COLUMN SPAN per celle multiple
                 GridPane.setColumnSpan(dayCell, bookingInfo.span);
 
                 // Marca le colonne successive come occupate

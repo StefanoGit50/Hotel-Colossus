@@ -55,7 +55,7 @@ public class MainApp3 extends Application {
     }
 
     /**
-     * ✅ STEP 1: Mostra schermata login
+     *  Mostra schermata login
      */
     private void showLoginScreen() {
         // CREA LoginView SOLO UNA VOLTA
@@ -64,13 +64,13 @@ public class MainApp3 extends Application {
 
             loginView.setLoginCallback((username, password) -> {
                 if (authenticateUser(username, password)) {
-                    System.out.println("✅ Login riuscito: " + username);
+                    System.out.println(" Login riuscito: " + username);
                     currentUsername = username;
                     currentRole = getRoleFromUsername(username);
                     loginView.clearFields();
                     showMainInterface();
                 } else {
-                    System.out.println("❌ Login fallito");
+                    System.out.println(" Login fallito");
                     loginView.clearFields();
                 }
             });
@@ -104,7 +104,7 @@ public class MainApp3 extends Application {
     }
 
     /**
-     * ✅ AUTENTICAZIONE (MOCK - sostituire con chiamata server)
+     *  AUTENTICAZIONE (MOCK - sostituire con chiamata server)
      */
     private boolean authenticateUser(String username, String password) {
         // TODO: Chiamata al server
@@ -114,7 +114,7 @@ public class MainApp3 extends Application {
     }
 
     /**
-     * ✅ Determina ruolo da username
+     *  Determina ruolo da username
      */
     private String getRoleFromUsername(String username) {
         return switch (username.toLowerCase()) {
@@ -176,7 +176,7 @@ public class MainApp3 extends Application {
         root.getStyleClass().add("root-container");
         root.setPadding(new Insets(8, 8, 8, 3));
 
-        // ✅ TopBar con username, role e callback logout
+        //  TopBar con username, role e callback logout
         topBar = new TopBar(currentUsername, currentRole, this::handleLogout);
 
         // Main Area (Sidebar + Content)

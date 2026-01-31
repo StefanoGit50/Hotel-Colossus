@@ -318,7 +318,7 @@ public class RoomManagementView extends VBox{
 
         ToggleGroup statusGroup = new ToggleGroup();
 
-        RadioButton availableRadio = new RadioButton("Libera");
+        RadioButton availableRadio = new RadioButton("In servizio");
         availableRadio.setToggleGroup(statusGroup);
         availableRadio.getStyleClass().add("room-status-radio");
         availableRadio.setSelected(currentStatus.equals("Disponibile"));
@@ -333,12 +333,8 @@ public class RoomManagementView extends VBox{
         outOfOrderRadio.getStyleClass().add("room-status-radio");
         outOfOrderRadio.setSelected(currentStatus.equals("Out of Order"));
 
-        RadioButton occupiedRadio = new RadioButton("Occupata");
-        occupiedRadio.setToggleGroup(statusGroup);
-        occupiedRadio.getStyleClass().add("room-status-radio");
-        occupiedRadio.setSelected(currentStatus.equals("Occupata"));
 
-        statusOptions.getChildren().addAll(availableRadio, cleaningRadio, outOfOrderRadio, occupiedRadio);
+        statusOptions.getChildren().addAll(availableRadio, cleaningRadio, outOfOrderRadio);
 
         section.getChildren().addAll(sectionTitle, statusOptions);
 
