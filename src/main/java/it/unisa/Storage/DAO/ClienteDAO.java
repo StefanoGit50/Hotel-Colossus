@@ -103,7 +103,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
             LocalDate date = null;
             Boolean isBlackListed = false;
             String nazionalità = null;
-            try(PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM hotelcolossus.cliente WHERE CF = ?")){
+            try(PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM cliente WHERE CF = ?")){
                 preparedStatement.setString(1,cf);
                 preparedStatement.executeQuery();
                 resultSet =  preparedStatement.getResultSet();
@@ -162,7 +162,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
 
         if(o != null && o.getCf() != null){
             Connection connection = ConnectionStorage.getConnection();
-            try(PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM hotelcolossus.cliente WHERE CF = ?")){
+            try(PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM cliente WHERE CF = ?")){
                 preparedStatement.setString(1,o.getCf());
 
                 if(preparedStatement.executeUpdate()==0)
@@ -182,7 +182,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
         con = ConnectionStorage.getConnection();
         ArrayList<Cliente> clientes = new ArrayList<>();
 
-        String sql =  "SELECT * FROM hotelcolossus.cliente ORDER BY ? ";
+        String sql =  "SELECT * FROM cliente ORDER BY ? ";
         if(order != null){
             if(order.equalsIgnoreCase("decrescente")){
                 sql += "DESC";
@@ -248,7 +248,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
         if(o != null && o.getCf() != null){
             con = ConnectionStorage.getConnection();
             try(PreparedStatement preparedStatement = con.prepareStatement(
-                    "UPDATE hotelcolossus.cliente SET nome = ?, cognome = ?, Cap = ?, comune = ?, " +
+                    "UPDATE cliente SET nome = ?, cognome = ?, Cap = ?, comune = ?, " +
                             "civico = ?, provincia = ?, via = ?, Email = ?, Sesso = ?, " +
                             "telefono = ?, Cittadinanza = ?, " +
                             "DataDiNascita = ?, IsBackListed = ? WHERE CF = ?")){
@@ -291,7 +291,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
 
         if(attribute != null && !attribute.isEmpty() && value != null){
             con= ConnectionStorage.getConnection();
-            selectSQL = "SELECT * FROM hotelcolossus.cliente WHERE " + attribute + " = ?";
+            selectSQL = "SELECT * FROM cliente WHERE " + attribute + " = ?";
             try{
                 preparedStatement = con.prepareStatement(selectSQL);
                 preparedStatement.setObject(1, value);
@@ -362,7 +362,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
         }
         // Il numero di AND della query è pari a count - 1
 
-        selectSQL += "SELECT * FROM hotelcolossus.cliente WHERE";
+        selectSQL += "SELECT * FROM cliente WHERE";
         // Il cliclo serve per inserire gli AND correttamente
         for (int i = 0, j = count; i < params.length; i++) {
             if (i == 0 && params[0]) { // Se la flag è vera allora il parametro è presente ed è usato come criterio per la query di ricerca

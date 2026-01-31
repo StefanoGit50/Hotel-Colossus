@@ -79,7 +79,7 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
     public synchronized void doSave(Camera o) throws SQLException {
         connection = ConnectionStorage.getConnection();
         try{
-            preparedStatement = connection.prepareStatement("INSERT INTO hotelcolossus.camera VALUES (?,?,?,?,?)");
+            preparedStatement = connection.prepareStatement("INSERT INTO camera VALUES (?,?,?,?,?)");
             preparedStatement.setInt(1,o.getNumeroCamera());
             preparedStatement.setInt(2,o.getCapacità());
             preparedStatement.setString(3,o.getNoteCamera());
@@ -101,7 +101,7 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
         if(!listCamera.isEmpty()){
             StringBuilder insertSQL = new StringBuilder();
             String values = " (?, ?, ?, ?, ?) ";
-            insertSQL.append("INSERT INTO hotelcolossus.camera VALUES ");
+            insertSQL.append("INSERT INTO camera VALUES ");
             int numCamere = listCamera.size(); // numCamere * 5 = numCampi ?
 
             // Crea la query con i
@@ -142,7 +142,7 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
     @Override
     public synchronized Collection<Camera> doRetriveAll(String order) throws SQLException{
         connection = ConnectionStorage.getConnection();
-        String sql = "SELECT * FROM hotelcolossus.camera ORDER BY ? ";
+        String sql = "SELECT * FROM camera ORDER BY ? ";
             if(order != null){
                 if(order.equalsIgnoreCase("decrescente")){
                     sql += "DESC";
@@ -204,7 +204,7 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
             connection = ConnectionStorage.getConnection();
             try{
                 preparedStatement = connection.prepareStatement(
-                        "UPDATE hotelcolossus.camera SET NumeroMaxOcc = ?, NoteCamera = ?, Stato = ?, " +
+                        "UPDATE camera SET NumeroMaxOcc = ?, NoteCamera = ?, Stato = ?, " +
                                 "Prezzo = ? WHERE NumeroCamera = ?");
                 preparedStatement.setInt(1, o.getCapacità());
                 preparedStatement.setString(2, o.getNoteCamera());
@@ -245,7 +245,7 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
 
         if(attribute != null && !attribute.isEmpty() && value != null){
             connection = ConnectionStorage.getConnection();
-            selectSQL = "SELECT * FROM hotelcolossus.camera WHERE " + attribute + " = ?";
+            selectSQL = "SELECT * FROM camera WHERE " + attribute + " = ?";
             try{
                 preparedStatement = connection.prepareStatement(selectSQL);
                 preparedStatement.setObject(1, value);

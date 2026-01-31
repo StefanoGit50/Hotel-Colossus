@@ -28,7 +28,7 @@ public class    ConnectionStorage{
         Connection newConnection;
         String ip = "localhost";
         String port = "3306";
-        String db = "hotelcolossus";
+        String db = "hotelcolossus2";
         String username = "root";
         String password = "_MySqlServer2024";  //_MySqlServer2024 E' mia --Giovanni
 

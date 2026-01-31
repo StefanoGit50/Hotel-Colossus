@@ -14,13 +14,13 @@ import java.util.NoSuchElementException;
 
 public class ServizioDAO implements FrontDeskStorage<Servizio>
 {
-    private static final String TABLE_NAME= "hot.Servizio2";
+    private static final String TABLE_NAME= "Servizio";
 
     @Override
     public synchronized void doSave(Servizio servizio) throws SQLException
     {
         Connection connection = ConnectionStorage.getConnection();
-        String query = "INSERT INTO hot.Servizio2(Nome, Prezzo, IDPrenotazione) VALUES (?, ?, ?) ";
+        String query = "INSERT INTO Servizio(Nome, Prezzo, IDPrenotazione) VALUES (?, ?, ?) ";
 
         try (PreparedStatement stmt = connection.prepareStatement(query))
         {
@@ -50,7 +50,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
     {
         if(servizio != null && servizio.getNome() != null){
             Connection connection = ConnectionStorage.getConnection();
-            String query = "DELETE FROM hotelcolossus.servizio WHERE Nome = ?";
+            String query = "DELETE FROM servizio WHERE Nome = ?";
 
             try (PreparedStatement stmt = connection.prepareStatement(query))
             {
@@ -71,7 +71,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
     {
         if(nome instanceof String){
             Connection connection = ConnectionStorage.getConnection();
-            String query = "SELECT * FROM hotelcolossus.servizio WHERE Nome = ?";
+            String query = "SELECT * FROM servizio WHERE Nome = ?";
 
             try (PreparedStatement stmt = connection.prepareStatement(query))
             {
@@ -101,7 +101,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
     public synchronized Collection<Servizio> doRetriveAll(String order) throws SQLException
     {
         Connection connection = ConnectionStorage.getConnection();
-        String query = "SELECT * FROM hotelcolossus.servizio ";
+        String query = "SELECT * FROM servizio ";
         if(order.equalsIgnoreCase("decrescente")){
             query += " ORDER BY Nome DESC " ;
         }else{
@@ -152,7 +152,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
         if(servizio != null)
         {
             Connection connection = ConnectionStorage.getConnection();
-            String query = "UPDATE hotelcolossus.servizio SET Prezzo = ? WHERE Nome = ?";
+            String query = "UPDATE servizio SET Prezzo = ? WHERE Nome = ?";
 
             try (PreparedStatement stmt = connection.prepareStatement(query))
             {

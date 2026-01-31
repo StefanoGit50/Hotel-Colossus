@@ -16,7 +16,7 @@ public class ServizioRicevutaDAO {
 
     public void doSave(Servizio o , int IDRicevutaFiscale , int quantinta) throws SQLException {
             Connection connection = ConnectionStorage.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO hotelcolossus.serviziricevuta values(?,?,?,?)");
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO serviziricevuta values(?,?,?,?)");
             preparedStatement.setInt(1,IDRicevutaFiscale);
             preparedStatement.setString(2,o.getNome());
             preparedStatement.setInt(3,quantinta);
