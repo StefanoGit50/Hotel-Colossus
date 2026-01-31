@@ -14,11 +14,10 @@ public final class DaoUtils {
      */
     public static boolean checkWhitelist(String[] whitelist, String suspect) {
         if(whitelist == null) return false;
-
         boolean flag = false;
 
-        for (String w : whitelist) {
-            if(suspect.trim().toLowerCase().equals(w.toLowerCase()+" asc") || suspect.trim().toLowerCase().equals(w.toLowerCase()+" desc")) {
+        for (String w : whitelist){
+            if(suspect.trim().equalsIgnoreCase(w + " asc") || suspect.equalsIgnoreCase(w + " desc")) {
                 flag = true;
                 break;
             }

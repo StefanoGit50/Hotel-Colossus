@@ -21,26 +21,29 @@ import java.util.ArrayList;
 public class Main {
     static void main(){
         CameraDAO cameraDAO = new CameraDAO();
-
+        CatalogoCamere catalogoCamere = new CatalogoCamere();
+        CatalogoPrenotazioni catalogoPrenotazioni = new CatalogoPrenotazioni();
+        CatalogoClienti catalogoClienti = new CatalogoClienti();
+        
         try{
-            ArrayList<Camera> cameras = CatalogoCamere.getListaCamere();
+            ArrayList<Camera> cameras = catalogoCamere.getListaCamere();
             ArrayList<Camera> cameras1 = new ArrayList<>();
             cameras1 = (ArrayList<Camera>) cameraDAO.doRetriveAll("decrescente");
-            CatalogoCamere.addCamere(cameras1);
+            catalogoCamere.addCamere(cameras1);
             System.out.println(cameras);
-            System.out.println(CatalogoCamere.getListaCamere());
+            System.out.println(catalogoCamere.getListaCamere());
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
         }
 
 
         try{
-            cameraDAO.doDelete(CatalogoCamere.getListaCamere().getFirst());
+            cameraDAO.doDelete(catalogoCamere.getListaCamere().getFirst());
             ArrayList<Camera> cameras = new ArrayList<>();
             cameras = (ArrayList<Camera>) cameraDAO.doRetriveAll("decrescente");
-            CatalogoCamere.addCamere(cameras);
+            catalogoCamere.addCamere(cameras);
             System.out.println(cameras);
-            System.out.println(CatalogoCamere.getListaCamere());
+            System.out.println(catalogoCamere.getListaCamere());
         }catch (SQLException sqlException){
             sqlException.printStackTrace();
         }
@@ -48,19 +51,19 @@ public class Main {
         ClienteDAO clienteDAO = new ClienteDAO();
         try{
             ArrayList<Cliente> clientes =(ArrayList<Cliente>) clienteDAO.doRetriveAll("decrescente");
-            CatalogoClienti.setListaClienti(clientes);
+            catalogoClienti.setListaClienti(clientes);
             System.out.println(clientes);
-            System.out.println(CatalogoClienti.getListaClienti());
+            System.out.println(catalogoClienti.getListaClienti());
         }catch (SQLException sqlException){
             sqlException.printStackTrace();
         }
 
         try{
-            clienteDAO.doDelete(CatalogoClienti.getListaClienti().getFirst());
+            clienteDAO.doDelete(catalogoClienti.getListaClienti().getFirst());
             ArrayList<Cliente> clientes = (ArrayList<Cliente>) clienteDAO.doRetriveAll("crescente");
-            CatalogoClienti.setListaClienti(clientes);
+            catalogoClienti.setListaClienti(clientes);
             System.out.println(clientes);
-            System.out.println(CatalogoClienti.getListaClienti());
+            System.out.println(catalogoClienti.getListaClienti());
         }catch (SQLException sqlException){
             sqlException.printStackTrace();
         }
@@ -84,22 +87,23 @@ public class Main {
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
         }
-        PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO();
+        PrenotazioneDAO prenotazioneDAO = null;
+        prenotazioneDAO = new PrenotazioneDAO();
         try{
             ArrayList<Prenotazione> prenotaziones = (ArrayList<Prenotazione>) prenotazioneDAO.doRetriveAll("IDPrenotazione");
-            CatalogoPrenotazioni.addPrenotazioni(prenotaziones);
+//            catalogoPrenotazioni.addPrenotazioni(prenotaziones);
             System.out.println(prenotaziones);
-            System.out.println(CatalogoPrenotazioni.getListaPrenotazioni());
+            System.out.println(catalogoPrenotazioni.getListaPrenotazioni());
         }catch (SQLException sqlException){
             sqlException.printStackTrace();
         }
 
         try{
-           prenotazioneDAO.doDelete(CatalogoPrenotazioni.getListaPrenotazioni().getFirst());
+           prenotazioneDAO.doDelete(catalogoPrenotazioni.getListaPrenotazioni().getFirst());
            ArrayList<Prenotazione> prenotaziones = (ArrayList<Prenotazione>) prenotazioneDAO.doRetriveAll("IDPrenotazione");
-           CatalogoPrenotazioni.addPrenotazioni(prenotaziones);
+//           catalogoPrenotazioni.addPrenotazioni(prenotaziones);
            System.out.println(prenotaziones);
-           System.out.println(CatalogoPrenotazioni.getListaPrenotazioni());
+           System.out.println(catalogoPrenotazioni.getListaPrenotazioni());
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
         }

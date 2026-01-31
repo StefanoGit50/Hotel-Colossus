@@ -1,0 +1,134 @@
+package WhiteBox.UnitTest;
+
+
+import it.unisa.Common.Servizio;
+import it.unisa.Storage.ConnectionStorage;
+import it.unisa.Storage.DAO.ServizioDAO;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.NoSuchElementException;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+public class ServizioDAOTesting{
+
+    private Servizio servizio;
+
+    private ServizioDAO servizioDAO;
+
+    @BeforeEach
+    public void setUP(){
+        servizioDAO = new ServizioDAO();
+        servizio = new Servizio("Piscina",30.0);
+    }
+
+    @DisplayName("doDelete(Servizio servizio) quando va tutto bene")
+    @Test
+    @Tag("True")
+    public void doDeleteAllTrue() throws SQLException{
+        assertDoesNotThrow(()->servizioDAO.doDelete(new Servizio("Lavanderia",15)));
+    }
+    @Test
+    @DisplayName("doDelete(Servizio servizio) quando o la chiave di servizio o servizio sono uguale a null")
+    @Tags({@Tag("Exception"),@Tag("Error")})
+     public void doDeleteException() throws SQLException {
+        assertThrows(SQLException.class,()->servizioDAO.doDelete(null));
+    }
+
+    @Test
+    @DisplayName("doRetriveByKey(Object nome) quando vado tutto a buon fine")
+    @Tag("True")
+    public void doRetriveByKeyAllTrue() throws SQLException {
+        Servizio servizio1 = servizioDAO.doRetriveByKey("Spa e Benessere");
+        Servizio servizio2 = new Servizio("Spa e Benessere",40);
+        assertEquals(servizio2,servizio1);
+    }
+    @DisplayName("doRetriveByKey(Object nome) quando resultSet.next() ritorno false")
+    @Tags({@Tag("Error"),@Tag("Exception"),@Tag("False")})
+    @Test
+    public void doRetriveByKeyResultSetIsFalse() throws SQLException{
+        assertThrows(NoSuchElementException.class,()->servizioDAO.doRetriveByKey("Spa"));
+    }
+
+    @DisplayName("doRetriByKey(Object nome) quando il nome non è una stringa")
+    @Tags({@Tag("Exception"),@Tag("Error")})
+    @Test
+    public void doRetriveByKeyNomeNonèUnaStringa(){
+        assertThrows(SQLException.class,()->servizioDAO.doRetriveByKey(servizio));
+    }
+
+    @Test
+    @Tag("True")
+    @DisplayName("doRetriveAll(String order) quando va tutto bene")
+    public void doRetriveAllAllTrue() throws SQLException {
+        ArrayList<Servizio> servizios = new ArrayList<>();
+        servizios.add(new Servizio("Spa e Benessere",40));
+        ArrayList<Servizio> servizios1 = (ArrayList<Servizio>) servizioDAO.doRetriveAll("decrescente");
+        assertEquals(servizios,servizios1);
+    }
+
+    @Tag("False")
+    @Test
+    @DisplayName("doRetriveAll(String order) quando resultSet.next() restituisce uguale a false")
+    public void doRetriveAllResultSetIsFalse() throws SQLException{
+        assertEquals(new ArrayList<Servizio>(),servizioDAO.doRetriveAll("decrescente"));
+    }
+
+    @Tag("True")
+    @Test
+    @DisplayName("doRetriveAll(String order) quando va tutto bene pero è crescente")
+    public void doRetriveAllCrescente() throws SQLException{
+        ArrayList<Servizio> servizios = new ArrayList<>();
+
+        servizios.add(new Servizio("Lavanderia",15.0));
+        servizios.add(new Servizio("Spa e Benessere",40));
+        ArrayList<Servizio> servizios1 = (ArrayList<Servizio>) servizioDAO.doRetriveAll("crescente");
+        assertEquals(servizios,servizios1);
+    }
+
+    @Tag("True")
+    @DisplayName("doUpdate(Servizio servizio) quando va tutto bene")
+    @Test
+    public void doUpdateAllTrue() throws SQLException {
+
+    }
+
+    @Tags({@Tag("Exception"),@Tag("Error")})
+    @Test
+    @DisplayName("doUpdate(Servizio servizio) quando servizio è uguale a null")
+    public void doUpdatException(){
+        assertThrows(SQLException.class,()->servizioDAO.doUpdate(null));
+    }
+
+    @Tag("True")
+    @Test
+    @DisplayName("doRetriveByAttribute(String attribute , Object value) quando va tutto bene ")
+    public void doRetriveByAttributeAllTrue() throws SQLException {
+        ArrayList<Servizio> servizios = (ArrayList<Servizio>) servizioDAO.doRetriveByAttribute("Nome","Lavanderia");
+        ArrayList<Servizio> servizios1 = new ArrayList<>();
+        servizios1.add(new Servizio("Lavanderia",15));
+        assertEquals(servizios,servizios1);
+    }
+
+    @Tags({@Tag("Exception"),@Tag("Error"),@Tag("False")})
+    @Test
+    @DisplayName("doRetriveByAttribute() quando resultSet.next() ritorna false")
+    public void doRetriveByAttributeResultSetIsFalse() throws SQLException {
+       assertThrows(NoSuchElementException.class,()->servizioDAO.doRetriveByAttribute("Nome","Piscina"));
+    }
+    @Test
+    @DisplayName("doRetriveByAttribute() quando da un Eccezione ")
+    @Tags({@Tag("Error"),@Tag("Exception")})
+    public void doRetriveByAttributeException(){
+        assertThrows(RuntimeException.class,()->servizioDAO.doRetriveByAttribute(null,null));
+    }
+}

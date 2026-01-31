@@ -2,6 +2,7 @@ package it.unisa.Common;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -14,7 +15,7 @@ public class RicevutaFiscale implements Serializable, Cloneable {
     private int IDRicevutaFiscale;
 
     /** Identificativo della prenotazione a cui la ricevuta fa riferimento. */
-    Prenotazione IDPrenotazione;
+    private Prenotazione prenotazione;
 
     /** Importo complessivo della ricevuta (somma delle voci). */
     private double Totale;
@@ -22,18 +23,42 @@ public class RicevutaFiscale implements Serializable, Cloneable {
     /** Data in cui il documento fiscale è stato emesso. */
     private LocalDate dataEmissione;
 
+    /** Metodo di pagamento scelto dal Cliente */
+    private String metodoPagamento;
+
+    /** Data della Prenotazione */
+    private LocalDate dataPrenotazione;
+
+    /** Prezzo del trattamento*/
+    private double prezzoTrattamento;
+
+    /** la tipologia del trattamento*/
+    private String tipoTrattamento;
+    /** la lista delle camere */
+    private ArrayList<Camera> cameras;
+    /** la lista dei clienti */
+    private ArrayList<Cliente> clientes;
+    /** la lista dei servizi */
+    private ArrayList<Servizio> servizios;
     /**
      * Inizializza una nuova ricevuta con i dati identificativi e il totale.
      * @param IDRicevutaFiscale l'identificativo univoco della ricevuta.
-     * @param IDPrenotazione l'identificativo della prenotazione associata.
+     * @param prenotazione l'identificativo della prenotazione associata.
      * @param totale l'importo complessivo del documento.
      * @param dataEmissione la data di emissione della ricevuta.
+     * @param metodoPagamento il metodo di pagamento
+     *
+     *
      */
-    public RicevutaFiscale(int IDRicevutaFiscale, Prenotazione IDPrenotazione, double totale, LocalDate dataEmissione) {
+    public RicevutaFiscale(int IDRicevutaFiscale, Prenotazione prenotazione, double totale, LocalDate dataEmissione ,String metodoPagamento,LocalDate dataPrenotazione ,double prezzoTrattamento , String tipoTrattamento){
         this.IDRicevutaFiscale = IDRicevutaFiscale;
-        this.IDPrenotazione = IDPrenotazione;
+        this.prenotazione = prenotazione;
         this.Totale = totale;
         this.dataEmissione = dataEmissione;
+        this.metodoPagamento = metodoPagamento;
+        this.dataPrenotazione = dataPrenotazione;
+        this.prezzoTrattamento = prezzoTrattamento;
+        this.tipoTrattamento = tipoTrattamento;
     }
 
     /**
@@ -86,15 +111,134 @@ public class RicevutaFiscale implements Serializable, Cloneable {
     /**
      * @return l'id univoco della prenotazione.
      */
-    public int getIDPrenotazione() {
-        return IDPrenotazione.getIDPrenotazione();
+    public Prenotazione getPrenotazione() {
+        return prenotazione;
     }
 
     /**
-     * @param IDPrenotazione l'id univoco della prenotazione.
+     * @param prenotazione l'id univoco della prenotazione.
      */
-    public void setIDPrenotazione(int IDPrenotazione) {
-        this.IDPrenotazione.setIDPrenotazione(IDPrenotazione);
+    public void setPrenotazione(Prenotazione prenotazione) {
+        this.prenotazione = prenotazione;
+    }
+    /**
+     * @return metodoPagamento ritorna il metodo di pagamento scelto dal Cliente
+     */
+    public String getMetodoPagamento() {
+        return metodoPagamento;
+    }
+    /**
+     * @param metodoPagamento è il metodo di pagamento scelto dal cliente
+     * */
+    public void setMetodoPagamento(String metodoPagamento) {
+        this.metodoPagamento = metodoPagamento;
+    }
+    /**
+     * @return datPrenotazione restituisce il la data della prenotazione
+     * */
+
+    public LocalDate getDataPrenotazione() {
+        return dataPrenotazione;
+    }
+    /**
+     * @param dataPrenotazione la data della prenotazione
+     * */
+    public void setDataPrenotazione(LocalDate dataPrenotazione) {
+        this.dataPrenotazione = dataPrenotazione;
+    }
+    /**
+     * @return prezzoTrattamento il prezzo del trattamento
+     * */
+    public double getPrezzoTrattamento() {
+        return prezzoTrattamento;
+    }
+
+    /**
+     * @param prezzoTrattamento il prezzo del trattamento
+     * */
+
+    public void setPrezzoTrattamento(double prezzoTrattamento) {
+        this.prezzoTrattamento = prezzoTrattamento;
+    }
+    /**
+     * @return tipoTrattamento il tipo di trattamento
+     * */
+    public String getTipoTrattamento() {
+        return tipoTrattamento;
+    }
+
+    /**
+     * @param tipoTrattamento il tipo di trattamento
+     * */
+
+    public void setTipoTrattamento(String tipoTrattamento) {
+        this.tipoTrattamento = tipoTrattamento;
+    }
+
+    public void setServizios(ArrayList<Servizio> servizios){
+        for(Servizio servizio: servizios){
+            try{
+                this.servizios.add(servizio.clone());
+            }catch (CloneNotSupportedException cloneNotSupportedException){
+                throw new RuntimeException();
+            }
+        }
+    }
+
+    public void setCameras(ArrayList<Camera> cameras) {
+        for(Camera camera: cameras){
+            try{
+                this.cameras.add(camera.clone());
+            }catch (CloneNotSupportedException cloneNotSupportedException){
+                throw new RuntimeException();
+            }
+        }
+    }
+
+    public void setClientes(ArrayList<Cliente> clientes){
+        for (Cliente cliente: clientes){
+            try{
+                this.clientes.add(cliente.clone());
+            }catch (CloneNotSupportedException cloneNotSupportedException) {
+                throw new RuntimeException(cloneNotSupportedException);
+            }
+        }
+    }
+
+    public ArrayList<Cliente> getClientes(){
+        ArrayList<Cliente> clientes1 = new ArrayList<>();
+        for(Cliente cliente: clientes){
+            try{
+                clientes1.add(cliente.clone());
+            }catch (CloneNotSupportedException cloneNotSupportedException){
+                throw new RuntimeException();
+            }
+        }
+        return clientes1;
+    }
+
+    public ArrayList<Camera> getCameras(){
+        ArrayList<Camera> cameras1 = new ArrayList<>();
+        for(Camera camera: cameras){
+            try{
+                cameras1.add(camera.clone());
+            }catch (CloneNotSupportedException cloneNotSupportedException){
+                throw new RuntimeException();
+            }
+        }
+        return cameras1;
+    }
+
+    public ArrayList<Servizio> getServizi(){
+        ArrayList<Servizio> servizios1 = new ArrayList<>();
+        for(Servizio servizio: servizios){
+            try{
+                servizios1.add(servizio.clone());
+            }catch (CloneNotSupportedException cloneNotSupportedException){
+                throw new RuntimeException();
+            }
+        }
+        return servizios1;
     }
 
     /**
@@ -116,7 +260,7 @@ public class RicevutaFiscale implements Serializable, Cloneable {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         RicevutaFiscale that = (RicevutaFiscale) o;
-        return IDRicevutaFiscale == that.IDRicevutaFiscale && IDPrenotazione == that.IDPrenotazione &&
+        return IDRicevutaFiscale == that.IDRicevutaFiscale && prenotazione.equals(that.prenotazione) &&
                 Double.compare(Totale, that.Totale) == 0 && Objects.equals(dataEmissione, that.dataEmissione);
     }
 
@@ -127,7 +271,7 @@ public class RicevutaFiscale implements Serializable, Cloneable {
     public String toString() {
         return "RicevutaFiscale{" +
                 "IDRicevutaFiscale=" + IDRicevutaFiscale +
-                ", IDPrenotazione=" + IDPrenotazione +
+                ", prenotazione=" + prenotazione +
                 ", Totale=" + Totale +
                 ", dataEmissione=" + dataEmissione +
                 '}';

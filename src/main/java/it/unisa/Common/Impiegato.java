@@ -11,7 +11,7 @@ import java.util.Objects;
  * Rappresenta un Impiegato dell'hotel, che eredita le funzionalità di {@code Utente}.
  * Contiene i dati anagrafici, i dettagli lavorativi e le informazioni di contatto dell'impiegato.
  */
-public class Impiegato extends Utente implements Cloneable, Serializable {
+public class Impiegato implements Cloneable, Serializable {
 
     public void setUsername(String username) {
         this.username = username;
@@ -53,6 +53,14 @@ public class Impiegato extends Utente implements Cloneable, Serializable {
      * Nome dell'impiegato.
      */
     private String nome;
+
+    private String userName;
+
+    private String hashPassword;
+
+    private boolean isTempurali;
+
+    private Instant dataScadenzaToken;
 
     /**
      * Cognome dell'impiegato.
@@ -170,11 +178,12 @@ public class Impiegato extends Utente implements Cloneable, Serializable {
      * @param cittadinanza Cittadinanza.
      * @param dataScadenza Data di scadenza del documento
      */
-    public Impiegato(String username, String hashedPassword, String nome, String cognome, String sesso, String tipoDocumento,
+    public Impiegato(String username, String hashedPassword,boolean isTempurali,Instant dataScadenzaToken, String nome, String cognome, String sesso, String tipoDocumento,
                      String numeroDocumento, int CAP, String via, String provincia, String comune, int numeroCivico,
                      String codiceFiscale, String telefono, Ruolo ruolo, double stipendio, LocalDate dataAssunzione,
                      LocalDate dataRilascio, String emailAziendale, String cittadinanza , LocalDate dataScadenza) {
-        super(username, hashedPassword);
+        this.userName = username;
+        this.hashPassword = hashedPassword;
         this.nome = nome;
         this.cognome = cognome;
         this.sesso = sesso;
@@ -194,10 +203,13 @@ public class Impiegato extends Utente implements Cloneable, Serializable {
         this.emailAziendale = emailAziendale;
         this.cittadinanza = cittadinanza;
         this.dataScadenza = dataScadenza;
+        this.isTempurali = isTempurali;
+        this.dataScadenzaToken = dataScadenzaToken;
     }
 
     public Impiegato(){
-
+        this.userName = "";
+        this.hashPassword = "";
         this.nome = "";
         this.cognome = "";
         this.sesso = "";
@@ -220,6 +232,22 @@ public class Impiegato extends Utente implements Cloneable, Serializable {
     }
 
     // --- Getter e Setter ---
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getHashPassword() {
+        return hashPassword;
+    }
+
+    public void setHashPassword(String hashPassword) {
+        this.hashPassword = hashPassword;
+    }
 
     public String getNome() {
         return nome;
@@ -372,6 +400,22 @@ public class Impiegato extends Utente implements Cloneable, Serializable {
         this.dataScadenza = localDate;
     }
 
+    public boolean isTempurali() {
+        return isTempurali;
+    }
+
+    public void setTempurali(boolean tempurali) {
+        isTempurali = tempurali;
+    }
+
+    public Instant getDataScadenzaToken() {
+        return dataScadenzaToken;
+    }
+
+    public void setDataScadenzaToken(Instant dataScadenzaToken) {
+        this.dataScadenzaToken = dataScadenzaToken;
+    }
+
     // --- Metodi Standard di Object ---
 
 
@@ -379,6 +423,10 @@ public class Impiegato extends Utente implements Cloneable, Serializable {
     public String toString() {
         return "Impiegato{" +
                 "nome='" + nome + '\'' +
+                ", userName='" + userName + '\'' +
+                ", hashPassword='" + hashPassword + '\'' +
+                ", isTempurali=" + isTempurali +
+                ", dataScadenzaToken=" + dataScadenzaToken +
                 ", cognome='" + cognome + '\'' +
                 ", sesso='" + sesso + '\'' +
                 ", tipoDocumento='" + tipoDocumento + '\'' +
@@ -405,17 +453,17 @@ public class Impiegato extends Utente implements Cloneable, Serializable {
      * Il confronto è basato sull'uguaglianza della superclasse {@code Utente}
      * e di tutti gli attributi specifici dell'impiegato.
      *
-     * @param obj L'oggetto da confrontare.
+     * @param o L'oggetto da confrontare.
      * @return {@code true} se i due oggetti Impiegato sono uguali, {@code false} altrimenti.
      */
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        if (!super.equals(obj)) return false; // Confronta gli attributi di Utente
-        Impiegato impiegato = (Impiegato) obj;
-        return Double.compare(stipendio, impiegato.stipendio) == 0 && Objects.equals(nome, impiegato.nome) && Objects.equals(cognome, impiegato.cognome) && Objects.equals(sesso, impiegato.sesso) && Objects.equals(tipoDocumento, impiegato.tipoDocumento) && Objects.equals(numeroDocumento, impiegato.numeroDocumento) && Objects.equals(CAP, impiegato.CAP) && Objects.equals(via, impiegato.via) && Objects.equals(provincia, impiegato.provincia) && Objects.equals(comune, impiegato.comune) && Objects.equals(numeroCivico, impiegato.numeroCivico) && Objects.equals(codiceFiscale, impiegato.codiceFiscale) && Objects.equals(telefono, impiegato.telefono) && Objects.equals(ruolo, impiegato.ruolo) && Objects.equals(dataAssunzione, impiegato.dataAssunzione) && Objects.equals(dataRilascio, impiegato.dataRilascio) && Objects.equals(emailAziendale, impiegato.emailAziendale) && Objects.equals(cittadinanza, impiegato.cittadinanza) && Objects.equals(dataScadenza , impiegato.dataScadenza);
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Impiegato impiegato = (Impiegato) o;
+        return CAP == impiegato.CAP && numeroCivico == impiegato.numeroCivico && Double.compare(stipendio, impiegato.stipendio) == 0 && Objects.equals(nome, impiegato.nome) && Objects.equals(cognome, impiegato.cognome) && Objects.equals(sesso, impiegato.sesso) && Objects.equals(tipoDocumento, impiegato.tipoDocumento) && Objects.equals(numeroDocumento, impiegato.numeroDocumento) && Objects.equals(via, impiegato.via) && Objects.equals(provincia, impiegato.provincia) && Objects.equals(comune, impiegato.comune) && Objects.equals(codiceFiscale, impiegato.codiceFiscale) && Objects.equals(telefono, impiegato.telefono) && ruolo == impiegato.ruolo && Objects.equals(dataAssunzione, impiegato.dataAssunzione) && Objects.equals(dataScadenza, impiegato.dataScadenza) && Objects.equals(dataRilascio, impiegato.dataRilascio) && Objects.equals(emailAziendale, impiegato.emailAziendale) && Objects.equals(cittadinanza, impiegato.cittadinanza);
     }
+
 
     /**
      * Crea e restituisce una copia dell'oggetto (clone).

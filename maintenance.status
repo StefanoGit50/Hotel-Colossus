@@ -1,0 +1,98 @@
+# ==============================================================================
+# Hotel Colossus - Maintenance Status File
+# ==============================================================================
+# Questo file contiene tutte le informazioni sulla manutenzione programmata
+# I client e i servizi possono leggere questo file per conoscere lo stato
+# ==============================================================================
+
+# === INFORMAZIONI GENERALI ===
+maintenance.active=true
+maintenance.mode=SCHEDULED_SHUTDOWN
+maintenance.version=1.0
+maintenance.protocol=GRACEFUL_SHUTDOWN
+
+# === TIMING ===
+maintenance.scheduled.minutes=2
+maintenance.scheduled.seconds=120
+maintenance.started.timestamp=1769365366
+maintenance.started.datetime=2026-01-25 19:22:46
+maintenance.shutdown.timestamp=1769365486
+maintenance.shutdown.datetime=2026-01-25 19:24:46
+maintenance.timezone=CET
+maintenance.timezone.offset=+0100
+
+# === STATO CORRENTE ===
+maintenance.current.status=COMPLETED
+maintenance.current.phase=CLEANUP
+maintenance.remaining.seconds=1
+maintenance.remaining.minutes=0
+maintenance.elapsed.seconds=119
+maintenance.elapsed.minutes=1
+maintenance.progress.percentage=99
+
+# === MOTIVO E DESCRIZIONE ===
+maintenance.reason=Manutenzione programmata del sistema
+maintenance.description=Shutdown programmato per aggiornamento e manutenzione ordinaria
+maintenance.priority=HIGH
+maintenance.type=PLANNED
+maintenance.category=SYSTEM_UPDATE
+
+# === IMPATTO ===
+maintenance.impact.level=FULL_SYSTEM
+maintenance.impact.services=ALL
+maintenance.impact.users=ALL_DISCONNECTED
+maintenance.downtime.expected=2 minutes
+maintenance.recovery.estimated=30 minutes
+
+# === NOTIFICHE ===
+maintenance.notifications.enabled=true
+maintenance.notifications.channels=FILE,LOG,CONSOLE
+maintenance.notifications.frequency=PROGRESSIVE
+maintenance.notifications.last.sent=1769365478
+maintenance.notifications.count=3
+
+# === SERVIZI INTERESSATI ===
+maintenance.affected.service.frontdesk=true
+maintenance.affected.service.governante=true
+maintenance.affected.service.manager=true
+maintenance.affected.service.rmi_registry=true
+maintenance.affected.service.database=false
+
+# === AZIONI PROGRAMMATE ===
+maintenance.actions.backup=ENABLED
+maintenance.actions.graceful_shutdown=ENABLED
+maintenance.actions.client_notification=ENABLED
+maintenance.actions.data_sync=ENABLED
+maintenance.actions.log_rotation=ENABLED
+
+# === BACKUP ===
+maintenance.backup.enabled=true
+maintenance.backup.location=backups/
+maintenance.backup.timestamp=20260125_192448
+maintenance.backup.includes=logs,config,data
+maintenance.backup.format=tar.gz
+maintenance.backup.compression=gzip
+
+# === SISTEMA ===
+maintenance.system.hostname=Samuele
+maintenance.system.user=samuele
+maintenance.system.os=Linux
+maintenance.system.kernel=6.18.1-arch1-2
+maintenance.system.arch=x86_64
+maintenance.system.pid=34764
+maintenance.system.ppid=34711
+maintenance.system.shell=/usr/bin/bash
+
+# === MESSAGGI PER UTENTI ===
+maintenance.message.it=Sistema in manutenzione programmata. Shutdown tra 2 minuti.
+maintenance.message.en=System under scheduled maintenance. Shutdown in 2 minutes.
+maintenance.message.display=ATTENZIONE: Manutenzione in corso - Salva il tuo lavoro
+
+# === CHECKPOINT ===
+maintenance.checkpoint.backup=COMPLETED
+maintenance.checkpoint.shutdown=COMPLETED
+maintenance.checkpoint.cleanup=COMPLETED
+
+# ==============================================================================
+# Fine del file di stato - Ultimo aggiornamento: Sun Jan 25 19:22:46 CET 2026
+# ==============================================================================

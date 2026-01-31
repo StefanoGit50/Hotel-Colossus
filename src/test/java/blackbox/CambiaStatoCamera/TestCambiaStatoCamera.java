@@ -1,0 +1,133 @@
+package blackbox.CambiaStatoCamera;
+
+import it.unisa.Common.Camera;
+import it.unisa.Server.persistent.util.Stato;
+import it.unisa.interfacce.GovernanteInterface;
+import org.junit.jupiter.api.*;
+
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.util.List;
+
+//TODO  -->  runnare DB1.sql e insertDB.sql
+
+@DisplayName("TESTING: cambia stato camere")
+@Tag("cambiaStatoCamera")
+public class TestCambiaStatoCamera {
+
+    private static GovernanteInterface governante;
+
+    /**
+     * Restituisce il primo oggetto camera il cui stato è uguale al
+     * parametro esplicito passato
+     * @param stato uno stato
+     * @return la prima camera con lo stato cercato, {@code null} altrimenti
+     */
+    public Camera getCameraByStato(Stato stato) throws RemoteException{
+        List<Camera> camere = governante.getListCamere();
+        for (Camera c : camere){
+            if (c.getStatoCamera().equals(stato)){
+                return c;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Restituisce l'oggetto camera il cui ID è uguale al
+     * parametro esplicito.
+     * @param idCamera chiave primaria.
+     * @return la prima camera con l'id cercato, {@code null} altrimenti
+     */
+    public Camera getCameraById(int idCamera) throws RemoteException{
+        List<Camera> camere = governante.getListCamere();
+        for (Camera c : camere){
+            if (c.getNumeroCamera() == idCamera){
+                return c;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Esegue i casi di test di successo.
+     * @param daCambiare lo stato iniziale della camera, quello da cambiare.
+     * @param cambiato lo stato della camera dopo il cambio.
+     * @throws RemoteException per le invocazioni dei metodi di governante.
+     */
+    public void executeTest(Stato daCambiare, Stato cambiato) throws RemoteException {
+        Camera camera = getCameraByStato(daCambiare), prova = null;
+        Assertions.assertNotNull(camera);
+        Assertions.assertEquals(daCambiare, camera.getStatoCamera());
+
+        camera.setStatoCamera(cambiato);
+        governante.aggiornaStatoCamera(camera);
+        prova = getCameraById(camera.getNumeroCamera());
+        Assertions.assertNotNull(prova);
+
+        Assertions.assertEquals(cambiato, prova.getStatoCamera());
+    }
+
+    @BeforeAll
+    public static void istantiateGovernante() throws RemoteException, NotBoundException, MalformedURLException {
+        governante = (GovernanteInterface) Naming.lookup("rmi://localhost/GestoreCamere");
+    }
+
+    @Nested
+    @DisplayName("TESTING: CambiaStatoCamere")
+    @Tag("success")
+    class TestPassCambiaStatoCamera {
+
+        @Test
+        @DisplayName("TC1: [success] Out Of Order -> In pulizia")
+        public void testCase1() throws RemoteException {
+            executeTest(Stato.OutOfOrder, Stato.InPulizia);
+        }
+
+        @Test
+        @DisplayName("TC2: [success] Out Of Order -> In servizio")
+        public void testCase2() throws RemoteException {
+            executeTest(Stato.OutOfOrder, Stato.InServizio);
+        }
+
+        @Test
+        @DisplayName("TC3: [success] In pulizia -> Out of order")
+        public void testCase3() throws RemoteException {
+            executeTest(Stato.InPulizia, Stato.OutOfOrder);
+        }
+
+        @Test
+        @DisplayName("TC4: [success] In pulizia -> In servizio")
+        public void testCase4() throws RemoteException {
+            executeTest(Stato.InPulizia, Stato.InServizio);
+        }
+
+        @Test
+        @DisplayName("TC5: [success] In servizio -> Out of Order")
+        public void testCase5() throws RemoteException {
+            executeTest(Stato.InServizio, Stato.OutOfOrder);
+        }
+
+        @Test
+        @DisplayName("TC6: [success] In servizio -> In pulizia")
+        public void testCase6() throws RemoteException {
+            executeTest(Stato.InServizio, Stato.InPulizia);
+        }
+    }
+
+    /* ***************************** CASI DI ERRORE **************************** */
+
+    @Nested
+    @DisplayName("TESTING: CambiaStatoCamera - [error]")
+    @Tag("error")
+    class TestFailCambioStatoCamera {
+
+        @Test
+        @DisplayName("TF7: [error] Database offline - Lo stato non deve cambiare")
+        public void testCaseTF7() throws RemoteException {
+            Assertions.assertThrows(RemoteException.class, () -> governante.getListCamere());
+        }
+    }
+}

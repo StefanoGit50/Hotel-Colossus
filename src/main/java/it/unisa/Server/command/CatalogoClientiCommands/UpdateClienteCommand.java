@@ -56,7 +56,8 @@ public class UpdateClienteCommand implements Command {
     public void execute() {
         try {
             Cliente c = catalogue.getCliente(cliente.getCf());
-            ArrayList<Cliente> lc = CatalogoClienti.getListaClienti(), lcb = CatalogoClienti.getListaClientiBannati();
+            CatalogoClienti catalogoClienti = new CatalogoClienti();
+            ArrayList<Cliente> lc = catalogoClienti.getListaClienti(), lcb = catalogoClienti.getListaClientiBannati();
 
             // Ricerca in entrambe le liste (clienti bannati e non)
             Iterator<Cliente> it = lc.iterator(); // Evita di modificare l'array metre lo si itera
@@ -98,7 +99,8 @@ public class UpdateClienteCommand implements Command {
     public void undo() {
         try {
             Cliente c = catalogue.getCliente(cliente.getCf());
-            ArrayList<Cliente> lc = CatalogoClienti.getListaClienti(), lcb = CatalogoClienti.getListaClientiBannati();
+            CatalogoClienti catalogoClienti = new CatalogoClienti();
+            ArrayList<Cliente> lc = catalogoClienti.getListaClienti(), lcb = catalogoClienti.getListaClientiBannati();
 
             // Ricerca in entrambe le liste (clienti bannati e non)
             Iterator<Cliente> it = lc.iterator(); // Evita di modificare l'array metre lo si itera

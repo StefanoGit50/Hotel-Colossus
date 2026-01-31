@@ -31,7 +31,7 @@ public class Camera implements Cloneable, Serializable {
     /**
      * Numero massimo di clienti che possono soggiornare nella camera.
      */
-    private int numeroMaxOccupanti;
+    private Integer numeroMaxOccupanti;
 
     /**
      * Le note della camera (ad esempio check-in ore 14 , il cliente è celiaco , ecc.)
@@ -58,7 +58,13 @@ public class Camera implements Cloneable, Serializable {
     /**
      * Costruttore per creare una nuova istanza di {@code Camera} senza parametri.
      */
-    public Camera(){}
+    public Camera(){
+        this.numeroCamera = 0;
+        this.numeroMaxOccupanti = 0;
+        this.statoCamera = Stato.Libera;
+        this.noteCamera = "";
+        this.prezzoCamera = 0;
+    }
 
     /**
      * Costruttore per creare una nuova istanza di {@code Camera} con il solo parametro del numero camera.

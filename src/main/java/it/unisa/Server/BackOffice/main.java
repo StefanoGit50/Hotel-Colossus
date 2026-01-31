@@ -46,8 +46,7 @@ public class main {
                 "3233452",
                 "m",
                 LocalDate.of(2022, 1, 6),
-                "SDFGANNSOLF","Libero@asfnai",
-                "Carta");
+                "SDFGANNSOLF","Libero@asfnai","Italiana");
         clist.add(cliente);
 
         Prenotazione p1 = new Prenotazione(1,
@@ -60,7 +59,7 @@ public class main {
                 LocalDate.of(2030, 5, 20),
                 cliente.getNome()+" "+cliente.getCognome(),
                 "renato ti massaggiA",
-                c,listaServizi,clist,34569);
+                c,listaServizi,clist,"Ca345F69");
         p1.setStatoPrenotazione(false);
 
         CatalogoPrenotazioni catalogoPrenotazioni = new CatalogoPrenotazioni();
@@ -69,9 +68,9 @@ public class main {
 
         ContoEconomicoComposite prenotazioni = new ContoEconomicoComposite("PRENOTAZIONI");
 
-        CatalogoPrenotazioni.getListaPrenotazioni().add(p1);
+        catalogoPrenotazioni.getListaPrenotazioni().add(p1);
         //mostra solo le prenotazioni completate
-         for(Prenotazione p : CatalogoPrenotazioni.getListaPrenotazioni()){
+         for(Prenotazione p : catalogoPrenotazioni.getListaPrenotazioni()){
              if(!p.getStatoPrenotazione()){
                 ContoEconomicoComposite prenotazioneComposite = new ContoEconomicoComposite("PRENOTAZIONE"+p.getIDPrenotazione()+" "+p.getIntestatario());
 
@@ -106,6 +105,7 @@ public class main {
 
 // PASSIVITA
         List<Impiegato> listaImpiegati = new ArrayList<>();
+       /*
         listaImpiegati.add(new Impiegato(
                 "mrossi", "hashedPassword123", "Mario", "Rossi", "M", "Carta d'identità", "AB13334", 83734, "ViaRoma",
                 "NA", "Napoli", 10, "RSSMRA80A01H501X", "3331234567", Ruolo.FrontDesk, 4000,
@@ -114,8 +114,8 @@ public class main {
                 "mario.rossi@hotel.it",              // emailAziendale
                 "Italiana",                           // cittadinanza
                 LocalDate.of(2021, 3, 15)            // dataScadenza documento
-        ));
-
+        ));*/
+    /*
         listaImpiegati.add(new Impiegato(
                 "lbianchi",
                 "hashedPassword456",
@@ -139,7 +139,7 @@ public class main {
                 "Italiana",                          // cittadinanza
                 LocalDate.of(2033, 3, 15)           // dataScadenza documento
         ));
-
+    */
 // creo il composite stipendi
         ContoEconomicoComposite stipendi = creaNodoeFoglie(
                 "Stipendi Personale",

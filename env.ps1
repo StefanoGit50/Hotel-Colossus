@@ -1,4 +1,4 @@
-﻿#==============================================================================
+#==============================================================================
 # Environment Configuration - Hotel Colossus (Windows)
 #==============================================================================
 
@@ -11,6 +11,7 @@ $RMI_PORT = 1099
 $RMI_HOST = "localhost"
 
 # Directory
+
 $LOGS_DIR = Join-Path $PROJECT_ROOT "logs"
 $PID_DIR = Join-Path $PROJECT_ROOT "pids"
 $CONFIG_DIR = Join-Path $PROJECT_ROOT "config"
@@ -32,8 +33,8 @@ if (Test-Path (Join-Path $PROJECT_ROOT "target\classes")) {
     $CLASSPATH = Join-Path $PROJECT_ROOT "target\classes"
 }
 
-# Opzioni JVM - FORZA IPv4 per RMI
-$JAVA_OPTS = "-Djava.rmi.server.hostname=127.0.0.1 -Djava.net.preferIPv4Stack=true -Xmx512m -Xms256m"
+# Opzioni JVM
+$JAVA_OPTS = "-Djava.rmi.server.hostname=$RMI_HOST -Xmx512m -Xms256m"
 
 # Carica configurazione da rmi.properties se esiste
 $propsFile = Join-Path $CONFIG_DIR "rmi.properties"
@@ -58,6 +59,8 @@ if (Test-Path $propsFile) {
 $global:PROJECT_ROOT = $PROJECT_ROOT
 $global:RMI_PORT = $RMI_PORT
 $global:RMI_HOST = $RMI_HOST
+$global:BUILD_DIR = $BUILD_DIR
+$global:LIB_DIR = $LIB_DIR
 $global:LOGS_DIR = $LOGS_DIR
 $global:PID_DIR = $PID_DIR
 $global:CONFIG_DIR = $CONFIG_DIR

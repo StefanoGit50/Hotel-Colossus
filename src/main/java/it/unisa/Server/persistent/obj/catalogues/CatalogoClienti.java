@@ -2,11 +2,16 @@ package it.unisa.Server.persistent.obj.catalogues;
 
 import it.unisa.Common.Cliente;
 import it.unisa.Server.persistent.util.Util;
+import it.unisa.Storage.DAO.ClienteDAO;
+import it.unisa.Storage.Interfacce.FrontDeskStorage;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * Gestisce il catalogo dei clienti dell'hotel.
@@ -18,12 +23,82 @@ public class CatalogoClienti implements Serializable {
     /**
      * Lista interna contenente tutti gli oggetti {@link Cliente}.
      */
-    private static ArrayList<Cliente> listaClienti = new ArrayList<>();
+    private static FrontDeskStorage<Cliente> frontDeskStorage = new ClienteDAO();
+    private static ArrayList<Cliente> listaClienti ;
 
     /**
      * Lista interna contenente gli oggetti {@link Cliente} bannati.
      */
     private static ArrayList<Cliente> listaClientiBannati = new ArrayList<>();
+
+    static {
+        try {
+            listaClienti= (ArrayList<Cliente>)frontDeskStorage.doRetriveAll("decrescente");
+        }catch (SQLException e){
+            throw  new RuntimeException(e);
+        }
+        for( Cliente c : listaClienti){
+            if(c.isBlacklisted())
+                listaClientiBannati.add(c);
+        }
+    }
+
+
+    public  boolean updateCliente(Cliente cliente){
+         boolean flag=false;
+         if(listaClienti.contains(cliente)){
+            Iterator<Cliente> it = listaClienti.iterator();
+            while (it.hasNext()) {
+                Cliente c = it.next();
+                if (c.getCf().equals(cliente.getCf()) && !c.equals(cliente)) {
+                    try{
+                        frontDeskStorage.doUpdate(cliente);
+                    }catch (SQLException e){
+                        e.printStackTrace();
+                    }
+                    it.remove();                  // rimuove in sicurezza
+                    listaClienti.add(cliente);  // aggiunge cliente modificato
+                    flag=true;
+                        if(cliente.isBlacklisted())
+                            listaClientiBannati.add(cliente);
+                }
+            }
+        }
+         return flag;
+    }
+
+    public boolean aggiungiCliente(Cliente cliente){
+        if(!listaClienti.contains(cliente)){
+            try{
+                frontDeskStorage.doSave(cliente);
+            }catch (SQLException e){
+                e.printStackTrace();
+                return false;
+            }
+            listaClienti.add(cliente);
+            return true;
+        }
+        return false;
+    }
+
+    public  boolean removeCliente(Cliente cliente){
+        if(listaClienti.contains(cliente)){
+            try {
+                frontDeskStorage.doDelete(cliente);
+            }catch (SQLException e){
+                e.printStackTrace();
+                return false;
+            }
+            listaClienti.remove(cliente);
+            listaClientiBannati.remove(cliente);
+        }
+        return true;
+    }
+
+
+
+
+
 
 
 
@@ -32,7 +107,7 @@ public class CatalogoClienti implements Serializable {
      *
      * @return Un nuovo ArrayList contenente copie (cloni) di tutti gli oggetti Cliente.
      */
-    public synchronized static ArrayList<Cliente> getListaClienti() {
+    public synchronized ArrayList<Cliente> getListaClienti() {
         return listaClienti;
     }
 
@@ -41,7 +116,7 @@ public class CatalogoClienti implements Serializable {
      *
      * @return Uno nuovo ArrayList contenente copie (cloni) dei clienti bannati.
      */
-    public synchronized static ArrayList<Cliente> getListaClientiBannati() {
+    public synchronized  ArrayList<Cliente> getListaClientiBannati() {
         return listaClientiBannati;
     }
 
@@ -154,6 +229,35 @@ public class CatalogoClienti implements Serializable {
                 return c.clone();
         }
         return null;
+    }
+
+    public static void checkCliente(String nome, String cognome, String nazionalita, LocalDate dataNascita, Boolean blackListed) throws InvalidInputException{
+        Pattern namePattern = Pattern.compile("^[A-Za-z\\s]{0,49}$");
+
+        // Verifica se tutti i campi sono nulli / vuoti (stringhe)
+        if ( (nome == null || nome.isBlank()) && (cognome == null || cognome.isBlank()) && (nazionalita == null || nazionalita.isBlank()) && (blackListed == null)){
+            throw new NullPointerException("Tutti i campi sono nulli o vuoti");
+        }
+
+        // 1. Nome
+        if (nome != null && !namePattern.matcher(nome).matches()) {
+            throw new InvalidInputException("[Nome] errato");
+        }
+
+        // 2. Cognome
+        if (cognome != null && !namePattern.matcher(cognome).matches()) {
+            throw new InvalidInputException("[Cognome] errato");
+        }
+
+        // 3. Nazionalità
+        if (nazionalita != null && !namePattern.matcher(nazionalita).matches()) {
+            throw new InvalidInputException("[Nazionalità] errato");
+        }
+
+        // 4. Data di Nascita
+        if (dataNascita != null && (dataNascita.isAfter(LocalDate.now()) || dataNascita.isEqual(LocalDate.now()))) {
+            throw new InvalidInputException("[Data di Nascita] errato");
+        }
     }
 }
 

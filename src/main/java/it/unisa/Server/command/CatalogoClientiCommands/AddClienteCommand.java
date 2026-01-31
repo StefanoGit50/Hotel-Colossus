@@ -25,7 +25,6 @@ public class AddClienteCommand implements Command {
     public AddClienteCommand(CatalogoClienti catalogue, Cliente cliente) {
         this.catalogue = catalogue;
         this.cliente = cliente;
-        Collection<Cliente> c = new  ArrayList<>();
     }
 
     /**
@@ -52,32 +51,13 @@ public class AddClienteCommand implements Command {
 
     @Override
     public void execute() {
-        ArrayList<Cliente> lc = CatalogoClienti.getListaClienti();
-        lc.add(cliente);
-        try{
-            ClienteDAO clienteDAO = new ClienteDAO();
-            clienteDAO.doSave(cliente);
-        }catch(SQLException sqlException){
-            sqlException.printStackTrace();
-        }
+       catalogue.aggiungiCliente(cliente);
     }
 
     @Override
     public void undo() {
-        try {
-            Cliente c = catalogue.getCliente(cliente.getCf());
-            ArrayList<Cliente> lc = CatalogoClienti.getListaClienti();
-            lc.remove(c);
-
-            try{
-                ClienteDAO clienteDAO = new ClienteDAO();
-                clienteDAO.doDelete(cliente);
-            }catch (SQLException sqlException){
-                sqlException.printStackTrace();
+            if(catalogue.getListaClienti().contains(cliente)) {
+                catalogue.removeCliente(cliente);
             }
-
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
     }
 }

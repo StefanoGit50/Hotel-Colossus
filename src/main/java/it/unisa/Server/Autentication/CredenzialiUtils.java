@@ -2,7 +2,7 @@ package it.unisa.Server.Autentication;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import it.unisa.Common.Impiegato;
-import it.unisa.Storage.BackofficeStorage;
+import it.unisa.Storage.Interfacce.BackofficeStorage;
 import it.unisa.Storage.DAO.ImpiegatoDAO;
 import java.util.Base64;
 
@@ -34,8 +34,8 @@ public class CredenzialiUtils {
             return false;
         }
 
-        if (checkPassword(password, impiegato.getHashedPassword())) {
-            if(impiegato.getUsername().equals(username)) {
+        if (checkPassword(password, impiegato.getHashPassword())) {
+            if(impiegato.getUserName().equals(username)) {
                 return true;
             }
         }
@@ -45,5 +45,4 @@ public class CredenzialiUtils {
 
     //TODO : chiamare il doUpdate di Impiegato sul valore di ritorno
     // TODO: bisogna ricordarsi prima di mettere la nuova password di rendere null sia campo expire sia il campo token nel DB
-
 }

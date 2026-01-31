@@ -96,10 +96,15 @@ public class Trattamento implements Cloneable, Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
+        if (this == obj) return true;
         Trattamento trattamento = (Trattamento) obj;
         return Math.abs(trattamento.prezzo - prezzo) < EPSILON && Objects.equals(nome, trattamento.nome);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nome, prezzo);
     }
 
     /**
