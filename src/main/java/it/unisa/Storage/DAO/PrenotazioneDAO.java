@@ -264,23 +264,22 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
             query += " ORDER BY " + order;
         }
 
-        Collection<Prenotazione> prenotazioni = new ArrayList<>();
-
+        ArrayList<Prenotazione> prenotazioni = new ArrayList<>();
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
 
-            while (rs.next()) {
+            while (rs.next()){
                 int idPrenotazione = rs.getInt("IDPrenotazione");
-
                 // Recupera il trattamento
                 Trattamento trattamento = null;
-                String query1 = "SELECT * FROM Trattamento WHERE IDPrenotazione = ?";
+                String query1 = "SELECT * FROM hot.trattamento2 WHERE IDPrenotazione = ?";
 
                 try (PreparedStatement stmt2 = connection.prepareStatement(query1)) {
                     stmt2.setInt(1, idPrenotazione);
 
                     try (ResultSet rs1 = stmt2.executeQuery()) {
                         if (rs1.next()) {
+                            System.out.println("kajkef");
                             trattamento = new Trattamento(
                                     rs1.getString("Nome"),
                                     rs1.getDouble("Prezzo")
@@ -298,6 +297,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
 
                     try (ResultSet rs2 = stmt3.executeQuery()) {
                         while (rs2.next()) {
+                            System.out.println("efwkjf");
                             servizi.add(new Servizio(
                                     rs2.getString("Nome"),
                                     rs2.getDouble("Prezzo")
@@ -349,7 +349,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                                     rs4.getString("comune"),
                                     rs4.getString("via"),
                                     rs4.getInt("civico"),
-                                    rs4.getInt("Cap"),
+                                   Integer.parseInt(rs4.getString("Cap")),
                                     rs4.getString("telefono"),
                                     rs4.getString("Sesso"),
                                     rs4.getDate("DataDiNascita") != null ? rs4.getDate("DataDiNascita").toLocalDate() : null,
@@ -377,12 +377,11 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                         (ArrayList<Cliente>) clienti,
                         rs.getString("numeroDocumento"),
                         rs.getBoolean("Stato"),
-                        rs.getBoolean("CheckIn")
+                        rs.getBoolean("ChekIn")
                 );
                 prenotazioni.add(p);
             }
         }
-
         return prenotazioni;
     }
 
@@ -416,10 +415,9 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
             Connection connection = ConnectionStorage.getConnection();
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(
-                    "UPDATE hot.prenotazione2 SET DataPrenotazione = ?, DataArrivoCliente = ?, " +
-                            "DataPartenzaCliente = ?, NoteAggiuntive = ?, Intestatario = ?, " +
-                            "dataScadenza = ?, numeroDocumento = ?, DataRilascio = ?, TipoDocumento = ? , Stato = ? , ChekIn = ?" +
-                            "WHERE IDPrenotazione = ?")) {
+                    "UPDATE hot.prenotazione2 SET DataPrenotazione = ? , DataArrivoCliente = ?, DataPartenzaCliente = ? , " +
+                            "NoteAggiuntive = ? ,Intestatario = ? , dataScadenza = ? , numeroDocumento = ? , DataRilascio = ? , TipoDocumento = ?," +
+                            "Stato = ? , ChekIn = ? Where IDPrenotazione = ?")) {
 
                 preparedStatement.setDate(1, Date.valueOf(p.getDataCreazionePrenotazione()));
                 preparedStatement.setDate(2, Date.valueOf(p.getDataInizio()));
@@ -430,9 +428,9 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                 preparedStatement.setString(7, p.getNumeroDocumento());
                 preparedStatement.setDate(8, Date.valueOf(p.getDataRilascio()));
                 preparedStatement.setString(9, p.getTipoDocumento());
-                preparedStatement.setInt(10, p.getIDPrenotazione());
-                preparedStatement.setBoolean(11,p.getStatoPrenotazione());
-                preparedStatement.setBoolean(12,p.isCheckIn());
+                preparedStatement.setBoolean(10,p.getStatoPrenotazione());
+                preparedStatement.setBoolean(11,p.isCheckIn());
+                preparedStatement.setInt(12, p.getIDPrenotazione());
                 preparedStatement.executeUpdate();
 
                 // Aggiorna il trattamento associato
@@ -486,9 +484,9 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
         Connection connection = ConnectionStorage.getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM hot.prenotazione2 WHERE " + attribute + " = ?")) {
             preparedStatement.setObject(1, value);
-
-            try (ResultSet rs = preparedStatement.executeQuery()) {
-                if (rs.next()) {
+            Collection<Prenotazione> prenotaziones = new ArrayList<>();
+            try (ResultSet rs = preparedStatement.executeQuery()){
+                while(rs.next()){
                     int idPrenotazione = rs.getInt("IDPrenotazione");
 
                     // Recupera il trattamento
@@ -549,8 +547,8 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                     }
 
                     // Recupera i clienti
-                    String query4 = "SELECT DISTINCT cl.* FROM Cliente cl " +
-                            "JOIN Associato_a a ON cl.CF = a.CF " +
+                    String query4 = "SELECT DISTINCT cl.* FROM hot.cliente2 cl " +
+                            "JOIN hot.associato_a2 a ON cl.CF = a.CF " +
                             "WHERE a.IDPrenotazione = ?";
 
                     Collection<Cliente> clienti = new ArrayList<>();
@@ -580,11 +578,28 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                         }
                     }
 
-                    return null;
+                    prenotaziones.add(new Prenotazione(
+                                idPrenotazione,
+                                rs.getDate("DataPrenotazione").toLocalDate(),
+                                rs.getDate("DataArrivoCliente").toLocalDate(),
+                                rs.getDate("DataPartenzaCliente").toLocalDate(),
+                                trattamento,
+                                rs.getString("TipoDocumento"),
+                                rs.getDate("DataRilascio").toLocalDate(),
+                                rs.getDate("DataScadenza").toLocalDate(),
+                                rs.getString("Intestatario"),
+                                rs.getString("NoteAggiuntive"),
+                            (ArrayList<Camera>) camere,
+                            (ArrayList<Servizio>) servizi,
+                            (ArrayList<Cliente>) clienti,
+                                rs.getString("NumeroDocumento")
+                    ));
                 }
+
             }
+            return prenotaziones;
         }
-        return null;
+
     }
 
 

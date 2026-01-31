@@ -5,7 +5,7 @@ VALUES
 
 -- INSERT per Camera2 (2 camere)
 INSERT INTO hot.camera2 (NumeroCamera, NumeroMaxOcc, NoteCamera, Stato, Prezzo)
-VALUES 
+VALUES
 (101, 2, 'Camera doppia con vista mare', 'Libera', 120.00),
 (102, 4, 'Camera familiare con balcone', 'Libera', 180.00);
 
@@ -17,19 +17,19 @@ VALUES
 
 -- INSERT per Trattamento2 (2 trattamenti) - PRIMA delle associazioni
 INSERT INTO hot.trattamento2 (Nome, Prezzo, IDPrenotazione)
-VALUES 
+VALUES
 ('Pensione Completa', 50.00, 1),
 ('Mezza Pensione', 30.00, 2);
 
 -- INSERT per Servizio2 (2 servizi)
 INSERT INTO hot.servizio2 (Nome, Prezzo, IDPrenotazione)
-VALUES 
+VALUES
 ('Lavanderia', 15.00, 1),
 ('Spa e Benessere', 40.00, 2);
 
 -- INSERT per Associato_a2 (2 associazioni)
 INSERT INTO hot.associato_a2 (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto)
-VALUES 
+VALUES
 ('VRDLRA90D45F839Y', 102, 2, 180.00);
 
 -- INSERT per RicevutaFiscale2 (2 ricevute)

@@ -2,6 +2,7 @@ package it.unisa.Storage.DAO;
 
 import it.unisa.Common.Camera;
 import it.unisa.Common.Impiegato;
+import it.unisa.Common.Prenotazione;
 import it.unisa.Server.persistent.util.Ruolo;
 import it.unisa.Server.persistent.util.Stato;
 
@@ -20,8 +21,12 @@ public class Test {
         listaCamere.add(new Camera(103, Stato.Libera, 5, 454, "Vista mare, letto matrimoniale"));
         listaCamere.add(new Camera(104, Stato.Libera, 5, 454, "Vista mare, letto matrimoniale"));
         listaCamere.add(new Camera(105, Stato.Libera, 5, 454, "Vista mare, letto matrimoniale"));
+        PrenotazioneDAO  prenotazioneDAO = new PrenotazioneDAO();
 
-        CameraDAO cameraDAO = new CameraDAO();
-        cameraDAO.doSaveAll(listaCamere);
+        ArrayList<Prenotazione> prenotaziones = (ArrayList<Prenotazione>) prenotazioneDAO.doRetriveAll("IDPrenotazione");
+        System.out.println(prenotaziones);
+
+        //CameraDAO cameraDAO = new CameraDAO();
+        //cameraDAO.doSaveAll(listaCamere);
     }
 }
