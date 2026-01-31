@@ -6,17 +6,13 @@ import it.unisa.Server.ObserverCamereInterface;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 public interface FrontDeskInterface extends Remote, ObserverCamereInterface
 {
-    //void effettuaPrenotazione(String id, Cliente cliente, Camera camera) throws RemoteException, SQLException;
+    // Comandi camere
     List<Prenotazione> getPrenotazioni() throws RemoteException;
-    void cancellaPrenotazione(Prenotazione p) throws RemoteException;
-    Prenotazione getPrenotazione(String id) throws RemoteException;
     boolean aggiornaStatoCamera(Camera c) throws RemoteException;
     List<Camera> getCamere() throws RemoteException;
 
@@ -24,6 +20,9 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
     void addPrenotazione(Prenotazione p) throws RemoteException;
     void removePrenotazione(Prenotazione p) throws RemoteException;
     void updatePrenotazione(Prenotazione p) throws RemoteException;
+    // Filtro Prenotazioni
+        List<Prenotazione> filterPrenotazioni(String nome, String cognome, LocalDate dataInizioSoggiorno,
+                                     LocalDate dataFineSoggiorno, String orderBy) throws RemoteException;
 
     // Comandi cliente
     void addCliente(Cliente c) throws RemoteException;
@@ -31,11 +30,9 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
     void updateCliente(Cliente c) throws RemoteException;
     void banCliente(Cliente c) throws RemoteException;
     void unBanCliente(Cliente c) throws RemoteException;
-
-    // Comando impiegato
-    void addImpiegato(Impiegato i) throws RemoteException;
-    void removeImpiegato(Impiegato i) throws RemoteException;
-    void updateImpiegato(Impiegato i) throws RemoteException;
+    // Filtro clienti
+    List<Cliente> filterClienti(String nome, String cognome, String nazionalita, LocalDate dataNascita, Boolean blackListed, String orderBy)
+            throws RemoteException;
 
     // Comando undo
     void undoCommand() throws RemoteException;

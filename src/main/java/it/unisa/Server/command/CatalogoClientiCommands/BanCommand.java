@@ -56,7 +56,8 @@ public class BanCommand implements Command {
     public void execute() {
         try {
             Cliente c = catalogue.getCliente(CFCliente);
-            ArrayList<Cliente> lc = CatalogoClienti.getListaClienti(), lcb = CatalogoClienti.getListaClientiBannati();
+           CatalogoClienti catalogoClienti = new CatalogoClienti();
+            ArrayList<Cliente> lc = catalogoClienti.getListaClienti(), lcb = catalogoClienti.getListaClientiBannati();
 
             Cliente cli;
             for(int i = 0; i < lc.size(); i++) {
@@ -90,7 +91,8 @@ public class BanCommand implements Command {
     public void undo() {
         try {
             Cliente c = catalogue.getCliente(CFCliente);
-            ArrayList<Cliente> lc = CatalogoClienti.getListaClienti(), lcb = CatalogoClienti.getListaClientiBannati();
+            CatalogoClienti catalogoClienti = new CatalogoClienti();
+            ArrayList<Cliente> lc = catalogoClienti.getListaClienti(), lcb = catalogoClienti.getListaClientiBannati();
 
             Cliente cli;
             for (int i = 0; i < lcb.size(); i++) {

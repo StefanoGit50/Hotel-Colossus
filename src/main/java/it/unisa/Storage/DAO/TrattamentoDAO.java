@@ -1,8 +1,9 @@
 package it.unisa.Storage.DAO;
 
+import it.unisa.Common.Camera;
 import it.unisa.Common.Trattamento;
 import it.unisa.Storage.ConnectionStorage;
-import it.unisa.Storage.FrontDeskStorage;
+import it.unisa.Storage.Interfacce.FrontDeskStorage;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -11,8 +12,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
-{
+public class TrattamentoDAO implements FrontDeskStorage<Trattamento>{
     private static final String TABLE_NAME = "Trattamento";
 
     @Override
@@ -34,20 +34,36 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
             }
         }
     }
+
+    /**
+     * @param list
+     * @throws SQLException
+     */
+    @Override
+    public void doSaveAll(List<Trattamento> list) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     @Override
     public synchronized void doDelete(Trattamento trattamento) throws SQLException
     {
-        Connection connection = ConnectionStorage.getConnection();
-        String query = "DELETE FROM Trattamento WHERE Nome = ?";
+        if(trattamento != null && trattamento.getNome() != null){
+            Connection connection = ConnectionStorage.getConnection();
+            String query = "DELETE FROM Trattamento WHERE Nome = ?";
 
-        try (PreparedStatement stmt = connection.prepareStatement(query))
-        {
-            stmt.setString(1, trattamento.getNome());
-            stmt.executeUpdate();
-        }finally {
-            if(connection != null){
-                ConnectionStorage.releaseConnection(connection);
+            try (PreparedStatement stmt = connection.prepareStatement(query))
+            {
+                stmt.setString(1, trattamento.getNome());
+                if(stmt.executeUpdate() == 0){
+                    throw new NoSuchElementException("elemento non trovato");
+                }
+            }finally {
+                if(connection != null){
+                    ConnectionStorage.releaseConnection(connection);
+                }
             }
+        }else{
+            throw new SQLException("");
         }
     }
 
@@ -201,7 +217,8 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>
     }
 
     @Override
-    public Collection<Trattamento> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, String sesso, String orderBy) throws SQLException{
+    public Collection<Trattamento> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, Boolean blackListed, String orderBy) throws SQLException{
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
 }

@@ -3,10 +3,7 @@ package it.unisa.Server.command.CatalogoPrenotazioniCommands;
 import it.unisa.Common.Prenotazione;
 import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
-import it.unisa.Storage.DAO.PrenotazioneDAO;
-import it.unisa.Storage.FrontDeskStorage;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -41,7 +38,7 @@ public class RemovePrenotazioneCommand implements Command {
         this.catalogue = catalogue;
     }
 
-    public Prenotazione getPrenotazione() {
+    public Prenotazione getPrenotazioni() {
         return prenotazione;
     }
 
@@ -51,26 +48,12 @@ public class RemovePrenotazioneCommand implements Command {
 
     @Override
     public void execute() {
-        try {
-            Prenotazione p = catalogue.getPrenotazione(prenotazione.getIDPrenotazione());
-            ArrayList<Prenotazione> lp = CatalogoPrenotazioni.getListaPrenotazioni();
-            lp.remove(p);
-            FrontDeskStorage<Prenotazione> frontDeskStorage = new PrenotazioneDAO();
-            frontDeskStorage.doDelete(p);
-        } catch (CloneNotSupportedException | SQLException e) {
-            e.printStackTrace();
-        }
+        catalogue.removePrenotazioni(prenotazione);
     }
 
     @Override
     public void undo() {
-        ArrayList<Prenotazione> lp = CatalogoPrenotazioni.getListaPrenotazioni();
-        lp.add(prenotazione);
-        try{
-            PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO();
-            prenotazioneDAO.doSave(prenotazione);
-        }catch (SQLException sqlException){
-            sqlException.printStackTrace();
-        }
+        catalogue.getListaPrenotazioni();
+        catalogue.addPrenotazioni(prenotazione);
     }
 }

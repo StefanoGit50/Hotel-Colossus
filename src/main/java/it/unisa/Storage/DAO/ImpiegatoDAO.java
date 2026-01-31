@@ -3,11 +3,12 @@ package it.unisa.Storage.DAO;
 
 import it.unisa.Common.Impiegato;
 import it.unisa.Server.persistent.util.Ruolo;
-import it.unisa.Storage.BackofficeStorage;
+import it.unisa.Storage.Interfacce.BackofficeStorage;
 import it.unisa.Storage.ConnectionStorage;
 
 import java.sql.*;
 import java.sql.Date;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -35,26 +36,30 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
     @Override
     public synchronized void doSave(Impiegato impiegato) throws SQLException {
         Connection connection = ConnectionStorage.getConnection();
-        try(PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Impiegato(CF, Stipedio, Nome, Cognome, Cap, DataAssunzione, Telefono, Cittadinanza, EmailAziendale, Sesso, Ruolo, DataRilascio, TipoDocumento, Via, Provincia, Comune, Civico, NumeroDocumento, DataScadenza) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")){
+        try(PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Impiegato(CF,Stipedio,UserName,HashPasword,isTempurali,dataScadenzaToken,Nome,Cognome,Cap,DataAssunzione, Telefono, Cittadinanza, EmailAziendale, Sesso, Ruolo, DataRilascio, TipoDocumento, Via, Provincia, Comune, Civico, NumeroDocumento, DataScadenza) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")){
             preparedStatement.setString(1,impiegato.getCodiceFiscale());
             preparedStatement.setDouble(2,impiegato.getStipendio());
-            preparedStatement.setString(3,impiegato.getNome());
-            preparedStatement.setString(4,impiegato.getCognome());
-            preparedStatement.setString(5,"" + impiegato.getCAP());
-            preparedStatement.setDate(6, Date.valueOf(impiegato.getDataAssunzione()));
-            preparedStatement.setString(7,impiegato.getTelefono());
-            preparedStatement.setString(8,impiegato.getCittadinanza());
-            preparedStatement.setString(9,impiegato.getEmailAziendale());
-            preparedStatement.setString(10,impiegato.getSesso());
-            preparedStatement.setString(11,"" + impiegato.getRuolo());
-            preparedStatement.setDate(12,Date.valueOf(impiegato.getDataRilascio()));
-            preparedStatement.setString(13,impiegato.getTipoDocumento());
-            preparedStatement.setString(14,impiegato.getVia());
-            preparedStatement.setString(15,impiegato.getProvincia());
-            preparedStatement.setString(16,impiegato.getComune());
-            preparedStatement.setInt(17,impiegato.getNumeroCivico());
-            preparedStatement.setString(18,impiegato.getNumeroDocumento());
-            preparedStatement.setDate(19,Date.valueOf(impiegato.getDataScadenza()));
+            preparedStatement.setString(3,impiegato.getUserName());
+            preparedStatement.setString(4,impiegato.getHashPassword());
+            preparedStatement.setBoolean(5,impiegato.isTempurali());
+            preparedStatement.setTimestamp(6,Timestamp.from(impiegato.getDataScadenzaToken()));
+            preparedStatement.setString(7,impiegato.getNome());
+            preparedStatement.setString(8,impiegato.getCognome());
+            preparedStatement.setString(9,"" + impiegato.getCAP());
+            preparedStatement.setDate(10, Date.valueOf(impiegato.getDataAssunzione()));
+            preparedStatement.setString(11,impiegato.getTelefono());
+            preparedStatement.setString(12,impiegato.getCittadinanza());
+            preparedStatement.setString(13,impiegato.getEmailAziendale());
+            preparedStatement.setString(14,impiegato.getSesso());
+            preparedStatement.setString(15,"" + impiegato.getRuolo());
+            preparedStatement.setDate(16,Date.valueOf(impiegato.getDataRilascio()));
+            preparedStatement.setString(17,impiegato.getTipoDocumento());
+            preparedStatement.setString(18,impiegato.getVia());
+            preparedStatement.setString(19,impiegato.getProvincia());
+            preparedStatement.setString(20,impiegato.getComune());
+            preparedStatement.setInt(21,impiegato.getNumeroCivico());
+            preparedStatement.setString(22,impiegato.getNumeroDocumento());
+            preparedStatement.setDate(23,Date.valueOf(impiegato.getDataScadenza()));
             preparedStatement.executeUpdate();
         }finally{
             if(connection != null){
@@ -83,53 +88,35 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
             String f = (String) index;
             Connection connection = ConnectionStorage.getConnection();
             Impiegato impiegato;
-            try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM impiegato WHERE CF = ?")){
+            try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT CF , Nome , Cognome , UserName , HashPasword , isTempurali , dataScadenzaToken , Sesso , TipoDocumento , NumeroDocumento , Cap,Via ,Provincia , Comune ,Civico,Telefono,Ruolo,Stipedio,DataAssunzione,DataScadenza,DataRilascio,EmailAziendale,Cittadinanza FROM impiegato WHERE CF = ?")){
                 preparedStatement.setString(1,f);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 if(resultSet.next()){
-                    String cf = (String) resultSet.getObject(1);
-                    Double stipedio = (Double) resultSet.getObject(2);
-                    String nome = (String) resultSet.getObject(3);
-                    String cognome = (String) resultSet.getObject(4);
-                    String cap = (String) resultSet.getObject(5);
-                    Date dataAssunzione = (Date) resultSet.getObject(6);
-                    LocalDate date = dataAssunzione.toLocalDate();
-                    String telefono = (String) resultSet.getObject(7);
-                    String cittadinanza = (String) resultSet.getObject(8);
-                    String emailAzienda = (String) resultSet.getObject(9);
-                    String sesso = (String) resultSet.getObject(10);
-                    String c =  resultSet.getString(11);
-                    Ruolo ruolo = Ruolo.valueOf(c);
-                    Date  dataRilascio = (Date) resultSet.getObject(12);
-                    LocalDate localDate = dataRilascio.toLocalDate();
-                    String tipoDocumento = (String) resultSet.getObject(13);
-                    String via = (String) resultSet.getObject(14);
-                    String provincia = (String) resultSet.getObject(15);
-                    String comune = (String) resultSet.getObject(16);
-                    Integer civico = (Integer) resultSet.getObject(17);
-                    String numeroDocumento = (String) resultSet.getObject(18);
-                    Date dataScadenza = (Date) resultSet.getObject(19);
-                    LocalDate date1 = dataScadenza.toLocalDate();
+                    String cf = resultSet.getString("CF");
+                    String nome = resultSet.getString("Nome");
+                    String cognome = resultSet.getString("Cognome");
+                    String userName = resultSet.getString("UserName");
+                    String hashPassword = resultSet.getString("HashPasword");
+                    Boolean isTempurali = resultSet.getBoolean("isTempurali");
+                    Instant dataScadenzaToken = resultSet.getTimestamp("").toInstant();
+                    String sesso = resultSet.getString("Sesso");
+                    String tipoDocumento = resultSet.getString("TipoDocumento");
+                    String i = resultSet.getString("NumeroDocumento");
+                    Integer Cap = resultSet.getInt("Cap");
+                    String via = resultSet.getString("Via");
+                    String provincia = resultSet.getString("Provincia");
+                    String comune = resultSet.getString("Comune");
+                    Integer numeroCivico = resultSet.getInt("Civico");
+                    String telefono = resultSet.getString("Telefono");
+                    String ruolo = resultSet.getString("Ruolo");
+                    Double stipedio = resultSet.getDouble("Stipedio");
+                    LocalDate dataAssunzione = resultSet.getDate("DataAssunzione").toLocalDate();
+                    LocalDate dataScadenza = resultSet.getDate("DataScadenza").toLocalDate();
+                    LocalDate dataRilascio = resultSet.getDate("DataRilascio").toLocalDate();
+                    String emailAziendale = resultSet.getString("EmailAziendale");
+                    String cittadinanza = resultSet.getString("Cittadinanza");
 
-                    impiegato = new Impiegato();
-                    impiegato.setCodiceFiscale(cf);
-                    impiegato.setNome(nome);
-                    impiegato.setCognome(cognome);
-                    impiegato.setCAP(Integer.parseInt(cap));
-                    impiegato.setDataAssunzione(date);
-                    impiegato.setTelefono(telefono);
-                    impiegato.setCittadinanza(cittadinanza);
-                    impiegato.setEmailAziendale(emailAzienda);
-                    impiegato.setSesso(sesso);
-                    impiegato.setRuolo(ruolo);
-                    impiegato.setDataRilascio(localDate);
-                    impiegato.setTipoDocumento(tipoDocumento);
-                    impiegato.setVia(via);
-                    impiegato.setProvincia(provincia);
-                    impiegato.setComune(comune);
-                    impiegato.setNumeroCivico(civico);
-                    impiegato.setNumeroDocumento(numeroDocumento);
-                    impiegato.setDataScadenza(date1);
+                    impiegato = new Impiegato(userName,hashPassword,isTempurali,dataScadenzaToken,nome , cognome , sesso , tipoDocumento , i,Cap,via,provincia,comune,numeroCivico,cf,telefono,Ruolo.valueOf(ruolo),stipedio,dataAssunzione,dataRilascio,emailAziendale,cittadinanza,dataScadenza);
                 }else{
                     impiegato = null;
                     throw new NoSuchElementException ("impiegato non trovato");
@@ -150,52 +137,34 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
         if(order != null){
             Connection connection = ConnectionStorage.getConnection();
             ArrayList<Impiegato> impiegatoes = new ArrayList<>();
-            try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM impiegato"); ResultSet resultSet = preparedStatement.executeQuery()){
+            try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT CF , Nome , Cognome , UserName , HashPasword , isTempurali , dataScadenzaToken , Sesso , TipoDocumento , NumeroDocumento , Cap,Via ,Provincia , Comune ,Civico,Telefono,Ruolo,Stipedio,DataAssunzione,DataScadenza,DataRilascio,EmailAziendale,Cittadinanza FROM impiegato"); ResultSet resultSet = preparedStatement.executeQuery()){
                 while(resultSet.next()){
                     Impiegato impiegato;
-                    String cf = (String) resultSet.getObject(1);
-                    Double stipedio = (Double) resultSet.getObject(2);
-                    String nome = (String) resultSet.getObject(3);
-                    String cognome = (String) resultSet.getObject(4);
-                    String cap = (String) resultSet.getObject(5);
-                    Date dataAssunzione = (Date) resultSet.getObject(6);
-                    LocalDate date = dataAssunzione.toLocalDate();
-                    String telefono = (String) resultSet.getObject(7);
-                    String cittadinanza = (String) resultSet.getObject(8);
-                    String emailAzienda = (String) resultSet.getObject(9);
-                    String sesso = (String) resultSet.getObject(10);
-                    String c =  resultSet.getString(11);
-                    Ruolo ruolo = Ruolo.valueOf(c);
-                    Date  dataRilascio = (Date) resultSet.getObject(12);
-                    LocalDate localDate = dataRilascio.toLocalDate();
-                    String tipoDocumento = (String) resultSet.getObject(13);
-                    String via = (String) resultSet.getObject(14);
-                    String provincia = (String) resultSet.getObject(15);
-                    String comune = (String) resultSet.getObject(16);
-                    Integer civico = (Integer) resultSet.getObject(17);
-                    String numeroDocumento = (String) resultSet.getObject(18);
-                    Date dataScadenza = (Date) resultSet.getObject(19);
-                    LocalDate date1 = dataScadenza.toLocalDate();
+                    String cF = resultSet.getString("CF");
+                    String nome = resultSet.getString("Nome");
+                    String cognome = resultSet.getString("Cognome");
+                    String userName = resultSet.getString("UserName");
+                    String HashPassword = resultSet.getString("HashPasword");
+                    boolean isTempurali = resultSet.getBoolean("isTempurali");
+                    Instant dataScadenzaToken = resultSet.getTimestamp("dataScadenzaToken").toInstant();
+                    String sesso = resultSet.getString("Sesso");
+                    String tipoDocumento = resultSet.getString("TipoDocumento");
+                    String NumeroDocumento = resultSet.getString("NumeroDocumento");
+                    int cap = Integer.parseInt(resultSet.getString("Cap"));
+                    String via = resultSet.getString("Via");
+                    String provincia = resultSet.getString("Provincia");
+                    String comune = resultSet.getString("Comune");
+                    int civico = resultSet.getInt("Civico");
+                    String telefono = resultSet.getString("Telefono");
+                    String ruolo = resultSet.getString("Ruolo");
+                    double stipedio = resultSet.getDouble("Stipedio");
+                    LocalDate dataAssunzione = resultSet.getDate("DataAssunzione").toLocalDate();
+                    LocalDate dataScadenzio = resultSet.getDate("DataScadenza").toLocalDate();
+                    LocalDate dataRilascio = resultSet.getDate("DataRilascio").toLocalDate();
+                    String emailAziendale = resultSet.getString("EmailAziendale");
+                    String Cittadinanza = resultSet.getString("Cittadinanza");
 
-                    impiegato = new Impiegato();
-                    impiegato.setCodiceFiscale(cf);
-                    impiegato.setNome(nome);
-                    impiegato.setCognome(cognome);
-                    impiegato.setCAP(Integer.parseInt(cap));
-                    impiegato.setDataAssunzione(date);
-                    impiegato.setTelefono(telefono);
-                    impiegato.setCittadinanza(cittadinanza);
-                    impiegato.setEmailAziendale(emailAzienda);
-                    impiegato.setSesso(sesso);
-                    impiegato.setRuolo(ruolo);
-                    impiegato.setDataRilascio(localDate);
-                    impiegato.setTipoDocumento(tipoDocumento);
-                    impiegato.setVia(via);
-                    impiegato.setProvincia(provincia);
-                    impiegato.setComune(comune);
-                    impiegato.setNumeroCivico(civico);
-                    impiegato.setNumeroDocumento(numeroDocumento);
-                    impiegato.setDataScadenza(date1);
+                    impiegato = new Impiegato(userName , HashPassword , isTempurali , dataScadenzaToken , nome , cognome , sesso , tipoDocumento , NumeroDocumento , cap , via , provincia , comune , civico , cF , telefono , Ruolo.valueOf(ruolo) , stipedio , dataAssunzione , dataRilascio ,emailAziendale , Cittadinanza , dataScadenzio);
 
                     try{
                         impiegatoes.add(impiegato.clone());
@@ -242,32 +211,32 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
         {
             Connection connection = ConnectionStorage.getConnection();
             try(PreparedStatement preparedStatement = connection.prepareStatement(
-                    "UPDATE Impiegato SET Stipedio = ?, Nome = ?, Cognome = ?, Cap = ?, " +
-                            "DataAssunzione = ?, Telefono = ?, Cittadinanza = ?, EmailAziendale = ?, " +
-                            "Sesso = ?, Ruolo = ?, DataRilascio = ?, TipoDocumento = ?, Via = ?, " +
-                            "Provincia = ?, Comune = ?, Civico = ?, NumeroDocumento = ?, " +
-                            "DataScadenza = ? WHERE CF = ?")){
+                    "UPDATE Impiegato SET Nome = ? , Cognome = ? , UserName = ? ,isTempurali = ? , HashPasword = ? , isTempurali = ? , dataScadenzaToken = ? , Cap = ?" +
+                            " , DataAssunzione = ? , Telefono = ? , Cittadinanza = ? , EmailAziendale = ? , Sesso = ? , Ruolo = ? , DataRilascio = ? , TipoDocumento = ? ," +
+                            " Via = ? , Provincia = ? , Comune = ? ,Civico = ? , NumeroDocumento = ? , DataScadenza = ?  WHERE CF = ?")){
 
-                        preparedStatement.setDouble(1, impiegato.getStipendio());
-                        preparedStatement.setString(2, impiegato.getNome());
-                        preparedStatement.setString(3, impiegato.getCognome());
-                        preparedStatement.setString(4, "" + impiegato.getCAP());
-                        preparedStatement.setDate(5, Date.valueOf(impiegato.getDataAssunzione()));
-                        preparedStatement.setString(6, impiegato.getTelefono());
-                        preparedStatement.setString(7, impiegato.getCittadinanza());
-                        preparedStatement.setString(8, impiegato.getEmailAziendale());
-                        preparedStatement.setString(9, impiegato.getSesso());
-                        preparedStatement.setString(10, "" + impiegato.getRuolo());
-                        preparedStatement.setDate(11, Date.valueOf(impiegato.getDataRilascio()));
-                        preparedStatement.setString(12, impiegato.getTipoDocumento());
-                        preparedStatement.setString(13, impiegato.getVia());
-                        preparedStatement.setString(14, impiegato.getProvincia());
-                        preparedStatement.setString(15, impiegato.getComune());
-                        preparedStatement.setInt(16, impiegato.getNumeroCivico());
-                        preparedStatement.setString(17, impiegato.getNumeroDocumento());
-                        preparedStatement.setDate(18, Date.valueOf(impiegato.getDataScadenza()));
-                        preparedStatement.setString(19, impiegato.getCodiceFiscale());
-
+                        preparedStatement.setString(1,impiegato.getNome());
+                        preparedStatement.setString(2,impiegato.getCognome());
+                        preparedStatement.setString(3,impiegato.getUserName());
+                        preparedStatement.setBoolean(4,impiegato.isTempurali());
+                        preparedStatement.setString(5,impiegato.getHashPassword());
+                        preparedStatement.setBoolean(6,impiegato.isTempurali());
+                        preparedStatement.setTimestamp(7,Timestamp.from(impiegato.getDataScadenzaToken()));
+                        preparedStatement.setString(8,"" + impiegato.getCAP());
+                        preparedStatement.setDate(9,Date.valueOf(impiegato.getDataAssunzione()));
+                        preparedStatement.setString(10,impiegato.getTelefono());
+                        preparedStatement.setString(11,impiegato.getCittadinanza());
+                        preparedStatement.setString(12,impiegato.getEmailAziendale());
+                        preparedStatement.setString(13,impiegato.getSesso());
+                        preparedStatement.setString(14,impiegato.getRuolo().name());
+                        preparedStatement.setDate(15,Date.valueOf(impiegato.getDataRilascio()));
+                        preparedStatement.setString(16,impiegato.getTipoDocumento());
+                        preparedStatement.setString(17,impiegato.getVia());
+                        preparedStatement.setString(18,impiegato.getProvincia());
+                        preparedStatement.setInt(19,impiegato.getNumeroCivico());
+                        preparedStatement.setString(20,impiegato.getNumeroDocumento());
+                        preparedStatement.setDate(21,Date.valueOf(impiegato.getDataScadenza()));
+                        preparedStatement.setString(22,impiegato.getCodiceFiscale());
                         preparedStatement.executeUpdate();
             }
             finally
@@ -302,26 +271,28 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
 
                 while (resultSet.next()) {
                     impiegato = new Impiegato();
-                    impiegato.setUsername(resultSet.getString("username"));
-                    impiegato.setNewHashedPassword(resultSet.getString("password"));
-                    impiegato.setNome(resultSet.getString("nome"));
-                    impiegato.setCognome(resultSet.getString("cognome"));
-                    impiegato.setSesso(resultSet.getString("sesso"));
-                    impiegato.setTipoDocumento(resultSet.getString("tipoDocumento"));
-                    impiegato.setNumeroDocumento(resultSet.getString("numeroDocumento"));
+                    impiegato.setUserName(resultSet.getString("Username"));
+                    impiegato.setHashPassword(resultSet.getString("HashPasword"));
+                    impiegato.setNome(resultSet.getString("Nome"));
+                    impiegato.setCognome(resultSet.getString("Cognome"));
+                    impiegato.setSesso(resultSet.getString("Sesso"));
+                    impiegato.setTempurali(resultSet.getBoolean("isTempurali"));
+                    impiegato.setDataScadenzaToken(resultSet.getTimestamp("DataScadenzaToken").toInstant());
+                    impiegato.setTipoDocumento(resultSet.getString("TipoDocumento"));
+                    impiegato.setNumeroDocumento(resultSet.getString("NumeroDocumento"));
                     impiegato.setCAP(resultSet.getInt("CAP"));
-                    impiegato.setVia(resultSet.getString("via"));
-                    impiegato.setProvincia(resultSet.getString("provincia"));
-                    impiegato.setComune(resultSet.getString("comune"));
-                    impiegato.setNumeroCivico(resultSet.getInt("numeroCivico"));
-                    impiegato.setCodiceFiscale(resultSet.getString("codiceFiscale"));
-                    impiegato.setTelefono(resultSet.getString("telefono"));
-                    impiegato.setRuolo(resultSet.getObject("Ruolo", Ruolo.class));
+                    impiegato.setVia(resultSet.getString("Via"));
+                    impiegato.setProvincia(resultSet.getString("Provincia"));
+                    impiegato.setComune(resultSet.getString("Comune"));
+                    impiegato.setNumeroCivico(resultSet.getInt("NumeroCivico"));
+                    impiegato.setCodiceFiscale(resultSet.getString("CodiceFiscale"));
+                    impiegato.setTelefono(resultSet.getString("Telefono"));
+                    impiegato.setRuolo(Ruolo.valueOf((String) resultSet.getObject("Ruolo")));
                     impiegato.setStipendio(resultSet.getDouble("Stipendio"));
                     impiegato.setDataAssunzione(resultSet.getDate("DataAssunzione").toLocalDate());
                     impiegato.setDataRilascio(resultSet.getDate("DataRilascio").toLocalDate());
-                    impiegato.setEmailAziendale(resultSet.getString("emailAziendale"));
-                    impiegato.setCittadinanza(resultSet.getString("cittadinanza"));
+                    impiegato.setEmailAziendale(resultSet.getString("EmailAziendale"));
+                    impiegato.setCittadinanza(resultSet.getString("Cittadinanza"));
                     impiegato.setDataScadenza(resultSet.getDate("DataScadenza").toLocalDate());
                     lista.add(impiegato);
                 }
@@ -410,8 +381,13 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
             while(rs.next()){
                 Impiegato impiegato;
                 impiegato = new Impiegato();
+
                 impiegato.setCodiceFiscale(rs.getString("CF"));
                 impiegato.setStipendio(rs.getDouble("Stipedio"));
+                impiegato.setUserName(rs.getString("UserName"));
+                impiegato.setHashPassword(rs.getString("HashPasword"));
+                impiegato.setTempurali(rs.getBoolean("isTempurali"));
+                impiegato.setDataScadenzaToken(rs.getTimestamp("dataScadenzaToken").toInstant());
                 impiegato.setNome(rs.getString("nome"));
                 impiegato.setCognome(rs.getString("Cognome"));
                 impiegato.setCAP(rs.getInt("Cap"));

@@ -31,7 +31,7 @@ public class Camera implements Cloneable, Serializable {
     /**
      * Numero massimo di clienti che possono soggiornare nella camera.
      */
-    private int numeroMaxOccupanti;
+    private Integer numeroMaxOccupanti;
 
     /**
      * Le note della camera (ad esempio check-in ore 14 , il cliente è celiaco , ecc.)

@@ -3,11 +3,13 @@ package it.unisa.Server.persistent.obj.catalogues;
 import it.unisa.Common.Camera;
 import it.unisa.Server.ObserverCamereInterface;
 import it.unisa.Server.SubjectCamereInterface;
-import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Server.persistent.util.Util;
+import it.unisa.Storage.DAO.CameraDAO;
+import it.unisa.Storage.Interfacce.FrontDeskStorage;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -20,18 +22,27 @@ import java.util.logging.Logger;
  */
 
 public class CatalogoCamere implements SubjectCamereInterface, Serializable {
-
+    private static FrontDeskStorage<Camera> fds = new CameraDAO();
     private static List<ObserverCamereInterface> observers = new ArrayList<>();
 
     /**
      * Lista interna contenente tutti gli oggetti {@link it.unisa.Common.Camera} del catalogo.
      * La lista viene gestita tramite deep copy per garantire l'incapsulamento.
      */
-    private static ArrayList<Camera> camereList = new ArrayList<>();
+    private static ArrayList<Camera> camereList;
+
+    static {
+        try {
+            camereList = new ArrayList<>(fds.doRetriveAll("decrescente"));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     private static Camera lastModified;
 
-    public static Camera getLastModified() {
+    public Camera getLastModified() {
         return lastModified;
     }
 
@@ -41,24 +52,11 @@ public class CatalogoCamere implements SubjectCamereInterface, Serializable {
      *
      * @param listaCamere L'ArrayList di oggetti Camera da copiare nel catalogo.
      */
-    public  CatalogoCamere(ArrayList<Camera> listaCamere) {
+    public CatalogoCamere(ArrayList<Camera> listaCamere) {
         this.camereList = Util.deepCopyArrayList(listaCamere);
-
     }
 
     public CatalogoCamere(){}
-
-   static {
-       camereList.add(new Camera(112, Stato.Libera, 2,50,""));
-       camereList.add(new Camera(113, Stato.Libera, 3, 80, ""));
-       camereList.add(new Camera(114, Stato.Libera, 4, 123,"renato ti massaggia"));
-       camereList.add(new Camera(115, Stato.Libera, 5,80, "Andrea"));
-       camereList.add(new Camera(116, Stato.Libera, 6, 60, ""));
-       camereList.add(new Camera(117, Stato.Libera, 7,98,""));
-       camereList.add(new Camera(118, Stato.Libera, 8, 78, ""));
-       camereList.add(new Camera(119, Stato.Libera, 9, 56,""));
-   }
-
 
     /**
      * Restituisce una deep copy dell'elenco completo delle camere.
@@ -66,17 +64,18 @@ public class CatalogoCamere implements SubjectCamereInterface, Serializable {
      *
      * @return Una nuova ArrayList contenente copie (cloni) di tutti gli oggetti Camera.
      */
-    public synchronized static ArrayList<Camera> getListaCamere() {
+    public synchronized ArrayList<Camera> getListaCamere() {
         return camereList;
     }
 
-    public synchronized static void addCamere(ArrayList<Camera> camere) {
+    public synchronized void addCamere(ArrayList<Camera> camere) {
 
         try {
             for (Camera camera : camere) {
                 camereList.add(camera.clone());
             }
-        } catch (CloneNotSupportedException cloneNotSupportedException) {
+            fds.doSaveAll(camere);
+        } catch (CloneNotSupportedException | SQLException cloneNotSupportedException) {
             cloneNotSupportedException.printStackTrace();
         }
     }
@@ -103,6 +102,13 @@ public class CatalogoCamere implements SubjectCamereInterface, Serializable {
             for(Camera cam : camereList){
                 if(cam.getNumeroCamera()==c.getNumeroCamera() && !cam.getStatoCamera().equals(c.getStatoCamera())){
                     cam.setStatoCamera(c.getStatoCamera());
+                    FrontDeskStorage<Camera> fds = new CameraDAO();
+                    try {
+                        fds.doUpdate(cam);
+                    }catch (SQLException e) {
+                        e.printStackTrace();
+                        Logger.getLogger(FrontDeskStorage.class.getName()).log(Level.SEVERE, null, e);
+                    }
                     lastModified = cam;
                     notifyObservers();
                     return true;

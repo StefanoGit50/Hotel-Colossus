@@ -1,5 +1,6 @@
 package it.unisa.Common;
 
+import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Server.persistent.util.Util;
 
 import java.io.Serializable;
@@ -17,7 +18,7 @@ public class Prenotazione implements Cloneable, Serializable {
     /**
      * Codice univoco della prenotazione.
      */
-    private int IDPrenotazione;
+    private Integer IDPrenotazione;
 
     /**
      * Data in cui è stata creata la prenotazione.
@@ -67,7 +68,7 @@ public class Prenotazione implements Cloneable, Serializable {
     /**
      * Il numero del documento del cliente
      */
-    private int numeroDocumento;
+    private String numeroDocumento;
 
     /**
      * Lista delle camere incluse nella prenotazione.
@@ -83,8 +84,14 @@ public class Prenotazione implements Cloneable, Serializable {
      * Lista dei clienti che soggiorneranno.
      */
     private ArrayList<Cliente> listaClienti;
-
+    /**
+     * Indica lo stato della prenotazione
+     */
     private boolean statoPrenotazione;
+    /**
+     * Dice se è stato fatto il check-In della prenotazione
+     */
+    private boolean checkIn;
 
     /**
      * Costruttore completo per creare una nuova istanza di {@code Prenotazione}.
@@ -107,7 +114,7 @@ public class Prenotazione implements Cloneable, Serializable {
     public Prenotazione(int IDPrenotazione, LocalDate dataCreazionePrenotazione, LocalDate dataInizio, LocalDate dataFine,
                         Trattamento trattamento, String tipoDocumento, LocalDate dataRilascio, LocalDate dataScadenza,
                         String intestatario, String noteAggiuntive, ArrayList<Camera> listaCamere, ArrayList<Servizio> listaServizi,
-                        ArrayList<Cliente> listaClienti ,int numeroDocumento) {
+                        ArrayList<Cliente> listaClienti ,String numeroDocumento) {
         this.IDPrenotazione = IDPrenotazione;
         this.dataCreazionePrenotazione = dataCreazionePrenotazione;
         this.dataInizio = dataInizio;
@@ -124,11 +131,12 @@ public class Prenotazione implements Cloneable, Serializable {
         this.listaClienti = Util.deepCopyArrayList(listaClienti);
         this.numeroDocumento = numeroDocumento;
         this.statoPrenotazione = true;
+        this.checkIn = false;
     }
 
     public Prenotazione() {
         this.IDPrenotazione = 0;
-        this.numeroDocumento = 0;
+        this.numeroDocumento = "";
         this.dataCreazionePrenotazione = LocalDate.now();
         this.dataFine = LocalDate.now();
         this.dataInizio = LocalDate.now();
@@ -142,7 +150,6 @@ public class Prenotazione implements Cloneable, Serializable {
         this.intestatario = "";
         this.statoPrenotazione = false;
     }
-
 
      /**
      * Aggiunge un cliente alla lista dei clienti.
@@ -210,11 +217,11 @@ public class Prenotazione implements Cloneable, Serializable {
     // --- Getter e Setter ---
     // I getter per le liste restituiscono deep copy per l'incapsulamento
 
-    public void setIDPrenotazione(int IDPrenotazione) {
+    public void setIDPrenotazione(Integer IDPrenotazione) {
         this.IDPrenotazione = IDPrenotazione;
     }
 
-    public int getIDPrenotazione() {
+    public Integer getIDPrenotazione() {
         return IDPrenotazione;
     }
 
@@ -301,11 +308,11 @@ public class Prenotazione implements Cloneable, Serializable {
         this.noteAggiuntive = noteAggiuntive;
     }
 
-    public void setNumeroDocumento(int numeroDocumento){
+    public void setNumeroDocumento(String numeroDocumento){
         this.numeroDocumento = numeroDocumento;
     }
 
-    public int getNumeroDocumento(){
+    public String getNumeroDocumento(){
         return numeroDocumento;
     }
     /**
@@ -362,6 +369,17 @@ public class Prenotazione implements Cloneable, Serializable {
         this.listaClienti = Util.deepCopyArrayList(listaClienti);
     }
 
+    public boolean isCheckIn() {
+        return checkIn;
+    }
+
+    public boolean isStatoPrenotazione() {
+        return statoPrenotazione;
+    }
+
+    public void setCheckIn(boolean checkIn) {
+        this.checkIn = checkIn;
+    }
 
     // --- Metodi Standard di Object ---
 
@@ -390,15 +408,20 @@ public class Prenotazione implements Cloneable, Serializable {
      * Indica se un altro oggetto è "uguale a" questa prenotazione.
      * Il confronto è basato sul codice di prenotazione e su tutti gli attributi.
      *
-     * @param obj L'oggetto da confrontare.
+     * @param o L'oggetto da confrontare.
      * @return {@code true} se le due prenotazioni sono uguali, {@code false} altrimenti.
      */
+
     @Override
-    public boolean equals(Object obj){
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Prenotazione that = (Prenotazione) obj;
-        return Objects.equals(IDPrenotazione, that.IDPrenotazione) && Objects.equals(dataCreazionePrenotazione, that.dataCreazionePrenotazione) && Objects.equals(dataInizio, that.dataInizio) && Objects.equals(dataFine, that.dataFine) && Objects.equals(trattamento, that.trattamento) && Objects.equals(tipoDocumento, that.tipoDocumento) && Objects.equals(dataRilascio, that.dataRilascio) && Objects.equals(dataScadenza, that.dataScadenza) && Objects.equals(intestatario, that.intestatario) && Objects.equals(noteAggiuntive, that.noteAggiuntive) && Objects.equals(listaCamere, that.listaCamere) && Objects.equals(listaServizi, that.listaServizi) && Objects.equals(listaClienti, that.listaClienti) && numeroDocumento == that.numeroDocumento;
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Prenotazione that = (Prenotazione) o;
+        return numeroDocumento == that.numeroDocumento && statoPrenotazione == that.statoPrenotazione && checkIn == that.checkIn && Objects.equals(IDPrenotazione, that.IDPrenotazione) && Objects.equals(dataCreazionePrenotazione, that.dataCreazionePrenotazione) && Objects.equals(dataInizio, that.dataInizio) && Objects.equals(dataFine, that.dataFine) && Objects.equals(trattamento, that.trattamento) && Objects.equals(tipoDocumento, that.tipoDocumento) && Objects.equals(dataRilascio, that.dataRilascio) && Objects.equals(dataScadenza, that.dataScadenza) && Objects.equals(intestatario, that.intestatario) && Objects.equals(noteAggiuntive, that.noteAggiuntive) && Objects.equals(listaCamere, that.listaCamere) && Objects.equals(listaServizi, that.listaServizi) && Objects.equals(listaClienti, that.listaClienti);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(IDPrenotazione, dataCreazionePrenotazione, dataInizio, dataFine, trattamento, tipoDocumento, dataRilascio, dataScadenza, intestatario, noteAggiuntive, numeroDocumento, listaCamere, listaServizi, listaClienti, statoPrenotazione, checkIn);
     }
 
     /**

@@ -3,9 +3,9 @@ package it.unisa.Server.command.CatalogoImpiegatiCommands;
 import it.unisa.Common.Impiegato;
 import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoImpiegati;
-import it.unisa.Storage.BackofficeStorage;
+import it.unisa.Storage.Interfacce.BackofficeStorage;
 import it.unisa.Storage.DAO.ImpiegatoDAO;
-import it.unisa.Storage.FrontDeskStorage;
+import it.unisa.Storage.DuplicateKeyEntry;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -57,8 +57,9 @@ public class AddImpiegatoCommand implements Command {
         try{
             BackofficeStorage<Impiegato> impiegatoFrontDeskStorage = new ImpiegatoDAO();
             impiegatoFrontDeskStorage.doSave(impiegato);
-        }catch (SQLException sqlException){
-
+        } catch (SQLException e){
+            if (e.getErrorCode() == 1062)
+                throw new DuplicateKeyEntry();
         }
     }
 

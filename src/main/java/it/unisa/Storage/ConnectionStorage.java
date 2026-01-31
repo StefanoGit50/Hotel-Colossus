@@ -28,17 +28,17 @@ public class    ConnectionStorage{
         Connection newConnection;
         String ip = "localhost";
         String port = "3306";
-        String db = "hotelcolossus";
+        String db = "hotelcolossus2";
         String username = "root";
-        String password = "1uno2due";
+        String password = "_MySqlServer2024";  //_MySqlServer2024 E' mia --Giovanni
 
         newConnection = DriverManager.getConnection("jdbc:mysql://"+ ip+":"+ port+"/"+db+"?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", username, password);
         return newConnection;
     }
 
 
-    public static synchronized Connection getConnection() throws SQLException {
-        Connection connection;
+    public static synchronized Connection getConnection(){
+        Connection connection = null;
 
         if (!freeDbConnections.isEmpty()) {
             connection =  freeDbConnections.getFirst(); // restituisce la prima connessione disponibile
@@ -49,12 +49,20 @@ public class    ConnectionStorage{
                         return getConnection(); // richiama se stesso fin quando non trova una connessione valida
                     }
                 } catch (SQLException e) {
-                    connection.close();
+                    try{
+                        connection.close();
+                    }catch (SQLException sqlException){
+                        sqlException.printStackTrace();
+                    }
                     return getConnection(); // richiama se stesso fin quando non trova una connessione valida
                 }
 
         } else {
-            connection = createDBConnection();
+            try{
+                connection = createDBConnection();
+            }catch (SQLException sqlException){
+                sqlException.printStackTrace();
+            }
         }
         return connection;
     }

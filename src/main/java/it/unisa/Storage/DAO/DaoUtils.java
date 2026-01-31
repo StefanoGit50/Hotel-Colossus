@@ -14,7 +14,6 @@ public final class DaoUtils {
      */
     public static boolean checkWhitelist(String[] whitelist, String suspect) {
         if(whitelist == null) return false;
-        System.out.println("Sono dentro");
         boolean flag = false;
 
         for (String w : whitelist){

@@ -1,11 +1,19 @@
 package it.unisa.Server.persistent.obj.catalogues;
 
+import it.unisa.Common.Cliente;
 import it.unisa.Common.Impiegato;
+import it.unisa.Server.gestionePrenotazioni.FrontDesk;
 import it.unisa.Server.persistent.util.Ruolo;
+import it.unisa.Storage.DAO.ClienteDAO;
+import it.unisa.Storage.DAO.ImpiegatoDAO;
+import it.unisa.Storage.Interfacce.BackofficeStorage;
+import it.unisa.Storage.Interfacce.FrontDeskStorage;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Objects;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Il catalogo degli impiegati permette di modificare, accedere e cercare gli impiegati presenti nel sistema.
@@ -16,6 +24,19 @@ public class CatalogoImpiegati implements Serializable {
      * Lista di tutti gli impiegati del sistema.
      */
     private static ArrayList<Impiegato> listaImpiegati = new ArrayList<>();
+    private static BackofficeStorage<Impiegato> backOfficeStorage = new ImpiegatoDAO();
+
+
+    static {
+        try{
+            backOfficeStorage.doRetriveAll("decrescente");
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    public CatalogoImpiegati() {
+    }
 
     // Getters - Setters
 
@@ -36,8 +57,59 @@ public class CatalogoImpiegati implements Serializable {
             }
 
         }
-
     }
+
+
+    public  boolean aggiungiImpiegato(Impiegato imp) {
+        if (listaImpiegati.contains(imp)){
+            try {
+                backOfficeStorage.doSave(imp);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
+            listaImpiegati.remove(imp);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean eliminaImpiegato(Impiegato imp){
+        if(listaImpiegati.contains(imp)){
+            try{
+                backOfficeStorage.doDelete(imp);
+            }catch (SQLException e){
+                e.printStackTrace();
+                return false;
+            }
+            listaImpiegati.remove(imp);
+            return true;
+        }
+        return false;
+    }
+    public boolean updateImpiegato(Impiegato imp){
+        if(listaImpiegati.contains(imp)){
+            try{
+                backOfficeStorage.doUpdate(imp);
+            }catch (SQLException e){
+                e.printStackTrace();
+                return false;
+            }
+                boolean flag=false;
+                Iterator<Impiegato> it = listaImpiegati.iterator();
+                while (it.hasNext()){
+                    Impiegato i =  it.next();
+                    if(i.getCodiceFiscale().equals(imp.getCodiceFiscale()) && !i.equals(imp)){
+                        it.remove();
+                        listaImpiegati.add(imp);
+                        return true;
+                    }
+                }
+
+        }
+        return false;
+    }
+
 
     // Metodi interfaccia publica
 
@@ -68,8 +140,7 @@ public class CatalogoImpiegati implements Serializable {
      * @return Una deep copy dell'ArrayList contenente tutti gli impiegati che corrispondono ai criteri di ricerca.
      * @throws CloneNotSupportedException Se il metodo clone non è supportato dalla classe {@code Impiegato}
      */
-    public ArrayList<Impiegato> cercaimpiegati(String nome, String cognome, String sesso, Ruolo ruolo)
-            throws CloneNotSupportedException{
+    public ArrayList<Impiegato> cercaimpiegati(String nome, String cognome, String sesso, Ruolo ruolo) {
         ArrayList<Impiegato> risultati = new ArrayList<>();
 
         // Flags per verificare se almeno un parametro è stato fornito
@@ -105,12 +176,119 @@ public class CatalogoImpiegati implements Serializable {
                 }
             }
 
-            risultati.add(impiegato.clone());
+            try {
+                risultati.add(impiegato.clone());
+            } catch (CloneNotSupportedException e) { // Non succede perchè impiegato supporta clone
+                e.printStackTrace();
+            }
         }
 
         return risultati;
     }
 
+    /**
+     * Metodo usato per controllare la validità dei campi di un impiegato.
+     * @param impiegato impiegato da controllare.
+     * @throws InvalidInputException se un campo presenta un valore errato.
+     */
+    public static void checkImpiegato(Impiegato impiegato) throws InvalidInputException {
+        Pattern cfPattern = Pattern.compile("^[A-Z0-9]{16}$"),
+                numletterPattern = Pattern.compile("^[A-Za-z0-9]*$"),
+                namePattern = Pattern.compile("^[A-Za-z\\s]*$"),
+                telPattern = Pattern.compile("^[0-9]{0,15}$"),
+                emailPattern = Pattern.compile("^[A-Za-z]*\\.[A-Za-z]*[0-9]*@HotelColossus\\.it$");
+
+        String[] listaRuolo = {Ruolo.FrontDesk.toString(), Ruolo.Manager.toString(), Ruolo.Governante.toString()},
+            listaSesso = {"Maschio", "Femmina", "Altro"},
+            listaDocumenti = {"Patente", "CID", "Passaporto"};
+
+        LocalDate assunzione = impiegato.getDataAssunzione(),
+            rilascioDocumento = impiegato.getDataRilascio(),
+            scadenzaDocumento = impiegato.getDataScadenza();
+
+        // Condizioni che possono lanciare un errore
+        // 1. Codice Fiscale
+        if (!cfPattern.matcher(impiegato.getCodiceFiscale()).matches())
+            throw new InvalidInputException("[Codice Fiscale] errato");
+
+        // 2. Stipendio
+        if (impiegato.getStipendio() <= 0)
+            throw new InvalidInputException("[Stipendio] errato");
+
+        // 3. Nome
+        if (!namePattern.matcher(impiegato.getNome()).matches())
+            throw new InvalidInputException("[Nome] errato");
+
+        // 4. Cognome
+        if (!namePattern.matcher(impiegato.getCognome()).matches())
+            throw new InvalidInputException("[Cognome] errato");
+
+        // 5. CAP
+        if (impiegato.getCAP() < 10000 || impiegato.getCAP() > 99999)
+            throw new InvalidInputException("[CAP] errato");
+
+        // 6. Data Assunzione
+        if (assunzione.isAfter(LocalDate.now()))
+            throw new InvalidInputException("[Data Assunzione] errato");
+
+        // 7. Lunghezza Telefono e 8. Formato Telefono
+        if (impiegato.getTelefono().length() > 15 || !telPattern.matcher(impiegato.getTelefono()).matches())
+            throw new InvalidInputException("[Telefono] errato");
+
+        // 9. Cittadinanza
+        if (!namePattern.matcher(impiegato.getCittadinanza()).matches())
+            throw new InvalidInputException("[Cittadinanza] errato");
+
+        // 10. Email Aziendale
+        if (!emailPattern.matcher(impiegato.getEmailAziendale()).matches())
+            throw new InvalidInputException("[Email Aziendale] errato");
+
+        // 11. Ruolo
+        if (!Arrays.asList(listaRuolo).contains(impiegato.getRuolo().toString().trim()))
+            throw new InvalidInputException("[Ruolo] errato");
+
+        // 12. Sesso
+        if (!Arrays.asList(listaSesso).contains(impiegato.getSesso().trim()))
+            throw new InvalidInputException("[Sesso] errato");
+
+        // 13. Data Rilascio Documento
+        if (rilascioDocumento.isAfter(LocalDate.now()))
+            throw new InvalidInputException("[Data Rilascio Documento] errato");
+
+        // 14. Tipo Documento
+        if (!Arrays.asList(listaDocumenti).contains(impiegato.getTipoDocumento().trim()))
+            throw new InvalidInputException("[Tipo Documento] errato");
+
+        // 15. Via
+        if (!namePattern.matcher(impiegato.getVia()).matches())
+            throw new InvalidInputException("[Via] errato");
+
+        // 16. Provincia
+        if (!namePattern.matcher(impiegato.getProvincia()).matches())
+            throw new InvalidInputException("[Provincia] errato");
+
+        // 17. Comune
+        if (!namePattern.matcher(impiegato.getComune()).matches())
+            throw new InvalidInputException("[Comune] errato");
+
+        // 18. Numero Civico
+        if (impiegato.getNumeroCivico() <= 0)
+            throw new InvalidInputException("[Numero Civico] errato");
+
+        // 19. Numero Documento
+        if (!numletterPattern.matcher(impiegato.getNumeroDocumento()).matches())
+            throw new InvalidInputException("[Numero Documento] errato");
+
+        // 20, 21, 22. Validazione Data Scadenza Documento
+        if (scadenzaDocumento.isBefore(LocalDate.now()) ||
+                scadenzaDocumento.isEqual(LocalDate.now()) ||
+                scadenzaDocumento.isBefore(rilascioDocumento) ||
+                scadenzaDocumento.isEqual(rilascioDocumento)) {
+            throw new InvalidInputException("[Data Scadenza Documento] errato");
+        }
+
+    }
+    
     // Metodi della classe Object
 
     @Override
