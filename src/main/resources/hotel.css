@@ -9,7 +9,10 @@
     -light-gray: #f0f0f0;
     -text-dark: #1a202c;
     -text-gray: #666666;
+
+    -border-light: #e2e8f0;
 }
+
 
 /* Cambia questi per i colori burgundy del logo */
 /*
@@ -28,14 +31,19 @@
 /* ==================== TOP BAR ==================== */
 .top-bar {
     -fx-background-color: #faf8f5;
-    -fx-background-radius: 15;
+    -fx-background-radius:0,0,15,15;
+    -fx-border-width: 0 0 3 0;
+    -fx-border-radius: 0 0 15 15;
+    -fx-padding: 12px 25px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0, 0, 2);
     /*-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 2);*/
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 2)
+    -fx-border-color: transparent transparent #6d1331 transparent;
+
 }
 
 .logo {
     -fx-font-family: "Segoe UI Light", "Helvetica Neue Light", "Arial";
-    -fx-font-size: 39px;
+    -fx-font-size: 28px;
     -fx-font-weight: 600;
     -fx-text-fill: -burgundy-primary;
     -fx-letter-spacing: 4px; /* ✅ Spaziatura elegante */
@@ -73,7 +81,7 @@
 }
 
 .menu-item {
-    -fx-padding: 12px 20px;
+    -fx-padding: 16px 20px;
     -fx-background-color: transparent;
 }
 
@@ -94,6 +102,7 @@
 
 /* ==================== SIDEBAR ==================== */
 .sidebar {
+    -fx-min-width: 210px;
     -fx-background-color: -white;
     -fx-background-radius: 15;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 2);
@@ -103,6 +112,7 @@
     -fx-background-color: transparent;
     -fx-background-radius: 10;
     -fx-cursor: hand;
+    -fx-padding: 12px 12px;
 }
 
 .nav-item:hover {
@@ -137,11 +147,21 @@
     -fx-font-size: 18px;
     -fx-text-fill: #6d1331;
     -fx-font-weight: bolder;
+    -fx-letter-spacing: 1px;
+    -fx-padding: 0 0 0 0;
+    -fx-border-color: transparent transparent -border-light transparent;
+    -fx-alignment: center;
 }
 
-.placeholder-text {
-    -fx-text-fill: -text-gray;
+/* decorazioni ai lati del titolo */
+.section-decoration {
+    -fx-font-size: 16px;
+    -fx-text-fill: -burgundy-primary;
+    -fx-opacity: 0.6;
+    -fx-font-weight: normal;
 }
+
+
 
 /* ==================== STAT CARDS ==================== */
 .stats-grid {
@@ -150,22 +170,28 @@
 
 .stat-card {
     -fx-background-color: -burgundy-gradient-vertical;
+    -fx-border-width: 2;
     -fx-background-radius: 12;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 2);
     -fx-cursor: hand;
     -fx-border-color: #f5e6d3;;
+    -fx-padding: 12 20 15 20;  /* ✅ Cambia in: 10 15 10 15 */
+    -fx-min-height: 100;       /* ✅ Cambia in: 80 */
+    -fx-pref-height: 100;      /* ✅ Cambia in: 80 */
 }
 
 .stat-card:hover {
+    -fx-border-color: -burgundy-primary;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 12, 0, 0, 4);
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
+    -fx-translate-y: -5;
 }
 
 .stat-number {
     -fx-font-size: 32px;
     -fx-font-weight: bold;
-    -fx-text-fill: white;
+    -fx-text-fill: -burgundy-primary;
 }
 
 .stat-label {
@@ -174,8 +200,1630 @@
     -fx-alignment: center;
 }
 
+filters-section {
+    -fx-background-color: #fafafa;
+    -fx-background-radius: 10;
+    -fx-border-color: -border-light;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+}
+
+.filters-title {
+    -fx-font-size: 15px;
+    -fx-font-weight: 500;
+    -fx-text-fill: -burgundy-primary;
+}
+
+.filter-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #666666;
+}
+
+.filter-input {
+    -fx-background-color: white;
+    -fx-border-color: -border-light;
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+    -fx-background-radius: 10;
+    -fx-padding: 8px 12px;
+    -fx-font-size: 13px;
+}
+
+.filter-input:focused {
+    -fx-border-color: -burgundy-primary;
+    -fx-effect: dropshadow(gaussian, rgba(109, 19, 49, 0.1), 8, 0, 0, 0);
+}
+
+/* ==================== SORT BUTTONS ==================== */
+.sort-btn {
+    -fx-background-color: white;
+    -fx-border-color: -border-light;
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+    -fx-background-radius: 10;
+    -fx-padding: 10px 15px;
+    -fx-cursor: hand;
+    -fx-text-fill: #666666;
+    -fx-font-weight: 500;
+    -fx-font-size: 12px;
+}
+
+.sort-btn:hover {
+    -fx-border-color: -burgundy-primary;
+    -fx-text-fill: -burgundy-primary;
+    -fx-translate-y: -2;
+}
+
+.sort-btn.active {
+    -fx-background-color: linear-gradient(to right, #641004, #8b1538);
+    -fx-text-fill: white;
+    -fx-border-color: -burgundy-primary;
+}
+
+.reset-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: #999999;
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+    -fx-background-radius: 10;
+    -fx-padding: 10px 16px;
+    -fx-cursor: hand;
+    -fx-text-fill: #999999;
+    -fx-font-weight: 500;
+    -fx-font-size: 12px;
+}
+
+.reset-btn:hover {
+    -fx-background-color: #f5f5f5;
+    -fx-border-color: #666666;
+    -fx-text-fill: #666666;
+}
+
+/* ==================== BOOKINGS CONTAINER ==================== */
+.bookings-scroll {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.bookings-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.bookings-container {
+    -fx-padding: 10 0 10 0;
+}
+
+/* ==================== BOOKING CARDS ==================== */
+.booking-card {
+    -fx-background-color: white;
+    -fx-border-color: #f5e6d3;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-cursor: hand;
+}
+
+.booking-card:hover {
+    -fx-border-color: -burgundy-primary;
+    -fx-translate-x: 10;
+    -fx-effect: dropshadow(gaussian, rgba(109, 19, 49, 0.15), 20, 0, 0, 6);
+}
+
+.booking-name {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #671C31;
+}
+
+.booking-details {
+    -fx-font-size: 13px;
+    -fx-text-fill: #666666;
+}
+
+.booking-arrow {
+    -fx-font-size: 24px;
+    -fx-text-fill: -burgundy-primary;
+}
+
+.no-results {
+    -fx-font-size: 16px;
+    -fx-text-fill: #999999;
+    -fx-padding: 40px;
+    -fx-alignment: center;
+}
+
+
 /* ==================== ANIMAZIONI ==================== */
 .nav-item,
-.stat-card {
+.stat-card,
+.booking-card,
+.sort-btn,
+.reset-btn {
     -fx-transition: all 0.3s ease;
+}
+
+/*==================== GUEST MANAGEMENT - REGISTRATION FORM ==================== */
+.registration-header {
+    -fx-background-color: linear-gradient(to right, #641004 0%, #8b1538 100%);
+    -fx-background-radius: 15 15 0 0;
+    -fx-padding: 15px;
+}
+
+.registration-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: 300;
+    -fx-letter-spacing: 3px;
+    -fx-text-fill: white;
+}
+
+.registration-description {
+    -fx-font-size: 14px;
+    -fx-text-fill: #f5e6d3;
+    -fx-opacity: 0.9;
+}
+
+.registration-form-container {
+    -fx-background-color: white;
+    -fx-background-radius: 0 0 15 15;
+    -fx-padding: 20px 30px;
+}
+
+.form-group,
+.form-group-full {
+    -fx-padding: 0;
+}
+
+.form-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #6d1331;
+
+}
+
+.form-input {
+    -fx-background-color: white;
+    -fx-border-color: #f5e6d3;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 10px 14px;
+    -fx-font-size: 13px;
+}
+
+.form-input:focused {
+    -fx-border-color: #6d1331;
+    -fx-effect: dropshadow(gaussian, rgba(109, 19, 49, 0.1), 8, 0, 0, 0);
+}
+
+.combo-box .form-input {
+    -fx-padding: 12px 16px;
+}
+
+.date-picker .form-input {
+    -fx-padding: 12px 16px;
+}
+
+/* ==================== REGISTRATION BUTTONS ==================== */
+.register-btn-primary {
+    -fx-background-color: linear-gradient(to right, #6d1331, #8b1538);
+    -fx-text-fill: white;
+    -fx-border-width: 0;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 16px;
+    -fx-cursor: hand;
+    -fx-font-size: 15px;
+    -fx-font-weight: 500;
+    -fx-letter-spacing: 1px;
+}
+
+.register-btn-primary:hover {
+    -fx-effect: dropshadow(gaussian, rgba(109, 19, 49, 0.3), 20, 0, 0, 6);
+    -fx-translate-y: -2;
+    -fx-padding: 12px;  /* Da 16px */
+    -fx-font-size: 14px;
+}
+
+.register-btn-secondary {
+    -fx-background-color: white;
+    -fx-text-fill: #6d1331;
+    -fx-border-color: #6d1331;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 12px;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-letter-spacing: 1px;
+}
+
+.register-btn-secondary:hover {
+    -fx-background-color: #f5e6d3;
+}
+
+
+/* ==================== PLANNING VIEW ==================== */
+.planning-btn-primary {
+    -fx-background-color: linear-gradient(to right, #667eea, #764ba2);
+    -fx-text-fill: white;
+    -fx-font-weight: 500;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.planning-btn-primary:hover {
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.3), 20, 0, 0, 6);
+    -fx-translate-y: -2;
+}
+
+.planning-calendar-nav {
+    -fx-background-color: #fafafa;
+    -fx-background-radius: 12;
+    -fx-padding: 8px 15px;
+}
+
+.planning-nav-button {
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-max-width: 40px;
+    -fx-max-height: 40px;
+    -fx-background-color: white;
+    -fx-border-color: #f5e6d3;
+    -fx-border-width: 2;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-text-fill: #667eea;
+    -fx-font-size: 18px;
+    -fx-cursor: hand;
+}
+
+.planning-nav-button:hover {
+    -fx-background-color: linear-gradient(to right, #667eea, #764ba2);
+    -fx-text-fill: white;
+    -fx-border-color: #667eea;
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
+
+.planning-today-btn {
+    -fx-background-color: white;
+    -fx-border-color: #667eea;
+    -fx-border-width: 2;
+    -fx-text-fill: #667eea;
+    -fx-font-weight: 500;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-cursor: hand;
+}
+
+.planning-today-btn:hover {
+    -fx-background-color: #667eea;
+    -fx-text-fill: white;
+}
+
+.planning-period-label {
+    -fx-font-size: 18px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #333;
+}
+
+.planning-scroll {
+    -fx-background-color: transparent;
+}
+
+.planning-calendar-grid {
+    -fx-background-color: white;
+    -fx-border-color: #f5e6d3;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+.planning-room-header {
+    -fx-background-color: linear-gradient(to right, #667eea, #764ba2);
+    -fx-border-color: white;
+    -fx-border-width: 0 1 0 0;
+}
+
+.planning-date-header {
+    -fx-background-color: linear-gradient(to bottom, #fafafa, white);
+    -fx-border-color: #f5e6d3;
+    -fx-border-width: 0 1 2 0;
+}
+
+.planning-day-name {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #667eea;
+}
+
+.planning-date-value {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333;
+}
+
+.planning-date-today {
+    -fx-background-color: #667eea;
+    -fx-text-fill: white;
+    -fx-padding: 4px 8px;
+    -fx-background-radius: 6;
+}
+
+.planning-room-cell {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #f5e6d3;
+    -fx-border-width: 0 1 1 0;
+}
+
+.planning-room-number {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #667eea;
+}
+
+.planning-room-type {
+    -fx-font-size: 11px;
+    -fx-text-fill: #666;
+}
+
+.planning-day-cell {
+    -fx-border-color: #f5e6d3;
+    -fx-border-width: 0 1 1 0;
+    -fx-cursor: hand;
+}
+
+.planning-booking-occupied {
+    -fx-background-color: linear-gradient(to right, #667eea, #764ba2);
+    -fx-border-color: #5568d3;
+    -fx-border-width: 1;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 2);
+}
+
+.planning-booking-reserved {
+    -fx-background-color: linear-gradient(to right, #f59e0b, #f59e0b);
+    -fx-border-color: #d97706;
+    -fx-border-width: 1;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 2);
+}
+
+.planning-guest-name {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.planning-booking-dates {
+    -fx-font-size: 11px;
+    -fx-text-fill: rgba(255,255,255,0.9);
+}
+
+.planning-legend {
+    -fx-background-color: #fafafa;
+    -fx-background-radius: 8;
+    -fx-padding: 8px 15px;
+}
+
+.planning-legend-occupied {
+    -fx-background-color: linear-gradient(to right, #667eea, #764ba2);
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.planning-legend-reserved {
+    -fx-background-color: linear-gradient(to right, #f59e0b, #f59e0b);
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.planning-legend-available {
+    -fx-background-color: white;
+    -fx-border-color: #f5e6d3;
+    -fx-border-width: 2;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.planning-legend-text {
+    -fx-font-size: 13px;
+    -fx-text-fill: #666;
+}
+
+
+/* ==================== ROOM MANAGEMENT - ROYAL HOTEL ATMOSPHERE ==================== */
+
+.dark-premium {
+    -fx-background-color: transparent; /* ✅ Trasparente per vedere l'immagine */
+}
+
+/* HEADER */
+.dp-header {
+    -fx-background-color: linear-gradient(to bottom right,
+    rgba(23, 20, 20, 0.94) 0%,
+    #621003 30%,
+    #570303 60%,
+    #621003 80%,
+    rgba(100, 16, 4, 0.9)); /* ✅ Con trasparenza */
+    -fx-background-radius: 15;
+    -fx-border-color: rgba(212, 175, 55, 0.3); /* ✅ Oro discreto */
+    -fx-border-width: 1;
+    -fx-border-radius: 15;
+    -fx-effect: dropshadow(gaussian, rgba(109, 19, 49, 0.3), 20, 0, 0, 8);
+}
+
+.dp-header-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: 300;
+    -fx-letter-spacing: 2px;
+    -fx-text-fill: #cbaa41;
+}
+
+.dp-header-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #f5e6d3;
+    -fx-opacity: 0.8;
+}
+
+/* ROOM CARDS */
+.dp-room-card {
+    -fx-background-color: linear-gradient(to bottom right,
+    rgba(20, 11, 11, 0.91) 0%,
+    #440c09 20%,
+    #310000 60%,
+    #621003 80%,
+    #641004 100%); /* ✅ Colori del logo */
+    -fx-border-color: rgba(212, 175, 55, 0.2);
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-cursor: hand;
+    -fx-min-width: 190;
+    -fx-pref-width: 190;
+    -fx-min-height: 125; /* ✅ RIDOTTO da 140 */
+    -fx-pref-height: 125;
+    -fx-effect: dropshadow(gaussian, rgba(100, 16, 4, 0.4), 15, 0, 0, 5);
+}
+
+.dp-room-card:hover {
+    -fx-border-color: rgba(212, 175, 55, 0.6); /* ✅ Oro un po' più visibile al hover */
+    -fx-border-width: 2;
+    -fx-scale-x: 1.03; /* ✅ Scala ridotta */
+    -fx-scale-y: 1.03;
+    -fx-effect: dropshadow(gaussian, rgba(212, 175, 55, 0.3), 25, 0, 0, 8); /* ✅ Bagliore discreto */
+}
+
+.dp-room-number {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #cfae4d; /* ✅ Oro tenue, non acceso */
+}
+
+.dp-room-type {
+    -fx-font-size: 12px;
+    -fx-text-fill: #f5e6d3;
+    -fx-opacity: 0.85;
+}
+
+/* STATUS BADGES */
+.dp-room-status {
+    -fx-padding: 4px 12px;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-font-size: 11px;
+    -fx-font-weight: 500;
+}
+
+.status-available {
+    -fx-background-color: rgba(52, 211, 153, 0.15);
+    -fx-text-fill: #5eead4; /* Verde acqua elegante */
+    -fx-border-color: rgba(52, 211, 153, 0.4);
+    -fx-border-width: 1;
+}
+
+.status-occupied {
+    -fx-background-color: rgba(239, 68, 68, 0.15);
+    -fx-text-fill: #fca5a5; /* Rosso soft */
+    -fx-border-color: rgba(239, 68, 68, 0.4);
+    -fx-border-width: 1;
+}
+
+.status-cleaning {
+    -fx-background-color: rgba(201, 169, 97, 0.15);
+    -fx-text-fill: #c9a961; /* ✅ Oro tenue */
+    -fx-border-color: rgba(201, 169, 97, 0.4);
+    -fx-border-width: 1;
+}
+
+/* SCROLL PANE */
+.rooms-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.rooms-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.rooms-scroll .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.rooms-scroll .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(212, 175, 55, 0.3);
+    -fx-background-radius: 5;
+}
+
+.rooms-scroll .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: rgba(212, 175, 55, 0.5);
+}
+
+
+
+
+/* ==================== LOGIN VIEW - GLASS MORPHISM ==================== */
+.login-root {
+    -fx-background-color: #1a1a2e;
+}
+
+/* CARD PRINCIPALE */
+.login-card {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-background-radius: 25;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 40, 0, 0, 10);
+    -fx-border-color: rgba(255, 255, 255, 0.2);
+    -fx-border-width: 1;
+    -fx-border-radius: 25;
+}
+
+/* LATO SINISTRO - GLASS MORPHISM ROSSO */
+.login-left-glass {
+    -fx-background-color: linear-gradient(to bottom right,
+    #080707 0%,
+    #440c09 20%,
+    #310000 60%,
+    #621003 80%,
+    #641004 100%);
+
+    -fx-background-radius: 25 0 0 25;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-width: 0 1 0 0;
+}
+
+.login-hotel-name {
+    -fx-font-size: 32px;
+    -fx-font-weight: 300;
+    -fx-letter-spacing: 5px;
+    -fx-text-fill: white;
+    -fx-line-spacing: 5px;
+}
+
+.login-glass-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: rgba(245, 230, 211, 0.9);
+    -fx-font-weight: 300;
+    -fx-letter-spacing: 3px;
+}
+
+.login-decorative-line {
+    -fx-background-color: rgba(245, 230, 211, 0.5);
+}
+
+/* LATO DESTRO - FORM GLASS */
+.login-form-glass {
+    -fx-background-color: rgba(255, 255, 255, 0.98);
+    -fx-background-radius: 0 25 25 0;
+    -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.05), 10, 0, 0, 0);
+}
+
+.login-welcome-glass {
+    -fx-font-size: 21px;
+    -fx-font-weight: 300;
+    -fx-letter-spacing: 3px;
+    -fx-text-fill: #701401;
+}
+
+.login-subtitle-glass {
+    -fx-font-size: 13px;
+    -fx-text-fill: #999;
+    -fx-font-weight: 300;
+}
+
+.login-label-glass {
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #6d1331;
+}
+
+/* INPUT FIELDS */
+.login-input {
+    -fx-background-color: rgba(255, 255, 255, 0.9);
+    -fx-border-color: rgba(245, 230, 211, 0.8);
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 14px 18px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #333;
+}
+
+.login-input:focused {
+    -fx-border-color: #6d1331;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(109, 19, 49, 0.2), 15, 0, 0, 0);
+}
+
+/* BOTTONE LOGIN */
+.login-btn {
+    -fx-background-color: linear-gradient(to right, #621003, #8b1538);
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: 2px;
+    -fx-padding: 16px;
+    -fx-background-radius: 12;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(109, 19, 49, 0.3), 15, 0, 0, 5);
+}
+
+.login-btn:hover {
+    -fx-background-color: linear-gradient(to right, #8b1538, #a01d44);
+    -fx-effect: dropshadow(gaussian, rgba(109, 19, 49, 0.5), 25, 0, 0, 8);
+    -fx-translate-y: -2;
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.login-btn:pressed {
+    -fx-translate-y: 0;
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+/* LINK */
+.login-link-glass {
+    -fx-text-fill: #999;
+    -fx-font-size: 13px;
+    -fx-underline: false;
+}
+
+.login-link-glass:hover {
+    -fx-text-fill: #6d1331;
+    -fx-underline: true;
+}
+
+/* ==================== CONTO ECONOMICO ==================== */
+
+/* Container principale */
+.conto-economico-container {
+    -fx-background-color: #f5f0eb;
+}
+
+/* Header */
+.conto-economico-header {
+    -fx-border-color: #f5e6d3;
+    -fx-border-width: 0 0 2 0;
+    -fx-padding: 0 0 20 0;
+}
+
+.conto-economico-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: 300;
+    -fx-text-fill: #6d1331;
+}
+
+.conto-economico-combo {
+    -fx-background-color: white;
+    -fx-border-color: #f5e6d3;
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 10px 20px;
+}
+
+.conto-economico-btn-export {
+    -fx-background-color: linear-gradient(to bottom right, #667eea, #764ba2);
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+    -fx-padding: 10px 20px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.conto-economico-btn-export:hover {
+    -fx-background-color: linear-gradient(to bottom right, #5568d3, #6640a0);
+    -fx-effect: dropshadow(gaussian, rgba(102,126,234,0.3), 10, 0, 0, 6);
+}
+
+/* Summary Cards */
+.conto-economico-card {
+    -fx-background-radius: 15;
+    -fx-padding: 25px;
+    -fx-cursor: hand;
+}
+
+.conto-economico-card-ricavi {
+    -fx-background-color: linear-gradient(to bottom right, #059669, #10b981);
+}
+
+.conto-economico-card-passivita {
+    -fx-background-color: linear-gradient(to bottom right, #dc2626, #ef4444);
+}
+
+.conto-economico-card-utile {
+    -fx-background-color: linear-gradient(to bottom right, #667eea, #764ba2);
+}
+
+.conto-economico-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 12, 0, 0, 4);
+}
+
+.conto-economico-card-title {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-opacity: 0.9;
+}
+
+.conto-economico-card-value {
+    -fx-text-fill: white;
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+}
+
+/* Toggle Buttons */
+.conto-economico-toggle-active {
+    -fx-background-color: linear-gradient(to bottom right, #667eea, #764ba2);
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+    -fx-padding: 10px 20px;
+    -fx-font-weight: 500;
+    -fx-border-color: #667eea;
+    -fx-border-width: 2;
+    -fx-cursor: hand;
+}
+
+.conto-economico-toggle-inactive {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-padding: 10px 20px;
+    -fx-font-weight: 500;
+    -fx-border-color: #f5e6d3;
+    -fx-border-width: 2;
+    -fx-cursor: hand;
+}
+
+/* Sections */
+.conto-economico-section {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(109,19,49,0.15), 10, 0, 0, 5);
+}
+
+.conto-economico-section-header-ricavi {
+    -fx-background-color: linear-gradient(to right, #059669, #10b981);
+    -fx-background-radius: 12 12 0 0;
+    -fx-padding: 20px 25px;
+}
+
+.conto-economico-section-header-passivita {
+    -fx-background-color: linear-gradient(to right, #dc2626, #ef4444);
+    -fx-background-radius: 12 12 0 0;
+    -fx-padding: 20px 25px;
+}
+
+.conto-economico-section-title {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+/* TreeTableView */
+.conto-economico-tree {
+    -fx-border-color: transparent;
+}
+
+.conto-economico-importo-positivo {
+    -fx-text-fill: #059669;
+    -fx-font-weight: bold;
+    -fx-font-family: 'Courier New';
+    -fx-alignment: CENTER-RIGHT;
+}
+
+.conto-economico-importo-negativo {
+    -fx-text-fill: #dc2626;
+    -fx-font-weight: bold;
+    -fx-font-family: 'Courier New';
+    -fx-alignment: CENTER-RIGHT;
+}
+
+/* Totale Finale */
+.conto-economico-totale-finale {
+    -fx-background-color: linear-gradient(to right, #f8f9fa, white);
+    -fx-border-color: #667eea;
+    -fx-border-width: 3 0 0 0;
+    -fx-padding: 20px 25px;
+}
+
+.conto-economico-totale-label {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.conto-economico-totale-value {
+    -fx-text-fill: #059669;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-font-family: 'Courier New';
+}
+
+/* Legend */
+.conto-economico-legend {
+    -fx-background-color: #fafafa;
+    -fx-background-radius: 8;
+    -fx-padding: 20px;
+}
+
+.conto-economico-legend-box {
+    -fx-background-radius: 4;
+}
+
+.conto-economico-legend-box-ricavi {
+    -fx-background-color: linear-gradient(to bottom right, #059669, #10b981);
+}
+
+.conto-economico-legend-box-passivita {
+    -fx-background-color: linear-gradient(to bottom right, #dc2626, #ef4444);
+}
+
+.conto-economico-legend-box-utile {
+    -fx-background-color: linear-gradient(to bottom right, #667eea, #764ba2);
+}
+
+/* Waterfall */
+.conto-economico-waterfall-container {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-padding: 25px;
+    -fx-border-color: #f5e6d3;
+    -fx-border-width: 1;
+}
+
+.conto-economico-waterfall-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #333;
+}
+
+.conto-economico-waterfall-subtitle {
+    -fx-text-fill: #666;
+    -fx-font-size: 14px;
+}
+
+.conto-economico-waterfall-chart {
+    -fx-background-color: linear-gradient(to top, #fafafa, white);
+    -fx-border-color: #f5e6d3;
+    -fx-border-width: 2;
+    -fx-background-radius: 12;
+    -fx-padding: 30px 20px;
+}
+
+.conto-economico-bar-ricavi {
+    -fx-background-color: linear-gradient(to top, #059669, #10b981);
+    -fx-background-radius: 8 8 0 0;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 2);
+}
+
+.conto-economico-bar-passivita {
+    -fx-background-color: linear-gradient(to top, #dc2626, #ef4444);
+    -fx-background-radius: 8 8 0 0;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 2);
+}
+
+.conto-economico-bar-totale-ricavi {
+    -fx-background-color: linear-gradient(to top, #667eea, #764ba2);
+    -fx-background-radius: 8 8 0 0;
+    -fx-border-color: #5568d3;
+    -fx-border-width: 3;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 2);
+}
+
+.conto-economico-bar-totale-passivita {
+    -fx-background-color: linear-gradient(to top, #dc2626, #ef4444);
+    -fx-background-radius: 8 8 0 0;
+    -fx-border-color: #b91c1c;
+    -fx-border-width: 3;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 2);
+}
+
+.conto-economico-bar-utile-finale {
+    -fx-background-color: linear-gradient(to top, #667eea, #764ba2);
+    -fx-background-radius: 8 8 0 0;
+    -fx-border-color: #5568d3;
+    -fx-border-width: 3;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(102,126,234,0.5), 8, 0, 0, 2);
+}
+
+.conto-economico-bar-value {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+.conto-economico-bar-label {
+    -fx-font-weight: 600;
+    -fx-text-fill: #555;
+    -fx-font-size: 12px;
+    -fx-text-alignment: center;
+}
+
+.conto-economico-bar-label-highlight {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #667eea;
+}
+
+/* Info Box */
+.conto-economico-info-box {
+    -fx-background-color: linear-gradient(to right, #fafafa, white);
+    -fx-background-radius: 12;
+    -fx-border-color: #f5e6d3;
+    -fx-border-width: 2;
+    -fx-padding: 20px;
+}
+
+.conto-economico-info-item {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #667eea;
+    -fx-border-width: 0 0 0 4;
+    -fx-padding: 15px;
+}
+
+.conto-economico-info-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #666;
+    -fx-font-weight: 500;
+}
+
+.conto-economico-info-value {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.conto-economico-info-value-positivo {
+    -fx-text-fill: #059669;
+}
+
+.conto-economico-info-value-negativo {
+    -fx-text-fill: #dc2626;
+}
+
+.conto-economico-info-value-utile {
+    -fx-text-fill: #667eea;
+}
+
+
+
+/* ==================== ROOM MANAGEMENT - ROYAL HOTEL ATMOSPHERE ==================== */
+
+.dark-premium {
+    -fx-background-color: transparent; /* ✅ Trasparente per vedere l'immagine */
+}
+
+/* HEADER */
+.dp-header {
+    -fx-background-color: linear-gradient(to bottom right,
+    rgba(23, 20, 20, 0.94) 0%,
+    #621003 30%,
+    #570303 60%,
+    #621003 80%,
+    rgba(100, 16, 4, 0.9)); /* ✅ Con trasparenza */
+    -fx-background-radius: 15;
+    -fx-border-color: rgba(212, 175, 55, 0.3); /* ✅ Oro discreto */
+    -fx-border-width: 1;
+    -fx-border-radius: 15;
+    -fx-effect: dropshadow(gaussian, rgba(109, 19, 49, 0.3), 20, 0, 0, 8);
+}
+
+.dp-header-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: 300;
+    -fx-letter-spacing: 2px;
+    -fx-text-fill: #cbaa41;
+}
+
+.dp-header-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #f5e6d3;
+    -fx-opacity: 0.8;
+}
+
+/* ROOM CARDS */
+.dp-room-card {
+    -fx-background-color: linear-gradient(to bottom right,
+    rgba(20, 11, 11, 0.91) 0%,
+    #440c09 20%,
+    #310000 60%,
+    #621003 80%,
+    #641004 100%); /* ✅ Colori del logo */
+    -fx-border-color: rgba(212, 175, 55, 0.2);
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-cursor: hand;
+    -fx-min-width: 190;
+    -fx-pref-width: 190;
+    -fx-min-height: 125; /* ✅ RIDOTTO da 140 */
+    -fx-pref-height: 125;
+    -fx-effect: dropshadow(gaussian, rgba(100, 16, 4, 0.4), 15, 0, 0, 5);
+}
+
+.dp-room-card:hover {
+    -fx-border-color: rgba(212, 175, 55, 0.6); /* ✅ Oro un po' più visibile al hover */
+    -fx-border-width: 2;
+    -fx-scale-x: 1.03; /* ✅ Scala ridotta */
+    -fx-scale-y: 1.03;
+    -fx-effect: dropshadow(gaussian, rgba(212, 175, 55, 0.3), 25, 0, 0, 8); /* ✅ Bagliore discreto */
+}
+
+.dp-room-number {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #cfae4d; /* ✅ Oro tenue, non acceso */
+}
+
+.dp-room-type {
+    -fx-font-size: 12px;
+    -fx-text-fill: #f5e6d3;
+    -fx-opacity: 0.85;
+}
+
+/* STATUS BADGES */
+.dp-room-status {
+    -fx-padding: 4px 12px;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-font-size: 11px;
+    -fx-font-weight: 500;
+}
+
+.status-available {
+    -fx-background-color: rgba(52, 211, 153, 0.15);
+    -fx-text-fill: #5eead4; /* Verde acqua elegante */
+    -fx-border-color: rgba(52, 211, 153, 0.4);
+    -fx-border-width: 1;
+}
+
+.status-occupied {
+    -fx-background-color: rgba(239, 68, 68, 0.15);
+    -fx-text-fill: #fca5a5; /* Rosso soft */
+    -fx-border-color: rgba(239, 68, 68, 0.4);
+    -fx-border-width: 1;
+}
+
+.status-cleaning {
+    -fx-background-color: rgba(201, 169, 97, 0.15);
+    -fx-text-fill: #c9a961; /* ✅ Oro tenue */
+    -fx-border-color: rgba(201, 169, 97, 0.4);
+    -fx-border-width: 1;
+}
+
+/* SCROLL PANE */
+.rooms-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.rooms-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.rooms-scroll .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.rooms-scroll .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(212, 175, 55, 0.3);
+    -fx-background-radius: 5;
+}
+
+.rooms-scroll .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: rgba(212, 175, 55, 0.5);
+}
+
+
+
+/* ==================== ROOM DETAIL DIALOG ==================== */
+
+.room-dialog {
+    -fx-background-color: white;
+    -fx-background-radius: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 40, 0, 0, 10);
+}
+
+/* Header */
+.room-dialog-header {
+    -fx-padding: 0 0 15 0;
+}
+
+.room-dialog-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #6d1331;
+    -fx-letter-spacing: 1px;
+}
+
+.room-dialog-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #999;
+    -fx-font-weight: 500;
+}
+
+.room-dialog-close {
+    -fx-font-size: 28px;
+    -fx-text-fill: #999;
+    -fx-cursor: hand;
+    -fx-padding: 0 5 0 5;
+}
+
+.room-dialog-close:hover {
+    -fx-text-fill: #6d1331;
+    -fx-scale-x: 1.2;
+    -fx-scale-y: 1.2;
+}
+
+/* Sections */
+.room-dialog-section {
+    -fx-background-color: #fafafa;
+    -fx-background-radius: 12;
+    -fx-border-color: #f5e6d3;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+    -fx-padding: 15px 20px;
+}
+
+.room-dialog-section-title {
+    -fx-font-size: 15px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #6d1331;
+    -fx-letter-spacing: 0.5px;
+}
+
+/* Status Radio Buttons */
+.room-status-radio {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333;
+    -fx-padding: 5px 0;
+}
+
+.room-status-radio .radio {
+    -fx-border-color: #6d1331;
+    -fx-border-width: 2;
+}
+
+.room-status-radio:selected .radio .dot {
+    -fx-background-color: #6d1331;
+}
+
+/* Guest Name */
+.room-dialog-guest-name {
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #333;
+    -fx-padding: 10px 15px;
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #f5e6d3;
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+}
+
+/* Notes Area */
+.room-dialog-notes {
+    -fx-background-color: white;
+    -fx-border-color: #f5e6d3;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 12px;
+    -fx-font-size: 13px;
+}
+
+.room-dialog-notes:focused {
+    -fx-border-color: #6d1331;
+    -fx-effect: dropshadow(gaussian, rgba(109, 19, 49, 0.15), 10, 0, 0, 0);
+}
+
+/* Action Buttons */
+.room-dialog-btn-cancel {
+    -fx-background-color: white;
+    -fx-text-fill: #666;
+    -fx-border-color: #ddd;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 12px 24px;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: 1px;
+    -fx-cursor: hand;
+}
+
+.room-dialog-btn-cancel:hover {
+    -fx-border-color: #999;
+    -fx-text-fill: #333;
+}
+
+.room-dialog-btn-save {
+    -fx-background-color: linear-gradient(to right, #6d1331, #8b1538);
+    -fx-text-fill: white;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 12px 24px;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: 1px;
+    -fx-cursor: hand;
+}
+
+.room-dialog-btn-save:hover {
+    -fx-effect: dropshadow(gaussian, rgba(109, 19, 49, 0.4), 20, 0, 0, 6);
+    -fx-translate-y: -2;
+}
+
+
+/* ==================== BOOKING DETAIL VIEW ==================== */
+
+.booking-detail-view {
+    -fx-background-color: white;
+}
+
+/* Header */
+.booking-header {
+    -fx-background-color: linear-gradient(to right, #080707 0%, #440c09 25%, #310000 50%, #621003 75%, #641004 100%);
+    -fx-background-radius: 15;
+    -fx-border-color: rgba(212, 175, 55, 0.3);
+    -fx-border-width: 2 0 2 0;
+}
+
+.booking-header-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: 300;
+    -fx-letter-spacing: 4px;
+    -fx-text-fill: #d4af37;
+}
+
+.booking-header-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #f5e6d3;
+    -fx-opacity: 0.85;
+}
+
+.booking-code-box {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-border-color: rgba(212, 175, 55, 0.4);
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+.booking-code-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: rgba(255, 255, 255, 0.7);
+    -fx-text-alignment: center;
+}
+
+.booking-code-value {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #d4af37;
+    -fx-letter-spacing: 3px;
+}
+
+/* Check-in Button */
+.booking-checkin-btn {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: 1px;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+
+.booking-checkin-complete {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #059669, #10b981);
+    -fx-text-fill: white;
+    -fx-border-color: #059669;
+}
+
+.booking-checkin-pending {
+    -fx-background-color: rgba(245, 158, 11, 0.15);
+    -fx-text-fill: #f59e0b;
+    -fx-border-color: #f59e0b;
+}
+
+.booking-checkin-btn:hover {
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* Client Info */
+.booking-client-info {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #fafafa 0%, white 100%);
+    -fx-border-color: #f1e3c6;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+.client-info-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #999;
+}
+
+.client-info-value {
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #333333;
+}
+
+/* Section Titles */
+.section-title-booking {
+    -fx-font-size: 18px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #6d1331;
+    -fx-letter-spacing: 1px;
+}
+
+/* Rooms Table */
+.booking-rooms-table {
+    -fx-border-color: #f5e6d3;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+.booking-rooms-table .column-header {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #6d1331 0%, #8b1538 100%);
+    -fx-text-fill: white;
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: 0.5px;
+}
+
+.booking-rooms-table .column-header-background {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #6d1331 0%, #8b1538 100%);
+}
+
+.booking-rooms-table .table-row-cell {
+    -fx-background-color: #fafafa;
+    -fx-background-radius: 8;
+}
+
+.booking-rooms-table .table-row-cell:hover {
+    -fx-background-color: #f5e6d3;
+}
+
+.booking-badge-complete {
+    -fx-background-color: #10b981;
+    -fx-text-fill: white;
+    -fx-padding: 5px 10px;
+    -fx-background-radius: 12;
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+}
+
+/* Service Cards */
+.booking-service-card {
+    -fx-background-color: white;
+    -fx-border-color: #f5e6d3;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+
+.booking-service-card:hover {
+    -fx-border-color: #6d1331;
+    -fx-effect: dropshadow(gaussian, rgba(109, 19, 49, 0.1), 20, 0, 0, 5);
+    -fx-translate-y: -2;
+}
+
+.service-name {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #333;
+}
+
+.service-desc {
+    -fx-font-size: 11px;
+    -fx-text-fill: #999;
+}
+
+.service-price {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #6d1331;
+}
+
+.qty-btn {
+    /* 1. Rendi il bottone visibile */
+    -fx-background-color: white;       /* Sfondo bianco */
+    -fx-border-color: #e2e8f0;         /* Bordo grigio chiaro per definire la "casella" */
+    -fx-border-width: 1;
+    -fx-border-radius: 4;              /* Angoli leggermente arrotondati */
+    -fx-background-radius: 4;
+
+    /* 2. Forza una dimensione quadrata (Fondamentale!) */
+    -fx-min-width: 30px;
+    -fx-max-width: 30px;
+    -fx-min-height: 30px;
+    -fx-max-height: 30px;
+    -fx-padding: 0;                    /* Rimuovi il padding interno di JavaFX */
+
+    /* 3. Stile del testo (+) */
+    -fx-alignment: center;             /* Centra perfettamente il "+" */
+    -fx-text-fill: #6d1331;            /* Colore Burgundy */
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-cursor: hand;
+}
+
+/* Effetto quando passi sopra col mouse */
+.qty-btn:hover {
+    -fx-background-color: #faf5f5;     /* Sfondo leggermente rosato */
+    -fx-border-color: #6d1331;         /* Il bordo diventa Burgundy */
+}
+
+/* Effetto quando clicchi */
+.qty-btn:pressed {
+    -fx-background-color: #6d1331;     /* Diventa tutto rosso */
+    -fx-text-fill: white;              /* Il "+" diventa bianco */
+}
+
+.qty-value {
+    /* 1. Rendi il testo visibile */
+    -fx-text-fill: #1a202c;        /* Colore scuro (quasi nero) */
+    -fx-font-size: 16px;           /* Stessa grandezza dei simboli +/- */
+    -fx-font-weight: bold;
+
+    /* 2. Dagli spazio fisso così non "balla" quando cambi cifra */
+    -fx-min-width: 30px;
+    -fx-alignment: center;         /* Centra il numero nel suo spazio */
+
+    /* Opzionale: se vuoi vedere i bordi della label per debug, togli il commento sotto */
+    /* -fx-background-color: #f0f0f0; */
+}
+
+
+/* Service Subtotal */
+.service-subtotal {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #059669;
+}
+
+/* Summary Box */
+.booking-summary-box {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #fafafa 0%, white 100%);
+    -fx-border-color: #f5e6d3;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+.summary-line {
+    -fx-border-color: #f5e6d3;
+    -fx-border-width: 0 0 1 0;
+}
+
+.summary-line-total {
+    -fx-border-color: #6d1331;
+    -fx-border-width: 3 0 0 0;
+}
+
+.summary-label {
+    -fx-text-fill: #666;
+    -fx-font-size: 14px;
+}
+
+.summary-value {
+    -fx-font-weight: 600;
+    -fx-text-fill: #333;
+    -fx-font-size: 14px;
+}
+
+.summary-value-total {
+    -fx-font-weight: bold;
+    -fx-text-fill: #6d1331;
+    -fx-font-size: 22px;
+}
+
+/* Notes Box */
+.booking-notes-box {
+    -fx-background-color: #fafafa;
+    -fx-border-color: #f5e6d3;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+.booking-notes-area {
+    -fx-background-color: white;
+    -fx-border-color: #f5e6d3;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-font-size: 13px;
+}
+
+.booking-notes-area:focused {
+    -fx-border-color: #6d1331;
+}
+
+/* Action Buttons */
+.booking-btn-back {
+    -fx-background-color: white;
+    -fx-text-fill: #666;
+    -fx-border-color: #ddd;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 14px 28px;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: 1px;
+    -fx-cursor: hand;
+}
+
+.booking-btn-back:hover {
+    -fx-border-color: #6d1331;
+    -fx-text-fill: #6d1331;
+}
+
+.booking-btn-delete {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #dc2626, #ef4444);
+    -fx-text-fill: white;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 14px 28px;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: 1px;
+    -fx-cursor: hand;
+}
+
+.booking-btn-delete:hover {
+    -fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.4), 20, 0, 0, 8);
+    -fx-translate-y: -2;
+}
+
+.booking-btn-save {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #6d1331, #8b1538);;
+    -fx-text-fill: white;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 14px 28px;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: 1px;
+    -fx-cursor: hand;
+}
+
+.booking-btn-save:hover {
+    -fx-effect: dropshadow(gaussian, rgba(109, 19, 49, 0.5), 25, 0, 0, 8);
+    -fx-translate-y: -2;
 }

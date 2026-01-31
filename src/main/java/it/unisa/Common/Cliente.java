@@ -88,6 +88,24 @@ public class Cliente implements Cloneable, Serializable {
      */
     private String nazionalità;
 
+    public void setCamera(Camera camera) {
+        this.camera = camera;
+    }
+
+    public void setNazionalità(String nazionalità) {
+        this.nazionalità = nazionalità;
+    }
+
+    public String getNazionalità() {
+        return nazionalità;
+    }
+
+    public Camera getCamera() {
+        return camera;
+    }
+
+    private Camera camera;
+
     /**
      * Costruttore completo per creare una nuova istanza di {@code Cliente}
      * (l'attributo {@code isBlacklisted} Flag che indica se il cliente è in lista nera di default {@code false}).
