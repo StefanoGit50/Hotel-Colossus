@@ -25,7 +25,6 @@ public class AddClienteCommand implements Command {
     public AddClienteCommand(CatalogoClienti catalogue, Cliente cliente) {
         this.catalogue = catalogue;
         this.cliente = cliente;
-        Collection<Cliente> c = new  ArrayList<>();
     }
 
     /**

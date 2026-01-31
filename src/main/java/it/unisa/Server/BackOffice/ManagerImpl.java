@@ -18,6 +18,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.security.SecureRandom;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
@@ -40,6 +41,15 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
         try
         {
             logger.info("Avvio RMI Registry sulla porta " + RMI_PORT + "...");
+
+            // Recupera gli impiegati e aggiungili al catalogo
+            try {
+                ImpiegatoDAO dao = new ImpiegatoDAO();
+                CatalogoImpiegati.setListaImpiegati((ArrayList<Impiegato>) dao.doRetriveAll(""));
+            } catch (SQLException ex) {
+                logger.info("Recupero impiegati dal DB fallito!");
+                throw new RemoteException("Try creting 'Manager' object again!");
+            }
 
             try {
                 // Prova a creare un nuovo registry
@@ -210,9 +220,9 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
 
         ContoEconomicoComposite prenotazioni = new ContoEconomicoComposite("PRENOTAZIONI");
 
-        CatalogoPrenotazioni.getListaPrenotazioni().add(p1);
+        catalogoPrenotazioni.getListaPrenotazioni().add(p1);
         //mostra solo le prenotazioni completate
-        for (Prenotazione p : CatalogoPrenotazioni.getListaPrenotazioni()) {
+        for (Prenotazione p : catalogoPrenotazioni.getListaPrenotazioni()) {
             if (p.getStatoPrenotazione() == false) {
                 ContoEconomicoComposite prenotazioneComposite = new ContoEconomicoComposite("PRENOTAZIONE" + p.getIDPrenotazione() + " " + p.getIntestatario());
 

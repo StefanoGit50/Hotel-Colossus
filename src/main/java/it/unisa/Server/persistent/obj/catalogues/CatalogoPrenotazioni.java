@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * Gestisce l'elenco complessivo delle prenotazioni, permettendo la registrazione,
@@ -19,12 +20,12 @@ import java.util.Objects;
  */
 public class CatalogoPrenotazioni implements Serializable {
 
-    private static FrontDeskStorage<Prenotazione>fds;
+    private static FrontDeskStorage<Prenotazione>fds = new PrenotazioneDAO();
     private static Collection<Prenotazione> listaPrenotazioni;
 
     static {
         try {
-            listaPrenotazioni = fds.doRetriveAll("discendente");
+            listaPrenotazioni = fds.doRetriveAll("");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -138,10 +139,7 @@ public class CatalogoPrenotazioni implements Serializable {
                 }
                 listaPrenotazioni.add(p);
             }
-        if(listaPrenotazioni.size()==n)
-            return false;
-        else
-            return true;
+        return listaPrenotazioni.size() != n;
     }
 
     public synchronized boolean removePrenotazioni(ArrayList<Prenotazione> listaPrenotazioni1) {
@@ -274,5 +272,42 @@ public class CatalogoPrenotazioni implements Serializable {
         if (scadenza.isBefore(rilascio) || scadenza.isEqual(rilascio))
             throw new InvalidInputException("Data scadenza documento deve essere successi");
 
+    }
+
+    /**
+     * Metodo usato per controllare la validità dei campi passati al filtro delle prenotazioni.
+     * @throws InvalidInputException se un campo presenta un valore errato.
+     */
+    public static void checkFiltroPrenotazione(String nome, String cognome, LocalDate dataInizioSoggiorno, LocalDate dataFineSoggiorno, String elementOrder) {
+        Pattern namePattern = Pattern.compile("^[A-Za-z\\s]{0,49}$");
+
+        // Verifica se tutti i campi sono nulli / vuoti (stringhe)
+        if ( (nome == null || nome.isBlank()) && (cognome == null || cognome.isBlank()) && (dataInizioSoggiorno == null) && (dataFineSoggiorno == null)){
+            throw new NullPointerException("Tutti i campi sono nulli o vuoti");
+        }
+
+        // 1. Nome
+        if (nome != null && !namePattern.matcher(nome).matches()) {
+            throw new InvalidInputException("[Nome] errato");
+        }
+
+        // 2. Cognome
+        if (cognome != null && !namePattern.matcher(cognome).matches()) {
+            throw new InvalidInputException("[Cognome] errato");
+        }
+
+        // 3. Data di inizio del soggiorno
+        if (dataInizioSoggiorno != null && dataInizioSoggiorno.isBefore(LocalDate.now())) {
+            throw new InvalidInputException("[dataInizioSoggiorno] passata");
+        }
+
+        // 4. Data di fine del soggiorno
+        if (dataFineSoggiorno != null && dataFineSoggiorno.isBefore(LocalDate.now())) {
+            throw new InvalidInputException("[dataFineSoggiorno] passata");
+        }
+
+        if (dataFineSoggiorno != null && dataFineSoggiorno.isBefore(dataInizioSoggiorno)) {
+            throw new InvalidInputException("[dataFineSoggiorno] precedente a dataInizioSoggiorno");
+        }
     }
 }

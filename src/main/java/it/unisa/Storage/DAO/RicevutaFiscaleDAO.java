@@ -347,8 +347,4 @@ public class RicevutaFiscaleDAO implements FrontDeskStorage<RicevutaFiscale>
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @Override
-    public void doSaveAll(List<Camera> listCamera) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }

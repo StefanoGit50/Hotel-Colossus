@@ -86,9 +86,14 @@ public class TestCasesRegistraImpiegato {
         @Test
         @DisplayName("TC1: [success] Registrazione impiegato effettuata con successo")
         public void testCase1() {
-            Impiegato i = createBaseImpiegato();
+            Impiegato i = createBaseImpiegato(), campione;
             System.out.println(i.toString());
-            Assertions.assertDoesNotThrow( () -> manager.addImpiegato(i));
+            Assertions.assertDoesNotThrow(() -> manager.addImpiegato(i));
+            try {
+                Assertions.assertEquals(i, manager.filtroImpiegati(i.getNome(), i.getCognome(), i.getRuolo(), ""));
+            } catch (RemoteException | InvalidInputException e) {
+                Assertions.fail(e.getMessage());
+            }
         }
     }
     /* ***************************** CASI DI ERRORE **************************** */

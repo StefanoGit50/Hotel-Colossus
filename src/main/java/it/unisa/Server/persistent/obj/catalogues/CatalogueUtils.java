@@ -17,13 +17,13 @@ public class CatalogueUtils {
         Class<?> oggettoClass = oggetto.getClass();
         Field[] fields = oggettoClass.getDeclaredFields(); // Otteni tutti i campi della classe di appartenenza dell'oggetto
         List<String> excludedFields = List.of(
-                "noteAggiuntive", "dataScadenzaToken"
+                "noteaggiuntive", "datascadenzaToken", "trattamento"
         );
         for (Field field : fields) {
             try {
                 field.setAccessible(true); // Rendili accessilibi temporaneamente
                 Object fieldValue = field.get(oggetto);
-                if (excludedFields.contains(field.getName())) {
+                if (excludedFields.contains(field.getName().toLowerCase())) {
                     field.setAccessible(false);
                     continue;
                 }

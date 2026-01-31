@@ -14,7 +14,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
     private static final String [] whitelist = {
         "IDPrenotazione",
         "DataPrenotazione",
-        "DataArrivoCliente",
+         "DataArrivoCliente",
         "DataPartenzaCliente",
         "NomeTrattamento",
         "NoteAggiuntive",
@@ -23,7 +23,8 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
         "numeroDocumento",
         "DataRilascio",
         "TipoDocumento",
-        "Stato"
+        "Stato",
+            "CheckIn"
     };
     private ClienteDAO clienteDAO;
 
@@ -39,19 +40,19 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
     public synchronized void doSave(Prenotazione p) throws SQLException {
         if(p != null && p.getTrattamento() != null){
             Connection connection = ConnectionStorage.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO prenotazione(DataPrenotazione, DataArrivoCliente, DataPartenzaCliente, NomeTrattamento, NoteAggiuntive, Intestatario, dataScadenza, numeroDocumento, DataRilascio, TipoDocumento, Stato, ChekIn) " +
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO prenotazione(DataPrenotazione, DataArrivoCliente, DataPartenzaCliente, NomeTrattamento, NoteAggiuntive, Intestatario, dataScadenza, numeroDocumento, DataRilascio, TipoDocumento, Stato, CheckIn) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ? , ?, ? , ? , ? , ?)");
 
             preparedStatement.setDate(1,Date.valueOf(p.getDataCreazionePrenotazione()));
             preparedStatement.setDate(2,Date.valueOf(p.getDataInizio()));
             preparedStatement.setDate(3,Date.valueOf(p.getDataFine()));
-            preparedStatement.setString(10, p.getTrattamento().getNome());
-            preparedStatement.setString(4,p.getNoteAggiuntive());
-            preparedStatement.setString(5 , p.getIntestatario());
-            preparedStatement.setDate(6, Date.valueOf(p.getDataScadenza()));
-            preparedStatement.setString(7,p.getNumeroDocumento());
-            preparedStatement.setDate(8,Date.valueOf(p.getDataRilascio()));
-            preparedStatement.setString(9,p.getTipoDocumento());
+            preparedStatement.setString(4, p.getTrattamento().getNome());
+            preparedStatement.setString(5, p.getNoteAggiuntive());
+            preparedStatement.setString(6, p.getIntestatario());
+            preparedStatement.setDate(7, Date.valueOf(p.getDataScadenza()));
+            preparedStatement.setString(8, p.getNumeroDocumento());
+            preparedStatement.setDate(9, Date.valueOf(p.getDataRilascio()));
+            preparedStatement.setString(10,p.getTipoDocumento());
             preparedStatement.setBoolean(11,p.getStatoPrenotazione());
             preparedStatement.setBoolean(12,p.isCheckIn());
             preparedStatement.executeUpdate();
@@ -419,7 +420,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
             try (PreparedStatement preparedStatement = connection.prepareStatement(
                     "UPDATE Prenotazione SET DataPrenotazione = ?, DataArrivoCliente = ?, " +
                             "DataPartenzaCliente = ?, NoteAggiuntive = ?, Intestatario = ?, " +
-                            "dataScadenza = ?, numeroDocumento = ?, DataRilascio = ?, TipoDocumento = ? , Stato = ? , ChekIn = ?" +
+                            "dataScadenza = ?, numeroDocumento = ?, DataRilascio = ?, TipoDocumento = ? , Stato = ? , CheckIn = ?" +
                             "WHERE IDPrenotazione = ?")) {
 
                 preparedStatement.setDate(1, Date.valueOf(p.getDataCreazionePrenotazione()));
@@ -476,10 +477,6 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
         return List.of();
     }
 
-    @Override
-    public void doSaveAll(List<Camera> listCamera) throws SQLException {
-        throw new  UnsupportedOperationException("Not supported yet.");
-    }
 
     /**
      * @param attribute;

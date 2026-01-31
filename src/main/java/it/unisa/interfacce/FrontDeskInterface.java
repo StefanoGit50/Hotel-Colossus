@@ -40,4 +40,7 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
     // Comando redo
     void redoCommand() throws RemoteException;
 
+    // find (per singoli oggetti)
+    Prenotazione getPrenotazioneById(int id) throws RemoteException;
+    Cliente getClienteByCF(String CF) throws RemoteException;
 }

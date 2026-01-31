@@ -22,7 +22,8 @@ public class TestCasesRegistraPrenotazione {
     public static ArrayList<Camera> listaCamere = new ArrayList<>();
     public static ArrayList<Servizio> listaServizi = new ArrayList<>();
     public static ArrayList<Cliente> listaClienti = new ArrayList<>();
-    public static Trattamento trattamento;
+    public static Trattamento trattamento = new Trattamento("Mezza Pensione", 125.00);
+    public static int autoIncrement = 1; // simula l'autoincrement del DB
 
     @BeforeAll
     public static void istantiateFrontDesk() throws RemoteException, NotBoundException, MalformedURLException {
@@ -110,7 +111,7 @@ public class TestCasesRegistraPrenotazione {
      */
     public Prenotazione createBasePrenotazione() {
         return new Prenotazione(
-                new Random().nextInt(1, 1000),  // ID
+                autoIncrement++,  // ID
                 LocalDate.now(), // Data Creazione
                 LocalDate.now().plusDays(1),            // Data arrivo
                 LocalDate.now().plusDays(5),            // Data partenza
@@ -121,7 +122,7 @@ public class TestCasesRegistraPrenotazione {
                 new ArrayList<>(listaCamere.subList(0, 1)), // lista camere
                 listaServizi,                          // lista servizi
                 new ArrayList<>(listaClienti.subList(0, 1)),// lista clienti
-                "987654321"
+                "12345678"
         );
     }
     /* ************************************************************************************************************** */
@@ -134,10 +135,17 @@ public class TestCasesRegistraPrenotazione {
     class TestPassRegistraImpiegato {
         @Test
         @DisplayName("TC1: [Success] Registrazione con servizi: nessuno")
-        void testCase1() {
-            Prenotazione p = createBasePrenotazione();
+        void testCase1() throws RemoteException{
+            Prenotazione p = createBasePrenotazione(), campione;
+            p.setTrattamento(null);
             p.setListaServizi(new ArrayList<>(listaServizi));
-            Assertions.assertDoesNotThrow(() -> frontDesk.addPrenotazione(p));
+            frontDesk.addPrenotazione(p);
+
+            try {
+                Assertions.assertEquals(p, frontDesk.getPrenotazioneById(1));
+            } catch (RemoteException e) {
+                Assertions.fail(e.getMessage());
+            }
         }
 
         @Test
@@ -146,6 +154,11 @@ public class TestCasesRegistraPrenotazione {
             Prenotazione p = createBasePrenotazione();
             p.setListaServizi(new ArrayList<>(listaServizi.subList(0, 1)));
             Assertions.assertDoesNotThrow(() -> frontDesk.addPrenotazione(p));
+            try {
+                Assertions.assertEquals(p, frontDesk.getPrenotazioneById(p.getIDPrenotazione()));
+            } catch (RemoteException e) {
+                Assertions.fail(e.getMessage());
+            }
         }
 
         @Test
@@ -154,7 +167,12 @@ public class TestCasesRegistraPrenotazione {
             Prenotazione p = createBasePrenotazione();
             p.setTipoDocumento("CID");
             p.setTrattamento(new Trattamento("Pensione Completa", 500));
-            //frontDesk.addPrenotazione(p);
+            Assertions.assertDoesNotThrow(() -> frontDesk.addPrenotazione(p));
+            try {
+                Assertions.assertEquals(p, frontDesk.getPrenotazioneById(p.getIDPrenotazione()));
+            } catch (RemoteException e) {
+                Assertions.fail(e.getMessage());
+            }
         }
 
         @Test
@@ -163,7 +181,12 @@ public class TestCasesRegistraPrenotazione {
             Prenotazione p = createBasePrenotazione();
             p.setTipoDocumento("Passaporto");
             p.setTrattamento(new Trattamento("Solo pernottamento", 80));
-
+            Assertions.assertDoesNotThrow(() -> frontDesk.addPrenotazione(p));
+            try {
+                Assertions.assertEquals(p, frontDesk.getPrenotazioneById(p.getIDPrenotazione()));
+            } catch (RemoteException e) {
+                Assertions.fail(e.getMessage());
+            }
         }
     }
 

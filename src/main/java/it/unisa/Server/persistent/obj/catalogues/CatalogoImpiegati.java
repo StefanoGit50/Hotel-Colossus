@@ -23,7 +23,7 @@ public class CatalogoImpiegati implements Serializable {
     /**
      * Lista di tutti gli impiegati del sistema.
      */
-    private static ArrayList<Impiegato> listaImpiegati;
+    private static ArrayList<Impiegato> listaImpiegati = new ArrayList<>();
     private static BackofficeStorage<Impiegato> backOfficeStorage = new ImpiegatoDAO();
 
 

@@ -1,4 +1,4 @@
-package WhiteBox.Cataloghi;
+package whitebox.Cataloghi;
 
 import it.unisa.Common.Camera;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
@@ -89,7 +89,7 @@ public class CatalogoCamereTesting{
     @Tag("True")
     @DisplayName("aggiornaStatoCamera(Camera c) quando è tutto vero")
     public void AggiornaStatoCameraAllTrue() throws SQLException, RemoteException {
-        catalogoCamere = new CatalogoCamere(cameraDAO);
+        catalogoCamere = new CatalogoCamere((ArrayList<Camera>) cameraDAO.doRetriveAll(""));
         ArrayList<Camera> cameras = new ArrayList<>();
         Camera camera1 = new Camera(111, Stato.Libera,2,100.0,"");
         doNothing().when(cameraDAO).doUpdate(camera1);
@@ -104,8 +104,8 @@ public class CatalogoCamereTesting{
     @Test
     @Tag("False")
     @DisplayName("aggiornaStatoCamera() quando tutto Falso")
-    public void AggiornaStatoCameraAllFalse() throws RemoteException {
-        catalogoCamere = new CatalogoCamere(cameraDAO);
+    public void AggiornaStatoCameraAllFalse() throws SQLException, RemoteException {
+        catalogoCamere = new CatalogoCamere((ArrayList<Camera>) cameraDAO.doRetriveAll(""));
         Camera camera1 = new Camera(111, Stato.Libera,2,100.0,"");
         assertFalse(catalogoCamere.aggiornaStatoCamera(camera1));
     }

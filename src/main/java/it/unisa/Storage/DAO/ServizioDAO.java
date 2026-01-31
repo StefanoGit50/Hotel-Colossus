@@ -50,7 +50,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
     {
         if(servizio != null && servizio.getNome() != null){
             Connection connection = ConnectionStorage.getConnection();
-            String query = "DELETE FROM hot.servizio2 WHERE Nome = ?";
+            String query = "DELETE FROM hotelcolossus.servizio WHERE Nome = ?";
 
             try (PreparedStatement stmt = connection.prepareStatement(query))
             {
@@ -71,7 +71,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
     {
         if(nome instanceof String){
             Connection connection = ConnectionStorage.getConnection();
-            String query = "SELECT * FROM hot.servizio2 WHERE Nome = ?";
+            String query = "SELECT * FROM hotelcolossus.servizio WHERE Nome = ?";
 
             try (PreparedStatement stmt = connection.prepareStatement(query))
             {
@@ -101,7 +101,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
     public synchronized Collection<Servizio> doRetriveAll(String order) throws SQLException
     {
         Connection connection = ConnectionStorage.getConnection();
-        String query = "SELECT * FROM hot.servizio2 ";
+        String query = "SELECT * FROM hotelcolossus.servizio ";
         if(order.equalsIgnoreCase("decrescente")){
             query += " ORDER BY Nome DESC " ;
         }else{
@@ -152,7 +152,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
         if(servizio != null)
         {
             Connection connection = ConnectionStorage.getConnection();
-            String query = "UPDATE hot.servizio2 SET Prezzo = ? WHERE Nome = ?";
+            String query = "UPDATE hotelcolossus.servizio SET Prezzo = ? WHERE Nome = ?";
 
             try (PreparedStatement stmt = connection.prepareStatement(query))
             {
@@ -220,8 +220,4 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @Override
-    public void doSaveAll(List<Camera> listCamera) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }

@@ -68,9 +68,9 @@ public class main {
 
         ContoEconomicoComposite prenotazioni = new ContoEconomicoComposite("PRENOTAZIONI");
 
-        CatalogoPrenotazioni.getListaPrenotazioni().add(p1);
+        catalogoPrenotazioni.getListaPrenotazioni().add(p1);
         //mostra solo le prenotazioni completate
-         for(Prenotazione p : CatalogoPrenotazioni.getListaPrenotazioni()){
+         for(Prenotazione p : catalogoPrenotazioni.getListaPrenotazioni()){
              if(!p.getStatoPrenotazione()){
                 ContoEconomicoComposite prenotazioneComposite = new ContoEconomicoComposite("PRENOTAZIONE"+p.getIDPrenotazione()+" "+p.getIntestatario());
 

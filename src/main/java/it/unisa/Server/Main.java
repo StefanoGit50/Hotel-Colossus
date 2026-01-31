@@ -22,6 +22,8 @@ public class Main {
     static void main(){
         CameraDAO cameraDAO = new CameraDAO();
         CatalogoCamere catalogoCamere = new CatalogoCamere();
+        CatalogoPrenotazioni catalogoPrenotazioni = new CatalogoPrenotazioni();
+
         try{
             ArrayList<Camera> cameras = catalogoCamere.getListaCamere();
             ArrayList<Camera> cameras1 = new ArrayList<>();
@@ -88,19 +90,19 @@ public class Main {
         prenotazioneDAO = new PrenotazioneDAO();
         try{
             ArrayList<Prenotazione> prenotaziones = (ArrayList<Prenotazione>) prenotazioneDAO.doRetriveAll("IDPrenotazione");
-            CatalogoPrenotazioni.addPrenotazioni(prenotaziones);
+            catalogoPrenotazioni.addPrenotazioni(prenotaziones);
             System.out.println(prenotaziones);
-            System.out.println(CatalogoPrenotazioni.getListaPrenotazioni());
+            System.out.println(catalogoPrenotazioni.getListaPrenotazioni());
         }catch (SQLException sqlException){
             sqlException.printStackTrace();
         }
 
         try{
-           prenotazioneDAO.doDelete(CatalogoPrenotazioni.getListaPrenotazioni().getFirst());
+           prenotazioneDAO.doDelete(catalogoPrenotazioni.getListaPrenotazioni().getFirst());
            ArrayList<Prenotazione> prenotaziones = (ArrayList<Prenotazione>) prenotazioneDAO.doRetriveAll("IDPrenotazione");
-           CatalogoPrenotazioni.addPrenotazioni(prenotaziones);
+           catalogoPrenotazioni.addPrenotazioni(prenotaziones);
            System.out.println(prenotaziones);
-           System.out.println(CatalogoPrenotazioni.getListaPrenotazioni());
+           System.out.println(catalogoPrenotazioni.getListaPrenotazioni());
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
         }

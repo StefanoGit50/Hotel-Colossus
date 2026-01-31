@@ -15,6 +15,7 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Logger;
@@ -22,15 +23,14 @@ import java.util.logging.Logger;
 public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface {
     static Logger logger = Logger.getLogger("global");
     private static final int RMI_PORT = 1099;
-    private static CatalogoCamere catalogoCamere;
-   private CatalogoCamere camList = new CatalogoCamere();
+    private CatalogoCamere camList = new CatalogoCamere();
 
     public FrontDesk() throws RemoteException {
         super();
     }
 
     public List<Camera> getCamere(){
-       return catalogoCamere.getListaCamere();
+       return camList.getListaCamere();
     }
 
     @Override
@@ -42,13 +42,13 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     // manda al client la camera ricevuta dall'update e il client dovrà aggiornare la sua lista da mostrare.
     @Override
     public Camera update() throws RemoteException {
-        return CatalogoCamere.getLastModified();
+        return camList.getLastModified();
     }
 
     @Override
     public List<Prenotazione> getPrenotazioni() throws RemoteException
     {
-        return CatalogoPrenotazioni.getListaPrenotazioni();
+        return catalogoPrenotazioni.getListaPrenotazioni();
     }
 
 
@@ -219,5 +219,39 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         } else {
             System.out.println("REDO: lista cliente vuoto");
         }
+    }
+
+    /**
+     * @param id della prenotazione.
+     * @return un oggetto {@code Prenotazione} se è presente una prenotazione con quell'Id sul database, {@code null} altrimenti.
+     * @throws RemoteException .
+     */
+    @Override
+    public Prenotazione getPrenotazioneById(int id) throws RemoteException {
+        PrenotazioneDAO dao = new PrenotazioneDAO();
+        Prenotazione p;
+        try {
+            p = dao.doRetriveByKey(id);
+        } catch (SQLException e) {
+            throw new RemoteException(e.getMessage());
+        }
+        return p;
+    }
+
+    /**
+     * @param CF del cliente.
+     * @return un oggetto {@code Cliente} se è presente una prenotazione con quel CF sul database, {@code null} altrimenti.
+     * @throws RemoteException .
+     */
+    @Override
+    public Cliente getClienteByCF(String CF) throws RemoteException {
+        ClienteDAO dao = new ClienteDAO();
+        Cliente c;
+        try {
+            c = dao.doRetriveByKey(CF);
+        } catch (SQLException e) {
+            throw new RemoteException(e.getMessage());
+        }
+        return c;
     }
 }

@@ -39,11 +39,11 @@ create table Prenotazione(
     NoteAggiuntive varchar(1000) not null,
     Intestatario varchar(50) not null,
     dataScadenza date not null,
-    numeroDocumento char(8) not null,
+    numeroDocumento char(9) not null,
     DataRilascio date not null,
     TipoDocumento varchar(50) not null,
     Stato boolean not null,
-    ChekIn boolean not null,
+    CheckIn boolean not null,
     primary key(IDPrenotazione)
 );
 
@@ -129,7 +129,7 @@ create table Impiegato(
     Cittadinanza varchar(50) not null,
     EmailAziendale varchar(100) not null,
     Sesso varchar(20) not null,
-    Ruolo enum('FDclient','Manager','Governante') not null,
+    Ruolo enum('FrontDesk','Manager','Governante') not null,
     DataRilascio date not null,
     TipoDocumento varchar(50) not null,
     Via varchar(40) not null,

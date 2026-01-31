@@ -1,8 +1,7 @@
 package it.unisa.Client.Manager;
 
-import it.unisa.Common.Camera;
+import it.unisa.Common.Cliente;
 import it.unisa.Common.Prenotazione;
-import it.unisa.Server.gestioneClienti.Cliente;
 import it.unisa.interfacce.FrontDeskInterface;
 import it.unisa.interfacce.GovernanteInterface;
 
@@ -47,7 +46,7 @@ public class ManagerClient {
 
                             System.out.println("Inserisci nome cliente: ");
                             Scanner sc3 = new Scanner(System.in);
-                            Cliente c = new Cliente(sc3.nextLine());
+                            //Cliente c = new Cliente(sc3.nextLine());
 
                           //  String id = c.getNome() + "" + camera.getNumeroCamera();
 
@@ -63,7 +62,7 @@ public class ManagerClient {
 
                             System.out.println("Inserisci nome cliente: ");
                             Scanner sc3 = new Scanner(System.in);
-                            Cliente c = new Cliente(sc3.nextLine());
+                           // Cliente c = new Cliente(sc3.nextLine());
 
                             //String id = c.getNome() + "" + s.getNumeroCamera();
 

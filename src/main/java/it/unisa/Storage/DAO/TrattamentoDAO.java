@@ -221,8 +221,4 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>{
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @Override
-    public void doSaveAll(List<Camera> listCamera) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }

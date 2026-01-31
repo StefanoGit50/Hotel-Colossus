@@ -48,17 +48,17 @@ public class Governante extends UnicastRemoteObject implements GovernanteInterfa
 
     public static void main(String[] args) throws RemoteException {
         logger.info("Ottengo le camere...");
-      /*  CameraDAO dao = new CameraDAO();
+        CameraDAO dao = new CameraDAO();
         ArrayList<Camera> listaCamere = null;
         try {
             listaCamere = (ArrayList<Camera>) dao.doRetriveAll("decrescente");
-            //CatalogoCamere.addCamere(listaCamere);
-            //System.out.println(CatalogoCamere.getListaCamere().size());
-            // } catch (SQLException e) {
+                catalogoCamere.addCamere(listaCamere);
+                System.out.println(catalogoCamere.getListaCamere().size());
+        } catch (SQLException e) {
             throw new RemoteException("Try istantiate \"Governate\" again!");
-            //  }
+        }
 
-           /*logger.info("Camere ottenute!");
+            logger.info("Camere ottenute!");
 
             try {
                 // IMPORTANTE: Avvia l'RMI registry programmaticamente
@@ -90,11 +90,6 @@ public class Governante extends UnicastRemoteObject implements GovernanteInterfa
                 e.printStackTrace();
             }
 
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }*/
-
-
-    }
+        }
 
 }
