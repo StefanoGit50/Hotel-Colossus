@@ -172,9 +172,9 @@ public class Camera implements Cloneable, Serializable {
     public boolean equals(Object obj) {
         if (obj == null || getClass() != obj.getClass()) return false;
         Camera camera = (Camera) obj;
-        return numeroCamera == camera.numeroCamera && numeroMaxOccupanti == camera.numeroMaxOccupanti &&
-                statoCamera == camera.statoCamera && Math.abs(prezzoCamera - camera.prezzoCamera) < EPSILON &&
-                Objects.equals(noteCamera,camera.noteCamera);
+        return numeroCamera == camera.numeroCamera && numeroMaxOccupanti.equals(camera.numeroMaxOccupanti) &&
+                statoCamera.equals(camera.statoCamera) && Math.abs(prezzoCamera - camera.prezzoCamera) < EPSILON &&
+                noteCamera.equalsIgnoreCase(camera.noteCamera);
     }
 
     /**

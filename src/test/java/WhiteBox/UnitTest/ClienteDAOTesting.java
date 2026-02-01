@@ -168,7 +168,7 @@ public class ClienteDAOTesting {
     public void doFilterAllTrue(){
         ArrayList<Cliente> clientes1 = new ArrayList<>();
         ArrayList<Cliente> clientes = (ArrayList<Cliente>) clienteDAO.doFilter("","","",LocalDate.of(1985,8,1),false,"Nome");
-       // clientes1.add(new Cliente("Mario","Rossi","Italiana","Napoli","Napoli","Via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana"));
+        clientes1.add(new Cliente("Mario","Rossi","Italiana","Napoli","Napoli","Via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana",new Camera(101,Stato.Occupata,2, 120.00,"Camera matrimoniale vista mare")));
         assertEquals(clientes,clientes1);
     }
 
@@ -187,7 +187,4 @@ public class ClienteDAOTesting {
         ArrayList<Cliente> clientes1 = (ArrayList<Cliente>) clienteDAO.doFilter("Umberto",null,null,null,null,null);
         assertEquals(clientes,clientes1);
     }
-
-
-
 }

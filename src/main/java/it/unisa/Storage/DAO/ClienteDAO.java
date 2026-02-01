@@ -346,11 +346,13 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                     preparedStatement1.setString(1,resultSet.getString("CF"));
 
                     try(ResultSet resultSet1 = preparedStatement1.executeQuery()){
-                        camera.setNumeroCamera(resultSet1.getInt("NumeroCamera"));
-                        camera.setNoteCamera(resultSet1.getString("NoteCamera"));
-                        camera.setPrezzoCamera(resultSet1.getDouble("Prezzo"));
-                        camera.setCapacità(resultSet1.getInt("NumeroMaxOcc"));
-                        camera.setStatoCamera(Stato.valueOf(resultSet1.getString("Stato")));
+                        if(resultSet1.next()){
+                            camera.setNumeroCamera(resultSet1.getInt("NumeroCamera"));
+                            camera.setNoteCamera(resultSet1.getString("NoteCamera"));
+                            camera.setPrezzoCamera(resultSet1.getDouble("Prezzo"));
+                            camera.setCapacità(resultSet1.getInt("NumeroMaxOcc"));
+                            camera.setStatoCamera(Stato.valueOf(resultSet1.getString("Stato")));
+                        }
                     }
                     cliente.setCamere(camera);
 

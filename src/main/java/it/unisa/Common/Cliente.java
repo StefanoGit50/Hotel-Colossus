@@ -444,7 +444,7 @@ public class Cliente implements Cloneable, Serializable {
                 ", sesso='" + sesso + '\'' +
                 ", dataNascita=" + dataNascita +
                 ", nazionalità='" + nazionalità + '\'' +
-                '}';
+                ",Camera = " + camere + "}";
     }
 
     /**
@@ -460,12 +460,11 @@ public class Cliente implements Cloneable, Serializable {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Cliente cliente = (Cliente) obj;
-        return numeroCivico == cliente.numeroCivico && Objects.equals(CAP,cliente.CAP)&& Objects.equals(cognome, cliente.cognome)
-                && Objects.equals(cittadinanza, cliente.cittadinanza) && Objects.equals(provincia, cliente.provincia)
-                && Objects.equals(comune, cliente.comune) && Objects.equals(via, cliente.via)
-                && Objects.equals(numeroTelefono, cliente.numeroTelefono) && Objects.equals(sesso, cliente.sesso)
-                && Objects.equals(dataNascita, cliente.dataNascita) && Objects.equals(nazionalità, cliente.nazionalità) && Objects.equals(email , cliente.email) &&
-                Objects.equals(cf,cliente.cf);
+        return numeroCivico.equals(cliente.getNumeroCivico()) && nome.equalsIgnoreCase(cliente.getNome()) && cognome.equalsIgnoreCase(cliente.getCognome()) &&
+                cf.equalsIgnoreCase(cliente.getCf()) && email.equalsIgnoreCase(cliente.getEmail()) && cittadinanza.equalsIgnoreCase(cliente.getCittadinanza()) && provincia.equalsIgnoreCase(cliente.getProvincia())
+                && comune.equalsIgnoreCase(cliente.getComune()) && via.equalsIgnoreCase(cliente.getVia()) && CAP.equals(cliente.getCAP()) && numeroTelefono.equalsIgnoreCase(cliente.getNumeroTelefono())
+                && isBlacklisted == cliente.isBlacklisted() && sesso.equalsIgnoreCase(cliente.getSesso()) && camere.equals(cliente.getCamera()) && dataNascita.equals(cliente.getDataNascita())
+                && nazionalità.equalsIgnoreCase(cliente.getNazionalita());
     }
     /**
      * Crea e restituisce una copia dell'oggetto (clone).

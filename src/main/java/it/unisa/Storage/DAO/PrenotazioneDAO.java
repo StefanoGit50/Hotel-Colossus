@@ -163,7 +163,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                     String query2 = "SELECT * FROM servizio WHERE IDPrenotazione = ?";
                     Collection<Servizio> servizi = new ArrayList<>();
 
-                    try (PreparedStatement stmt = connection.prepareStatement(query2)) {
+                    try (PreparedStatement stmt = connection.prepareStatement(query2)){
                         stmt.setInt(1, idPrenotazione);
 
                         try (ResultSet rs2 = stmt.executeQuery()) {
@@ -187,7 +187,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                         stmt.setInt(1, idPrenotazione);
 
                         try (ResultSet rs3 = stmt.executeQuery()) {
-                            while (rs3.next()) {
+                            while (rs3.next()){
                                 camere.add(new Camera(
                                         rs3.getInt("NumeroCamera"),
                                         Stato.valueOf(rs3.getString("Stato")),
@@ -214,20 +214,17 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
 
                         try (ResultSet rs4 = stmt.executeQuery()){
                             p = connection.prepareStatement(query5);
-                            p.setString(1,rs4.getString("CF"));
-
-                            try(ResultSet resultSet = p.executeQuery()){
-                                resultSet.next();
-                                camera.setNumeroCamera(resultSet.getInt("NumeroCamera"));
-                                camera.setCapacità(resultSet.getInt("NumeroMassimo"));
-                                camera.setNoteCamera(resultSet.getString("NoteCamera"));
-                                camera.setStatoCamera(Stato.valueOf(resultSet.getString("Stato")));
-                                camera.setPrezzoCamera(resultSet.getDouble("Prezzo"));
-                            }
-
-
-
                             while (rs4.next()) {
+                                p.setString(1,rs4.getString("CF"));
+                                try(ResultSet resultSet = p.executeQuery()){
+                                    resultSet.next();
+                                    camera.setNumeroCamera(resultSet.getInt("NumeroCamera"));
+                                    camera.setCapacità(resultSet.getInt("NumeroMaxOcc"));
+                                    camera.setNoteCamera(resultSet.getString("NoteCamera"));
+                                    camera.setStatoCamera(Stato.valueOf(resultSet.getString("Stato")));
+                                    camera.setPrezzoCamera(resultSet.getDouble("Prezzo"));
+                                }
+
                                 clienti.add(new Cliente(
                                         rs4.getString("nome"),
                                         rs4.getString("cognome"),
