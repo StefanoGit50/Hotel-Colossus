@@ -17,25 +17,11 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
     private static final String TABLE_NAME= "Servizio";
 
     @Override
-    public synchronized void doSave(Servizio servizio) throws SQLException
-    {
+    public synchronized void doSave(Servizio servizio) throws SQLException{
         Connection connection = ConnectionStorage.getConnection();
-        String query = "INSERT INTO Servizio(Nome, Prezzo, IDPrenotazione) VALUES (?, ?, ?) ";
+        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO servizio(Nome, Prezzo, IDPrenotazione) values (?,?,?)");
 
-        try (PreparedStatement stmt = connection.prepareStatement(query))
-        {
-            stmt.setString(1, servizio.getNome());
-            stmt.setDouble(2, servizio.getPrezzo());
-            stmt.setNull(3, Types.INTEGER); // gestito altrove
-
-            stmt.executeUpdate();
-        }finally {
-            if(connection != null){
-                ConnectionStorage.releaseConnection(connection);
-            }
-        }
     }
-
     /**
      * @param list
      * @throws SQLException
@@ -46,8 +32,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
     }
 
     @Override
-    public synchronized void doDelete(Servizio servizio) throws SQLException
-    {
+    public synchronized void doDelete(Servizio servizio) throws SQLException{
         if(servizio != null && servizio.getNome() != null){
             Connection connection = ConnectionStorage.getConnection();
             String query = "DELETE FROM servizio WHERE Nome = ?";
@@ -67,8 +52,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
     }
 
     @Override
-    public synchronized Servizio doRetriveByKey(Object nome) throws SQLException
-    {
+    public synchronized Servizio doRetriveByKey(Object nome) throws SQLException{
         if(nome instanceof String){
             Connection connection = ConnectionStorage.getConnection();
             String query = "SELECT * FROM servizio WHERE Nome = ?";
@@ -98,8 +82,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
     }
 
     @Override
-    public synchronized Collection<Servizio> doRetriveAll(String order) throws SQLException
-    {
+    public synchronized Collection<Servizio> doRetriveAll(String order) throws SQLException{
         Connection connection = ConnectionStorage.getConnection();
         String query = "SELECT * FROM servizio ";
         if(order.equalsIgnoreCase("decrescente")){
@@ -129,7 +112,6 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
 
         return servizi;
     }
-
     /**
      * Aggiorna il prezzo di un servizio esistente nel database.
      *
@@ -147,8 +129,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
      *   L'eventuale IDPrenotazione associato rimane invariato
      */
     @Override
-    public synchronized void doUpdate(Servizio servizio) throws SQLException
-    {
+    public synchronized void doUpdate(Servizio servizio) throws SQLException{
         if(servizio != null)
         {
             Connection connection = ConnectionStorage.getConnection();

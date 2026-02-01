@@ -11,15 +11,20 @@ import java.util.Objects;
  * del cliente, oltre a un flag per indicare se è inserito nella blacklist.
  */
 public class Cliente implements Cloneable, Serializable {
+
     /**
      * Il nome del cliente.
      */
     private String nome;
 
     /**
+     * Il cognome del cliente.
+     */
+    private String cognome;
+
+    /**
      * Il codice fiscale del cliente
      */
-
     private String cf;
 
     /**
@@ -28,14 +33,9 @@ public class Cliente implements Cloneable, Serializable {
     private String email;
 
     /**
-     * Il cognome del cliente.
-     */
-    private String cognome;
-
-    /**
      * La cittadinanza del cliente.
      */
-    private String cittadinanza;
+
 
     /**
      * La provincia di residenza.

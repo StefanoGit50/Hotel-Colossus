@@ -1,6 +1,7 @@
 package it.unisa.Storage;
 
 import it.unisa.Common.*;
+import it.unisa.Server.persistent.util.Ruolo;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.DAO.PrenotazioneDAO;
 import it.unisa.interfacce.FrontDeskInterface;
@@ -9,11 +10,11 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.sql.SQLException;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 public class Test {
 
@@ -97,7 +98,7 @@ public class Test {
 
         // Trattamento
 
-        trattamento = new Trattamento("Mezza Pensione", 200);
+        trattamento = new Trattamento("Mezza Pensione", 180);
     }
 
     /* ************************************************************************************************************** */
@@ -130,14 +131,59 @@ public class Test {
         );
     }
 
+    public static Impiegato createBaseImpiegato() {
+        return new Impiegato(
+                "mario.rossi",                  // username
+                "passwordSicura123!",      // hashedPassword
+                true,
+                Instant.now().plusSeconds(3600),
+                "Mario",               // nome
+                "Rossi",                     // cognome
+                "Maschio",                   // sesso
+                "CID",                       // tipoDocumento
+                "AB1234567",                 // numeroDocumento
+                80100,                       // CAP
+                "Via Roma",                  // via
+                "Napoli",                    // provincia
+                "Napoli",                    // comune
+                10,                          // numeroCivico
+                generateRandomCF(),          // codiceFiscale
+                "1",                         // telefono
+                Ruolo.Manager,               // ruolo (mappato dal testo "Front desk")
+                2500.00,                     // stipendio
+                LocalDate.of(2024, 1, 15),   // dataAssunzione
+                LocalDate.of(2020, 1, 20),   // dataRilascio
+                "mario.rossi@HotelColossus.it", // emailAziendale
+                "Italiana",                  // cittadinanza
+                LocalDate.of(2099, 1, 20)    // dataScadenza
+        );
+    }
+
+    public static String generateRandomCF() {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        StringBuilder sb = new StringBuilder();
+        Random rn =  new Random();
+
+        // Aggiunge len caratteri random
+        for (int i = 0; i < 16; i++) {
+            sb.append(chars.charAt(rn.nextInt(chars.length())));
+        }
+
+        return sb.toString();
+    }
+
     public static void main() throws Exception {
-        PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO();
         istantiateFrontDesk();
-        Prenotazione prenotazione = createBasePrenotazione();
-        Prenotazione prenotazione1;
-        prenotazioneDAO.doSave(prenotazione);
-        prenotazione1 = prenotazioneDAO.doRetriveByKey(prenotazione.getIDPrenotazione());
-        System.out.println(prenotazione);
-        System.out.println(prenotazione1);
+        PrenotazioneDAO dao = new PrenotazioneDAO();
+        Prenotazione p = createBasePrenotazione(), campione = null;
+        try {
+            System.out.println(p);
+           //dao.doSave(p);
+            campione = dao.doRetriveByKey(p.getIDPrenotazione());
+            System.out.println(campione);
+            System.out.println(Objects.equals(campione, p));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

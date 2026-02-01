@@ -57,11 +57,13 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
 
             // Salva il trattamento associato
             if(p.getTrattamento().getNome() != null){
-                String query = "UPDATE trattamento SET IDPrenotazione = ? WHERE Nome = ?";
-                try (PreparedStatement stmt = connection.prepareStatement(query)) {
-                    stmt.setInt(1, p.getIDPrenotazione());
-                    stmt.setString(2, p.getTrattamento().getNome());
-                    stmt.executeUpdate();
+                TrattamentoDAO trattamentoDAO = new TrattamentoDAO();
+                trattamentoDAO.doSave(p.getTrattamento());
+                String query = "Update trattamento set IDPrenotazione = ? where Nome = ?";
+                try(PreparedStatement preparedStatement1 = connection.prepareStatement(query)){
+                    preparedStatement1.setInt(p.getIDPrenotazione());
+                    preparedStatement1.setString()
+
                 }
             }
 

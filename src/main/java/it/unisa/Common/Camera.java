@@ -19,7 +19,13 @@ public class Camera implements Cloneable, Serializable {
      * Numero di camera, univoco per ogni camera all'interno dell'hotel.
      */
      private int numeroCamera;
+
     /**
+     *  Il Nome della camera
+     */
+    private String nomeCamera;
+
+     /**
      * Il prezzo della camera
      */
     private double prezzoCamera;
