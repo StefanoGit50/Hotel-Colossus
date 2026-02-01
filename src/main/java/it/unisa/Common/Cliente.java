@@ -452,7 +452,7 @@ public class Cliente implements Cloneable, Serializable {
                 ", sesso='" + sesso + '\'' +
                 ", dataNascita=" + dataNascita +
                 ", nazionalità='" + nazionalità + '\'' +
-                ",Camera = " + camere + "}";
+                ",Camera = " + camera + "}";
     }
 
     /**
@@ -471,7 +471,7 @@ public class Cliente implements Cloneable, Serializable {
         return numeroCivico.equals(cliente.getNumeroCivico()) && nome.equalsIgnoreCase(cliente.getNome()) && cognome.equalsIgnoreCase(cliente.getCognome()) &&
                 cf.equalsIgnoreCase(cliente.getCf()) && email.equalsIgnoreCase(cliente.getEmail()) && cittadinanza.equalsIgnoreCase(cliente.getCittadinanza()) && provincia.equalsIgnoreCase(cliente.getProvincia())
                 && comune.equalsIgnoreCase(cliente.getComune()) && via.equalsIgnoreCase(cliente.getVia()) && CAP.equals(cliente.getCAP()) && numeroTelefono.equalsIgnoreCase(cliente.getNumeroTelefono())
-                && isBlacklisted == cliente.isBlacklisted() && sesso.equalsIgnoreCase(cliente.getSesso()) && camere.equals(cliente.getCamera()) && dataNascita.equals(cliente.getDataNascita())
+                && isBlacklisted == cliente.isBlacklisted() && sesso.equalsIgnoreCase(cliente.getSesso()) && camera.equals(cliente.getCamera()) && dataNascita.equals(cliente.getDataNascita())
                 && nazionalità.equalsIgnoreCase(cliente.getNazionalita());
     }
     /**
