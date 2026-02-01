@@ -22,7 +22,7 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
     void removePrenotazione(Prenotazione p) throws RemoteException;
     void updatePrenotazione(Prenotazione p) throws RemoteException;
     // Filtro Prenotazioni
-        List<Prenotazione> filterPrenotazioni(String nome, String cognome, LocalDate dataInizioSoggiorno,
+    List<Prenotazione> filterPrenotazioni(String nome, String cognome, LocalDate dataInizioSoggiorno,
                                      LocalDate dataFineSoggiorno, String orderBy) throws RemoteException;
 
     // Comandi cliente
@@ -44,4 +44,7 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
     // Comando redo
     void redoCommand() throws RemoteException;
 
+    // MetodiFindSingoli
+    Prenotazione getPrenotazioneById(int id) throws RemoteException;
+    Cliente getClienteByCf(String cf) throws RemoteException;
 }

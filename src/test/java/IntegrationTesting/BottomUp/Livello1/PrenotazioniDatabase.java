@@ -62,7 +62,11 @@ public class PrenotazioniDatabase {
         ArrayList<Servizio> servizio=new ArrayList<>();
         servizio.add(new Servizio("Piscina",20));
         ArrayList<Cliente> cliente=new ArrayList<>();
+<<<<<<< Updated upstream
         cliente.add(new Cliente("mario","Rossi","Burundi","napoli","napoli","via manzo",12,45,"323425","M",LocalDate.of(1998,12,1),"CF234rdfcfg","luca@gmail.com","italiana",new Camera()));
+=======
+        cliente.add(new Cliente("mario","Rossi","Burundi","napoli","napoli","via manzo",12,45,"323425","M",LocalDate.of(1998,12,1),"CF234rdfcfg","luca@gmail.com","italiana", new Camera()));
+>>>>>>> Stashed changes
         Prenotazione prenotazione =new Prenotazione(1234, LocalDate.now(),LocalDate.now(),LocalDate.of(2026,02,01),new Trattamento("MEZZA PENSIONE", 60),"Passaporto",LocalDate.of(2012,03,11),LocalDate.of(2044,12,11),"Mario Biondi","",listcamera,servizio,cliente,"34532MC2");
         catprenotazioni.addPrenotazioni(prenotazione);
         // prendo dal database la prenotazione appena inserita

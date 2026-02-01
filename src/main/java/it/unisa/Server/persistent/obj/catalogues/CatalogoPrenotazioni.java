@@ -1,4 +1,5 @@
 package it.unisa.Server.persistent.obj.catalogues;
+
 import it.unisa.Common.Camera;
 import it.unisa.Common.Prenotazione;
 import it.unisa.Storage.DAO.PrenotazioneDAO;
@@ -20,12 +21,12 @@ import java.util.regex.Pattern;
  */
 public class CatalogoPrenotazioni implements Serializable {
 
-    private static FrontDeskStorage<Prenotazione>fds;
+    private static FrontDeskStorage<Prenotazione>fds = new PrenotazioneDAO();
     private static Collection<Prenotazione> listaPrenotazioni;
 
     static {
         try {
-            listaPrenotazioni = fds.doRetriveAll("decrescente");
+            listaPrenotazioni = fds.doRetriveAll("");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -138,15 +139,17 @@ public class CatalogoPrenotazioni implements Serializable {
      * Imposta o sostituisce l'intera lista delle prenotazioni.
      */
     public synchronized boolean addPrenotazioni(Prenotazione prenotazione) {
-        if(prenotazione == null|| listaPrenotazioni.contains(prenotazione)) {
-            return false;
-        }
+//        if(prenotazione == null || listaPrenotazioni.contains(prenotazione)) {
+//            return false;
+//        }
                 FrontDeskStorage<Prenotazione> fd = new PrenotazioneDAO();
                 try{
                     fd.doSave(prenotazione);
                 } catch (SQLException e) {
-                if (e.getErrorCode() == 1062)
-                    throw new DuplicateKeyEntry();
+                    if (e.getErrorCode() == 1062)
+                        throw new DuplicateKeyEntry();
+                    else
+                        e.printStackTrace();
                 }
                 listaPrenotazioni.add(prenotazione);
             return true;

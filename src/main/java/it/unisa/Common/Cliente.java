@@ -76,7 +76,6 @@ public class Cliente implements Cloneable, Serializable {
      * Sesso del cliente.
      */
     private String sesso;
-
     private Camera camera;
 
     /**
@@ -147,7 +146,6 @@ public class Cliente implements Cloneable, Serializable {
         this.email = email;
         this.nazionalità = nazionalità;
         this.camera = camera;
-        this.isIntestatario = false;
     }
 
     /**
@@ -430,8 +428,8 @@ public class Cliente implements Cloneable, Serializable {
         return camera.clone();
     }
 
-    public void setCamere(Camera camere){
-        this.camera = camere;
+    public void setCamere(Camera camera){
+        this.camera = camera;
     }
 
     @Override

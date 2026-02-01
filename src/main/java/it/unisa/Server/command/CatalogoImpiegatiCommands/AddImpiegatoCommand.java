@@ -15,16 +15,14 @@ import java.util.ArrayList;
  */
 public class AddImpiegatoCommand implements Command {
 
-    private CatalogoImpiegati catalogue;
+    private CatalogoImpiegati catalogue = new  CatalogoImpiegati();
     private Impiegato impiegato;
 
     /**
      * Costruttore del comando.
-     * @param catalogue Catalogo degli impiegati per poter completare il comando.
      * @param impiegato   Impiegato da registrare.
      */
-    public AddImpiegatoCommand(CatalogoImpiegati catalogue, Impiegato impiegato) {
-        this.catalogue = catalogue;
+    public AddImpiegatoCommand(Impiegato impiegato) {
         this.impiegato = impiegato;
     }
 

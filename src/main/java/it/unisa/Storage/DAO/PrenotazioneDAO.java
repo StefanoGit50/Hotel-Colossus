@@ -38,7 +38,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
     public synchronized void doSave(Prenotazione p) throws SQLException {
         if(p != null && p.getTrattamento() != null){
             Connection connection = ConnectionStorage.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO prenotazione(DataPrenotazione, DataArrivoCliente, DataPartenzaCliente, NomeTrattamento, NoteAggiuntive, Intestatario, dataScadenza, numeroDocumento, DataRilascio, TipoDocumento, Stato, ChekIn) " +
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO prenotazione(DataPrenotazione, DataArrivoCliente, DataPartenzaCliente, NomeTrattamento, NoteAggiuntive, Intestatario, dataScadenza, numeroDocumento, DataRilascio, TipoDocumento, Stato, CheckIn) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ? , ?, ? , ? , ? , ?)");
 
             preparedStatement.setDate(1,Date.valueOf(p.getDataCreazionePrenotazione()));
@@ -213,17 +213,19 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                         stmt.setInt(1, idPrenotazione);
 
                         try (ResultSet rs4 = stmt.executeQuery()){
-                            p = connection.prepareStatement(query5);
+
                             while (rs4.next()) {
-                                p.setString(1,rs4.getString("CF"));
-                                try(ResultSet resultSet = p.executeQuery()){
-                                    resultSet.next();
-                                    camera.setNumeroCamera(resultSet.getInt("NumeroCamera"));
-                                    camera.setCapacità(resultSet.getInt("NumeroMaxOcc"));
-                                    camera.setNoteCamera(resultSet.getString("NoteCamera"));
-                                    camera.setStatoCamera(Stato.valueOf(resultSet.getString("Stato")));
-                                    camera.setPrezzoCamera(resultSet.getDouble("Prezzo"));
-                                }
+                            p = connection.prepareStatement(query5);
+                            p.setString(1,rs4.getString("CF"));
+
+                            try(ResultSet resultSet = p.executeQuery()){
+                                resultSet.next();
+                                camera.setNumeroCamera(resultSet.getInt("NumeroCamera"));
+                                camera.setCapacità(resultSet.getInt("NumeroMaxOcc"));
+                                camera.setNoteCamera(resultSet.getString("NoteCamera"));
+                                camera.setStatoCamera(Stato.valueOf(resultSet.getString("Stato")));
+                                camera.setPrezzoCamera(resultSet.getDouble("Prezzo"));
+                            }
 
                                 clienti.add(new Cliente(
                                         rs4.getString("nome"),
@@ -309,7 +311,6 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
 
                     try (ResultSet rs2 = stmt3.executeQuery()) {
                         while (rs2.next()) {
-                            System.out.println("efwkjf");
                             servizi.add(new Servizio(
                                     rs2.getString("Nome"),
                                     rs2.getDouble("Prezzo")
@@ -361,19 +362,17 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
 
 
                         while (rs4.next()) {
-                                p1.setString(1,rs4.getString("CF"));
+                            p1.setString(1,rs4.getString("CF"));
 
-                                try(ResultSet rs5 = p1.executeQuery()){
+                            try(ResultSet rs5 = p1.executeQuery()){
+                                while (rs5.next()) {
                                     camera.setNumeroCamera(rs5.getInt("NumeroCamera"));
                                     camera.setCapacità(rs5.getInt("NumeroMaxOcc"));
                                     camera.setNoteCamera(rs5.getString("NoteCamera"));
                                     camera.setStatoCamera(Stato.valueOf(rs5.getString("Stato")));
                                     camera.setPrezzoCamera(rs5.getDouble("Prezzo"));
                                 }
-
-
-
-
+                            }
 
                             clienti.add(new Cliente(
                                     rs4.getString("nome"),
@@ -450,7 +449,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
             try (PreparedStatement preparedStatement = connection.prepareStatement(
                     "UPDATE prenotazione SET DataPrenotazione = ? , DataArrivoCliente = ?, DataPartenzaCliente = ? , " +
                             "NoteAggiuntive = ? ,Intestatario = ? , dataScadenza = ? , numeroDocumento = ? , DataRilascio = ? , TipoDocumento = ?," +
-                            "Stato = ? , ChekIn = ? Where IDPrenotazione = ?")) {
+                            "Stato = ? , CheckIn = ? Where IDPrenotazione = ?")) {
 
                 preparedStatement.setDate(1, Date.valueOf(p.getDataCreazionePrenotazione()));
                 preparedStatement.setDate(2, Date.valueOf(p.getDataInizio()));
@@ -585,7 +584,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                             "WHERE a.IDPrenotazione = ?";
 
                     Collection<Cliente> clienti = new ArrayList<>();
-                    String query5 = "SELECT c.* FROM (associato_a join camera c on associato_a.NumeroCamera = c.NumeroCamera" +
+                    String query5 = "SELECT camera.* FROM (associato_a join camera c on associato_a.NumeroCamera = c.NumeroCamera" +
                             ")where CF = ?";
                     PreparedStatement preparedStatement1;
                     Camera camera = new Camera();
@@ -667,7 +666,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
             try{
                         Connection connection = ConnectionStorage.getConnection();
                         boolean [] booleans = new boolean[4];
-                        PreparedStatement preparedStatement = connection.prepareStatement("CREATE or replace view hot.PrenotaIS as\n" +
+                        PreparedStatement preparedStatement = connection.prepareStatement("CREATE or replace view PrenotaIS as\n" +
                                 "SELECT  p.*, t.Nome as TrattamentoNome, t.Prezzo as TrattamentoPrezzo,\n" +
                                 "        c.CF, c.nome as ClienteNome, c.cognome as ClienteCognome,   c.Email, c.telefono, c.Sesso, c.DataDiNascita, c.Cittadinanza,\n" +
                                 "        c.via, c.civico, c.comune, c.provincia, c.Cap, c.IsBackListed,\n" +
@@ -681,7 +680,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                                 "          LEFT JOIN servizio s ON s.IDPrenotazione = p.IDPrenotazione\n");
 
                         preparedStatement.executeUpdate();
-                        String sqlBello = "SELECT * FROM hot.prenotais WHERE ";
+                        String sqlBello = "SELECT * FROM prenotais WHERE ";
                         booleans[0] = nome != null && !nome.isEmpty();
                         booleans[1] = cognome != null && !cognome.isEmpty();
                         booleans[2] = dataInizio != null;

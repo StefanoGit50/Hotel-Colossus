@@ -89,7 +89,6 @@ public class ClienteDAOTesting {
         ArrayList<Cliente> clientes;
         ArrayList<Cliente> clientes1 = new ArrayList<>();
         clientes = (ArrayList<Cliente>) clienteDAO.doRetriveAll("decrescente");
-
        clientes1.add(new Cliente("Mario","Rossi","Italiana","Napoli","Napoli","Via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana",new Camera(101,Stato.Occupata,2, 120.00,"Camera matrimoniale vista mare")));
        clientes1.add(new Cliente("Laura","Verdi","Italiana","Roma","Roma","Via Milano",23,100,"3339876543","Femmina",LocalDate.of(1990,4,5),"VRDLRA90D45F839Y","laura.verdi@email.it","Italiana",new Camera(102,Stato.Libera,3,130.0,"Camera per due persone")));
 

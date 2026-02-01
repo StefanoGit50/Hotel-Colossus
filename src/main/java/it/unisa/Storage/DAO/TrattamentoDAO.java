@@ -1,6 +1,5 @@
 package it.unisa.Storage.DAO;
 
-import it.unisa.Common.Camera;
 import it.unisa.Common.Trattamento;
 import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.Interfacce.FrontDeskStorage;

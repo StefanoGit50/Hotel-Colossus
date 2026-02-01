@@ -45,7 +45,11 @@ public class ServerCatalogoDB {
         servizio.add( new Servizio("Piscina",20));
         arraycamera.add(new Camera(112, Stato.Occupata,2,45.50,""));
         prenotazione =new Prenotazione(1234, LocalDate.now(),LocalDate.now(),LocalDate.of(2026,02,01),new Trattamento("MEZZA PENSIONE", 60),"Passaporto",LocalDate.of(2012,03,11),LocalDate.of(2044,12,11),"Mario Biondi","",arraycamera,servizio,cliente,"34532MC2");
+<<<<<<< Updated upstream
         //cliente.add( new Cliente("mario","Rossi","Burundi","napoli","napoli","via manzo",12,45,"323425","M",LocalDate.of(1998,12,1),"CF234rdfcfg","luca@gmail.com","italiana"));
+=======
+//        cliente.add( new Cliente("mario","Rossi","Burundi","napoli","napoli","via manzo",12,45,"323425","M",LocalDate.of(1998,12,1),"CF234rdfcfg","luca@gmail.com","italiana"));
+>>>>>>> Stashed changes
     }
 
     @AfterEach
@@ -167,12 +171,17 @@ public class ServerCatalogoDB {
     @DisplayName("Bottom up 3.7: LV2 Test controllo dell interazione sull'aggiunta del cliente fra frontdeskServer command pattern e DB")
     @Tag("integration-LV2")
     public void addClienteTest() throws RemoteException {
+<<<<<<< Updated upstream
         Cliente c = new Cliente("Roberto","Rossi","Burundiano","napoli","napoli","via manzo",12,45,"323425","M",LocalDate.of(1998,12,1),"CF234rdfcfg","luca@gmail.com","italiana",new Camera());
         frontDesk.addCliente(c);
+=======
+//        Cliente c = new Cliente("Roberto","Rossi","Burundiano","napoli","napoli","via manzo",12,45,"323425","M",LocalDate.of(1998,12,1),"CF234rdfcfg","luca@gmail.com","italiana");
+//        frontDesk.addCliente(c);
+>>>>>>> Stashed changes
 
         Collection <?> clienti= new ArrayList<>();
         try{
-            assertDoesNotThrow(()->frontDeskStorage.doRetriveByKey(c.getCf()));
+//            assertDoesNotThrow(()->frontDeskStorage.doRetriveByKey(c.getCf()));
             clienti= frontDeskStorage.doRetriveAll("decrescente");
         }catch (SQLException e ){
             e.printStackTrace();

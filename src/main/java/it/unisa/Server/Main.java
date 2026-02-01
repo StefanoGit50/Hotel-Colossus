@@ -1,6 +1,5 @@
 package it.unisa.Server;
 
-import com.mysql.cj.protocol.a.SqlDateValueEncoder;
 import it.unisa.Common.Camera;
 import it.unisa.Common.Cliente;
 import it.unisa.Common.Impiegato;
@@ -14,7 +13,6 @@ import it.unisa.Storage.DAO.ClienteDAO;
 import it.unisa.Storage.DAO.ImpiegatoDAO;
 import it.unisa.Storage.DAO.PrenotazioneDAO;
 
-import javax.xml.catalog.CatalogResolver;
 import java.sql.SQLException;
 import java.util.ArrayList;
 

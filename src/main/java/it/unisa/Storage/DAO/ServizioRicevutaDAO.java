@@ -2,15 +2,12 @@ package it.unisa.Storage.DAO;
 
 import it.unisa.Common.Servizio;
 import it.unisa.Storage.ConnectionStorage;
-import it.unisa.Storage.Interfacce.FrontDeskStorage;
-import it.unisa.interfacce.FrontDeskInterface;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.List;
 
 public class ServizioRicevutaDAO {
 

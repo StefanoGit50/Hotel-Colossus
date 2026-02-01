@@ -1,13 +1,9 @@
 package it.unisa.Server.persistent.obj.catalogues;
 
-import it.unisa.Common.Cliente;
 import it.unisa.Common.Impiegato;
-import it.unisa.Server.gestionePrenotazioni.FrontDesk;
 import it.unisa.Server.persistent.util.Ruolo;
-import it.unisa.Storage.DAO.ClienteDAO;
 import it.unisa.Storage.DAO.ImpiegatoDAO;
 import it.unisa.Storage.Interfacce.BackofficeStorage;
-import it.unisa.Storage.Interfacce.FrontDeskStorage;
 
 import java.io.Serializable;
 import java.sql.SQLException;

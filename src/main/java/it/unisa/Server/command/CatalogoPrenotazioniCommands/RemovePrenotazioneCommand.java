@@ -4,23 +4,20 @@ import it.unisa.Common.Prenotazione;
 import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
 
-import java.util.ArrayList;
 
 /**
  * Comando che permette di eliminare una prenotazione (eliminarla dal catalogo delle prenotazioni).
  */
 public class RemovePrenotazioneCommand implements Command {
 
-    private CatalogoPrenotazioni catalogue;
+    private CatalogoPrenotazioni catalogue = new CatalogoPrenotazioni();
     private Prenotazione prenotazione;
 
     /**
      * Costruttore del comando
-     * @param catalogue     Catalogo delle prenotazioni, necessario per completare il comando.
      * @param prenotazione  Oggetto {@code Prenotazione} da eliminare.
      */
-    public RemovePrenotazioneCommand(CatalogoPrenotazioni catalogue, Prenotazione prenotazione) {
-        this.catalogue = catalogue;
+    public RemovePrenotazioneCommand(Prenotazione prenotazione) {
         this.prenotazione = prenotazione;
     }
 

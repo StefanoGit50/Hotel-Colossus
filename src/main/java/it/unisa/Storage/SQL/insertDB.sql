@@ -14,16 +14,15 @@ INSERT INTO Cliente (
 
 INSERT INTO Camera (
     NumeroCamera, NumeroMaxOcc, NoteCamera, Stato, Prezzo
-) VALUES (
-             101, 2, 'Camera matrimoniale vista mare', 'Occupata', 120.00
-         ),
-      (102 , 3 , 'Camera per due persone','Libera',130.0);
+) VALUES (101, 2, 'Camera matrimoniale vista mare', 'Occupata', 120.00 ),
+         (102 , 3 , 'Camera per due persone','Libera',130.0),
+         (404 , 1, 'Suite Familiare, due stanze comunicanti, balcone ampio','Libera',250.0);
 
 INSERT INTO Prenotazione (
     DataPrenotazione, DataArrivoCliente, DataPartenzaCliente,
     NomeTrattamento, NoteAggiuntive, Intestatario,
     dataScadenza, numeroDocumento, DataRilascio,
-    TipoDocumento, Stato, ChekIn
+    TipoDocumento, Stato, CheckIn
 ) VALUES (
              '2026-02-01', '2026-02-10', '2026-02-15',
              'Pensione Completa', 'Nessuna nota',

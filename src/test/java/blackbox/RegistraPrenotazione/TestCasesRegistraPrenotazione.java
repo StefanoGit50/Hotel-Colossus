@@ -3,6 +3,7 @@ package blackbox.RegistraPrenotazione;
 import it.unisa.Common.*;
 import it.unisa.Server.persistent.obj.catalogues.InvalidInputException;
 import it.unisa.Server.persistent.util.Stato;
+import it.unisa.Storage.DAO.*;
 import it.unisa.interfacce.FrontDeskInterface;
 import org.junit.jupiter.api.*;
 
@@ -10,9 +11,9 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Random;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @Tag("registraPrenotazione")
@@ -23,7 +24,22 @@ public class TestCasesRegistraPrenotazione {
     public static ArrayList<Servizio> listaServizi = new ArrayList<>();
     public static ArrayList<Cliente> listaClienti = new ArrayList<>();
     public static Trattamento trattamento = new Trattamento("Mezza Pensione", 125.00);
-    public static int autoIncrement = 1; // simula l'autoincrement del DB
+    public static int autoIncrement; // simula l'autoincrement del DB
+
+    @BeforeAll
+    public static void istantiateNumberOfInstances(){
+        // Numero di prenotazioni presenti nel sistema + 1 = prenotazione successiva ad essere memorizzata
+        try {
+            autoIncrement = new PrenotazioneDAO().doRetriveAll("").size() + 1;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @AfterEach
+    public void evadeDuplicateKeyError(){
+        autoIncrement++;
+    }
 
     @BeforeAll
     public static void istantiateFrontDesk() throws RemoteException, NotBoundException, MalformedURLException {
@@ -113,18 +129,24 @@ public class TestCasesRegistraPrenotazione {
      * @return {@code Prenotazione} base.
      */
     public Prenotazione createBasePrenotazione() {
+        ArrayList<Camera> camere = new ArrayList<>();
+        ArrayList<Cliente> clienti = new ArrayList<>();
+        camere.add(listaCamere.getFirst());
+        clienti.add(listaClienti.getFirst());
+        String nome = clienti.getFirst().getNome();
+
         return new Prenotazione(
-                autoIncrement++,  // ID
+                autoIncrement,  // ID
                 LocalDate.now(), // Data Creazione
                 LocalDate.now().plusDays(1),            // Data arrivo
                 LocalDate.now().plusDays(5),            // Data partenza
                 trattamento, "Patente",
                 LocalDate.of(2020, 1, 10),
                 LocalDate.of(2030, 1, 10),
-                listaClienti.getFirst().getNome(), "",
-                new ArrayList<>(listaCamere.subList(0, 1)), // lista camere
-                listaServizi,                          // lista servizi
-                new ArrayList<>(listaClienti.subList(0, 1)),// lista clienti
+                "NNN", "",
+                camere, // lista camere
+                listaServizi, // lista servizi
+                clienti, // lista clienti
                 "12345678"
         );
     }
@@ -135,21 +157,22 @@ public class TestCasesRegistraPrenotazione {
     @Nested
     @DisplayName("TESTING: RegistraPrenotazione")
     @Tag("success")
-    class TestPassRegistraImpiegato {
+    class TestPassRegistraPrenotazione {
         @Test
         @DisplayName("TC1: [Success] Registrazione con servizi: nessuno")
         void testCase1() throws RemoteException{
             Prenotazione p = createBasePrenotazione(), campione;
             p.setTrattamento(null);
             p.setListaServizi(new ArrayList<>(listaServizi));
-            frontDesk.addPrenotazione(p);
-            /*
+            Assertions.assertDoesNotThrow(() -> frontDesk.addPrenotazione(p));
+            System.out.println(p);
+            System.out.println(autoIncrement);
             try {
-                Assertions.assertEquals(p, frontDesk.getPrenotazioneById(1));
+                campione = frontDesk.getPrenotazioneById(autoIncrement);
+                Assertions.assertEquals(p, campione);
             } catch (RemoteException e) {
-                Assertions.fail(e.getMessage());
+                e.printStackTrace();
             }
-            */
 
         }
 
@@ -201,7 +224,7 @@ public class TestCasesRegistraPrenotazione {
     @Nested
     @DisplayName("TESTING: RegistraPrenotazione - [error]")
     @Tag("error")
-    class TestFailRegistraImpiegato {
+    class TestFailRegistraPrenotazione {
         @Test
         @DisplayName("TC5: [error] Formato data arrivo non valido")
         public void testCase5() {

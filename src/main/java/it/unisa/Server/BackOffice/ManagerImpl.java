@@ -112,20 +112,20 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
     public void addImpiegato(Impiegato i) throws RemoteException {
         CatalogueUtils.checkNull(i);            // Lancia InvalidInputException
         CatalogoImpiegati.checkImpiegato(i);    // Lancia InvalidInputException
-        AddImpiegatoCommand command = new AddImpiegatoCommand(catalogoImpiegati, i);
+        AddImpiegatoCommand command = new AddImpiegatoCommand(i);
         invoker.executeCommand(command);
     }
 
     @Override
     public void removeImpiegato(Impiegato i) throws RemoteException {
-        RemoveImpiegatoCommand command = new RemoveImpiegatoCommand(catalogoImpiegati, i);
+        RemoveImpiegatoCommand command = new RemoveImpiegatoCommand(i);
         invoker.executeCommand(command);
 
     }
 
     @Override
     public void updateImpiegato(Impiegato i) throws RemoteException {
-        UpdateImpiegatoCommand command = new UpdateImpiegatoCommand(catalogoImpiegati, i);
+        UpdateImpiegatoCommand command = new UpdateImpiegatoCommand(i);
         invoker.executeCommand(command);
     }
 
@@ -204,7 +204,7 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
                 "3233452",
                 "m",
                 LocalDate.of(2022, 1, 6),
-                "SDFGANNSOLF", "Libero@asfnai","Italiana",new Camera());
+                "SDFGANNSOLF", "Libero@asfnai","Italiana", new Camera());
         clist.add(cliente);
 
         Prenotazione p1 = new Prenotazione(1,
