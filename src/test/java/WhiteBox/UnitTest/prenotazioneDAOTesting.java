@@ -102,9 +102,8 @@ public class prenotazioneDAOTesting {
     @Tag("False")
     @DisplayName("doRetriveByKey() quando resultSet.next() è true ma gli altri false")
     public void doRetriveByKeyAllFalseTranneIlPrimoResultSet() throws SQLException {
-       // Prenotazione prenotazione1 = prenotazioneDAO.doRetriveByKey();
-
-      //  assertEquals(prenotazione,prenotazione1);
+       Prenotazione prenotazione1 = prenotazioneDAO.doRetriveByKey();
+       assertEquals(prenotazione,prenotazione1);
     }
     @Test
     @Tag("True")
