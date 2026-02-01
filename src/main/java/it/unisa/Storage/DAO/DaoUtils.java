@@ -17,7 +17,8 @@ public final class DaoUtils {
         boolean flag = false;
 
         for (String w : whitelist){
-            if(suspect.trim().equalsIgnoreCase(w + " asc") || suspect.equalsIgnoreCase(w + " desc")) {
+            if(suspect.trim().equalsIgnoreCase(w + " asc") || suspect.equalsIgnoreCase(w + " desc")
+                || suspect.trim().equalsIgnoreCase(w + " crescente") || suspect.equalsIgnoreCase(w + " decrescente")) {
                 flag = true;
                 break;
             }

@@ -16,7 +16,7 @@ create table Cliente(
                         telefono char(15) not null,
                         Nazionalita varchar(50) not null,
                         DataDiNascita date not null,
-                        IsBackListed boolean not null,
+                        IsBlackListed boolean not null,
                         primary key(CF)
 );
 

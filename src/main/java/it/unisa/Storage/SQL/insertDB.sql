@@ -73,7 +73,7 @@ VALUES
 -- INSERT CLIENTE
 -- =============================================
 INSERT INTO Cliente (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso,
-                     telefono, Nazionalita, DataDiNascita, IsBackListed)
+                     telefono, Nazionalita, DataDiNascita, IsBlackListed)
 VALUES
     ('FRRLRD80A01H501Z', 'Leonardo', 'Ferrari', '20100', 'Milano', 15, 'Milano', 'Via Dante',
      'leonardo.ferrari@email.it', 'M', '+393331234567', 'Italiana', '1980-01-01', false),
