@@ -21,13 +21,14 @@ import java.util.regex.Pattern;
  */
 public class CatalogoPrenotazioni implements Serializable {
 
-    private static FrontDeskStorage<Prenotazione>fds = new PrenotazioneDAO();
+    private static FrontDeskStorage<Prenotazione>fds;
     private static Collection<Prenotazione> listaPrenotazioni;
 
     static {
         try {
+            fds = new PrenotazioneDAO();
             listaPrenotazioni = fds.doRetriveAll("");
-        } catch (SQLException e) {
+        }catch(SQLException e){
             throw new RuntimeException(e);
         }
     }
@@ -38,7 +39,6 @@ public class CatalogoPrenotazioni implements Serializable {
      */
     public CatalogoPrenotazioni(ArrayList<Prenotazione> listaPrenotazioni) {
         CatalogoPrenotazioni.listaPrenotazioni = listaPrenotazioni;
-         fds = new PrenotazioneDAO();
     }
 
     /**

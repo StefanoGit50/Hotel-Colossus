@@ -413,7 +413,7 @@ public class Prenotazione implements Cloneable, Serializable {
      */
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o){
         if(o == null){
             return false;
         }
@@ -424,67 +424,233 @@ public class Prenotazione implements Cloneable, Serializable {
             return false;
         }
         Prenotazione prenotazione = (Prenotazione) o;
-        ArrayList<Cliente> clientes = prenotazione.getListaClienti();
-        ArrayList<Camera> cameras = prenotazione.getListaCamere();
-        ArrayList<Servizio> servizios = prenotazione.getListaServizi();
+        if(!isNullAll(prenotazione) && !isNullAll(this)){
+                ArrayList<Cliente> clientes = prenotazione.getListaClienti();
+                ArrayList<Camera> cameras = prenotazione.getListaCamere();
+                ArrayList<Servizio> servizios = prenotazione.getListaServizi();
 
-        Boolean clien = null;
-        Boolean came = null;
-        Boolean servi = null;
-        int i = 0;
-        if(clientes.size() == listaClienti.size()){
-            for(Cliente cliente : clientes){
-                if(!listaClienti.get(i).equals(cliente)){
+                if(isNull(clientes)){
+                     if(!isNull(listaClienti)){
+                        return false;
+                     }
+                }else {
+                    if(isNull(listaClienti)){
+                        return false;
+                    }
+                }
+
+                if(isNull(cameras)){
+                    if(!isNull(listaCamere)){
+                        return false;
+                    }
+                }else{
+                    if(isNull(listaCamere)){
+                        return false;
+                    }
+                }
+
+                if(isNull(servizios)){
+                    if(!isNull(listaServizi)){
+                        return false;
+                    }
+                }else{
+                    if(isNull(listaServizi)){
+                        return false;
+                    }
+                }
+
+                Boolean clien = null;
+                Boolean came = null;
+                Boolean servi = null;
+                int i = 0;
+                if(clientes.size() == listaClienti.size()){
+                    for(Cliente cliente : clientes){
+                        if(!listaClienti.get(i).equals(cliente)){
+                            clien = false;
+                            break;
+                        }
+                        i++;
+                    }
+
+                    if(clien == null){
+                        clien = true;
+                    }
+                }else{
                     clien = false;
-                    break;
                 }
-                i++;
-            }
+                i = 0;
+                if(servizios.size() == listaServizi.size()){
+                    for(Servizio servizio : servizios){
+                        if(!listaServizi.get(i).equals(servizio)){
+                            servi = false;
+                            break;
+                        }
+                        i++;
+                    }
 
-            if(clien == null){
-                clien = true;
-            }
-        }else{
-            clien = false;
-        }
-        i = 0;
-        if(servizios.size() == listaServizi.size()){
-            for(Servizio servizio : servizios){
-                if(!listaServizi.get(i).equals(servizio)){
+                    if(servi == null){
+                        servi =true;
+                    }
+                }else{
                     servi = false;
-                    break;
                 }
-                i++;
-            }
+                i = 0;
+                if(cameras.size() == listaCamere.size()){
+                    for(Camera camera : cameras){
+                        if(!listaCamere.get(i).equals(camera)){
+                            came = false;
+                            break;
+                        }
+                        i++;
+                    }
 
-            if(servi == null){
-                servi =true;
-            }
-        }else{
-            servi = false;
-        }
-        i = 0;
-        if(cameras.size() == listaCamere.size()){
-            for(Camera camera : cameras){
-                if(!listaCamere.get(i).equals(camera)){
+                    if(came == null){
+                        came = true;
+                    }
+                }else{
                     came = false;
-                    break;
                 }
-                i++;
-            }
 
-            if(came == null){
-                came = true;
-            }
+                if(isNull(trattamento)){
+                    if(!isNull(prenotazione.trattamento)){
+                        return false;
+                    }
+                }else{
+                    if(isNull(prenotazione.trattamento)){
+                        return false;
+                    }
+                }
+
+                if(isNull(IDPrenotazione)){
+                    if(!isNull(prenotazione.IDPrenotazione)){
+                        return false;
+                    }
+                }else{
+                    if(isNull(prenotazione.IDPrenotazione)){
+                        return false;
+                    }
+                }
+
+                if(isNull(dataCreazionePrenotazione)){
+                    if(!isNull(prenotazione.dataCreazionePrenotazione)){
+                        return false;
+                    }
+                }else{
+                    if(isNull(prenotazione.dataCreazionePrenotazione)){
+                        return false;
+                    }
+                }
+
+                if(isNull(dataFine)){
+                    if(!isNull(prenotazione.dataFine)){
+                        return false;
+                    }
+                }else{
+                    if(isNull(prenotazione.dataFine)){
+                        return false;
+                    }
+                }
+
+                if(isNull(dataInizio)){
+                    if(!isNull(prenotazione.dataInizio)){
+                        return false;
+                    }
+                }else{
+                    if(isNull(prenotazione.dataInizio)){
+                        return false;
+                    }
+                }
+
+                if(isNull(dataRilascio)){
+                    if(!isNull(prenotazione.dataRilascio)){
+                        return false;
+                    }
+                }else{
+                    if(isNull(prenotazione.dataRilascio)){
+                        return false;
+                    }
+                }
+
+                if(isNull(dataScadenza)){
+                    if(!isNull(prenotazione.dataScadenza)){
+                        return false;
+                    }
+                }else{
+                    if(isNull(prenotazione.dataScadenza)){
+                        return false;
+                    }
+                }
+
+                if(isNull(tipoDocumento)){
+                    if(!isNull(prenotazione.tipoDocumento)){
+                        return false;
+                    }
+                }else{
+                    if(isNull(prenotazione.tipoDocumento)){
+                        return false;
+                    }
+                }
+
+                if(isNull(numeroDocumento)){
+                    if(!isNull(prenotazione.numeroDocumento)){
+                        return false;
+                    }
+                }else{
+                    if(isNull(prenotazione.numeroDocumento)){
+                        return false;
+                    }
+                }
+
+                if(isNull(intestatario)){
+                    if(!isNull(prenotazione.intestatario)){
+                       return false;
+                    }
+                }else{
+                    if(isNull(prenotazione.intestatario)){
+                        return false;
+                    }
+                }
+
+                if(isNull(noteAggiuntive)){
+                    if(!isNull(prenotazione.noteAggiuntive)){
+                        return false;
+                    }
+                }else{
+                    if(isNull(noteAggiuntive)){
+                        return false;
+                    }
+                }
+                return came && servi && clien && trattamento.equals(prenotazione.getTrattamento()) && IDPrenotazione.equals(prenotazione.getIDPrenotazione())
+                        && dataCreazionePrenotazione.equals(prenotazione.getDataCreazionePrenotazione()) && dataInizio.equals(prenotazione.getDataInizio()) &&
+                        dataFine.equals(prenotazione.getDataFine()) && dataRilascio.equals(prenotazione.getDataRilascio()) && dataScadenza.equals(prenotazione.getDataScadenza())
+                        && tipoDocumento.equalsIgnoreCase(prenotazione.getTipoDocumento()) && numeroDocumento.equalsIgnoreCase(prenotazione.getNumeroDocumento())
+                        && intestatario.equalsIgnoreCase(prenotazione.getIntestatario()) && noteAggiuntive.equalsIgnoreCase(prenotazione.getNoteAggiuntive()) && checkIn == prenotazione.isCheckIn()
+                        && statoPrenotazione == prenotazione.getStatoPrenotazione();
+
         }else{
-            came = false;
+           if(isNullAll(prenotazione) && isNullAll(this)){
+               return true;
+           }else{
+               return false;
+           }
         }
-        return came && servi && clien && trattamento.equals(prenotazione.getTrattamento()) && IDPrenotazione.equals(prenotazione.getIDPrenotazione())
-                && dataCreazionePrenotazione.equals(prenotazione.getDataCreazionePrenotazione()) && dataInizio.equals(prenotazione.getDataInizio()) &&
-                dataFine.equals(prenotazione.getDataFine()) && dataRilascio.equals(prenotazione.getDataRilascio()) && dataScadenza.equals(prenotazione.getDataScadenza())
-                && tipoDocumento.equalsIgnoreCase(prenotazione.getTipoDocumento()) && numeroDocumento.equalsIgnoreCase(prenotazione.getNumeroDocumento())
-                && intestatario.equalsIgnoreCase(prenotazione.getIntestatario()) && noteAggiuntive.equalsIgnoreCase(prenotazione.getNoteAggiuntive()) && checkIn == prenotazione.isCheckIn()
-                && statoPrenotazione == prenotazione.getStatoPrenotazione();
+
+    }
+    private boolean isNullAll(Prenotazione prenotazione) {
+        return prenotazione.trattamento == null && prenotazione.noteAggiuntive == null && prenotazione.intestatario == null &&
+                prenotazione.numeroDocumento == null && prenotazione.tipoDocumento == null && prenotazione.IDPrenotazione == null &&
+                prenotazione.dataRilascio == null && prenotazione.dataScadenza == null && prenotazione.dataInizio == null &&
+                prenotazione.dataFine == null && prenotazione.listaCamere == null && prenotazione.listaClienti == null &&
+                prenotazione.listaServizi == null && prenotazione.dataCreazionePrenotazione == null;
+    }
+
+
+    private boolean isNull(Object o ){
+        if(o == null){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     @Override

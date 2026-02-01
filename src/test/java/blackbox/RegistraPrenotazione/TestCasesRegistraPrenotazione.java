@@ -15,6 +15,9 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @Tag("registraPrenotazione")
 public class TestCasesRegistraPrenotazione {
@@ -230,7 +233,7 @@ public class TestCasesRegistraPrenotazione {
         public void testCase5() {
             Prenotazione p = createBasePrenotazione();
             p.setDataInizio(null);
-            Assertions.assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
+            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
@@ -238,7 +241,7 @@ public class TestCasesRegistraPrenotazione {
         public void testCase6() {
             Prenotazione p = createBasePrenotazione();
             p.setDataInizio(LocalDate.of(2020, 1, 10));
-            Assertions.assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
+            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
@@ -246,7 +249,7 @@ public class TestCasesRegistraPrenotazione {
         public void testCase7() {
             Prenotazione p = createBasePrenotazione();
             p.setDataInizio(null);
-            Assertions.assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
+            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
@@ -254,7 +257,7 @@ public class TestCasesRegistraPrenotazione {
         public void testCase8() {
             Prenotazione p = createBasePrenotazione();
             p.setDataFine(null);
-            Assertions.assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
+            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
@@ -262,7 +265,7 @@ public class TestCasesRegistraPrenotazione {
         public void testCase9() {
             Prenotazione p = createBasePrenotazione();
             p.setDataFine(p.getDataInizio());
-            Assertions.assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
+            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
@@ -270,7 +273,7 @@ public class TestCasesRegistraPrenotazione {
         public void testCase10() {
             Prenotazione p = createBasePrenotazione();
             p.setDataFine(LocalDate.of(2024, 1, 10));
-            Assertions.assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
+            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
@@ -278,7 +281,7 @@ public class TestCasesRegistraPrenotazione {
         public void testCase11() {
             Prenotazione p = createBasePrenotazione();
             p.setDataFine(null);
-            Assertions.assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
+            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
@@ -286,7 +289,7 @@ public class TestCasesRegistraPrenotazione {
         public void testCase13() {
             Prenotazione p = createBasePrenotazione();
             p.setTrattamento(null);
-            Assertions.assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
+            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
@@ -294,7 +297,7 @@ public class TestCasesRegistraPrenotazione {
         public void testCase14() {
             Prenotazione p = createBasePrenotazione();
             p.setListaClienti(new ArrayList<>());
-            Assertions.assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
+            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
@@ -302,7 +305,7 @@ public class TestCasesRegistraPrenotazione {
         public void testCase15() {
             Prenotazione p = createBasePrenotazione();
             p.setListaCamere(new ArrayList<>());
-            Assertions.assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
+            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
@@ -310,7 +313,7 @@ public class TestCasesRegistraPrenotazione {
         public void testCase16() {
             Prenotazione p = createBasePrenotazione();
             p.setTipoDocumento("");
-            Assertions.assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
+            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
@@ -318,7 +321,7 @@ public class TestCasesRegistraPrenotazione {
         public void testCase17() {
             Prenotazione p = createBasePrenotazione();
             p.setTipoDocumento("Tessera sanitaria");
-            Assertions.assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
+            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
@@ -327,7 +330,7 @@ public class TestCasesRegistraPrenotazione {
             Prenotazione p = createBasePrenotazione();
             p.setListaClienti(new ArrayList<>(listaClienti.subList(0, 2))); // 2 Clienti
             // Assumendo che la camera in subList(0,1) abbia capacità 1
-            Assertions.assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
+            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
@@ -335,7 +338,7 @@ public class TestCasesRegistraPrenotazione {
         public void testCase19() {
             Prenotazione p = createBasePrenotazione();
             p.setDataRilascio(null);
-            Assertions.assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
+            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
@@ -343,7 +346,7 @@ public class TestCasesRegistraPrenotazione {
         public void testCase20() {
             Prenotazione p = createBasePrenotazione();
             p.setDataRilascio(LocalDate.now().plusYears(1));
-            Assertions.assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
+            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
@@ -351,7 +354,7 @@ public class TestCasesRegistraPrenotazione {
         public void testCase21() {
             Prenotazione p = createBasePrenotazione();
             p.setDataRilascio(null);
-            Assertions.assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
+            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
@@ -359,7 +362,7 @@ public class TestCasesRegistraPrenotazione {
         public void testCase22() {
             Prenotazione p = createBasePrenotazione();
             p.setDataRilascio(p.getDataScadenza());
-            Assertions.assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
+            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
@@ -368,7 +371,7 @@ public class TestCasesRegistraPrenotazione {
             Prenotazione p = createBasePrenotazione();
             p.setDataRilascio(LocalDate.of(2020, 1, 10));
             p.setDataScadenza(LocalDate.of(2019, 1, 10));
-            Assertions.assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
+            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
@@ -376,7 +379,7 @@ public class TestCasesRegistraPrenotazione {
         public void testCase24() {
             Prenotazione p = createBasePrenotazione();
             p.setDataScadenza(LocalDate.of(2024, 1, 10));
-            Assertions.assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
+            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
@@ -384,7 +387,7 @@ public class TestCasesRegistraPrenotazione {
         public void testCase25() {
             Prenotazione p = createBasePrenotazione();
             p.setDataScadenza(null);
-            Assertions.assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
+            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
     }
 }

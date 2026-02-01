@@ -94,7 +94,7 @@ public class Servizio implements Cloneable, Serializable {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Servizio servizio = (Servizio) obj;
-        return Double.compare(servizio.prezzo, prezzo) == 0 && Objects.equals(nome, servizio.nome);
+        return Double.compare(servizio.prezzo, prezzo) == 0 && nome.equalsIgnoreCase(servizio.getNome());
     }
 
     /**
