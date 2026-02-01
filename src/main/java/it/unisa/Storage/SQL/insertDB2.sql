@@ -1,5 +1,5 @@
 -- INSERT per Cliente2 (2 clienti)
-INSERT INTO hot.cliente2 (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, Cittadinanza, Nazionalità, DataDiNascita, IsBackListed)
+INSERT INTO cliente (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, Cittadinanza, Nazionalità, DataDiNascita, IsBackListed)
 VALUES
 ('VRDLRA90D45F839Y', 'Laura', 'Verdi', '00100', 'Roma', 23, 'Roma', 'Via Milano', 'laura.verdi@email.it', 'Femmina', '3339876543', 'Italiana', 'Italiana', '1990-04-05', FALSE);
 

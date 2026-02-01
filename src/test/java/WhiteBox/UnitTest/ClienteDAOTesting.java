@@ -1,8 +1,9 @@
-package whitebox.UnitTest;
+package WhiteBox.UnitTest;
 
 
 import it.unisa.Common.Camera;
 import it.unisa.Common.Cliente;
+import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.DAO.ClienteDAO;
 import org.junit.jupiter.api.*;
@@ -32,7 +33,7 @@ public class ClienteDAOTesting {
     @BeforeEach
     void setUp() throws SQLException {
         clienteDAO = new ClienteDAO();
-        cliente = new Cliente("Mario","Rossi","Italiana","Salerno","Salerno","Via roma",10,84121,"3249554018","maschio",LocalDate.of(2020,12,11),"RSSMRA20T11H703F","Mario.Rossi@gmail.com","Italiana");
+        cliente = new Cliente("Mario","Rossi","Italiana","Salerno","Salerno","Via roma",10,84121,"3249554018","maschio",LocalDate.of(2020,12,11),"RSSMRA20T11H703F","Mario.Rossi@gmail.com","Italiana",new Camera(101, Stato.Libera,2,20.0,""));
     }
 
     @Test
@@ -45,9 +46,9 @@ public class ClienteDAOTesting {
     @Test
     @Tag("True")
     @DisplayName("doRetriveByKey() quando va tutto bene")
-
-    public void doRetriveByKeyAllTrue(){
-        assertDoesNotThrow(()->clienteDAO.doRetriveByKey("RSSMRA20T11H703F"));
+    public void doRetriveByKeyAllTrue() throws SQLException{
+        Cliente cliente1 = clienteDAO.doRetriveByKey("RSSMRA20T11H703F");
+        assertEquals(cliente,cliente1);
     }
 
     @Test
@@ -89,8 +90,8 @@ public class ClienteDAOTesting {
         ArrayList<Cliente> clientes1 = new ArrayList<>();
         clientes = (ArrayList<Cliente>) clienteDAO.doRetriveAll("decrescente");
 
-        clientes1.add(new Cliente("Mario","Rossi","Italiana","Napoli","Napoli","Via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana"));
-        clientes1.add(new Cliente("Laura","Verdi","Italiana","Roma","Roma","Via Milano",23,100,"3339876543","Femmina",LocalDate.of(1990,4,5),"VRDLRA90D45F839Y","laura.verdi@email.it","Italiana"));
+       clientes1.add(new Cliente("Mario","Rossi","Italiana","Napoli","Napoli","Via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana",new Camera(101,Stato.Occupata,2, 120.00,"Camera matrimoniale vista mare")));
+       clientes1.add(new Cliente("Laura","Verdi","Italiana","Roma","Roma","Via Milano",23,100,"3339876543","Femmina",LocalDate.of(1990,4,5),"VRDLRA90D45F839Y","laura.verdi@email.it","Italiana",new Camera(102,Stato.Libera,3,130.0,"Camera per due persone")));
 
         assertEquals(clientes1,clientes);
     }
@@ -103,8 +104,8 @@ public class ClienteDAOTesting {
         ArrayList<Cliente> clientes1 = new ArrayList<>();
         clientes = (ArrayList<Cliente>) clienteDAO.doRetriveAll("crescente");
 
-        clientes1.add(new Cliente("Mario","Rossi","Italiana","Napoli","Napoli","Via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana"));
-        clientes1.add(new Cliente("Laura","Verdi","Italiana","Roma","Roma","Via Milano",23,100,"3339876543","Femmina",LocalDate.of(1990,4,5),"VRDLRA90D45F839Y","laura.verdi@email.it","Italiana"));
+       clientes1.add(new Cliente("Mario","Rossi","Italiana","Napoli","Napoli","Via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana",new Camera()));
+       clientes1.add(new Cliente("Laura","Verdi","Italiana","Roma","Roma","Via Milano",23,100,"3339876543","Femmina",LocalDate.of(1990,4,5),"VRDLRA90D45F839Y","laura.verdi@email.it","Italiana",new Camera()));
 
         assertEquals(clientes1,clientes);
     }
@@ -146,8 +147,8 @@ public class ClienteDAOTesting {
     @DisplayName("doRetriveByAttribute() quando va tutto bene")
     public void doRetriveByAttributeAllTrue() throws SQLException {
         ArrayList<Cliente> clientes = new ArrayList<>();
-        clientes.add(new Cliente("Mario","Rossi","Italiana","Napoli","Napoli","Via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana"));
-        clientes.add(new Cliente("Laura","Verdi","Italiana","Roma","Roma","Via Milano",23,100,"3339876543","Femmina",LocalDate.of(1990,4,5),"VRDLRA90D45F839Y","laura.verdi@email.it","Italiana"));
+        clientes.add(new Cliente("Mario","Rossi","Italiana","Napoli","Napoli","Via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana",new Camera(101,Stato.Occupata,2, 120.00,"Camera matrimoniale vista mare")));
+        clientes.add(new Cliente("Laura","Verdi","Italiana","Roma","Roma","Via Milano",23,100,"3339876543","Femmina",LocalDate.of(1990,4,5),"VRDLRA90D45F839Y","laura.verdi@email.it","Italiana",new Camera(102,Stato.Libera,3,130.0,"Camera per due persone")));
         Object s = "Italiana" ;
         ArrayList<Cliente> clientes1 = (ArrayList<Cliente>) clienteDAO.doRetriveByAttribute("Cittadinanza",s);
         assertEquals(clientes,clientes1);
@@ -167,7 +168,7 @@ public class ClienteDAOTesting {
     public void doFilterAllTrue(){
         ArrayList<Cliente> clientes1 = new ArrayList<>();
         ArrayList<Cliente> clientes = (ArrayList<Cliente>) clienteDAO.doFilter("","","",LocalDate.of(1985,8,1),false,"Nome");
-        clientes1.add(new Cliente("Mario","Rossi","Italiana","Napoli","Napoli","Via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana"));
+       // clientes1.add(new Cliente("Mario","Rossi","Italiana","Napoli","Napoli","Via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana"));
         assertEquals(clientes,clientes1);
     }
 

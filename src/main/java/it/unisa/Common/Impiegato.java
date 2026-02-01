@@ -12,39 +12,6 @@ import java.util.Objects;
  * Contiene i dati anagrafici, i dettagli lavorativi e le informazioni di contatto dell'impiegato.
  */
 public class Impiegato implements Cloneable, Serializable {
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setExpires(Instant expires) {
-        this.expires = expires;
-    }
-
-    public void setChange(boolean change) {
-        this.change = change;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public Instant getExpires() {
-        return expires;
-    }
-
-    public boolean isChange() {
-        return change;
-    }
-
     private String username;
     private String password;
     private Instant expires;
@@ -232,6 +199,38 @@ public class Impiegato implements Cloneable, Serializable {
     }
 
     // --- Getter e Setter ---
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setExpires(Instant expires) {
+        this.expires = expires;
+    }
+
+    public void setChange(boolean change) {
+        this.change = change;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public Instant getExpires() {
+        return expires;
+    }
+
+    public boolean isChange() {
+        return change;
+    }
 
     public String getUserName() {
         return userName;

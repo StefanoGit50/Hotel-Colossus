@@ -37,8 +37,6 @@ public class CameraDaoTesting{
         camera = new Camera(104, Stato.Libera, 2, 150.0, "Camera prova");
     }
 
-
-
     @Test
     @Tag("True")
     @DisplayName("doSaveAll() quando è tutto vero")

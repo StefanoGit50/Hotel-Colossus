@@ -1,4 +1,4 @@
-package it.unisa.Server.BackOffice;
+/*package it.unisa.Server.BackOffice;
 
 import it.unisa.Common.*;
 import it.unisa.Server.command.CatalogoImpiegatiCommands.AddImpiegatoCommand;
@@ -136,7 +136,8 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
     /**
      * @return nuova pssword temporanea
      */
-    @Override
+
+    /*@Override
     public String generatePassword() throws RemoteException
     {
         // definiamo i set di caratteri
@@ -304,7 +305,7 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
                 i -> TipoVoce.STIPENDI
         );*/
 
-        ContoEconomicoLeaf manutenzione = new ContoEconomicoLeaf("Manutenzione Camere", 540, TipoVoce.ALTRO);
+        /*ContoEconomicoLeaf manutenzione = new ContoEconomicoLeaf("Manutenzione Camere", 540, TipoVoce.ALTRO);
 
         ContoEconomicoComponentAbstract passivita = new ContoEconomicoComposite("PASSIVITA");
         //passivita.addChild(stipendi);
@@ -340,7 +341,7 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
         System.out.println("Totale Conto Economico = " + totaleVeroContoEconomico);
         */
 
-        return conto;
+    /*    return conto;
     }
 
     private static <T> ContoEconomicoComposite creaNodoeFoglie(String nomeComposite,
@@ -365,4 +366,4 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
     public static final String PASSIVITA_KEY = "totalePassivita";
     public static final String RICAVI_KEY = "totaleRicavi";
     public static final String CONTOECONOMICO_KEY = "totaleContoEconomico";
-}
+} */
