@@ -1,5 +1,6 @@
 package IntegrationTesting.BottomUp.Livello1;
 
+import it.unisa.Common.Camera;
 import it.unisa.Common.Cliente;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
 import it.unisa.Storage.DAO.ClienteDAO;
@@ -16,7 +17,7 @@ public class ClientiDatabase {
 
     private FrontDeskStorage <Cliente>  fds;
     private CatalogoClienti catalogoClienti;
-    Cliente cliente = new Cliente("nome","cognome","italiana","milano","milano","via milano",23,12453,"32345672","m", LocalDate.of(2001,12,13),"CSDFHWSDO2","luca@email","italiana");
+    Cliente cliente = new Cliente("nome","cognome","italiana","milano","milano","via milano",23,12453,"32345672","m", LocalDate.of(2001,12,13),"CSDFHWSDO2","luca@email","italiana",new Camera());
 
     @BeforeEach
     public void setUp() {

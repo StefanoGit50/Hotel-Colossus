@@ -1,3 +1,4 @@
+
 INSERT INTO Cliente (
     CF, nome, cognome, Cap, comune, civico, provincia, via,
     Email, Sesso, telefono, Cittadinanza, Nazionalità,
@@ -7,7 +8,9 @@ INSERT INTO Cliente (
              'Napoli', 'Via Roma', 'mario.rossi@email.it',
              'Maschio', '3331234567', 'Italiana', 'Italiana',
              '1985-08-01', false
-         );
+         ),
+         ('VRDLRA90D45F839Y', 'Laura', 'Verdi', '00100', 'Roma', 23, 'Roma', 'Via Milano', 'laura.verdi@email.it', 'Femmina', '3339876543', 'Italiana', 'Italiana', '1990-04-05', FALSE)
+;
 
 INSERT INTO Camera (
     NumeroCamera, NumeroMaxOcc, NoteCamera, Stato, Prezzo
@@ -27,13 +30,16 @@ INSERT INTO Prenotazione (
              'Mario Rossi', '2026-02-09',
              'AA123456', '2020-01-01',
              'CartaIdentità', true, false
-         );
+         ),
+         ('2026-01-20', '2026-02-10', '2026-02-15', 'Mezza Pensione', 'Nessuna nota particolare', 'Laura Verdi', '2029-05-10', 'BC789012', '2019-05-10', 'Passaporto', TRUE, FALSE);
+
 
 INSERT INTO Associato_a (
     CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto
 ) VALUES (
              'RSSMRA85M01H501Z', 101, 1, 600.00
-         );
+         ),
+      ('VRDLRA90D45F839Y',102,2,180.00);
 
 INSERT INTO RicevutaFiscale (
     IDRicevutaFiscale, IDPrenotazione, DataEmissione,

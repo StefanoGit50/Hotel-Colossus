@@ -1,5 +1,6 @@
 package WhiteBox.Server.command.CatalogoClientiCommands;
 
+import it.unisa.Common.Camera;
 import it.unisa.Common.Cliente;
 import it.unisa.Server.command.CatalogoClientiCommands.RemoveClienteCommand;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
@@ -30,9 +31,9 @@ class RemoveClienteCommandTester {
     void setUp() {
         catalogue = mock(CatalogoClienti.class);
 
-        clienteTest = new Cliente("Mario", "Rossi", "Italiana", "Roma", "Roma", "Via del Corso", 10, 18600, "3331234567", "M", LocalDate.of(1990, 5, 15), "RSSMRA90E15H501Z", "mario.rossi@email.com","Italiana");
+        clienteTest = new Cliente("Mario", "Rossi", "Italiana", "Roma", "Roma", "Via del Corso", 10, 18600, "3331234567", "M", LocalDate.of(1990, 5, 15), "RSSMRA90E15H501Z", "mario.rossi@email.com","Italiana",new Camera());
 
-        clienteBannatoTest = new Cliente("Valeria", "Bianchi", "Francese", "MI", "Milano", "Via Dante", 42, 20121, "3479876543", "F", LocalDate.of(1985, 12, 02), "BNCVLR85T42F205Z", "valeria.b@provider.it","Italiana");
+        clienteBannatoTest = new Cliente("Valeria", "Bianchi", "Francese", "MI", "Milano", "Via Dante", 42, 20121, "3479876543", "F", LocalDate.of(1985, 12, 02), "BNCVLR85T42F205Z", "valeria.b@provider.it","Italiana",new Camera());
 
         command = new RemoveClienteCommand(catalogue, clienteTest);
     }

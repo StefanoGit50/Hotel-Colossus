@@ -2,7 +2,6 @@ package WhiteBox.Server.BackOffice;
 
 import com.google.protobuf.Internal;
 import it.unisa.Common.*;
-import it.unisa.Server.BackOffice.ManagerImpl;
 import it.unisa.Server.persistent.util.Ruolo;
 import it.unisa.Storage.DAO.ImpiegatoDAO;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +25,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class ManagerImplTest {
 
-    private ManagerImpl manager;
+    //private ManagerImpl manager;
 
     @Mock
     private ImpiegatoDAO mockImpiegatoDAO;

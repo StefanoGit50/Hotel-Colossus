@@ -11,9 +11,10 @@ import java.sql.Date;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
-{
+public class ImpiegatoDAO implements BackofficeStorage<Impiegato> {
     private static final String TABLE_NAME = "Impiegato";
     String[] whitelist = {
             "CF",
@@ -36,62 +37,112 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
     @Override
     public synchronized void doSave(Impiegato impiegato) throws SQLException {
         Connection connection = ConnectionStorage.getConnection();
-        try(PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Impiegato(CF,Stipedio,UserName,HashPasword,isTempurali,dataScadenzaToken,Nome,Cognome,Cap,DataAssunzione, Telefono, Cittadinanza, EmailAziendale, Sesso, Ruolo, DataRilascio, TipoDocumento, Via, Provincia, Comune, Civico, NumeroDocumento, DataScadenza) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")){
-            preparedStatement.setString(1,impiegato.getCodiceFiscale());
-            preparedStatement.setDouble(2,impiegato.getStipendio());
-            preparedStatement.setString(3,impiegato.getUserName());
-            preparedStatement.setString(4,impiegato.getHashPassword());
-            preparedStatement.setBoolean(5,impiegato.isTempurali());
-            preparedStatement.setTimestamp(6,Timestamp.from(impiegato.getDataScadenzaToken()));
-            preparedStatement.setString(7,impiegato.getNome());
-            preparedStatement.setString(8,impiegato.getCognome());
-            preparedStatement.setString(9,"" + impiegato.getCAP());
+        try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Impiegato(CF,Stipedio,UserName,HashPasword,isTempurali,dataScadenzaToken,Nome,Cognome,Cap,DataAssunzione, Telefono, Cittadinanza, EmailAziendale, Sesso, Ruolo, DataRilascio, TipoDocumento, Via, Provincia, Comune, Civico, NumeroDocumento, DataScadenza) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) {
+            preparedStatement.setString(1, impiegato.getCodiceFiscale());
+            preparedStatement.setDouble(2, impiegato.getStipendio());
+            preparedStatement.setString(3, impiegato.getUserName());
+            preparedStatement.setString(4, impiegato.getHashPassword());
+            preparedStatement.setBoolean(5, impiegato.isTempurali());
+            preparedStatement.setTimestamp(6, Timestamp.from(impiegato.getDataScadenzaToken()));
+            preparedStatement.setString(7, impiegato.getNome());
+            preparedStatement.setString(8, impiegato.getCognome());
+            preparedStatement.setString(9, "" + impiegato.getCAP());
             preparedStatement.setDate(10, Date.valueOf(impiegato.getDataAssunzione()));
-            preparedStatement.setString(11,impiegato.getTelefono());
-            preparedStatement.setString(12,impiegato.getCittadinanza());
-            preparedStatement.setString(13,impiegato.getEmailAziendale());
-            preparedStatement.setString(14,impiegato.getSesso());
-            preparedStatement.setString(15,"" + impiegato.getRuolo());
-            preparedStatement.setDate(16,Date.valueOf(impiegato.getDataRilascio()));
-            preparedStatement.setString(17,impiegato.getTipoDocumento());
-            preparedStatement.setString(18,impiegato.getVia());
-            preparedStatement.setString(19,impiegato.getProvincia());
-            preparedStatement.setString(20,impiegato.getComune());
-            preparedStatement.setInt(21,impiegato.getNumeroCivico());
-            preparedStatement.setString(22,impiegato.getNumeroDocumento());
-            preparedStatement.setDate(23,Date.valueOf(impiegato.getDataScadenza()));
+            preparedStatement.setString(11, impiegato.getTelefono());
+            preparedStatement.setString(12, impiegato.getCittadinanza());
+            preparedStatement.setString(13, impiegato.getEmailAziendale());
+            preparedStatement.setString(14, impiegato.getSesso());
+            preparedStatement.setString(15, "" + impiegato.getRuolo());
+            preparedStatement.setDate(16, Date.valueOf(impiegato.getDataRilascio()));
+            preparedStatement.setString(17, impiegato.getTipoDocumento());
+            preparedStatement.setString(18, impiegato.getVia());
+            preparedStatement.setString(19, impiegato.getProvincia());
+            preparedStatement.setString(20, impiegato.getComune());
+            preparedStatement.setInt(21, impiegato.getNumeroCivico());
+            preparedStatement.setString(22, impiegato.getNumeroDocumento());
+            preparedStatement.setDate(23, Date.valueOf(impiegato.getDataScadenza()));
             preparedStatement.executeUpdate();
-        }finally{
-            if(connection != null){
+        } finally {
+            if (connection != null) {
                 ConnectionStorage.releaseConnection(connection);
             }
         }
     }
 
     @Override
-    public synchronized void doDelete(Impiegato impiegato) throws SQLException
-    {
+    public synchronized void doDelete(Impiegato impiegato) throws SQLException {
         Connection connection = ConnectionStorage.getConnection();
-        try(PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM impiegato WHERE CF = ?")){
-            preparedStatement.setString(1,impiegato.getCodiceFiscale());
+        try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM impiegato WHERE CF = ?")) {
+            preparedStatement.setString(1, impiegato.getCodiceFiscale());
             preparedStatement.executeUpdate();
-        }finally{
-            if(connection != null){
+        } finally {
+            if (connection != null) {
                 ConnectionStorage.releaseConnection(connection);
             }
         }
     }
 
     @Override
-    public synchronized Impiegato doRetriveByKey(Object index) throws SQLException{
-        if(index instanceof String){
-            String f = (String) index;
+    public synchronized Impiegato doRetriveByKey(Object index) throws SQLException {
+        String f = "";
+        if (index instanceof String) {
+            f = (String) index;
+            Pattern p = Pattern.compile("^[0-9]*$");
+            Matcher matcher = p.matcher(f);
+            if (matcher.matches()) {
+                Integer integer = Integer.parseInt(f);
+                Connection connection = ConnectionStorage.getConnection();
+                Impiegato impiegato;
+                try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT CF , Nome , Cognome , UserName , HashPasword , isTempurali , dataScadenzaToken , Sesso , TipoDocumento , NumeroDocumento , Cap,Via ,Provincia , Comune ,Civico,Telefono,Ruolo,Stipedio,DataAssunzione,DataScadenza,DataRilascio,EmailAziendale,Cittadinanza FROM impiegato WHERE IDImpiegato = ?")) {
+                    preparedStatement.setString(1, f);
+                    ResultSet resultSet = preparedStatement.executeQuery();
+                    if (resultSet.next()) {
+                        String cf = resultSet.getString("CF");
+                        String nome = resultSet.getString("Nome");
+                        String cognome = resultSet.getString("Cognome");
+                        String userName = resultSet.getString("UserName");
+                        String hashPassword = resultSet.getString("HashPasword");
+                        Boolean isTempurali = resultSet.getBoolean("isTempurali");
+                        Instant dataScadenzaToken = resultSet.getTimestamp("").toInstant();
+                        String sesso = resultSet.getString("Sesso");
+                        String tipoDocumento = resultSet.getString("TipoDocumento");
+                        String i = resultSet.getString("NumeroDocumento");
+                        Integer Cap = resultSet.getInt("Cap");
+                        String via = resultSet.getString("Via");
+                        String provincia = resultSet.getString("Provincia");
+                        String comune = resultSet.getString("Comune");
+                        Integer numeroCivico = resultSet.getInt("Civico");
+                        String telefono = resultSet.getString("Telefono");
+                        String ruolo = resultSet.getString("Ruolo");
+                        Double stipedio = resultSet.getDouble("Stipedio");
+                        LocalDate dataAssunzione = resultSet.getDate("DataAssunzione").toLocalDate();
+                        LocalDate dataScadenza = resultSet.getDate("DataScadenza").toLocalDate();
+                        LocalDate dataRilascio = resultSet.getDate("DataRilascio").toLocalDate();
+                        String emailAziendale = resultSet.getString("EmailAziendale");
+                        String cittadinanza = resultSet.getString("Cittadinanza");
+
+                        impiegato = new Impiegato(userName, hashPassword, isTempurali, dataScadenzaToken, nome, cognome, sesso, tipoDocumento, i, Cap, via, provincia, comune, numeroCivico, cf, telefono, Ruolo.valueOf(ruolo), stipedio, dataAssunzione, dataRilascio, emailAziendale, cittadinanza, dataScadenza);
+                    } else {
+                        impiegato = null;
+                        throw new NoSuchElementException("impiegato non trovato");
+                    }
+                }finally {
+                    if (connection != null) {
+                        ConnectionStorage.releaseConnection(connection);
+                    }
+                }
+                return impiegato;
+            } else {
+                throw new RuntimeException();
+            }
+
+        }else{
             Connection connection = ConnectionStorage.getConnection();
-            Impiegato impiegato;
-            try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT CF , Nome , Cognome , UserName , HashPasword , isTempurali , dataScadenzaToken , Sesso , TipoDocumento , NumeroDocumento , Cap,Via ,Provincia , Comune ,Civico,Telefono,Ruolo,Stipedio,DataAssunzione,DataScadenza,DataRilascio,EmailAziendale,Cittadinanza FROM impiegato WHERE CF = ?")){
-                preparedStatement.setString(1,f);
-                ResultSet resultSet = preparedStatement.executeQuery();
-                if(resultSet.next()){
+            Impiegato impiegato = null;
+            try(PreparedStatement pr = connection.prepareStatement("SELECT CF , Nome , Cognome , UserName , HashPasword , isTempurali , dataScadenzaToken , Sesso , TipoDocumento , NumeroDocumento , Cap,Via ,Provincia , Comune ,Civico,Telefono,Ruolo,Stipedio,DataAssunzione,DataScadenza,DataRilascio,EmailAziendale,Cittadinanza FROM impiegato WHERE CF = ?")){
+                pr.setString(1,f);
+                ResultSet resultSet = pr.executeQuery();
+                if (resultSet.next()){
                     String cf = resultSet.getString("CF");
                     String nome = resultSet.getString("Nome");
                     String cognome = resultSet.getString("Cognome");
@@ -115,20 +166,13 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato>
                     LocalDate dataRilascio = resultSet.getDate("DataRilascio").toLocalDate();
                     String emailAziendale = resultSet.getString("EmailAziendale");
                     String cittadinanza = resultSet.getString("Cittadinanza");
-
-                    impiegato = new Impiegato(userName,hashPassword,isTempurali,dataScadenzaToken,nome , cognome , sesso , tipoDocumento , i,Cap,via,provincia,comune,numeroCivico,cf,telefono,Ruolo.valueOf(ruolo),stipedio,dataAssunzione,dataRilascio,emailAziendale,cittadinanza,dataScadenza);
+                    impiegato = new Impiegato(userName,hashPassword,isTempurali,dataScadenzaToken,nome,cognome,sesso,tipoDocumento,i,Cap,via,provincia,comune,numeroCivico,cf,telefono,Ruolo.valueOf(ruolo),stipedio,dataAssunzione,dataRilascio,emailAziendale,cittadinanza,dataScadenza);
                 }else{
-                    impiegato = null;
-                    throw new NoSuchElementException ("impiegato non trovato");
+                    throw new NoSuchElementException("impiegato non trovato");
                 }
-            }finally {
-                if (connection != null) {
-                    ConnectionStorage.releaseConnection(connection);
-                }
+
             }
-           return impiegato;
-        }else{
-            throw new RuntimeException();
+            return  impiegato;
         }
     }
 

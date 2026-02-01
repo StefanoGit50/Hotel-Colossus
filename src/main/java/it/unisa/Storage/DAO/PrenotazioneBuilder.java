@@ -25,13 +25,18 @@ public class PrenotazioneBuilder{
      */
     public  PrenotazioneBuilder(ResultSet rs) throws SQLException {
         this.prenotazione = new Prenotazione();
-
         // Imposta i campi BASE (questi sono uguali in tutte le righe)
         prenotazione.setCodicePrenotazione(rs.getInt("IDPrenotazione"));
         prenotazione.setIntestatario(rs.getString("Intestatario"));
         prenotazione.setDataInizio(rs.getDate("DataArrivoCliente").toLocalDate());
-        // ... altri campi base
-        // Trattamento (uguale per tutte le righe)
+        prenotazione.setDataFine(rs.getDate("DataPartenzaCliente").toLocalDate());
+        prenotazione.setDataCreazionePrenotazione(rs.getDate("DataPrenotazione").toLocalDate());
+        prenotazione.setNoteAggiuntive(rs.getString("NoteAggiuntive"));
+        prenotazione.setNumeroDocumento(rs.getString("numeroDocumento"));
+        prenotazione.setDataRilascio(rs.getDate("DataRilascio").toLocalDate());
+        prenotazione.setTipoDocumento(rs.getString("Stato"));
+        prenotazione.setStatoPrenotazione(rs.getBoolean("Stato"));
+        prenotazione.setCheckIn(rs.getBoolean("ChekIn"));
         Trattamento trattamento = new Trattamento(
                 rs.getString("TrattamentoNome"),
                 rs.getDouble("TrattamentoPrezzo")
@@ -45,20 +50,23 @@ public class PrenotazioneBuilder{
     public void addCliente(ResultSet rs) throws SQLException {
         String cf = rs.getString("CF");
         Connection connection = ConnectionStorage.getConnection();
-        String q = "Select hot.camera2.* FROM (hot.associato_a2 join hot.camera2 " +
-                "on associato_a2.NumeroCamera = camera2.NumeroCamera) where CF = ?";
+        String q = "Select camera.* FROM (associato_a join camera " +
+                "on associato_a.NumeroCamera = camera.NumeroCamera) where CF = ?";
         PreparedStatement p = connection.prepareStatement(q);
         // Controlla se il cliente è già stato aggiunto
 
-        ResultSet resultSet = p.executeQuery();
+
         Camera camera = new Camera();
-        if(resultSet.next()){
-            camera.setCapacità(resultSet.getInt("NumeroMaxOcc"));
-            camera.setNumeroCamera(resultSet.getInt("NumeroCamera"));
-            camera.setNoteCamera(resultSet.getString("NoteCamera"));
-            camera.setStatoCamera(Stato.valueOf(resultSet.getString("Stato")));
-            camera.setPrezzoCamera(resultSet.getDouble("Prezzo"));
+        try(ResultSet resultSet = p.executeQuery()){
+            if(resultSet.next()){
+                camera.setCapacità(resultSet.getInt("NumeroMaxOcc"));
+                camera.setNumeroCamera(resultSet.getInt("NumeroCamera"));
+                camera.setNoteCamera(resultSet.getString("NoteCamera"));
+                camera.setStatoCamera(Stato.valueOf(resultSet.getString("Stato")));
+                camera.setPrezzoCamera(resultSet.getDouble("Prezzo"));
+            }
         }
+
 
         if (!clientiMap.containsKey(cf)){
             // Cliente nuovo - crealo e aggiungilo
@@ -94,8 +102,8 @@ public class PrenotazioneBuilder{
             Camera camera = new Camera();
             camera.setNumeroCamera(numeroCamera);
             camera.setPrezzoCamera(rs.getDouble("CameraPrezzo"));
-            // ... altri campi
-
+            camera.setNoteCamera(rs.getString("NoteCamera"));
+            camera.setStatoCamera(Stato.valueOf(rs.getString("NoteCamera")));
             camereMap.put(numeroCamera, camera);
         }
     }

@@ -1,4 +1,4 @@
-package it.unisa.Server.BackOffice;
+/*package it.unisa.Server.BackOffice;
 
 import it.unisa.Common.*;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
@@ -141,7 +141,7 @@ public class main {
         ));
     */
 // creo il composite stipendi
-        ContoEconomicoComposite stipendi = creaNodoeFoglie(
+       /* ContoEconomicoComposite stipendi = creaNodoeFoglie(
                 "Stipendi Personale",
                 listaImpiegati,
                 Impiegato::getNome,  //uso di method reference syntax
@@ -189,4 +189,4 @@ public class main {
 
 
     }
-}
+}*/
