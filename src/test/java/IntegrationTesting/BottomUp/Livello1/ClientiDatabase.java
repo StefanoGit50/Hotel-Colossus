@@ -17,11 +17,7 @@ public class ClientiDatabase {
 
     private FrontDeskStorage <Cliente>  fds;
     private CatalogoClienti catalogoClienti;
-<<<<<<< Updated upstream
-    Cliente cliente = new Cliente("nome","cognome","italiana","milano","milano","via milano",23,12453,"32345672","m", LocalDate.of(2001,12,13),"CSDFHWSDO2","luca@email","italiana",new Camera());
-=======
     Cliente cliente = new Cliente("nome","cognome","italiana","milano","milano","via milano",23,12453,"32345672","m", LocalDate.of(2001,12,13),"CSDFHWSDO2","luca@email","italiana", new Camera());
->>>>>>> Stashed changes
 
     @BeforeEach
     public void setUp() {

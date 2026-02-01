@@ -176,14 +176,8 @@ class CredenzialiUtilsTest
     {
         String token = "testToken123";
 
-<<<<<<< Updated upstream
-        //String hashed = CredenzialiUtils.HashToken(token);
-
-      //assertNotNull(hashed);
-=======
 //        String hashed = CredenzialiUtils.HashToken(token);
-
 //        assertNotNull(hashed);
->>>>>>> Stashed changes
+
     }
 }

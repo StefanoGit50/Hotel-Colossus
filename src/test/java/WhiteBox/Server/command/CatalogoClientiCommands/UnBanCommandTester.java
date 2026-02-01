@@ -32,13 +32,8 @@ class UnBanCommandTester {
         catalogue = mock(CatalogoClienti.class);
         CFCliente = "RSSMRA90E15H501Z";
 
-<<<<<<< Updated upstream
         clienteTest = new Cliente("Mario", "Rossi", "Italiana", "Roma", "Roma", "Via del Corso", 10, 18600, "3331234567", "M", LocalDate.of(1990, 5, 15), "RSSMRA90E15H501Z", "mario.rossi@email.com","Italiana",new Camera());
-=======
-//        clienteTest = new Cliente("Mario", "Rossi", "Italiana", "Roma", "Roma", "Via del Corso", 10, 18600, "3331234567", "M", LocalDate.of(1990, 5, 15), "RSSMRA90E15H501Z", "mario.rossi@email.com","Italiana");
->>>>>>> Stashed changes
-
-//        command = new UnBanCommand(catalogue, CFCliente);
+        command = new UnBanCommand(CFCliente);
     }
 
     // testo costruttore con parametri

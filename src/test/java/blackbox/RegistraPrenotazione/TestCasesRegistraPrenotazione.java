@@ -39,11 +39,6 @@ public class TestCasesRegistraPrenotazione {
         }
     }
 
-    @AfterEach
-    public void evadeDuplicateKeyError(){
-        autoIncrement++;
-    }
-
     @BeforeAll
     public static void istantiateFrontDesk() throws RemoteException, NotBoundException, MalformedURLException {
         frontDesk = (FrontDeskInterface) Naming.lookup("rmi://localhost:1099/GestionePrenotazioni");

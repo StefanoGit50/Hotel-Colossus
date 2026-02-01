@@ -129,6 +129,24 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
         invoker.executeCommand(command);
     }
 
+    /**
+     * @param Cf dell'impiegato.
+     * @return l'oggetto {@code Impiegato} il cui Cf corrisponde a quello passato come parametro, {@code null} altrimenti.
+     * @throws RemoteException .
+     */
+    @Override
+    public Impiegato getImpiegatoByCF(String Cf) throws RemoteException {
+        ImpiegatoDAO dao = new ImpiegatoDAO();
+        Impiegato impiegato = null;
+        try {
+            impiegato =  dao.doRetriveByKey(Cf);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return impiegato;
+    }
+
     // Comando undo
     public void undoCommand() throws RemoteException {
         invoker.undoCommand();

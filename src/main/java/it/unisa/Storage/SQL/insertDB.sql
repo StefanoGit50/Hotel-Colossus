@@ -71,15 +71,15 @@ INSERT INTO ServiziRicevuta (
 
 INSERT INTO Servizio (
     Nome, Prezzo, IDPrenotazione
-) VALUES (
-             'Spa', 50.00, 1
-         );
+) VALUES ('Spa', 50.00, 1),
+         ('Consumazione Minibar', 15.50, NULL),
+         ('Parcheggio Coperto', 10.00, NULL),
+         ('Colazione in Camera', 12.00, NULL);
 
 INSERT INTO Trattamento (
     Nome, Prezzo, IDPrenotazione
-) VALUES (
-             'Pensione Completa', 300.00, 1
-         );
+) VALUES ('Pensione Completa', 300.00, 1),
+         ('Mezza Pensione', 180.00, 1);
 
 INSERT INTO Impiegato (
     CF, Stipedio, UserName, HashPasword,
