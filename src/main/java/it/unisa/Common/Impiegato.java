@@ -196,6 +196,8 @@ public class Impiegato implements Cloneable, Serializable {
         this.emailAziendale = "";
         this.cittadinanza = "";
         this.dataScadenza = null;
+        this.isTempurali = false;
+        this.dataScadenzaToken = null;
     }
 
     // --- Getter e Setter ---

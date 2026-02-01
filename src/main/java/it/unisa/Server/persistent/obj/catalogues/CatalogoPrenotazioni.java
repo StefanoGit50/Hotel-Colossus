@@ -25,8 +25,9 @@ public class CatalogoPrenotazioni implements Serializable {
 
     static {
         try {
-            listaPrenotazioni = fds.doRetriveAll("decrescente");
-        } catch (SQLException e) {
+            fds = new PrenotazioneDAO();
+            listaPrenotazioni = fds.doRetriveAll("IDPrenotazione");
+        }catch(SQLException e){
             throw new RuntimeException(e);
         }
     }
@@ -37,7 +38,6 @@ public class CatalogoPrenotazioni implements Serializable {
      */
     public CatalogoPrenotazioni(ArrayList<Prenotazione> listaPrenotazioni) {
         CatalogoPrenotazioni.listaPrenotazioni = listaPrenotazioni;
-         fds = new PrenotazioneDAO();
     }
 
     /**

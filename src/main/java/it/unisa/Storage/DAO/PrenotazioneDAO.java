@@ -58,7 +58,6 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
             // Salva il trattamento associato
             if(p.getTrattamento().getNome() != null){
                 String query = "UPDATE trattamento SET IDPrenotazione = ? WHERE Nome = ?";
-
                 try (PreparedStatement stmt = connection.prepareStatement(query)) {
                     stmt.setInt(1, p.getIDPrenotazione());
                     stmt.setString(2, p.getTrattamento().getNome());
@@ -69,7 +68,6 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
             // Salva i servizi associati
             for (Servizio servizio : p.getListaServizi()){
                 String query = "UPDATE servizio SET IDPrenotazione = ? WHERE Nome = ?";
-
                 try (PreparedStatement stmt = connection.prepareStatement(query)) {
                     stmt.setInt(1, p.getIDPrenotazione());
                     stmt.setString(2, servizio.getNome());
@@ -84,7 +82,8 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
             }
 
             for (Camera camera : p.getListaCamere()){
-                for (Cliente cliente : p.getListaClienti()) {
+                for (Cliente cliente : p.getListaClienti()){
+                    System.out.println("ciao");
                     String query = "INSERT INTO associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto) " +
                             "VALUES (?, ?, ?, ?)";
                     System.out.println(cliente);
@@ -101,7 +100,61 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
             preparedStatement.close();
             connection.close();
         }else{
-            throw new SQLException();
+            if(p != null && p.getTrattamento() == null){
+                Connection connection = ConnectionStorage.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO prenotazione(DataPrenotazione, DataArrivoCliente, DataPartenzaCliente, NomeTrattamento, NoteAggiuntive, Intestatario, dataScadenza, numeroDocumento, DataRilascio, TipoDocumento, Stato, ChekIn) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ? , ?, ? , ? , ? , ?)");
+
+                preparedStatement.setDate(1,Date.valueOf(p.getDataCreazionePrenotazione()));
+                preparedStatement.setDate(2,Date.valueOf(p.getDataInizio()));
+                preparedStatement.setDate(3,Date.valueOf(p.getDataFine()));
+                preparedStatement.setString(4, null);
+                preparedStatement.setString(5,p.getNoteAggiuntive());
+                preparedStatement.setString(6 , p.getIntestatario());
+                preparedStatement.setDate(7, Date.valueOf(p.getDataScadenza()));
+                preparedStatement.setString(8,p.getNumeroDocumento());
+                preparedStatement.setDate(9,Date.valueOf(p.getDataRilascio()));
+                preparedStatement.setString(10,p.getTipoDocumento());
+                preparedStatement.setBoolean(11,p.getStatoPrenotazione());
+                preparedStatement.setBoolean(12,p.isCheckIn());
+                preparedStatement.executeUpdate();
+
+                // Salva i servizi associati
+                for (Servizio servizio : p.getListaServizi()){
+                    String query = "UPDATE servizio SET IDPrenotazione = ? WHERE Nome = ?";
+                    try (PreparedStatement stmt = connection.prepareStatement(query)) {
+                        stmt.setInt(1, p.getIDPrenotazione());
+                        stmt.setString(2, servizio.getNome());
+                        stmt.executeUpdate();
+                    }
+                }
+
+
+                // Salva le associazioni clienti-camere
+                for(Cliente cliente : p.getListaClienti()){
+                    clienteDAO.doSave(cliente);
+                }
+
+                for (Camera camera : p.getListaCamere()){
+                    for (Cliente cliente : p.getListaClienti()) {
+                        String query = "INSERT INTO associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto) " +
+                                "VALUES (?, ?, ?, ?)";
+                        System.out.println(cliente);
+                        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+                            stmt.setString(1, cliente.getCf());
+                            stmt.setInt(2, camera.getNumeroCamera());
+                            stmt.setInt(3, p.getIDPrenotazione());
+                            stmt.setDouble(4, camera.getPrezzoCamera());
+                            stmt.executeUpdate();
+                        }
+                    }
+                }
+
+                preparedStatement.close();
+                connection.close();
+            }else{
+                throw new SQLException();
+            }
         }
 
     }
@@ -279,7 +332,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
 
         ArrayList<Prenotazione> prenotazioni = new ArrayList<>();
         try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+            ResultSet rs = stmt.executeQuery(query)) {
 
             while (rs.next()){
                 int idPrenotazione = rs.getInt("IDPrenotazione");
@@ -287,7 +340,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                 Trattamento trattamento = null;
                 String query1 = "SELECT * FROM trattamento WHERE IDPrenotazione = ?";
 
-                try (PreparedStatement stmt2 = connection.prepareStatement(query1)) {
+                try(PreparedStatement stmt2 = connection.prepareStatement(query1)) {
                     stmt2.setInt(1, idPrenotazione);
 
                     try (ResultSet rs1 = stmt2.executeQuery()) {
@@ -364,11 +417,13 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                                 p1.setString(1,rs4.getString("CF"));
 
                                 try(ResultSet rs5 = p1.executeQuery()){
-                                    camera.setNumeroCamera(rs5.getInt("NumeroCamera"));
-                                    camera.setCapacità(rs5.getInt("NumeroMaxOcc"));
-                                    camera.setNoteCamera(rs5.getString("NoteCamera"));
-                                    camera.setStatoCamera(Stato.valueOf(rs5.getString("Stato")));
-                                    camera.setPrezzoCamera(rs5.getDouble("Prezzo"));
+                                    if(rs5.next()){
+                                        camera.setNumeroCamera(rs5.getInt("NumeroCamera"));
+                                        camera.setCapacità(rs5.getInt("NumeroMaxOcc"));
+                                        camera.setNoteCamera(rs5.getString("NoteCamera"));
+                                        camera.setStatoCamera(Stato.valueOf(rs5.getString("Stato")));
+                                        camera.setPrezzoCamera(rs5.getDouble("Prezzo"));
+                                    }
                                 }
 
 

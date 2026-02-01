@@ -254,7 +254,13 @@ import java.rmi.RemoteException;
             }
 
             if (loginCallback != null) {
-                loginCallback.onLogin(username, password);
+                try {
+                    loginCallback.onLogin(username, password);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                } catch (IllegalAccess e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
 

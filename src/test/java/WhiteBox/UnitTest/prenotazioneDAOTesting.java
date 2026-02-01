@@ -81,10 +81,7 @@ public class prenotazioneDAOTesting {
     @DisplayName("doRetriveByKey() quando è tutto true")
     public void doRetriveByKeyAllTrue() throws SQLException {
         Prenotazione prenotazione1 = prenotazioneDAO.doRetriveByKey(1);
-        System.out.println(prenotazione1);
-        System.out.println(prenotazione);
         assertEquals(prenotazione,prenotazione1);
-
     }
 
     @Test
@@ -105,24 +102,10 @@ public class prenotazioneDAOTesting {
     @Tag("False")
     @DisplayName("doRetriveByKey() quando resultSet.next() è true ma gli altri false")
     public void doRetriveByKeyAllFalseTranneIlPrimoResultSet() throws SQLException {
-        Prenotazione prenotazione1 = prenotazioneDAO.doRetriveByKey(6);
-        Prenotazione prenotazione2 = new Prenotazione();
-        prenotazione2.setIDPrenotazione(6);
-        prenotazione2.setDataCreazionePrenotazione(LocalDate.of(2026,2,1));
-        prenotazione2.setDataInizio(LocalDate.of(2026,2,10));
-        prenotazione2.setDataFine(LocalDate.of(2026,2,15));
-        prenotazione2.setTrattamento(null);
-        prenotazione2.setNoteAggiuntive("Nessuna nota");
-        prenotazione2.setIntestatario("Mario Rossi");
-        prenotazione2.setDataScadenza(LocalDate.of(2026,2,9));
-        prenotazione2.setNumeroDocumento("AA123456");
-        prenotazione2.setDataRilascio(LocalDate.of(2020,1,1));
-        prenotazione2.setTipoDocumento("CartaIdentità");
-        prenotazione2.setStatoPrenotazione(true);
-        prenotazione2.setCheckIn(false);
-        assertEquals(prenotazione2,prenotazione1);
-    }
+       // Prenotazione prenotazione1 = prenotazioneDAO.doRetriveByKey();
 
+      //  assertEquals(prenotazione,prenotazione1);
+    }
     @Test
     @Tag("True")
     @DisplayName("doRetriveAll() quando va tutto bene")

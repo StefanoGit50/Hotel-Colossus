@@ -413,7 +413,7 @@ public class Prenotazione implements Cloneable, Serializable {
      */
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o){
         if(o == null){
             return false;
         }
@@ -424,68 +424,117 @@ public class Prenotazione implements Cloneable, Serializable {
             return false;
         }
         Prenotazione prenotazione = (Prenotazione) o;
-        ArrayList<Cliente> clientes = prenotazione.getListaClienti();
-        ArrayList<Camera> cameras = prenotazione.getListaCamere();
-        ArrayList<Servizio> servizios = prenotazione.getListaServizi();
+        if(!isNullAll(prenotazione) && !isNullAll(this)){
 
-        Boolean clien = null;
-        Boolean came = null;
-        Boolean servi = null;
-        int i = 0;
-        if(clientes.size() == listaClienti.size()){
-            for(Cliente cliente : clientes){
-                if(!listaClienti.get(i).equals(cliente)){
+                ArrayList<Cliente> clientes = prenotazione.getListaClienti();
+                ArrayList<Camera> cameras = prenotazione.getListaCamere();
+                ArrayList<Servizio> servizios = prenotazione.getListaServizi();
+
+                Boolean clien = null;
+                Boolean came = null;
+                Boolean servi = null;
+                int i = 0;
+                if(clientes.size() == listaClienti.size()){
+                    for(Cliente cliente : clientes){
+                        if(!listaClienti.get(i).equals(cliente)){
+                            clien = false;
+                            break;
+                        }
+                        i++;
+                    }
+
+                    if(clien == null){
+                        clien = true;
+                    }
+                }else{
                     clien = false;
-                    break;
                 }
-                i++;
-            }
+                i = 0;
+                if(servizios.size() == listaServizi.size()){
+                    for(Servizio servizio : servizios){
+                        if(!listaServizi.get(i).equals(servizio)){
+                            servi = false;
+                            break;
+                        }
+                        i++;
+                    }
 
-            if(clien == null){
-                clien = true;
-            }
-        }else{
-            clien = false;
-        }
-        i = 0;
-        if(servizios.size() == listaServizi.size()){
-            for(Servizio servizio : servizios){
-                if(!listaServizi.get(i).equals(servizio)){
+                    if(servi == null){
+                        servi =true;
+                    }
+                }else{
                     servi = false;
-                    break;
                 }
-                i++;
-            }
+                i = 0;
+                if(cameras.size() == listaCamere.size()){
+                    for(Camera camera : cameras){
+                        if(!listaCamere.get(i).equals(camera)){
+                            came = false;
+                            break;
+                        }
+                        i++;
+                    }
 
-            if(servi == null){
-                servi =true;
-            }
-        }else{
-            servi = false;
-        }
-        i = 0;
-        if(cameras.size() == listaCamere.size()){
-            for(Camera camera : cameras){
-                if(!listaCamere.get(i).equals(camera)){
+                    if(came == null){
+                        came = true;
+                    }
+                }else{
                     came = false;
-                    break;
                 }
-                i++;
-            }
+                return came && servi && clien && trattamento.equals(prenotazione.getTrattamento()) && IDPrenotazione.equals(prenotazione.getIDPrenotazione())
+                        && dataCreazionePrenotazione.equals(prenotazione.getDataCreazionePrenotazione()) && dataInizio.equals(prenotazione.getDataInizio()) &&
+                        dataFine.equals(prenotazione.getDataFine()) && dataRilascio.equals(prenotazione.getDataRilascio()) && dataScadenza.equals(prenotazione.getDataScadenza())
+                        && tipoDocumento.equalsIgnoreCase(prenotazione.getTipoDocumento()) && numeroDocumento.equalsIgnoreCase(prenotazione.getNumeroDocumento())
+                        && intestatario.equalsIgnoreCase(prenotazione.getIntestatario()) && noteAggiuntive.equalsIgnoreCase(prenotazione.getNoteAggiuntive()) && checkIn == prenotazione.isCheckIn()
+                        && statoPrenotazione == prenotazione.getStatoPrenotazione();
 
-            if(came == null){
-                came = true;
-            }
         }else{
-            came = false;
+           if(isNullAll(prenotazione) && isNullAll(this)){
+               return true;
+           }else{
+               return false;
+           }
         }
-        return came && servi && clien && trattamento.equals(prenotazione.getTrattamento()) && IDPrenotazione.equals(prenotazione.getIDPrenotazione())
-                && dataCreazionePrenotazione.equals(prenotazione.getDataCreazionePrenotazione()) && dataInizio.equals(prenotazione.getDataInizio()) &&
-                dataFine.equals(prenotazione.getDataFine()) && dataRilascio.equals(prenotazione.getDataRilascio()) && dataScadenza.equals(prenotazione.getDataScadenza())
-                && tipoDocumento.equalsIgnoreCase(prenotazione.getTipoDocumento()) && numeroDocumento.equalsIgnoreCase(prenotazione.getNumeroDocumento())
-                && intestatario.equalsIgnoreCase(prenotazione.getIntestatario()) && noteAggiuntive.equalsIgnoreCase(prenotazione.getNoteAggiuntive()) && checkIn == prenotazione.isCheckIn()
-                && statoPrenotazione == prenotazione.getStatoPrenotazione();
+
     }
+    private boolean isNullAll(Prenotazione prenotazione) {
+        return prenotazione.trattamento == null && prenotazione.noteAggiuntive == null && prenotazione.intestatario == null &&
+                prenotazione.numeroDocumento == null && prenotazione.tipoDocumento == null && prenotazione.IDPrenotazione == null &&
+                prenotazione.dataRilascio == null && prenotazione.dataScadenza == null && prenotazione.dataInizio == null &&
+                prenotazione.dataFine == null && prenotazione.listaCamere == null && prenotazione.listaClienti == null &&
+                prenotazione.listaServizi == null && prenotazione.dataCreazionePrenotazione == null;
+    }
+
+    private ArrayList<String> isNullElement(Prenotazione prenotazione){
+        ArrayList<String> strings = new ArrayList<>();
+        if(prenotazione.getIDPrenotazione() == null){
+            strings.add("IDPrenotazione");
+        }
+        if(prenotazione.getDataCreazionePrenotazione() == null){
+           strings.add("dataCreazionePrenotazione");
+        }
+        if(prenotazione.getDataInizio() == null){
+            strings.add("dataInizio");
+        }
+        if(prenotazione.getDataFine() == null){
+            strings.add("dataFine");
+        }
+        if(prenotazione.getDataRilascio() == null){
+            strings.add("dataRilascio");
+        }
+        if(prenotazione.getDataScadenza() == null){
+            strings.add("dataScadenza");
+        }
+        if(prenotazione.getTrattamento() == null){
+            strings.add("trattamento");
+        }
+        /*
+        if(prenotazione.get){
+
+        }*/
+        return strings;
+    }
+
 
     @Override
     public int hashCode() {

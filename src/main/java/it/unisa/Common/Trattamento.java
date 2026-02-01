@@ -99,7 +99,7 @@ public class Trattamento implements Cloneable, Serializable {
         if (obj == null || getClass() != obj.getClass()) return false;
         if (this == obj) return true;
         Trattamento trattamento = (Trattamento) obj;
-        return Math.abs(trattamento.prezzo - prezzo) < EPSILON && Objects.equals(nome, trattamento.nome);
+        return Math.abs(trattamento.prezzo - prezzo) < EPSILON && nome.equalsIgnoreCase(trattamento.getNome());
     }
 
     @Override
