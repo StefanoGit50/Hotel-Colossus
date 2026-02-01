@@ -1,5 +1,6 @@
 package it.unisa.Client.GUI.components;
 
+import it.unisa.Common.Camera;
 import it.unisa.Common.Cliente;
 import it.unisa.Common.Prenotazione;
 import it.unisa.Common.Servizio;
@@ -8,120 +9,82 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 /**
- * BookingDetail - Vista dettaglio prenotazione
- * REFACTORING DINAMICO: I totali si aggiornano automaticamente.
+ * BookingDetail - Vista dettaglio prenotazione PULITA E DINAMICA
+ * Riceve dati → Mostra numeri. SEMPLICE.
  */
 public class BookingDetail extends VBox {
 
-    // ===== DATI & COSTANTI =====
-    private String bookingCode;
-    private String clientName;
-    private String fiscalCode;
-    private boolean checkinCompleted;
-
-    // Costi Fissi (es. somma delle camere e dei trattamenti)
-    private final double FIXED_ROOM_COST = 716.00;
-    private final double FIXED_TREATMENT_COST = 404.00;
-
-    // [DINAMICO] Lista "Master" dei servizi. Il programma legge da qui per fare i calcoli.
+    // ===== DATI =====
+    private Prenotazione prenotazione;
+    private List<Servizio> catalogoServizi;
     private List<ServiceItem> serviceItems;
 
-    // ===== COMPONENTI UI =====
+    // ===== COMPONENTI UI (riferimenti diretti) =====
     private Button checkinStatusBtn;
     private TextArea notesArea;
+    private TableView<RoomBooking> roomsTable;
     private GridPane servicesGrid;
 
-    // [DINAMICO] Le etichette del riepilogo sono variabili globali per poterle aggiornare
+    // Label dinamiche per totali
+    private Label lblCode;
+    private Label lblClientName;
+    private Label lblFiscalCode;
+    private Label lblCheckin;
+    private Label lblCheckout;
+    private Label lblRoomCost;
+    private Label lblTreatmentCost;
     private Label lblServicesTotal;
     private Label lblGrandTotal;
 
-    // ===== COSTRUTTORE =====
-    public BookingDetail() {
-        this("TXAA504554", "CLAUDIO MINERVA", "MNRCLD85M01H501Z", true);
-    }
-
-    public BookingDetail(String bookingCode, String clientName, String fiscalCode, boolean checkinCompleted) {
-        this.bookingCode = bookingCode;
-        this.clientName = clientName;
-        this.fiscalCode = fiscalCode;
-        this.checkinCompleted = checkinCompleted;
+    // ===== COSTRUTTORE - RICEVE DATI E BASTA =====
+    public BookingDetail(Prenotazione prenotazione, List<Servizio> catalogoServizi) {
+        this.prenotazione = prenotazione;
+        this.catalogoServizi = catalogoServizi;
         this.serviceItems = new ArrayList<>();
 
-       // 1. Inizializziamo i dati PRIMA della grafica
+        // 1. Prepara i dati dei servizi
+        initializeServiceItems();
+
+        // 2. Costruisci l'interfaccia
         initializeComponents();
         setupLayout();
         setupStyling();
 
-        // 2. Facciamo il primo calcolo appena aperta la finestra
-        recalculateTotals();
+        // 3. Carica i dati nella UI
+        loadDataIntoUI();
     }
 
-    public void setBookingData(Prenotazione p, List<Servizio> catalogoCompleto) {
+    /**
+     * Prepara la lista dei servizi dal catalogo
+     */
+    private void initializeServiceItems() {
+        // Per ogni servizio del catalogo
+        for (Servizio catalogItem : catalogoServizi) {
+            int count = 0;
 
-        Label lblCode = (Label) ((VBox)((HBox)this.getChildren().get(0)).getChildren().get(2)).getChildren().get(1);
-        lblCode.setText(String.valueOf(p.getIDPrenotazione()));
-
-        // Svuota la tabella
-        ScrollPane scroll = (ScrollPane) this.getChildren().get(2);
-        GridPane grid = (GridPane) scroll.getContent();
-        VBox leftCol = (VBox) grid.getChildren().get(0);
-        TableView<RoomBooking> table = (TableView<RoomBooking>) ((VBox) leftCol.getChildren().get(0)).getChildren().get(1);
-
-        table.getItems().clear();
-
-        for (Cliente c : p.getListaClienti()) {
-            String numCamera = (c.getCamera()!= null) ? String.valueOf(c.getCamera().getNumeroCamera()) : "-";
-            String tipo = null;
-            if( c.getCamera()!= null) {
-                if (c.getCamera().getCapacità() == 1)
-                    tipo= "Singola";
-                else if (c.getCamera().getCapacità() == 2) {
-                    tipo = "Doppia";
-                } else if (c.getCamera().getCapacità() == 3) {
-                    tipo = "Tripla";
+            // Conta quante volte appare nella prenotazione
+            if (prenotazione.getListaServizi() != null) {
+                for (Servizio prenotatoItem : prenotazione.getListaServizi()) {
+                    if (prenotatoItem.getNome().equals(catalogItem.getNome())) {
+                        count++;
+                    }
                 }
-            }else {
-                tipo = "-";
             }
 
-            table.getItems().add(new RoomBooking(
-                    c.getNome(), c.getCognome(), numCamera, "11/07/2026","12/07/2026",tipo,"Pensione Completa",""+ c.getCamera().getPrezzoCamera(),
-                    ""+p.getTrattamento().getPrezzo(),"anagrafica")
-            );
-        }
-
-
-        this.serviceItems.clear();
-
-
-
-        for (Servizio voceCatalogo : catalogoCompleto) {
-            int numeroOccorrenze = Collections.frequency(serviceItems, voceCatalogo);
-
-            // Aggiungi alla lista grafica
-            // Nota: getEmojiForService è un metodo helper (vedi punto 4 se non ce l'hai)
-            this.serviceItems.add(new ServiceItem(
-                    getEmojiForService(voceCatalogo.getNome()),
-                    voceCatalogo.getNome(),
-                    voceCatalogo.getPrezzo(),
-                    numeroOccorrenze
+            // Aggiungi alla lista
+            serviceItems.add(new ServiceItem(
+                    getEmojiForService(catalogItem.getNome()),
+                    catalogItem.getNome(),
+                    catalogItem.getPrezzo(),
+                    count
             ));
         }
-
-        // --- 4. Ridisegna la Griglia Servizi ---
-        VBox servicesSection = (VBox) leftCol.getChildren().get(1);
-        servicesSection.getChildren().remove(1); // Rimuovi vecchia griglia
-        this.servicesGrid = createServicesGrid(); // Ricrea griglia con nuovi dati
-        servicesSection.getChildren().add(this.servicesGrid);
-
-        // Aggiorna i totali
-        recalculateTotals();
     }
 
-    // Aggiungi anche questo se non lo avevi copiato prima
     private String getEmojiForService(String nome) {
         if (nome == null) return "✨";
         String n = nome.toLowerCase();
@@ -129,22 +92,27 @@ public class BookingDetail extends VBox {
         if (n.contains("spa")) return "💆";
         if (n.contains("camera")) return "🛏️";
         if (n.contains("colazione")) return "🍽️";
-        if (n.contains("auto") || n.contains("transfer")) return "🚗";
-        if (n.contains("vino") || n.contains("bar")) return "🍷";
+        if (n.contains("transfer")) return "🚗";
+        if (n.contains("vino")) return "🍷";
+        if (n.contains("parcheggio")) return "🅿️";
+        if (n.contains("lavanderia")) return "🧺";
         return "✨";
     }
 
-
-
     private void initializeComponents() {
         checkinStatusBtn = new Button();
-        updateCheckinButton();
         checkinStatusBtn.setOnAction(e -> toggleCheckin());
+        updateCheckinButton();
 
-        notesArea = new TextArea("Cliente celebra anniversario - preparare champagne in camera");
+        String noteText = (prenotazione.getNoteAggiuntive() != null && !prenotazione.getNoteAggiuntive().isEmpty())
+                ? prenotazione.getNoteAggiuntive()
+                : "Nessuna nota";
+        notesArea = new TextArea(noteText);
         notesArea.setWrapText(true);
         notesArea.setPrefRowCount(5);
         notesArea.getStyleClass().add("booking-notes-area");
+
+        roomsTable = createRoomsTable();
     }
 
     private void setupLayout() {
@@ -173,6 +141,65 @@ public class BookingDetail extends VBox {
         this.getStyleClass().add("booking-detail-view");
     }
 
+    /**
+     * CARICA I DATI NELLA UI - Chiamato una volta sola
+     */
+    private void loadDataIntoUI() {
+        // Header
+        lblCode.setText(String.valueOf(prenotazione.getIDPrenotazione()));
+
+        // Client info
+        Cliente intestatario = null;
+        for (Cliente c : prenotazione.getListaClienti()) {
+            if (c.isIntestatario()) {
+                intestatario = c;
+                break;
+            }
+        }
+
+        if (intestatario != null) {
+            lblClientName.setText(intestatario.getNome() + " " + intestatario.getCognome());
+            lblFiscalCode.setText(intestatario.getCf());
+        }
+
+        lblCheckin.setText(prenotazione.getDataInizio().toString());
+        lblCheckout.setText(prenotazione.getDataFine().toString());
+
+        // Tabella camere
+        roomsTable.getItems().clear();
+        for (Cliente c : prenotazione.getListaClienti()) {
+            String numCamera = (c.getCamera() != null) ? String.valueOf(c.getCamera().getNumeroCamera()) : "-";
+            String tipo = getTipoCamera(c.getCamera());
+            String prezzoCamera = (c.getCamera() != null) ? String.format("%.2f €", c.getCamera().getPrezzoCamera()) : "0.00 €";
+            String prezzoTrattamento = String.format("%.2f €", prenotazione.getTrattamento().getPrezzo());
+
+            roomsTable.getItems().add(new RoomBooking(
+                    c.getNome(),
+                    c.getCognome(),
+                    numCamera,
+                    prenotazione.getDataInizio().toString(),
+                    prenotazione.getDataFine().toString(),
+                    tipo,
+                    prenotazione.getTrattamento().getNome(),
+                    prezzoCamera,
+                    prezzoTrattamento,
+                    "✓ COMPLETA"
+            ));
+        }
+
+        // Calcola e mostra i totali
+        recalculateTotals();
+    }
+
+    private String getTipoCamera(Camera camera) {
+        if (camera == null) return "-";
+        int capacita = camera.getCapacità();
+        if (capacita == 1) return "Singola";
+        if (capacita == 2) return "Doppia";
+        if (capacita == 3) return "Tripla";
+        return "Suite";
+    }
+
     // ===== HEADER =====
     private HBox createHeader() {
         HBox header = new HBox(30);
@@ -181,7 +208,6 @@ public class BookingDetail extends VBox {
         header.getStyleClass().add("booking-header");
 
         VBox headerLeft = new VBox(5);
-        headerLeft.setAlignment(Pos.CENTER_LEFT);
         Label title = new Label("GESTIONE PRENOTAZIONE");
         title.getStyleClass().add("booking-header-title");
         Label subtitle = new Label("Visualizza e modifica i dettagli della prenotazione");
@@ -197,9 +223,9 @@ public class BookingDetail extends VBox {
         codeBox.setPadding(new Insets(10, 20, 10, 20));
         Label codeLabel = new Label("Codice Prenotazione");
         codeLabel.getStyleClass().add("booking-code-label");
-        Label codeValue = new Label(bookingCode);
-        codeValue.getStyleClass().add("booking-code-value");
-        codeBox.getChildren().addAll(codeLabel, codeValue);
+        lblCode = new Label(""); // Sarà riempita dopo
+        lblCode.getStyleClass().add("booking-code-value");
+        codeBox.getChildren().addAll(codeLabel, lblCode);
 
         checkinStatusBtn.getStyleClass().add("booking-checkin-btn");
         checkinStatusBtn.setPadding(new Insets(12, 24, 12, 24));
@@ -216,29 +242,32 @@ public class BookingDetail extends VBox {
         clientBox.getStyleClass().add("booking-client-info");
 
         Label icon = new Label("👤");
-        icon.setStyle("-fx-font-size: 32px;");
-        VBox nameBox = createInfoBox("Intestato a", clientName);
-        Region separator1 = createSeparator();
-        Region spacer = new Region();
-        spacer.setMinWidth(0);
-        VBox fiscalBox = createInfoBox("Codice Fiscale", fiscalCode);
-        Region separator2 = createSeparator();
-        VBox checkinBox = createInfoBox("Check-in", "20/07/2025");
-        Region separator3 = createSeparator();
-        VBox checkoutBox = createInfoBox("Check-out", "24/07/2025");
+        icon.setStyle("-fx-font-size: 32px; -fx-text-fill: black");
 
-        clientBox.getChildren().addAll(icon, nameBox,spacer, separator1, fiscalBox, separator2, checkinBox, separator3, checkoutBox);
+        lblClientName = new Label("");
+        lblFiscalCode = new Label("");
+        lblCheckin = new Label("");
+        lblCheckout = new Label("");
+
+        VBox nameBox = createInfoBox("Intestato a", lblClientName);
+        Region sep1 = createSeparator();
+        VBox fiscalBox = createInfoBox("Codice Fiscale", lblFiscalCode);
+        Region sep2 = createSeparator();
+        VBox checkinBox = createInfoBox("Check-in", lblCheckin);
+        Region sep3 = createSeparator();
+        VBox checkoutBox = createInfoBox("Check-out", lblCheckout);
+
+        clientBox.getChildren().addAll(icon, nameBox, sep1, fiscalBox, sep2, checkinBox, sep3, checkoutBox);
         return clientBox;
     }
 
-    private VBox createInfoBox(String label, String value) {
+    private VBox createInfoBox(String label, Label valueLabel) {
         VBox box = new VBox(3);
         box.setAlignment(Pos.CENTER_LEFT);
         Label labelNode = new Label(label);
         labelNode.getStyleClass().add("client-info-label");
-        Label valueNode = new Label(value);
-        valueNode.getStyleClass().add("client-info-value");
-        box.getChildren().addAll(labelNode, valueNode);
+        valueLabel.getStyleClass().add("client-info-value");
+        box.getChildren().addAll(labelNode, valueLabel);
         return box;
     }
 
@@ -263,11 +292,12 @@ public class BookingDetail extends VBox {
         grid.getColumnConstraints().addAll(col1, col2);
 
         VBox leftColumn = createLeftColumn();
-        grid.add(leftColumn, 0, 0);
-        GridPane.setVgrow(leftColumn, Priority.ALWAYS);
-
         VBox rightColumn = createRightColumn();
+
+        grid.add(leftColumn, 0, 0);
         grid.add(rightColumn, 1, 0);
+
+        GridPane.setVgrow(leftColumn, Priority.ALWAYS);
         GridPane.setVgrow(rightColumn, Priority.ALWAYS);
 
         return grid;
@@ -292,9 +322,7 @@ public class BookingDetail extends VBox {
         Label title = new Label("Camere Prenotate");
         title.getStyleClass().add("section-title-booking");
         titleBox.getChildren().addAll(icon, title);
-
-        TableView<RoomBooking> table = createRoomsTable();
-        section.getChildren().addAll(titleBox, table);
+        section.getChildren().addAll(titleBox, roomsTable);
         return section;
     }
 
@@ -306,25 +334,35 @@ public class BookingDetail extends VBox {
 
         TableColumn<RoomBooking, String> nameCol = new TableColumn<>("Nome");
         nameCol.setCellValueFactory(data -> data.getValue().nameProperty());
+        nameCol.setStyle("-fx-background-radius: 12 0 0 0;");
+
         TableColumn<RoomBooking, String> surnameCol = new TableColumn<>("Cognome");
         surnameCol.setCellValueFactory(data -> data.getValue().surnameProperty());
+
         TableColumn<RoomBooking, String> roomCol = new TableColumn<>("Camera");
         roomCol.setCellValueFactory(data -> data.getValue().roomNumberProperty());
+
         TableColumn<RoomBooking, String> arrivalCol = new TableColumn<>("Arrivo");
         arrivalCol.setCellValueFactory(data -> data.getValue().arrivalProperty());
+
         TableColumn<RoomBooking, String> departureCol = new TableColumn<>("Partenza");
         departureCol.setCellValueFactory(data -> data.getValue().departureProperty());
+
         TableColumn<RoomBooking, String> typeCol = new TableColumn<>("Tipologia");
         typeCol.setCellValueFactory(data -> data.getValue().roomTypeProperty());
+
         TableColumn<RoomBooking, String> treatmentCol = new TableColumn<>("Trattamento");
         treatmentCol.setCellValueFactory(data -> data.getValue().treatmentProperty());
+
         TableColumn<RoomBooking, String> nightPriceCol = new TableColumn<>("€ Notte");
         nightPriceCol.setCellValueFactory(data -> data.getValue().nightPriceProperty());
+
         TableColumn<RoomBooking, String> treatmentPriceCol = new TableColumn<>("€ Tratt.");
         treatmentPriceCol.setCellValueFactory(data -> data.getValue().treatmentPriceProperty());
 
         TableColumn<RoomBooking, String> anagraficaCol = new TableColumn<>("Anagrafica");
         anagraficaCol.setCellValueFactory(data -> data.getValue().anagraficaProperty());
+        anagraficaCol.setStyle("-fx-background-radius: 0 12 0 0;");
         anagraficaCol.setCellFactory(col -> new TableCell<>() {
             @Override
             protected void updateItem(String item, boolean empty) {
@@ -341,30 +379,20 @@ public class BookingDetail extends VBox {
             }
         });
 
-        table.getColumns().addAll(nameCol, surnameCol, roomCol, arrivalCol, departureCol, typeCol, treatmentCol, nightPriceCol, treatmentPriceCol, anagraficaCol);
+        table.getColumns().addAll(nameCol, surnameCol, roomCol, arrivalCol, departureCol,
+                typeCol, treatmentCol, nightPriceCol, treatmentPriceCol, anagraficaCol);
 
+        // Hover effect
         table.setRowFactory(tv -> {
-            TableRow<RoomBooking> row = new TableRow<>() {
-                @Override
-                protected void updateItem(RoomBooking item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty || item == null) setStyle("");
-                    else setStyle("-fx-background-color: #fafafa; -fx-background-radius: 8; -fx-padding: 5;");
-                }
-            };
+            TableRow<RoomBooking> row = new TableRow<>();
             row.setOnMouseEntered(e -> {
-                if (!row.isEmpty()) row.setStyle("-fx-background-color: #f5e6d3; -fx-background-radius: 8; -fx-translate-x: 5; -fx-padding: 5;");
+                if (!row.isEmpty()) row.setStyle("-fx-background-color: #f5e6d3; -fx-background-radius: 8; -fx-translate-x: 5;");
             });
             row.setOnMouseExited(e -> {
-                if (!row.isEmpty()) row.setStyle("-fx-background-color: #fafafa; -fx-background-radius: 8; -fx-translate-x: 0; -fx-padding: 5;");
+                if (!row.isEmpty()) row.setStyle("-fx-background-color: #fafafa; -fx-background-radius: 8; -fx-translate-x: 0;");
             });
             return row;
         });
-
-        table.getItems().addAll(
-                new RoomBooking("CLAUDIO", "MINERVA", "123", "20/07/25", "24/07/25", "DOPPIA", "MEZZA PENSIONE", "89.5 €", "50.5 €", "✓ COMPLETA"),
-                new RoomBooking("BARBARA", "D'ORSO", "123", "20/07/25", "24/07/25", "DOPPIA", "MEZZA PENSIONE", "89.5 €", "50.5 €", "✓ COMPLETA")
-        );
 
         return table;
     }
@@ -374,7 +402,7 @@ public class BookingDetail extends VBox {
         VBox section = new VBox(15);
         HBox titleBox = new HBox(10);
         titleBox.setAlignment(Pos.CENTER_LEFT);
-        Label icon =new Label("✨");
+        Label icon = new Label("✨");
         icon.setStyle("-fx-font-family: 'Segoe UI Emoji'; -fx-text-fill: #e4c418; -fx-font-size: 22px;");
         Label title = new Label("Servizi Aggiuntivi");
         title.getStyleClass().add("section-title-booking");
@@ -385,9 +413,6 @@ public class BookingDetail extends VBox {
         return section;
     }
 
-    /**
-     * [DINAMICO] Crea la griglia leggendo la lista di oggetti ServiceItem
-     */
     private GridPane createServicesGrid() {
         GridPane grid = new GridPane();
         grid.setHgap(12);
@@ -397,7 +422,6 @@ public class BookingDetail extends VBox {
         int row = 0;
 
         for (ServiceItem item : serviceItems) {
-            // Passiamo l'oggetto reale (item) alla funzione di creazione
             VBox serviceCard = createServiceCard(item);
             grid.add(serviceCard, col, row);
 
@@ -417,20 +441,16 @@ public class BookingDetail extends VBox {
         return grid;
     }
 
-    /**
-     * [DINAMICO] Crea la card e collega i bottoni all'oggetto dati
-     */
     private VBox createServiceCard(ServiceItem item) {
         VBox card = new VBox(12);
         card.getStyleClass().add("booking-service-card");
         card.setPadding(new Insets(16));
-        card.setAlignment(Pos.TOP_LEFT);
 
         // Header
         HBox header = new HBox();
         header.setAlignment(Pos.CENTER_LEFT);
+
         HBox nameBox = new HBox(10);
-        nameBox.setAlignment(Pos.CENTER_LEFT);
         Label iconLabel = new Label(item.emoji);
         iconLabel.setStyle("-fx-font-family: 'Segoe UI Emoji'; -fx-text-fill: black; -fx-font-size: 28px;");
 
@@ -453,26 +473,24 @@ public class BookingDetail extends VBox {
         // Controls
         HBox controls = new HBox(15);
         controls.setAlignment(Pos.CENTER_LEFT);
+
         HBox qtyBox = new HBox(10);
         qtyBox.setAlignment(Pos.CENTER);
-
-        // Label locali per quantità e subtotale (da aggiornare al click)
-        Label subtotalLabel = new Label(String.format("%.0f €", item.getTotalPrice()));
-        subtotalLabel.getStyleClass().add("service-subtotal");
 
         Label qtyLabel = new Label(String.valueOf(item.quantity));
         qtyLabel.getStyleClass().add("qty-value");
         qtyLabel.setMinWidth(35);
         qtyLabel.setAlignment(Pos.CENTER);
 
+        Label subtotalLabel = new Label(String.format("%.0f €", item.getTotalPrice()));
+        subtotalLabel.getStyleClass().add("service-subtotal");
+
         Button minusBtn = new Button("−");
         minusBtn.getStyleClass().add("qty-btn");
-        // [EVENTO] Passiamo item, e le label locali
         minusBtn.setOnAction(e -> updateQuantity(item, -1, qtyLabel, subtotalLabel));
 
         Button plusBtn = new Button("+");
         plusBtn.getStyleClass().add("qty-btn");
-        // [EVENTO] Passiamo item, e le label locali
         plusBtn.setOnAction(e -> updateQuantity(item, 1, qtyLabel, subtotalLabel));
 
         qtyBox.getChildren().addAll(minusBtn, qtyLabel, plusBtn);
@@ -483,22 +501,26 @@ public class BookingDetail extends VBox {
         controls.getChildren().addAll(qtyBox, spacer2, subtotalLabel);
         card.getChildren().addAll(header, controls);
 
-        card.setOnMouseEntered(e -> card.setStyle("-fx-border-color: #6d1331; -fx-border-width: 2; -fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-effect: dropshadow(gaussian, rgba(109, 19, 49, 0.2), 20, 0, 0, 5); -fx-translate-y: -3;"));
-        card.setOnMouseExited(e -> card.setStyle("-fx-border-color: #f5e6d3; -fx-border-width: 2; -fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-translate-y: 0;"));
+        // Hover effect
+        card.setOnMouseEntered(e -> card.setStyle(
+                "-fx-border-color: #6d1331; -fx-border-width: 2; " +
+                        "-fx-background-color: white; -fx-background-radius: 10; " +
+                        "-fx-border-radius: 10; -fx-translate-y: -3; " +
+                        "-fx-effect: dropshadow(gaussian, rgba(109, 19, 49, 0.2), 20, 0, 0, 5);"
+        ));
+        card.setOnMouseExited(e -> card.setStyle(
+                "-fx-border-color: #f5e6d3; -fx-border-width: 2; " +
+                        "-fx-background-color: white; -fx-background-radius: 10; " +
+                        "-fx-border-radius: 10; -fx-translate-y: 0;"
+        ));
 
         return card;
     }
 
-    /**
-     * [LOGICA] Aggiorna quantità singolo servizio e chiama il ricalcolo totale
-     */
     private void updateQuantity(ServiceItem item, int change, Label qtyLabel, Label subtotalLabel) {
         int newQty = Math.max(0, item.quantity + change);
-
-        // 1. Aggiorna il modello dati
         item.quantity = newQty;
 
-        // 2. Aggiorna la card specifica (grafica locale)
         qtyLabel.setText(String.valueOf(newQty));
         subtotalLabel.setText(String.format("%.0f €", item.getTotalPrice()));
 
@@ -512,48 +534,54 @@ public class BookingDetail extends VBox {
         });
         pause.play();
 
-        // 3. Ricalcola i totali generali (Riepilogo Costi)
         recalculateTotals();
     }
 
-    /**
-     * [LOGICA] Somma tutto e aggiorna le Label globali del Riepilogo
-     */
     private void recalculateTotals() {
-        double servicesTotal = 0.0;
+        // Calcola notti
+        long notti = ChronoUnit.DAYS.between(prenotazione.getDataInizio(), prenotazione.getDataFine());
+        if (notti <= 0) notti = 1;
 
-        // Somma i prezzi di tutti i servizi nella lista
+        // Calcola costo camere
+        double roomCost = 0;
+        for (Camera c : prenotazione.getListaCamere()) {
+            roomCost += c.getPrezzoCamera();
+        }
+        roomCost *= notti;
+
+        // Costo trattamento
+        double treatmentCost = prenotazione.getTrattamento().getPrezzo() * prenotazione.getListaClienti().size();
+
+        // Costo servizi
+        double servicesTotal = 0;
         for (ServiceItem item : serviceItems) {
             servicesTotal += item.getTotalPrice();
         }
 
-        double grandTotal = FIXED_ROOM_COST + FIXED_TREATMENT_COST + servicesTotal;
+        // Totale
+        double grandTotal = roomCost + treatmentCost + servicesTotal;
 
-        // Aggiorna le Label globali (se sono già state create)
-        if (lblServicesTotal != null) {
-            lblServicesTotal.setText(String.format("%.2f €", servicesTotal));
-        }
-        if (lblGrandTotal != null) {
-            lblGrandTotal.setText(String.format("%,.2f €", grandTotal));
-        }
+        // Aggiorna UI
+        if (lblRoomCost != null) lblRoomCost.setText(String.format("%.2f €", roomCost));
+        if (lblTreatmentCost != null) lblTreatmentCost.setText(String.format("%.2f €", treatmentCost));
+        if (lblServicesTotal != null) lblServicesTotal.setText(String.format("%.2f €", servicesTotal));
+        if (lblGrandTotal != null) lblGrandTotal.setText(String.format("%,.2f €", grandTotal));
     }
 
     private String getServiceDescription(String serviceName) {
         switch (serviceName) {
             case "Accesso Piscina": return "Accesso giornaliero";
-            case "Camera Extra": return "Letto aggiuntivo";
             case "Spa & Wellness": return "Massaggio 60min";
             case "Transfer Aeroporto": return "Andata/Ritorno";
             case "Colazione in Camera": return "Servizio in stanza";
-            case "Parcheggio Coperto": return "Al giorno";
             case "Bottiglia Vino": return "Selezione premium";
+            case "Parcheggio Coperto": return "Al giorno";
             case "Lavanderia": return "Servizio rapido";
-            case "Late Check-out": return "Fino alle 18:00";
             default: return "";
         }
     }
 
-    // ===== RIGHT COLUMN (SIDEBAR) =====
+    // ===== RIGHT COLUMN =====
     private VBox createRightColumn() {
         VBox rightCol = new VBox(20);
         VBox summaryBox = createSummaryBox();
@@ -577,35 +605,37 @@ public class BookingDetail extends VBox {
 
         VBox lines = new VBox(0);
 
-        // [DINAMICO] Inizializzazione Label Globali
+        lblRoomCost = new Label();
+        lblRoomCost.getStyleClass().add("summary-value");
+
+        lblTreatmentCost = new Label();
+        lblTreatmentCost.getStyleClass().add("summary-value");
+
         lblServicesTotal = new Label();
         lblServicesTotal.getStyleClass().add("summary-value");
 
         lblGrandTotal = new Label();
         lblGrandTotal.getStyleClass().add("summary-value-total");
 
+        long notti = ChronoUnit.DAYS.between(prenotazione.getDataInizio(), prenotazione.getDataFine());
+        if (notti <= 0) notti = 1;
+
         lines.getChildren().addAll(
-                createSummaryLine("Camere (4 notti)", String.format("%.2f €", FIXED_ROOM_COST), false, null),
-                createSummaryLine("Trattamenti", String.format("%.2f €", FIXED_TREATMENT_COST), false, null),
-                // Passiamo le label globali per essere inserite nel layout
-                createSummaryLine("Servizi Extra", null, false, lblServicesTotal),
-                createSummaryLine("TOTALE", null, true, lblGrandTotal)
+                createSummaryLine("Camere (" + notti + " notti)", lblRoomCost),
+                createSummaryLine("Trattamenti", lblTreatmentCost),
+                createSummaryLine("Servizi Extra", lblServicesTotal),
+                createSummaryLineTot("TOTALE", lblGrandTotal)
         );
 
         box.getChildren().addAll(titleBox, lines);
         return box;
     }
 
-    private HBox createSummaryLine(String label, String staticValue, boolean isTotal, Label dynamicLabel) {
+    private HBox createSummaryLine(String label, Label valueLabel) {
         HBox line = new HBox();
         line.setAlignment(Pos.CENTER);
         line.setPadding(new Insets(12, 0, 12, 0));
-
-        if (isTotal) {
-            line.getStyleClass().add("summary-line-total");
-        } else {
-            line.getStyleClass().add("summary-line");
-        }
+        line.getStyleClass().add("summary-line");
 
         Label labelNode = new Label(label);
         labelNode.getStyleClass().add("summary-label");
@@ -613,16 +643,23 @@ public class BookingDetail extends VBox {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        Label valueNode;
-        // Se c'è una label dinamica usiamo quella, altrimenti ne creiamo una statica
-        if (dynamicLabel != null) {
-            valueNode = dynamicLabel;
-        } else {
-            valueNode = new Label(staticValue);
-            valueNode.getStyleClass().add(isTotal ? "summary-value-total" : "summary-value");
-        }
+        line.getChildren().addAll(labelNode, spacer, valueLabel);
+        return line;
+    }
 
-        line.getChildren().addAll(labelNode, spacer, valueNode);
+    private HBox createSummaryLineTot(String label, Label valueLabel) {
+        HBox line = new HBox();
+        line.setAlignment(Pos.CENTER);
+        line.setPadding(new Insets(12, 0, 12, 0));
+        line.getStyleClass().add("summary-line-total");
+
+        Label labelNode = new Label(label);
+        labelNode.getStyleClass().add("summary-label");
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        line.getChildren().addAll(labelNode, spacer, valueLabel);
         return line;
     }
 
@@ -651,10 +688,13 @@ public class BookingDetail extends VBox {
 
         Button backBtn = new Button("← INDIETRO");
         backBtn.getStyleClass().add("booking-btn-back");
+
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
+
         Button deleteBtn = new Button("🗑️ ELIMINA");
         deleteBtn.getStyleClass().add("booking-btn-delete");
+
         Button saveBtn = new Button("💾 SALVA MODIFICHE");
         saveBtn.getStyleClass().add("booking-btn-save");
 
@@ -663,12 +703,12 @@ public class BookingDetail extends VBox {
     }
 
     private void toggleCheckin() {
-        checkinCompleted = !checkinCompleted;
+        prenotazione.setCheckIn(!prenotazione.isCheckIn());
         updateCheckinButton();
     }
 
     private void updateCheckinButton() {
-        if (checkinCompleted) {
+        if (prenotazione.isCheckIn()) {
             checkinStatusBtn.setText("✓ CHECK-IN COMPLETATO");
             checkinStatusBtn.getStyleClass().removeAll("booking-checkin-pending");
             checkinStatusBtn.getStyleClass().add("booking-checkin-complete");
@@ -719,9 +759,6 @@ public class BookingDetail extends VBox {
         public javafx.beans.property.SimpleStringProperty anagraficaProperty() { return anagrafica; }
     }
 
-    /**
-     * [NUOVA CLASSE] Rappresenta un servizio con i suoi dati numerici
-     */
     private static class ServiceItem {
         String emoji;
         String name;

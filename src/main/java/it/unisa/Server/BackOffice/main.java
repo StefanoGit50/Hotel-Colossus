@@ -46,7 +46,7 @@ public class main {
                 "3233452",
                 "m",
                 LocalDate.of(2022, 1, 6),
-                "SDFGANNSOLF","Libero@asfnai","Italiana");
+                "SDFGANNSOLF","Libero@asfnai","Italiana",new Camera());
         clist.add(cliente);
 
         Prenotazione p1 = new Prenotazione(1,

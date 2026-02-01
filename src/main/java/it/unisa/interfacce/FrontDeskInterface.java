@@ -2,6 +2,7 @@ package it.unisa.interfacce;
 
 import it.unisa.Common.*;
 
+import it.unisa.Server.IllegalAccess;
 import it.unisa.Server.ObserverCamereInterface;
 
 import java.rmi.Remote;
@@ -33,6 +34,9 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
     // Filtro clienti
     List<Cliente> filterClienti(String nome, String cognome, String nazionalita, LocalDate dataNascita, Boolean blackListed, String orderBy)
             throws RemoteException;
+
+    //autenticazione
+    Impiegato authentication(String username, String password,String pwd2) throws RemoteException, IllegalAccess;
 
     // Comando undo
     void undoCommand() throws RemoteException;

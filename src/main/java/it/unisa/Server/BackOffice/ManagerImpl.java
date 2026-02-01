@@ -1,6 +1,7 @@
 package it.unisa.Server.BackOffice;
 
 import it.unisa.Common.*;
+import it.unisa.Server.Autentication.TokenGenerator;
 import it.unisa.Server.command.CatalogoImpiegatiCommands.AddImpiegatoCommand;
 import it.unisa.Server.command.CatalogoImpiegatiCommands.RemoveImpiegatoCommand;
 import it.unisa.Server.command.CatalogoImpiegatiCommands.UpdateImpiegatoCommand;
@@ -36,10 +37,9 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
     static Logger logger = Logger.getLogger("global");
     private static final int RMI_PORT = 1099;
 
-    static void main(String[] args)
-    {
-        try
-        {
+    static void main(String[] args) {
+
+        try {
             logger.info("Avvio RMI Registry sulla porta " + RMI_PORT + "...");
 
             // Recupera gli impiegati e aggiungili al catalogo
@@ -48,7 +48,7 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
                 CatalogoImpiegati.setListaImpiegati((ArrayList<Impiegato>) dao.doRetriveAll(""));
             } catch (SQLException ex) {
                 logger.info("Recupero impiegati dal DB fallito!");
-                throw new RemoteException("Try creting 'Manager' object again!");
+                throw new RemoteException("Try creating 'Manager' object again!");
             }
 
             try {
@@ -88,6 +88,12 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
 
     // Invoker --> mantiene l'ordine delle chiamate ai comandi
     private Invoker invoker = new Invoker();
+
+    @Override
+    public String generatePassword(){
+        TokenGenerator token = new TokenGenerator(30);
+        return token.getToken();
+    }
 
     @Override
     public List<Impiegato> filtroImpiegati(String nome, String sesso, Ruolo ruolo, String orderBy) throws RemoteException {
@@ -136,7 +142,7 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
     /**
      * @return nuova pssword temporanea
      */
-    @Override
+   /* @Override
     public String generatePassword() throws RemoteException
     {
         // definiamo i set di caratteri
@@ -178,7 +184,7 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
 
         return result.toString();
     }
-
+*/
 
     @Override
     public Map<String, Double> calcolaContoHotel() throws RemoteException{
@@ -198,7 +204,7 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
                 "3233452",
                 "m",
                 LocalDate.of(2022, 1, 6),
-                "SDFGANNSOLF", "Libero@asfnai","Italiana");
+                "SDFGANNSOLF", "Libero@asfnai","Italiana",new Camera());
         clist.add(cliente);
 
         Prenotazione p1 = new Prenotazione(1,

@@ -24,24 +24,6 @@ public class CredenzialiUtils {
         return false;
     }
 
-    public static boolean checkAccount(String username, String password) {
-
-        Impiegato impiegato;
-        BackofficeStorage<Impiegato> impiegatoStorage = new ImpiegatoDAO();
-        try{
-             impiegato=impiegatoStorage.doRetriveByKey(username);
-        }catch (Exception e){
-            return false;
-        }
-
-        if (checkPassword(password, impiegato.getHashPassword())) {
-            if(impiegato.getUserName().equals(username)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 
     //TODO : chiamare il doUpdate di Impiegato sul valore di ritorno
     // TODO: bisogna ricordarsi prima di mettere la nuova password di rendere null sia campo expire sia il campo token nel DB

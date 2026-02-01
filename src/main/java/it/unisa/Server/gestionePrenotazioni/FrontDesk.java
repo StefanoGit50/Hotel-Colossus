@@ -1,5 +1,7 @@
 package it.unisa.Server.gestionePrenotazioni;
 
+import it.unisa.Server.Autentication.Autentication;
+import it.unisa.Server.IllegalAccess;
 import it.unisa.Server.command.*;
 import it.unisa.Common.*;
 import it.unisa.Common.Prenotazione;
@@ -207,6 +209,12 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         return clienteDAO.doFilter(nome, cognome, nazionalita, dataNascita, blackListed, orderBy);
     }
 
+    @Override
+    public Impiegato authentication(String username, String password,String pwd2) throws RemoteException, IllegalAccess {
+        if( Autentication.checkaccount(username, password, pwd2))
+            return Autentication.getImpiegato();
+        else  return null;
+    }
 
     // COMANDO UNDO
     @Override

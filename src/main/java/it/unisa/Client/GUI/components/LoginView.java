@@ -1,6 +1,7 @@
 package it.unisa.Client.GUI.components;
 
 
+import it.unisa.Server.IllegalAccess;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -10,6 +11,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+
+import java.rmi.RemoteException;
 
 /**
      * LoginView - Login elegante con sfondo full-screen e card glass morphism
@@ -290,7 +293,7 @@ import javafx.scene.shape.Rectangle;
 
         @FunctionalInterface
         public interface LoginCallback {
-            void onLogin(String username, String password);
+            void onLogin(String username, String password) throws RemoteException, IllegalAccess;
         }
     }
 

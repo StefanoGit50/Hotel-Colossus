@@ -77,7 +77,7 @@ public class Cliente implements Cloneable, Serializable {
      */
     private String sesso;
 
-    private Camera camere;
+    private Camera camera;
 
     /**
      * Data di nascita del cliente.
@@ -104,7 +104,14 @@ public class Cliente implements Cloneable, Serializable {
         return camera;
     }
 
-    private Camera camera;
+    private boolean isIntestatario= false;
+
+    public boolean isIntestatario() {
+        return isIntestatario;
+    }
+    public void setIntestatario(boolean isIntestatario) {
+        this.isIntestatario = isIntestatario;
+    }
 
     /**
      * Costruttore completo per creare una nuova istanza di {@code Cliente}
@@ -123,7 +130,7 @@ public class Cliente implements Cloneable, Serializable {
      * @param cf il codice fiscale del cliente
      * @param email l'email del cliente
      */
-    public Cliente(String nome, String cognome, String cittadinanza, String provincia, String comune, String via, Integer numeroCivico, Integer CAP, String numeroTelefono, String sesso, LocalDate dataNascita ,String cf , String email,String nazionalità,Camera camere) {
+    public Cliente(String nome, String cognome, String cittadinanza, String provincia, String comune, String via, Integer numeroCivico, Integer CAP, String numeroTelefono, String sesso, LocalDate dataNascita ,String cf , String email,String nazionalità,Camera camera) {
         this.nome = nome;
         this.cognome = cognome;
         this.cittadinanza = cittadinanza;
@@ -139,7 +146,8 @@ public class Cliente implements Cloneable, Serializable {
         this.cf = cf;
         this.email = email;
         this.nazionalità = nazionalità;
-        this.camere = camere;
+        this.camera = camera;
+        this.isIntestatario = false;
     }
 
     /**
@@ -419,11 +427,11 @@ public class Cliente implements Cloneable, Serializable {
     }
 
     public Camera getCamere() throws CloneNotSupportedException {
-        return camere.clone();
+        return camera.clone();
     }
 
     public void setCamere(Camera camere){
-        this.camere = camere;
+        this.camera = camere;
     }
 
     @Override

@@ -7,21 +7,16 @@ import java.util.Base64;
 
 public class TokenGenerator {
 
-    private static Instant expiresAt;
-    private static String token;
+    private  Instant expiresAt;
+    private  String token;
 
-    public TokenGenerator(String token) {
-        TokenGenerator.expiresAt = Instant.now().plus(30, ChronoUnit.MINUTES);
-        TokenGenerator.token = token;
+
+    public TokenGenerator(int amount) {
+        this.expiresAt = Instant.now().plus(amount, ChronoUnit.MINUTES);
+        this.token = generateToken();
     }
 
-    public  TokenGenerator create() {
-        String token = generateToken();
-        return new TokenGenerator(token);
-    }
-
-
-    public static String generateToken() {
+    public String generateToken() {
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[24];
         random.nextBytes(salt);
@@ -34,11 +29,11 @@ public class TokenGenerator {
         return Instant.now().isAfter(expiresAt);
     }
     // Getters
-    public static String getToken() {
+    public String getToken() {
         return token;
     }
 
-    public static Instant getExpiresAt() {
+    public Instant getExpiresAt() {
         return expiresAt;
     }
 

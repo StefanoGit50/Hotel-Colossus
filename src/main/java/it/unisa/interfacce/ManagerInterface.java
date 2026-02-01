@@ -1,6 +1,7 @@
 package it.unisa.interfacce;
 
 import it.unisa.Common.Impiegato;
+import it.unisa.Server.Autentication.TokenGenerator;
 import it.unisa.Server.persistent.util.Ruolo;
 
 import java.rmi.Remote;
