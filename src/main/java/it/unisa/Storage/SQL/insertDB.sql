@@ -1,7 +1,8 @@
+
 -- INSERT per HotelColossusDB
 -- Rispettando tutti i vincoli di integrità referenziale e vincoli di dominio
 
-USE HotelColossus;
+USE hotelcolossus;
 
 -- =============================================
 -- INSERT TRATTAMENTO (deve essere inserito prima di Prenotazione)
@@ -32,7 +33,7 @@ INSERT INTO Servizio (Nome, Prezzo) VALUES
 -- INSERT IMPIEGATO
 -- =============================================
 -- Prima inseriamo i Manager (che non hanno manager superiore)
-INSERT INTO Impiegato (CF, Stipedio, UserName, HashPasword, isTemporary, dataScadenzaToken,
+INSERT INTO Impiegato (CF, Stipendio, UserName, HashPasword, isTemporary, dataScadenzaToken,
                        Nome, Cognome, Cap, DataAssunzione, Telefono, EmailAziendale, Sesso,
                        Ruolo, Via, Provincia, Comune, Civico, NumeroDocumento, TipoDocumento,
                        DataScadenzaDocumento, DataRilascioDocumento, Cittadinanza, IDManager, CFManager)
@@ -43,7 +44,7 @@ VALUES
      '2028-06-15', '2018-06-15', 'Italiana', 0, NULL);
 
 -- Poi inseriamo gli altri impiegati che riportano al Manager
-INSERT INTO Impiegato (CF, Stipedio, UserName, HashPasword, isTempurali, dataScadenzaToken,
+INSERT INTO Impiegato (CF, Stipendio, UserName, HashPasword, isTemporary, dataScadenzaToken,
                        Nome, Cognome, Cap, DataAssunzione, Telefono, EmailAziendale, Sesso,
                        Ruolo, Via, Provincia, Comune, Civico, NumeroDocumento, TipoDocumento,
                        DataScadenzaDocumento, DataRilascioDocumento, Cittadinanza, IDManager, CFManager)
