@@ -1,3 +1,4 @@
+
 -- INSERT per HotelColossusDB
 -- Rispettando tutti i vincoli di integrità referenziale e vincoli di dominio
 
