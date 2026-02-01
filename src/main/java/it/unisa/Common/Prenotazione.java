@@ -425,10 +425,39 @@ public class Prenotazione implements Cloneable, Serializable {
         }
         Prenotazione prenotazione = (Prenotazione) o;
         if(!isNullAll(prenotazione) && !isNullAll(this)){
-
                 ArrayList<Cliente> clientes = prenotazione.getListaClienti();
                 ArrayList<Camera> cameras = prenotazione.getListaCamere();
                 ArrayList<Servizio> servizios = prenotazione.getListaServizi();
+
+                if(isNull(clientes)){
+                     if(!isNull(listaClienti)){
+                        return false;
+                     }
+                }else {
+                    if(isNull(listaClienti)){
+                        return false;
+                    }
+                }
+
+                if(isNull(cameras)){
+                    if(!isNull(listaCamere)){
+                        return false;
+                    }
+                }else{
+                    if(isNull(listaCamere)){
+                        return false;
+                    }
+                }
+
+                if(isNull(servizios)){
+                    if(!isNull(listaServizi)){
+                        return false;
+                    }
+                }else{
+                    if(isNull(listaServizi)){
+                        return false;
+                    }
+                }
 
                 Boolean clien = null;
                 Boolean came = null;
@@ -481,6 +510,116 @@ public class Prenotazione implements Cloneable, Serializable {
                 }else{
                     came = false;
                 }
+
+                if(isNull(trattamento)){
+                    if(!isNull(prenotazione.trattamento)){
+                        return false;
+                    }
+                }else{
+                    if(isNull(prenotazione.trattamento)){
+                        return false;
+                    }
+                }
+
+                if(isNull(IDPrenotazione)){
+                    if(!isNull(prenotazione.IDPrenotazione)){
+                        return false;
+                    }
+                }else{
+                    if(isNull(prenotazione.IDPrenotazione)){
+                        return false;
+                    }
+                }
+
+                if(isNull(dataCreazionePrenotazione)){
+                    if(!isNull(prenotazione.dataCreazionePrenotazione)){
+                        return false;
+                    }
+                }else{
+                    if(isNull(prenotazione.dataCreazionePrenotazione)){
+                        return false;
+                    }
+                }
+
+                if(isNull(dataFine)){
+                    if(!isNull(prenotazione.dataFine)){
+                        return false;
+                    }
+                }else{
+                    if(isNull(prenotazione.dataFine)){
+                        return false;
+                    }
+                }
+
+                if(isNull(dataInizio)){
+                    if(!isNull(prenotazione.dataInizio)){
+                        return false;
+                    }
+                }else{
+                    if(isNull(prenotazione.dataInizio)){
+                        return false;
+                    }
+                }
+
+                if(isNull(dataRilascio)){
+                    if(!isNull(prenotazione.dataRilascio)){
+                        return false;
+                    }
+                }else{
+                    if(isNull(prenotazione.dataRilascio)){
+                        return false;
+                    }
+                }
+
+                if(isNull(dataScadenza)){
+                    if(!isNull(prenotazione.dataScadenza)){
+                        return false;
+                    }
+                }else{
+                    if(isNull(prenotazione.dataScadenza)){
+                        return false;
+                    }
+                }
+
+                if(isNull(tipoDocumento)){
+                    if(!isNull(prenotazione.tipoDocumento)){
+                        return false;
+                    }
+                }else{
+                    if(isNull(prenotazione.tipoDocumento)){
+                        return false;
+                    }
+                }
+
+                if(isNull(numeroDocumento)){
+                    if(!isNull(prenotazione.numeroDocumento)){
+                        return false;
+                    }
+                }else{
+                    if(isNull(prenotazione.numeroDocumento)){
+                        return false;
+                    }
+                }
+
+                if(isNull(intestatario)){
+                    if(!isNull(prenotazione.intestatario)){
+                       return false;
+                    }
+                }else{
+                    if(isNull(prenotazione.intestatario)){
+                        return false;
+                    }
+                }
+
+                if(isNull(noteAggiuntive)){
+                    if(!isNull(prenotazione.noteAggiuntive)){
+                        return false;
+                    }
+                }else{
+                    if(isNull(noteAggiuntive)){
+                        return false;
+                    }
+                }
                 return came && servi && clien && trattamento.equals(prenotazione.getTrattamento()) && IDPrenotazione.equals(prenotazione.getIDPrenotazione())
                         && dataCreazionePrenotazione.equals(prenotazione.getDataCreazionePrenotazione()) && dataInizio.equals(prenotazione.getDataInizio()) &&
                         dataFine.equals(prenotazione.getDataFine()) && dataRilascio.equals(prenotazione.getDataRilascio()) && dataScadenza.equals(prenotazione.getDataScadenza())
@@ -505,36 +644,14 @@ public class Prenotazione implements Cloneable, Serializable {
                 prenotazione.listaServizi == null && prenotazione.dataCreazionePrenotazione == null;
     }
 
-    private ArrayList<String> isNullElement(Prenotazione prenotazione){
-        ArrayList<String> strings = new ArrayList<>();
-        if(prenotazione.getIDPrenotazione() == null){
-            strings.add("IDPrenotazione");
-        }
-        if(prenotazione.getDataCreazionePrenotazione() == null){
-           strings.add("dataCreazionePrenotazione");
-        }
-        if(prenotazione.getDataInizio() == null){
-            strings.add("dataInizio");
-        }
-        if(prenotazione.getDataFine() == null){
-            strings.add("dataFine");
-        }
-        if(prenotazione.getDataRilascio() == null){
-            strings.add("dataRilascio");
-        }
-        if(prenotazione.getDataScadenza() == null){
-            strings.add("dataScadenza");
-        }
-        if(prenotazione.getTrattamento() == null){
-            strings.add("trattamento");
-        }
-        /*
-        if(prenotazione.get){
 
-        }*/
-        return strings;
+    private boolean isNull(Object o ){
+        if(o == null){
+            return true;
+        }else{
+            return false;
+        }
     }
-
 
     @Override
     public int hashCode() {
