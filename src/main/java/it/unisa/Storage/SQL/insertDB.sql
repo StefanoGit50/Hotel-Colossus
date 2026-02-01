@@ -32,7 +32,7 @@ INSERT INTO Servizio (Nome, Prezzo) VALUES
 -- INSERT IMPIEGATO
 -- =============================================
 -- Prima inseriamo i Manager (che non hanno manager superiore)
-INSERT INTO Impiegato (CF, Stipedio, UserName, HashPasword, isTemporary, dataScadenzaToken,
+INSERT INTO Impiegato (CF, stipendio, UserName, HashPasword, isTemporary, dataScadenzaToken,
                        Nome, Cognome, Cap, DataAssunzione, Telefono, EmailAziendale, Sesso,
                        Ruolo, Via, Provincia, Comune, Civico, NumeroDocumento, TipoDocumento,
                        DataScadenzaDocumento, DataRilascioDocumento, Cittadinanza, IDManager, CFManager)
@@ -43,7 +43,7 @@ VALUES
      '2028-06-15', '2018-06-15', 'Italiana', 0, NULL);
 
 -- Poi inseriamo gli altri impiegati che riportano al Manager
-INSERT INTO Impiegato (CF, Stipendio, UserName, HashPasword, isTemporary, dataScadenzaToken,
+INSERT INTO Impiegato (CF, stipendio, UserName, HashPasword, isTemporary, dataScadenzaToken,
                        Nome, Cognome, Cap, DataAssunzione, Telefono, EmailAziendale, Sesso,
                        Ruolo, Via, Provincia, Comune, Civico, NumeroDocumento, TipoDocumento,
                        DataScadenzaDocumento, DataRilascioDocumento, Cittadinanza, IDManager, CFManager)
@@ -72,7 +72,7 @@ VALUES
 -- INSERT CLIENTE
 -- =============================================
 INSERT INTO Cliente (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso,
-                     telefono, Nazionalità, DataDiNascita, IsBackListed)
+                     telefono, Nazionalita, DataDiNascita, IsBackListed)
 VALUES
     ('FRRLRD80A01H501Z', 'Leonardo', 'Ferrari', '20100', 'Milano', 15, 'Milano', 'Via Dante',
      'leonardo.ferrari@email.it', 'M', '+393331234567', 'Italiana', '1980-01-01', false),
