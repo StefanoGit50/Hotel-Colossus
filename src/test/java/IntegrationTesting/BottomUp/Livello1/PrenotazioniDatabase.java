@@ -63,7 +63,21 @@ public class PrenotazioniDatabase {
         servizio.add(new Servizio("Piscina",20));
         ArrayList<Cliente> cliente=new ArrayList<>();
         cliente.add(new Cliente("mario","Rossi","napoli","napoli","via manzo",12,45,"323425","M",LocalDate.of(1998,12,1),"CF234rdfcfg","luca@gmail.com","italiana",new Camera()));
-        Prenotazione prenotazione =new Prenotazione(1234, LocalDate.now(),LocalDate.now(),LocalDate.of(2026,02,01),new Trattamento("MEZZA PENSIONE", 60),"Passaporto",LocalDate.of(2012,03,11),LocalDate.of(2044,12,11),"Mario Biondi","",listcamera,servizio,cliente,"34532MC2");
+        Prenotazione prenotazione =new Prenotazione(5,
+                LocalDate.of(2025, 12, 1),
+                LocalDate.of(2026, 1, 10),
+                LocalDate.of(2026, 1, 20),
+                LocalDate.of(2025, 12, 1),
+                new Trattamento("Pensione Completa Deluxe", 5000.0),
+                "Passaporto",
+                LocalDate.of(2022, 10, 10),
+                LocalDate.of(2032, 10, 10),
+                "Mr. John Smith",
+                "Privacy assoluta",
+                listcamera, servizio, cliente,
+                "UK123456789",
+                "Amex Black"
+        );
         catprenotazioni.addPrenotazioni(prenotazione);
         // prendo dal database la prenotazione appena inserita
         Prenotazione p =fds.doRetriveByKey(prenotazione.getIDPrenotazione());

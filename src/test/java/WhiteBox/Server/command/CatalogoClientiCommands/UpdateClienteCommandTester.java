@@ -4,6 +4,7 @@ import it.unisa.Common.Camera;
 import it.unisa.Common.Cliente;
 import it.unisa.Server.command.CatalogoClientiCommands.UpdateClienteCommand;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
+import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.DAO.ClienteDAO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,13 +35,38 @@ class UpdateClienteCommandTester {
         catalogue = mock(CatalogoClienti.class);
 
 
-       clienteTest = new Cliente("Maria", "Rosso", "Italiana", "Roma", "Roma", "Via del Corso", 10, 18600, "3331234561", "M", LocalDate.of(1990, 5, 15), "RSSMRA90E15H501G", "maria.rossi@email.com","Italiana", new Camera());
+       clienteTest = new Cliente(
+               "Maria", "Rosso",
+               "Roma", "Roma", "Via del Corso",
+               10, 18600,
+               "3331234561", "F",
+               LocalDate.of(1990, 5, 15), "RSSMRA90E55H501G",
+               "maria.rossi@email.com", "Italiana",
+               new Camera(101, Stato.Libera,1,50.1,"","Minolo"));
 
-       clienteModificato = new Cliente("Mario", "Rossa", "Italiana", "Roma", "Romolo", "Via del Corso", 10, 18600, "3331234562", "F", LocalDate.of(1990, 5, 15), "RSSMRA90E15H501Z", "mari.rossi@email.com","Italiana", new Camera());
+       clienteModificato = new Cliente("Luigi", "Verdi",
+               "Milano", "Milano", "Corso Buenos Aires",
+               24, 20124,
+               "3391122334", "M",
+               LocalDate.of(1985, 10, 20), "VRDLGU85R20F205X",
+               "luigi.verdi@test.it", "Italiana",
+               new Camera(202,Stato.Libera, 2, 50,"", "Renato"));
 
-       clienteBannatoTest = new Cliente("Mauro", "Rosse", "Italiana", "Roma", "Remo", "Via del Corso", 10, 18600, "3331234563", "M", LocalDate.of(1990, 5, 15), "RSSMRA90E15H501X", "marik.rossi@email.com","Italiana", new Camera());
+       clienteBannatoTest = new Cliente("John", "Doe",
+               "Londra", "Londra", "Baker Street",
+               221, 1000,
+               "+4477009000", "M",
+               LocalDate.of(1978, 3, 12), "DOEJOHN78C12Z114A",
+               "john.doe@ukmail.com", "Inglese",
+               new Camera(305,Stato.Libera, 3, 70,"", "Sasa"));
 
-       clienteBannatoModificato = new Cliente("Marco", "Rossi", "Italiana", "Roma", "Rana", "Via del Corso", 10, 18600, "3331234564", "M", LocalDate.of(1990, 5, 15), "RSSMRA90E15H501J", "marii.rossi@email.com","Italiana", new Camera());
+       clienteBannatoModificato = new Cliente("Anna", "Bianchi",
+               "Napoli", "Napoli", "Via Toledo",
+               45, 80134,
+               "3289876543", "F",
+               LocalDate.of(2001, 8, 5), "BNCNNA01M45F839K",
+               "anna.b@libero.it", "Italiana",
+               new Camera(104, Stato.Libera,2,98, "", "asfsaf"));
 
         command = new UpdateClienteCommand(clienteModificato);
     }
