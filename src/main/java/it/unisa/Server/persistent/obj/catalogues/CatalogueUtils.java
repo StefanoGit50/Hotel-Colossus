@@ -1,7 +1,6 @@
 package it.unisa.Server.persistent.obj.catalogues;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 
 public class CatalogueUtils {

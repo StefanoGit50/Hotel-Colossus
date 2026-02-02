@@ -25,6 +25,7 @@ public class Cliente implements Cloneable, Serializable {
     /**
      * Il codice fiscale del cliente
      */
+
     private String cf;
 
     /**
@@ -32,9 +33,6 @@ public class Cliente implements Cloneable, Serializable {
      */
     private String email;
 
-    /**
-     * La cittadinanza del cliente.
-     */
 
 
     /**
@@ -101,6 +99,11 @@ public class Cliente implements Cloneable, Serializable {
     }
 
     public Camera getCamera() {
+        try{
+            camera.clone();
+        }catch(CloneNotSupportedException e){
+            e.printStackTrace();
+        }
         return camera;
     }
 
@@ -476,13 +479,7 @@ public class Cliente implements Cloneable, Serializable {
         return email;
     }
 
-    public Camera getCamere() throws CloneNotSupportedException {
-        return camera.clone();
-    }
 
-    public void setCamere(Camera camere){
-        this.camera = camere;
-    }
 
     @Override
     public String toString() {

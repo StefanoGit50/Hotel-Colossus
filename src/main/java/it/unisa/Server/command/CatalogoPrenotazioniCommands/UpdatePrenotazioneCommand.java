@@ -3,12 +3,8 @@ package it.unisa.Server.command.CatalogoPrenotazioniCommands;
 import it.unisa.Common.Prenotazione;
 import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
-import it.unisa.Storage.DAO.PrenotazioneDAO;
-import it.unisa.Storage.Interfacce.FrontDeskStorage;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -18,16 +14,14 @@ import java.util.Objects;
  */
 public class UpdatePrenotazioneCommand implements Command {
 
-    private CatalogoPrenotazioni catalogue;
+    private CatalogoPrenotazioni catalogue = new CatalogoPrenotazioni();
     private Prenotazione prenotazione;
     private Prenotazione prenotazioneNonModificata;
     /**
      * Costruttore del comando.
-     * @param catalogue     Catalogo delle prenotazioni per poter completare il comando.
      * @param prenotazione  Prenotazione da modificare.
      */
-    public UpdatePrenotazioneCommand(CatalogoPrenotazioni catalogue, Prenotazione prenotazione) {
-        this.catalogue = catalogue;
+    public UpdatePrenotazioneCommand(Prenotazione prenotazione) {
         this.prenotazione = prenotazione;
     }
 
@@ -63,7 +57,7 @@ public class UpdatePrenotazioneCommand implements Command {
         for (int i = 0; i < lp.size(); i++) {
             Prenotazione corrente = lp.get(i);
 
-            if (corrente.getIDPrenotazione() == prenotazione.getIDPrenotazione()) {
+            if (Objects.equals(corrente.getIDPrenotazione(), prenotazione.getIDPrenotazione())) {
                 try {
                     prenotazioneNonModificata = corrente.clone();
                 }catch (CloneNotSupportedException c) {

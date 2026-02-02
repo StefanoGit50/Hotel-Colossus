@@ -26,7 +26,7 @@ public class PrenotazioneBuilder{
     public  PrenotazioneBuilder(ResultSet rs) throws SQLException {
         this.prenotazione = new Prenotazione();
         // Imposta i campi BASE (questi sono uguali in tutte le righe)
-        prenotazione.setCodicePrenotazione(rs.getInt("IDPrenotazione"));
+        prenotazione.setIDPrenotazione(rs.getInt("IDPrenotazione"));
         prenotazione.setIntestatario(rs.getString("Intestatario"));
         prenotazione.setDataInizio(rs.getDate("DataArrivoCliente").toLocalDate());
         prenotazione.setDataFine(rs.getDate("DataPartenzaCliente").toLocalDate());
@@ -85,7 +85,7 @@ public class PrenotazioneBuilder{
             cliente.setCAP(Integer.parseInt(rs.getString("Cap")));
             cliente.setSesso(rs.getString("Sesso"));
             cliente.setNazionalita(rs.getString("Nazionalità"));
-            cliente.setCamere(camera);
+            cliente.setCamera(camera);
             clientiMap.put(cf, cliente);
         }
         // Se il cliente c'è già, NON fare nulla (evita duplicati)

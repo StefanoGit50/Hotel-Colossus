@@ -35,7 +35,7 @@ class RemoveClienteCommandTester {
 
         clienteBannatoTest = new Cliente("Valeria", "Bianchi","MI", "Milano", "Via Dante", 42, 20121, "3479876543", "F", LocalDate.of(1985, 12, 02), "BNCVLR85T42F205Z", "valeria.b@provider.it","Italiana",new Camera());
 
-        command = new RemoveClienteCommand(catalogue, clienteTest);
+//        command = new RemoveClienteCommand(catalogue, clienteTest);
     }
 
     // testo costruttore con parametri

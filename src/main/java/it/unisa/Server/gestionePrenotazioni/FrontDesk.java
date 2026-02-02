@@ -8,7 +8,10 @@ import it.unisa.Common.Prenotazione;
 import it.unisa.Server.command.CatalogoClientiCommands.*;
 import it.unisa.Server.command.CatalogoImpiegatiCommands.*;
 import it.unisa.Server.command.CatalogoPrenotazioniCommands.*;
-import it.unisa.Server.persistent.obj.catalogues.*;
+import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
+import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
+import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
+import it.unisa.Server.persistent.obj.catalogues.CatalogueUtils;
 import it.unisa.Storage.DAO.ClienteDAO;
 import it.unisa.Storage.DAO.PrenotazioneDAO;
 import it.unisa.interfacce.FrontDeskInterface;
@@ -17,22 +20,22 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
+import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface {
     static Logger logger = Logger.getLogger("global");
-    private static final int RMI_PORT = 1099;
     private CatalogoCamere camList = new CatalogoCamere();
+    private static final int RMI_PORT = 1099;
 
     public FrontDesk() throws RemoteException {
         super();
     }
 
     //costruttore di Testing
-    public FrontDesk(Invoker invoker,CatalogoPrenotazioni catalogoPrenotazioni,CatalogoClienti catalogoClienti,CatalogoCamere catalogoCamere) throws RemoteException {
+    public FrontDesk(Invoker invoker, CatalogoPrenotazioni catalogoPrenotazioni, CatalogoClienti catalogoClienti, CatalogoCamere catalogoCamere) throws RemoteException {
         super();
         this.invoker = invoker;
         this.catalogoPrenotazioni = catalogoPrenotazioni;
@@ -113,101 +116,58 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     public void addPrenotazione(Prenotazione p) throws RemoteException {
         CatalogueUtils.checkNull(p);                 // Lancia InvalidInputException
         CatalogoPrenotazioni.checkPrenotazione(p);   // Lancia InvalidInputException
-        AddPrenotazioneCommand command = new AddPrenotazioneCommand(catalogoPrenotazioni, p);
-            invoker.executeCommand(command);
+        AddPrenotazioneCommand command = new AddPrenotazioneCommand(p);
+        invoker.executeCommand(command);
 
     }
 
     @Override
     public void removePrenotazione(Prenotazione p) throws RemoteException {
 
-        RemovePrenotazioneCommand command = new RemovePrenotazioneCommand(catalogoPrenotazioni, p);
-        invoker.executeCommand(command);
+//        RemovePrenotazioneCommand command = new RemovePrenotazioneCommand(catalogoPrenotazioni, p);
+//        invoker.executeCommand(command);
     }
 
     @Override
     public void updatePrenotazione(Prenotazione p) throws RemoteException {
-        UpdatePrenotazioneCommand command = new UpdatePrenotazioneCommand(catalogoPrenotazioni, p);
-        invoker.executeCommand(command);
+//        UpdatePrenotazioneCommand command = new UpdatePrenotazioneCommand(catalogoPrenotazioni, p);
+//        invoker.executeCommand(command);
     }
 
-    /**
-     * Metodo per recuperare tramite filtro delle prenotazioni.
-     * @param nome  nome del cliente intestatario.
-     * @param cognome  cognome del cliente intestatario.
-     * @param dataInizioSoggiorno data di inizio del soggiorno del cliente.
-     * @param dataFineSoggiorno data di fine del soggiorno del cliente.
-     * @param elementOrder ordine dei risultati per data.
-     * @return lista di prenotazione che rispettano i criteri di ricerca.
-     * @throws RemoteException .
-     */
-    @Override
-    public List<Prenotazione> filterPrenotazioni(String nome, String cognome, LocalDate dataInizioSoggiorno, LocalDate dataFineSoggiorno, String elementOrder) throws RemoteException {
-        //catalogoPrenotazioni.checkFiltroPrenotazione(nome, cognome, dataInizioSoggiorno, dataFineSoggiorno, elementOrder);
-        PrenotazioneDAO dao = new PrenotazioneDAO();
-        return dao.doFilter(nome, cognome, dataInizioSoggiorno, dataFineSoggiorno, elementOrder);
-    }
 
     // COMANDI CLIENTE
     @Override
     public void addCliente(Cliente c) throws RemoteException {
-        AddClienteCommand command = new AddClienteCommand(catalogoClienti, c);
+        AddClienteCommand command = new AddClienteCommand(c);
         invoker.executeCommand(command);
-        if(!catalogoClienti.getListaClienti().isEmpty()){
-            catalogoClienti.getListaClienti().forEach(o -> System.out.println(o.toString()));
-        } else {
-            System.out.println("lista cliente vuoto");
-        }
     }
 
     @Override
     public void removeCliente(Cliente c) throws RemoteException {
-        RemoveClienteCommand command = new RemoveClienteCommand(catalogoClienti, c);
+        RemoveClienteCommand command = new RemoveClienteCommand(c);
         invoker.executeCommand(command);
     }
 
     @Override
     public void updateCliente(Cliente c) throws RemoteException {
-        UpdateClienteCommand command = new UpdateClienteCommand(catalogoClienti, c);
+        UpdateClienteCommand command = new UpdateClienteCommand(c);
         invoker.executeCommand(command);
     }
 
     @Override
     public void banCliente(Cliente c) throws RemoteException {
-        BanCommand command = new BanCommand(catalogoClienti, c.getCf());
+        BanCommand command = new BanCommand(c.getCf());
         invoker.executeCommand(command);
     }
 
     @Override
     public void unBanCliente(Cliente c) throws RemoteException {
-        UnBanCommand command = new UnBanCommand(catalogoClienti, c.getCf());
+        UnBanCommand command = new UnBanCommand(c.getCf());
         invoker.executeCommand(command);
     }
     //TODO: COMMAND PER RICEVERE LA LISTA UTENTI
 
-    /**
-     * @param nome nome del cliente.
-     * @param cognome cognome del cliente.
-     * @param nazionalita nazionalità del cliente.
-     * @param dataNascita data di nascita (gg/mm/aaaa) del cliente.
-     * @param blackListed stato di ban del ciente.
-     * @param orderBy criterio di ordinamento [attributo][ASC/DESC].
-     * @return lista di oggetti {@code Cliente} che rispettano i parametri della ricerca.
-     * @throws RemoteException .
-     */
-    @Override
-    public List<Cliente> filterClienti(String nome, String cognome, String nazionalita, LocalDate dataNascita, Boolean blackListed, String orderBy)
-            throws RemoteException {
 
-        CatalogoClienti.checkCliente(nome, cognome, nazionalita,  dataNascita, blackListed);
-        ClienteDAO clienteDAO = null;
-        try {
-            clienteDAO = new ClienteDAO();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return clienteDAO.doFilter(nome, cognome, nazionalita, dataNascita, blackListed, orderBy);
-    }
 
     @Override
     public Impiegato authentication(String username, String password,String pwd2) throws RemoteException, IllegalAccess {
@@ -220,23 +180,47 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     @Override
     public void undoCommand() throws RemoteException {
         invoker.undoCommand();
-        if(!catalogoClienti.getListaClienti().isEmpty()){
-            System.out.println("UNDO");
-            catalogoClienti.getListaClienti().forEach(o -> System.out.println(o.toString()));
-        } else {
-            System.out.println("UNDO: lista cliente vuoto");
-        }
     }
 
     // COMANDO REDO
     @Override
     public void redoCommand() throws RemoteException {
         invoker.redo();
-        if(!catalogoClienti.getListaClienti().isEmpty()){
-            System.out.println("REDO");
-            catalogoClienti.getListaClienti().forEach(o -> System.out.println(o.toString()));
-        } else {
-            System.out.println("REDO: lista cliente vuoto");
+    }
+
+    /**
+     * @param id della prenotazione.
+     * @return l'oggetto {@code Prenotazione} tale per cui l'id corrisponde, {@code null} altrimenti.
+     * @throws RemoteException .
+     */
+    @Override
+    public Prenotazione getPrenotazioneById(int id) throws RemoteException {
+        PrenotazioneDAO dao = new PrenotazioneDAO();
+        Prenotazione prenotazione = null;
+        try {
+            prenotazione = dao.doRetriveByKey(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return prenotazione;
+    }
+
+    /**
+     * @param cf del cliente.
+     * @return l'oggetto {@code Cliente} tale per cui il cf corrisponde, {@code null} altrimenti.
+     * @throws RemoteException
+     */
+    @Override
+    public Cliente getClienteByCf(String cf) throws RemoteException {
+        if (cf == null || cf.isBlank())
+            return null;
+        ClienteDAO dao = new ClienteDAO();
+        Cliente cliente = null;
+        try {
+            cliente = dao.doRetriveByKey(cf);
+        } catch (SQLException e) {
+            throw new RemoteException(e.getMessage());
+        }
+        return cliente;
     }
 }

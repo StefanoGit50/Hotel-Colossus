@@ -15,16 +15,14 @@ import java.util.Iterator;
  */
 public class UpdateImpiegatoCommand implements Command {
 
-    private CatalogoImpiegati catalogue;
+    private CatalogoImpiegati catalogue = new CatalogoImpiegati();
     private Impiegato impiegato;
     private Impiegato impiegatoNonModificato;
     /**
      * Costruttore del comando.
-     * @param catalogue Catalogo dei impiegati per poter completare il comando.
      * @param impiegato   Impiegato da modificare.
      */
-    public UpdateImpiegatoCommand(CatalogoImpiegati catalogue, Impiegato impiegato) {
-        this.catalogue = catalogue;
+    public UpdateImpiegatoCommand(Impiegato impiegato) {
         this.impiegato = impiegato;
     }
 

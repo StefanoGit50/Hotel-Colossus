@@ -89,8 +89,11 @@ public class TestCasesRegistraImpiegato {
             Impiegato i = createBaseImpiegato(), campione;
             System.out.println(i.toString());
             Assertions.assertDoesNotThrow(() -> manager.addImpiegato(i));
+            System.out.println(111);
             try {
-                Assertions.assertEquals(i, manager.filtroImpiegati(i.getNome(), i.getCognome(), i.getRuolo(), ""));
+                campione = manager.getImpiegatoByCF(i.getCodiceFiscale());
+                System.out.println(campione.toString());
+                Assertions.assertEquals(i, campione);
             } catch (RemoteException | InvalidInputException e) {
                 Assertions.fail(e.getMessage());
             }

@@ -1,6 +1,6 @@
 drop database hotelcolossus;
-create database hotelColossus;
-use hotelColossus;
+create database hotelcolossus;
+use hotelcolossus;
 
 create table Cliente(
                         CF char(16) not null,
@@ -16,7 +16,7 @@ create table Cliente(
                         telefono char(15) not null,
                         Nazionalita varchar(50) not null,
                         DataDiNascita date not null,
-                        IsBackListed boolean not null,
+                        IsBlackListed boolean not null,
                         primary key(CF)
 );
 
@@ -117,6 +117,3 @@ create table Impiegato(
                           primary key(IDImpiegato,CF),
                           foreign key(IDManager,CFManager) references Impiegato(IDImpiegato,CF) on delete cascade on update cascade
 );
-
-
-

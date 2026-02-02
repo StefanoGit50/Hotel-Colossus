@@ -43,8 +43,21 @@ public class CatalogoClienti implements Serializable {
         }
     }
 
+    public static boolean clienteIsEquals(Cliente c){
+        if(c==null)
+            return false;
+        if(!listaClienti.contains(c))
+            return false;
+        for(Cliente cc : listaClienti){
+            if(cc.equals(c))
+                return true;
+        }
+        return false;
+    }
 
-    public  boolean updateCliente(Cliente cliente){
+
+
+    public static boolean updateCliente(Cliente cliente){
          boolean flag=false;
          if(listaClienti.contains(cliente)){
             Iterator<Cliente> it = listaClienti.iterator();
@@ -55,6 +68,7 @@ public class CatalogoClienti implements Serializable {
                         frontDeskStorage.doUpdate(cliente);
                     }catch (SQLException e){
                         e.printStackTrace();
+                        return false;
                     }
                     it.remove();                  // rimuove in sicurezza
                     listaClienti.add(cliente);  // aggiunge cliente modificato
@@ -67,7 +81,7 @@ public class CatalogoClienti implements Serializable {
          return flag;
     }
 
-    public boolean aggiungiCliente(Cliente cliente){
+    public static boolean aggiungiCliente(Cliente cliente){
         if(!listaClienti.contains(cliente)){
             try{
                 frontDeskStorage.doSave(cliente);
@@ -81,7 +95,7 @@ public class CatalogoClienti implements Serializable {
         return false;
     }
 
-    public  boolean removeCliente(Cliente cliente){
+    public static boolean removeCliente(Cliente cliente){
         if(listaClienti.contains(cliente)){
             try {
                 frontDeskStorage.doDelete(cliente);
@@ -96,19 +110,13 @@ public class CatalogoClienti implements Serializable {
     }
 
 
-
-
-
-
-
-
     /**
      * Restituisce una deep copy dell'elenco completo dei clienti.
      *
      * @return Un nuovo ArrayList contenente copie (cloni) di tutti gli oggetti Cliente.
      */
-    public synchronized ArrayList<Cliente> getListaClienti() {
-        return listaClienti;
+    public synchronized static ArrayList<Cliente> getListaClienti() {
+        return Util.deepCopyArrayList(listaClienti);
     }
 
     /**
@@ -118,6 +126,18 @@ public class CatalogoClienti implements Serializable {
      */
     public synchronized  ArrayList<Cliente> getListaClientiBannati() {
         return listaClientiBannati;
+    }
+
+
+    public synchronized static boolean aggiornalista(){
+        frontDeskStorage = new ClienteDAO();
+        try{
+            listaClienti= (ArrayList<Cliente>) frontDeskStorage.doRetriveAll("decrescente");
+        }catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+        return !listaClienti.isEmpty();
     }
 
 

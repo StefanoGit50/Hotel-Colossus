@@ -49,7 +49,6 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
             }
         }
     }
-
     /**
      * @param list
      * @throws SQLException
@@ -72,7 +71,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
         String query = "DELETE FROM " + ServizioDAO.TABLE_NAME
                 + " WHERE Nome = ?";
 
-        try{
+        try {
             connection =  ConnectionStorage.getConnection();
             ps = connection.prepareStatement(query);
 
@@ -168,12 +167,11 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
 
         return servizi;
     }
-
     /**
      * Aggiorna il prezzo di un servizio esistente nel database.
      *
      * @param servizio Il servizio con il prezzo aggiornato da persistere.
-     * @throws SQLException Se il parametro Ã¨ null o si verifica un errore durante l'accesso al database.
+     * @throws SQLException Se il parametro è null o si verifica un errore durante l'accesso al database.
      *
      * Precondizioni:
      *   servizio != null
@@ -255,9 +253,5 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
         return lista;
     }
 
-    @Override
-    public Collection<Servizio> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, Boolean blackListed, String orderBy) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 
 }

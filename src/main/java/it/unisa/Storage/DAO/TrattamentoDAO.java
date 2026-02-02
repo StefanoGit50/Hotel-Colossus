@@ -1,6 +1,5 @@
 package it.unisa.Storage.DAO;
 
-import it.unisa.Common.Camera;
 import it.unisa.Common.Trattamento;
 import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.Interfacce.FrontDeskStorage;
@@ -14,22 +13,35 @@ import java.util.NoSuchElementException;
 
 public class TrattamentoDAO implements FrontDeskStorage<Trattamento>{
     private static final String TABLE_NAME = "Trattamento";
+    private static final String[] whitelist = {
+            "nome",
+            "prezzo"
+    };
 
     @Override
     public synchronized void doSave(Trattamento trattamento) throws SQLException
     {
-        Connection connection = ConnectionStorage.getConnection();
-        String query = "INSERT INTO Trattamento(Nome, Prezzo) VALUES (?,?) ";
+        Connection connection = null;
+        PreparedStatement ps = null;
+        String query = "INSERT INTO " + TrattamentoDAO.TABLE_NAME
+                + " (nome, prezzo) VALUES (?, ?)";
 
-        try (PreparedStatement stmt = connection.prepareStatement(query))
-        {
-            stmt.setString(1, trattamento.getNome());
-            stmt.setDouble(2, trattamento.getPrezzo());
+        try {
+            connection = ConnectionStorage.getConnection();
+            ps = connection.prepareStatement(query);
+            ps.setString(1, trattamento.getNome());
+            ps.setDouble(2, trattamento.getPrezzo());
 
-            stmt.executeUpdate();
-        }finally {
-            if(connection != null){
-                ConnectionStorage.releaseConnection(connection);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } finally {
+                if (connection != null)
+                    connection.close();
             }
         }
     }
@@ -46,81 +58,102 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>{
     @Override
     public synchronized void doDelete(Trattamento trattamento) throws SQLException
     {
-        if(trattamento != null && trattamento.getNome() != null){
-            Connection connection = ConnectionStorage.getConnection();
-            String query = "DELETE FROM Trattamento WHERE Nome = ?";
+        if(trattamento == null || trattamento.getNome() == null || trattamento.getNome().isBlank())
+            throw new SQLException("ERRORE: trattamento nullo oppure nomeServizio nullo/vuoto");
 
-            try (PreparedStatement stmt = connection.prepareStatement(query))
-            {
-                stmt.setString(1, trattamento.getNome());
-                if(stmt.executeUpdate() == 0){
-                    throw new NoSuchElementException("elemento non trovato");
-                }
-            }finally {
-                if(connection != null){
-                    ConnectionStorage.releaseConnection(connection);
-                }
+        Connection connection = null;
+        PreparedStatement ps = null;
+        String query = "DELETE FROM " + TrattamentoDAO.TABLE_NAME + " WHERE nome = ?";
+
+        try {
+            connection = ConnectionStorage.getConnection();
+            ps = connection.prepareStatement(query);
+
+            ps.setString(1, trattamento.getNome());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+           throw e;
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } finally {
+                if (connection != null)
+                    connection.close();
             }
-        }else{
-            throw new SQLException("");
         }
+
     }
 
     @Override
     public synchronized Trattamento doRetriveByKey(Object nome) throws SQLException
     {
-        if(nome instanceof String){
-            Connection connection = ConnectionStorage.getConnection();
-            String query = "SELECT * FROM Trattamento WHERE Nome = ?";
+        if( !(nome instanceof String) ) throw new SQLException("ERROR: chiave non valida");
 
-            try (PreparedStatement stmt = connection.prepareStatement(query))
-            {
-                stmt.setString(1, (String) nome);
+        Connection connection = null;
+        PreparedStatement ps = null;
+        Trattamento trattamento = new Trattamento();
+        String query = "SELECT * FROM " + TrattamentoDAO.TABLE_NAME +  " WHERE nome = ?";
 
-                try (ResultSet rs = stmt.executeQuery())
-                {
-                    if (rs.next())
-                    {
-                        return new Trattamento(
-                                rs.getString("Nome"),
-                                rs.getDouble("Prezzo")
-                        );
-                    }
-                }
-            }finally{
-                if(connection != null){
-                    ConnectionStorage.releaseConnection(connection);
-                }
+        try {
+            connection = ConnectionStorage.getConnection();
+            ps = connection.prepareStatement(query);
+
+            ps.setString(1, (String) nome);
+            ps.executeQuery();
+            ResultSet rs = ps.getResultSet();
+
+
+            if (rs.next()) {
+                trattamento.setNome(rs.getString("nome"));
+                trattamento.setPrezzo(rs.getDouble("prezzo"));
+            } else {
+                throw new NoSuchElementException("ERRORE: trattamento non trovato");
+            }
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } finally {
+                if (connection != null)
+                    connection.close();
             }
         }
-        throw new NoSuchElementException("Trattamento non trovato");
+        return trattamento;
     }
 
     @Override
-    public synchronized Collection<Trattamento> doRetriveAll(String order) throws SQLException
-    {
-        Connection connection = ConnectionStorage.getConnection();
-        String query = "SELECT * FROM Trattamento";
-        if (order.equalsIgnoreCase("decrescente"))
-        {
-            query += " ORDER BY Nome DESC ";
-        }else{
-            query += " ORDER BY Nome ASC";
+    public synchronized Collection<Trattamento> doRetriveAll(String order) throws SQLException {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        String query = "SELECT * FROM " + TrattamentoDAO.TABLE_NAME;
+
+        if (order != null && !order.isBlank() && DaoUtils.checkWhitelist(whitelist, order)) {
+            query += " ORDER BY " + order;
         }
 
         Collection<Trattamento> trattamenti = new ArrayList<>();
+        Trattamento trattamento = null;
 
-        try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(query))
-        {
-            while (rs.next())
-            {
-                Trattamento t = new Trattamento(
-                        rs.getString("Nome"),
-                        rs.getDouble("Prezzo")
-                );
+        try {
+            connection = ConnectionStorage.getConnection();
+            ps = connection.prepareStatement(query);
+            ps.executeQuery();
 
-                trattamenti.add(t);
+            ResultSet rs = ps.getResultSet();
+
+            if (rs.next()) {
+                trattamento = new Trattamento();
+                trattamento.setNome(rs.getString("nome"));
+                trattamento.setPrezzo(rs.getDouble("prezzo"));
+                trattamenti.add(trattamento);
+            } else {
+                throw new NoSuchElementException("ERRORE: nessun trattamento non trovato");
             }
+        } catch (SQLException e) {
+            throw e;
         }finally {
             if(connection != null){
                 ConnectionStorage.releaseConnection(connection);
@@ -148,34 +181,36 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>{
      */
     @Override
     public synchronized void doUpdate(Trattamento trattamento) throws SQLException{
-        if(trattamento != null)
-        {
-            Connection connection = ConnectionStorage.getConnection();
-            String query = "UPDATE Trattamento SET Prezzo = ? WHERE Nome = ?";
 
-            try (PreparedStatement stmt = connection.prepareStatement(query))
-            {
-                stmt.setDouble(1, trattamento.getPrezzo());
-                stmt.setString(2, trattamento.getNome());
+        if(trattamento == null || trattamento.getNome() == null || trattamento.getNome().isBlank())
+            throw new SQLException("ERRORE: trattamento nullo oppure nomeServizio nullo/vuoto");
 
-                stmt.executeUpdate();
+        Connection connection = null;
+        PreparedStatement ps = null;
+        String query = "UPDATE " + TrattamentoDAO.TABLE_NAME + " SET Prezzo = ? WHERE Nome = ?";
+
+        try {
+            connection = ConnectionStorage.getConnection();
+            ps = connection.prepareStatement(query);
+            ps.setDouble(1, trattamento.getPrezzo());
+            ps.setString(2, trattamento.getNome());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } finally {
+                if (connection != null)
+                    connection.close();
             }
-            finally
-            {
-                if(connection != null)
-                {
-                    ConnectionStorage.releaseConnection(connection);
-                }
-            }
-        }
-        else
-        {
-            throw new SQLException();
         }
     }
 
     public synchronized Collection<Trattamento> doRetriveByAttribute(String attribute, Object value) throws SQLException {
-        Connection connection;
+
+        Connection connection = null;
         PreparedStatement preparedStatement = null;
         ArrayList<Trattamento> lista = new ArrayList<>();
         String selectSQL;
@@ -215,9 +250,5 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>{
         return lista;
     }
 
-    @Override
-    public Collection<Trattamento> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, Boolean blackListed, String orderBy) throws SQLException{
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 
 }
