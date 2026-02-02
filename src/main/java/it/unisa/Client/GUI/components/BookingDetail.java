@@ -151,10 +151,11 @@ public class BookingDetail extends VBox {
         // Client info
         Cliente intestatario = null;
         for (Cliente c : prenotazione.getListaClienti()) {
-            if (c.isIntestatario()) {
+            /*
+            if (c) {
                 intestatario = c;
                 break;
-            }
+            }*/
         }
 
         if (intestatario != null) {

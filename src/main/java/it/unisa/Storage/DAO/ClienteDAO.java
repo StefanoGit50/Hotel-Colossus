@@ -52,13 +52,13 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                 con = ConnectionStorage.getConnection();
                 PreparedStatement preparedStatement = con.prepareStatement("INSERT INTO cliente(\n" +
                         "CF, nome, cognome, Cap, comune, civico, provincia, via,\n" +
-                        "Email, Sesso, telefono, Cittadinanza,\n" +
-                        "DataDiNascita, IsBackListed,Nazionalità\n" +
-                        ")VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                        "Email, Sesso, telefono,\n" +
+                        "DataDiNascita, IsBackListed,Nazionalita\n" +
+                        ")VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
                 preparedStatement.setString(1,o.getCf());
                 preparedStatement.setString(2,o.getNome());
                 preparedStatement.setString(3,o.getCognome());
-                preparedStatement.setInt(4,o.getCAP());
+                preparedStatement.setString(4,String.valueOf(o.getCAP()));
                 preparedStatement.setString(5,o.getComune());
                 preparedStatement.setInt(6,o.getNumeroCivico());
                 preparedStatement.setString(7,o.getProvincia());
@@ -66,11 +66,10 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                 preparedStatement.setString(9,o.getEmail());
                 preparedStatement.setString(10,o.getSesso());
                 preparedStatement.setString(11,o.getNumeroTelefono());
-                preparedStatement.setString(12,o.getCittadinanza());
                 Date date = Date.valueOf(o.getDataNascita());
-                preparedStatement.setDate(13,date);
-                preparedStatement.setBoolean(14,o.isBlacklisted());
-                preparedStatement.setString(15,o.getNazionalita());
+                preparedStatement.setDate(12,date);
+                preparedStatement.setBoolean(13,o.isBlacklisted());
+                preparedStatement.setString(14,o.getNazionalita());
                 preparedStatement.executeUpdate();
             }finally{
                 if(con != null){
@@ -140,6 +139,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                         }
                     }
                 }
+
                 resultSet.close();
             }finally{
                 if(con != null){
@@ -152,14 +152,14 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
 
                 if(cap!=null){
                     if (regex.matcher(cap).matches()) {
-                        cliente = new Cliente(nome, cognome, cittadinanza, provincia, comune, via, civico, Integer.parseInt(cap), telefono, sesso, date, cf1, email,nazionalità,camera);
+                        cliente = new Cliente(nome, cognome, provincia, comune, via, civico, Integer.parseInt(cap), telefono, sesso, date, cf1, email,nazionalità,camera);
                         cliente.setBlacklisted(isBlackListed);
                     } else {
-                        cliente = new Cliente(nome, cognome, cittadinanza, provincia, comune, via, civico, null, telefono, sesso, date, cf1, email,nazionalità,camera);
+                        cliente = new Cliente(nome, cognome, provincia, comune, via, civico, null, telefono, sesso, date, cf1, email,nazionalità,camera);
                         cliente.setBlacklisted(isBlackListed);
                     }
                 }else{
-                    cliente = new Cliente(nome, cognome, cittadinanza, provincia, comune, via, civico, null, telefono, sesso, date, cf1, email,nazionalità,camera);
+                    cliente = new Cliente(nome, cognome,provincia, comune, via, civico, null, telefono, sesso, date, cf1, email,nazionalità,camera);
                     cliente.setBlacklisted(isBlackListed);
                 }
 
@@ -237,7 +237,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                             camera.setPrezzoCamera(resultSet1.getDouble("Prezzo"));
                         }
                 }
-                cliente = new Cliente(nome,cognome,cittadinazione,provincia,comune,via,civico,Integer.parseInt(cap),telefono,sesso,date,cf1,email,nazionalità,camera);
+                cliente = new Cliente(nome,cognome,provincia,comune,via,civico,Integer.parseInt(cap),telefono,sesso,date,cf1,email,nazionalità,camera);
                 cliente.setBlacklisted(isBackListed);
                 clientes.add(cliente);
             }
@@ -275,8 +275,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
             try(PreparedStatement preparedStatement = con.prepareStatement(
                     "UPDATE cliente SET nome = ?, cognome = ?, Cap = ?, comune = ?, " +
                             "civico = ?, provincia = ?, via = ?, Email = ?, Sesso = ?, " +
-                            "telefono = ?, Cittadinanza = ?, " +
-                            "DataDiNascita = ?, IsBackListed = ? WHERE CF = ?")){
+                            "telefono = ?, DataDiNascita = ?, IsBackListed = ? WHERE CF = ?")){
 
                 preparedStatement.setString(1, o.getNome());
                 preparedStatement.setString(2, o.getCognome());
@@ -288,8 +287,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                 preparedStatement.setString(8, o.getEmail());
                 preparedStatement.setString(9, o.getSesso());
                 preparedStatement.setString(10, o.getNumeroTelefono());
-                preparedStatement.setString(11, o.getCittadinanza());
-                preparedStatement.setDate(12, Date.valueOf(o.getDataNascita()));
+                preparedStatement.setDate(11, Date.valueOf(o.getDataNascita()));
                 preparedStatement.setBoolean(13, o.isBlacklisted());
                 preparedStatement.setString(14, o.getCf());
                 preparedStatement.executeUpdate();
@@ -333,7 +331,6 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                     cliente.setNumeroCivico(resultSet.getInt("civico"));
                     cliente.setCAP(resultSet.getInt("Cap"));
                     cliente.setComune(resultSet.getString("Comune"));
-                    cliente.setCittadinanza(resultSet.getString("Cittadinanza"));
                     cliente.setProvincia(resultSet.getString("provincia"));
                     cliente.setVia(resultSet.getString("Via"));
                     cliente.setEmail(resultSet.getString("Email"));
@@ -476,7 +473,6 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                     cliente.setEmail(resultSet.getString("Email"));
                     cliente.setSesso(resultSet.getString("Sesso"));
                     cliente.setNumeroTelefono(resultSet.getString("telefono"));
-                    cliente.setCittadinanza(resultSet.getString("Cittadinanza"));
                     cliente.setBlacklisted(resultSet.getBoolean("IsBackListed"));
                     cliente.setNazionalita(resultSet.getString("Nazionalità"));
                     cliente.setDataNascita(resultSet.getDate("DataDiNascita").toLocalDate());

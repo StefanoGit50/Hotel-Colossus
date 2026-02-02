@@ -20,7 +20,6 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
     public synchronized void doSave(Servizio servizio) throws SQLException{
         Connection connection = ConnectionStorage.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO servizio(Nome, Prezzo, IDPrenotazione) values (?,?,?)");
-
     }
     /**
      * @param list

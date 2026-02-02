@@ -53,12 +53,13 @@ public class Camera implements Cloneable, Serializable {
      * @param prezzoCamera    il prezzo della camera in quel momento
      * @param noteCamera      le informazioni aggiunti
      */
-    public Camera(int numeroCamera, Stato statoCamera, int capacità , double prezzoCamera , String noteCamera ) {
+    public Camera(int numeroCamera, Stato statoCamera, int capacità , double prezzoCamera , String noteCamera , String nomeCamera) {
         this.numeroCamera = numeroCamera;
         this.statoCamera = statoCamera;
         this.numeroMaxOccupanti = capacità;
         this.prezzoCamera = prezzoCamera;
         this.noteCamera = noteCamera;
+        this.nomeCamera = nomeCamera;
     }
 
     /**
@@ -153,20 +154,28 @@ public class Camera implements Cloneable, Serializable {
         return prezzoCamera;
     }
 
+
+
+    public String getNomeCamera(){
+        return nomeCamera;
+    }
+
+    public void setNomeCamera(String nomeCamera){
+        this.nomeCamera = nomeCamera;
+    }
+
+
     /**
      * Imposta il prezzo della camera
      * @param prezzoCamera il nuovo prezzo della camera
      */
 
+
+
     public void setPrezzoCamera(double prezzoCamera) {
         this.prezzoCamera = prezzoCamera;
     }
 
-
-    @Override
-    public String toString(){
-        return getClass().getName() + "[ numeroCamera = " + numeroCamera + ", prezzoCamera = " + prezzoCamera + ", statoCamera = " + statoCamera.name() + ", numeroMaxOccupanti = " + numeroMaxOccupanti + ", noteCamera = " + noteCamera + "]";
-    }
 
     /**
      * @param obj   L'oggetto da confrontare.
@@ -180,7 +189,19 @@ public class Camera implements Cloneable, Serializable {
         Camera camera = (Camera) obj;
         return numeroCamera == camera.numeroCamera && numeroMaxOccupanti.equals(camera.numeroMaxOccupanti) &&
                 statoCamera.equals(camera.statoCamera) && Math.abs(prezzoCamera - camera.prezzoCamera) < EPSILON &&
-                noteCamera.equalsIgnoreCase(camera.noteCamera);
+                noteCamera.equalsIgnoreCase(camera.noteCamera) && nomeCamera.equalsIgnoreCase(nomeCamera);
+    }
+
+    @Override
+    public String toString() {
+        return "Camera{" +
+                "numeroCamera=" + numeroCamera +
+                ", nomeCamera='" + nomeCamera + '\'' +
+                ", prezzoCamera=" + prezzoCamera +
+                ", statoCamera=" + statoCamera +
+                ", numeroMaxOccupanti=" + numeroMaxOccupanti +
+                ", noteCamera='" + noteCamera + '\'' +
+                '}';
     }
 
     /**

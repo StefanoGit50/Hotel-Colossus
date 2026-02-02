@@ -35,7 +35,7 @@ public class CatalogoCamereTesting{
 
     @BeforeEach
     public void setBefore(){
-        camera = new Camera(110, Stato.Libera,2,100.0,"");
+        camera = new Camera(110, Stato.Libera,2,100.0,"","");
     }
 
     @Test
@@ -61,8 +61,8 @@ public class CatalogoCamereTesting{
     public void getCameraAllTrue() throws CloneNotSupportedException {
         ArrayList<Camera> cameras = new ArrayList<>();
         cameras.add(camera);
-        cameras.add(new Camera(111,Stato.Libera,2,110.0,""));
-        cameras.add(new Camera(112,Stato.Libera,3,112.0,""));
+        cameras.add(new Camera(111,Stato.Libera,2,110.0,"",""));
+        cameras.add(new Camera(112,Stato.Libera,3,112.0,"",""));
         catalogoCamere.addCamere(cameras);
         assertNotNull(catalogoCamere.getCamera(110));
     }
@@ -80,8 +80,8 @@ public class CatalogoCamereTesting{
     public void getCameraQuandoNonTrova() throws CloneNotSupportedException {
         ArrayList<Camera> cameras = new ArrayList<>();
         cameras.add(camera);
-        cameras.add(new Camera(111,Stato.Libera,2,110.0,""));
-        cameras.add(new Camera(112,Stato.Libera,3,112.0,""));
+        cameras.add(new Camera(111,Stato.Libera,2,110.0,"",""));
+        cameras.add(new Camera(112,Stato.Libera,3,112.0,"",""));
         assertNull(catalogoCamere.getCamera(113));
     }
 
@@ -91,11 +91,11 @@ public class CatalogoCamereTesting{
     public void AggiornaStatoCameraAllTrue() throws SQLException, RemoteException {
        // catalogoCamere = new CatalogoCamere(cameraDAO);
         ArrayList<Camera> cameras = new ArrayList<>();
-        Camera camera1 = new Camera(111, Stato.Libera,2,100.0,"");
+        Camera camera1 = new Camera(111, Stato.Libera,2,100.0,"","");
         doNothing().when(cameraDAO).doUpdate(camera1);
         cameras.add(camera);
-        cameras.add(new Camera(111,Stato.Occupata,2,110.0,""));
-        cameras.add(new Camera(112,Stato.Libera,3,112.0,""));
+        cameras.add(new Camera(111,Stato.Occupata,2,110.0,"",""));
+        cameras.add(new Camera(112,Stato.Libera,3,112.0,"",""));
 
         catalogoCamere.addCamere(cameras);
         assertTrue(catalogoCamere.aggiornaStatoCamera(camera1));
@@ -106,7 +106,7 @@ public class CatalogoCamereTesting{
     @DisplayName("aggiornaStatoCamera() quando tutto Falso")
     public void AggiornaStatoCameraAllFalse() throws RemoteException {
         //catalogoCamere = new CatalogoCamere(cameraDAO);
-        Camera camera1 = new Camera(111, Stato.Libera,2,100.0,"");
+        Camera camera1 = new Camera(111, Stato.Libera,2,100.0,"","");
         assertFalse(catalogoCamere.aggiornaStatoCamera(camera1));
     }
 

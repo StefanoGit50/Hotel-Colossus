@@ -38,9 +38,9 @@ public class prenotazioneDAOTesting {
         ArrayList<Cliente> clientes = new ArrayList<>();
         ArrayList<Camera> cameras = new ArrayList<>();
         ArrayList<Servizio> servizios = new ArrayList<>();
-        clientes.add(new Cliente("Mario","Rossi","Italiana","Napoli","Napoli","Via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana",new Camera(101,Stato.Occupata,2,120,"Camera matrimoniale vista mare")));
+        clientes.add(new Cliente("Mario","Rossi","Napoli","Napoli","Via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana",new Camera(101,Stato.Occupata,2,120,"Camera matrimoniale vista mare","")));
         servizios.add(new Servizio("Spa",50.0));
-        cameras.add(new Camera(101,Stato.Occupata,2,120,"Camera matrimoniale vista mare"));
+        cameras.add(new Camera(101,Stato.Occupata,2,120,"Camera matrimoniale vista mare",""));
         prenotazione = new Prenotazione(1,LocalDate.of(2026,2,1),LocalDate.of(2026,2,10),LocalDate.of(2026,2,15),new Trattamento("Pensione Completa",300.0),"CartaIdentità", LocalDate.of(2020,1,1),LocalDate.of(2026,2,9),"Mario Rossi","Nessuna nota",cameras,servizios,clientes,"AA123456");
         prenotazioneDAO = new PrenotazioneDAO();
     }
@@ -120,8 +120,8 @@ public class prenotazioneDAOTesting {
         ArrayList<Cliente> clientes = new ArrayList<>();
         ArrayList<Camera> cameras  = new ArrayList<>();
         ArrayList<Servizio> servizios = new ArrayList<>();
-        clientes.add(new Cliente("Laura","Verdi","Italiana","Roma","Roma","Via Milano",23,100,"3339876543","Femmina",LocalDate.of(1990,4,5),"VRDLRA90D45F839Y","laura.verdi@email.it","Italiana",new Camera(102,Stato.Libera,4,180.0,"Camera familiare con balcone")));
-        cameras.add(new Camera(102,Stato.Libera,4,180.0,"Camera familiare con balcone"));
+        clientes.add(new Cliente("Laura","Verdi","Roma","Roma","Via Milano",23,100,"3339876543","Femmina",LocalDate.of(1990,4,5),"VRDLRA90D45F839Y","laura.verdi@email.it","Italiana",new Camera(102,Stato.Libera,4,180.0,"Camera familiare con balcone","")));
+        cameras.add(new Camera(102,Stato.Libera,4,180.0,"Camera familiare con balcone",""));
         servizios.add(new Servizio("Spa e Benessere",40.0));
         prenotaziones1.add(prenotazione);
         prenotaziones1.add(new Prenotazione(2,LocalDate.of(2026,1,20),LocalDate.of(2026,2,10),LocalDate.of(2026,2,15),new Trattamento("Mezza Pensione",30.0),"Passaporto",LocalDate.of(2019,5,10),LocalDate.of(2029,5,10),"Laura Verdi","Nessuna nota particolare",cameras,servizios,clientes,"BC789012"));
@@ -201,9 +201,9 @@ public class prenotazioneDAOTesting {
         ArrayList<Cliente> clientes = new ArrayList<>();
         ArrayList<Camera> cameras = new ArrayList<>();
         ArrayList<Servizio> servizios = new ArrayList<>();
-        clientes.add(new Cliente("Mario","Rossi","Italiana","Napoli","Napoli","via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana",new Camera(101,Stato.Libera,2,120,"Camera doppia con vista mare")));
+        clientes.add(new Cliente("Mario","Rossi","Napoli","Napoli","via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana",new Camera(101,Stato.Libera,2,120,"Camera doppia con vista mare","")));
         servizios.add(new Servizio("Lavanderia",15.0));
-        cameras.add(new Camera(101,Stato.Libera,2,120,"Camera doppia con vista mare"));
+        cameras.add(new Camera(101,Stato.Libera,2,120,"Camera doppia con vista mare",""));
        assertDoesNotThrow(()->prenotazioneDAO.doUpdate(new Prenotazione(1,LocalDate.of(2026,1,15),LocalDate.of(2026,2,1),LocalDate.of(2026,2,5),new Trattamento("Pensione Completa",50.0),"Passaporto", LocalDate.of(2020,1,15),LocalDate.of(2030,1,1),"Maria Verdi","Richiesta camera silenziosa",cameras,servizios,clientes,"AX123456")));
     }
 
@@ -214,8 +214,8 @@ public class prenotazioneDAOTesting {
         ArrayList<Cliente> clientes = new ArrayList<>();
         ArrayList<Camera> cameras = new ArrayList<>();
         ArrayList<Servizio> servizios = new ArrayList<>();
-        clientes.add(new Cliente("Mario","Rossi","Italiana","Napoli","Napoli","via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana",new Camera(101,Stato.Libera,2,120,"Camera doppia con vista mare")));
-        cameras.add(new Camera(101,Stato.Libera,2,120,"Camera doppia con vista mare"));
+        clientes.add(new Cliente("Mario","Rossi","Napoli","Napoli","via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana",new Camera(101,Stato.Libera,2,120,"Camera doppia con vista mare","")));
+        cameras.add(new Camera(101,Stato.Libera,2,120,"Camera doppia con vista mare",""));
         assertDoesNotThrow(()->prenotazioneDAO.doUpdate(new Prenotazione(1,LocalDate.of(2026,1,15),LocalDate.of(2026,2,1),LocalDate.of(2026,2,5),null,"Passaporto", LocalDate.of(2020,1,15),LocalDate.of(2030,1,1),"Maria Verdi","Richiesta camera silenziosa",cameras,servizios,clientes,"AX123456")));
     }
 

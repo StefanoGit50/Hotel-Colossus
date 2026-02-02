@@ -175,7 +175,7 @@ public class FrontDeskTest{
         // HELPER
         private Prenotazione creaPrenotazioneValida() {
             ArrayList<Camera> listcamera=new ArrayList<>();
-            listcamera.add(new Camera(112, Stato.Occupata,2,45.50,""));
+            listcamera.add(new Camera(112, Stato.Occupata,2,45.50,"",""));
             ArrayList<Servizio> servizio=new ArrayList<>();
             servizio.add(new Servizio("Piscina",20));
             ArrayList<Cliente> cliente=new ArrayList<>();

@@ -84,7 +84,6 @@ public class PrenotazioneBuilder{
             cliente.setCognome(rs.getString("comune"));
             cliente.setCAP(Integer.parseInt(rs.getString("Cap")));
             cliente.setSesso(rs.getString("Sesso"));
-            cliente.setCittadinanza(rs.getString("Cittadinanza"));
             cliente.setNazionalita(rs.getString("Nazionalità"));
             cliente.setCamere(camera);
             clientiMap.put(cf, cliente);

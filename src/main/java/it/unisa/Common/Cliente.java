@@ -104,21 +104,11 @@ public class Cliente implements Cloneable, Serializable {
         return camera;
     }
 
-    private boolean isIntestatario= false;
-
-    public boolean isIntestatario() {
-        return isIntestatario;
-    }
-    public void setIntestatario(boolean isIntestatario) {
-        this.isIntestatario = isIntestatario;
-    }
-
     /**
      * Costruttore completo per creare una nuova istanza di {@code Cliente}
      * (l'attributo {@code isBlacklisted} Flag che indica se il cliente è in lista nera di default {@code false}).
      * @param nome Il nome del cliente.
      * @param cognome Il cognome del cliente.
-     * @param cittadinanza La cittadinanza del cliente.
      * @param provincia La provincia di residenza.
      * @param comune Il comune di residenza.
      * @param via La via di residenza.
@@ -130,10 +120,9 @@ public class Cliente implements Cloneable, Serializable {
      * @param cf il codice fiscale del cliente
      * @param email l'email del cliente
      */
-    public Cliente(String nome, String cognome, String cittadinanza, String provincia, String comune, String via, Integer numeroCivico, Integer CAP, String numeroTelefono, String sesso, LocalDate dataNascita ,String cf , String email,String nazionalità,Camera camera) {
+    public Cliente(String nome, String cognome, String provincia, String comune, String via, Integer numeroCivico, Integer CAP, String numeroTelefono, String sesso, LocalDate dataNascita ,String cf , String email,String nazionalità,Camera camera) {
         this.nome = nome;
         this.cognome = cognome;
-        this.cittadinanza = cittadinanza;
         this.provincia = provincia;
         this.comune = comune;
         this.via = via;
@@ -147,7 +136,6 @@ public class Cliente implements Cloneable, Serializable {
         this.email = email;
         this.nazionalità = nazionalità;
         this.camera = camera;
-        this.isIntestatario = false;
     }
 
     /**
@@ -189,24 +177,6 @@ public class Cliente implements Cloneable, Serializable {
      */
     public void setCognome(String cognome) {
         this.cognome = cognome;
-    }
-
-    /**
-     * Restituisce la cittadinanza del cliente.
-     *
-     * @return La cittadinanza del cliente.
-     */
-    public String getCittadinanza() {
-        return cittadinanza;
-    }
-
-    /**
-     * Imposta la cittadinanza del cliente.
-     *
-     * @param cittadinanza La nuova cittadinanza del cliente.
-     */
-    public void setCittadinanza(String cittadinanza) {
-        this.cittadinanza = cittadinanza;
     }
 
     /**
@@ -441,7 +411,6 @@ public class Cliente implements Cloneable, Serializable {
                 ", cf='" + cf + '\'' +
                 ", email='" + email + '\'' +
                 ", cognome='" + cognome + '\'' +
-                ", cittadinanza='" + cittadinanza + '\'' +
                 ", provincia='" + provincia + '\'' +
                 ", comune='" + comune + '\'' +
                 ", via='" + via + '\'' +
@@ -469,7 +438,7 @@ public class Cliente implements Cloneable, Serializable {
         if (obj == null || getClass() != obj.getClass()) return false;
         Cliente cliente = (Cliente) obj;
         return numeroCivico.equals(cliente.getNumeroCivico()) && nome.equalsIgnoreCase(cliente.getNome()) && cognome.equalsIgnoreCase(cliente.getCognome()) &&
-                cf.equalsIgnoreCase(cliente.getCf()) && email.equalsIgnoreCase(cliente.getEmail()) && cittadinanza.equalsIgnoreCase(cliente.getCittadinanza()) && provincia.equalsIgnoreCase(cliente.getProvincia())
+                cf.equalsIgnoreCase(cliente.getCf()) && email.equalsIgnoreCase(cliente.getEmail()) && provincia.equalsIgnoreCase(cliente.getProvincia())
                 && comune.equalsIgnoreCase(cliente.getComune()) && via.equalsIgnoreCase(cliente.getVia()) && CAP.equals(cliente.getCAP()) && numeroTelefono.equalsIgnoreCase(cliente.getNumeroTelefono())
                 && isBlacklisted == cliente.isBlacklisted() && sesso.equalsIgnoreCase(cliente.getSesso()) && camera.equals(cliente.getCamera()) && dataNascita.equals(cliente.getDataNascita())
                 && nazionalità.equalsIgnoreCase(cliente.getNazionalita());

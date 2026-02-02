@@ -1,4 +1,4 @@
-drop database hotelcolossus;
+drop database HotelColossus;
 create database HotelColossus;
 use HotelColossus;
 
@@ -88,7 +88,7 @@ create table Ha(
 create table Impiegato(
                           IDImpiegato int not null auto_increment,
                           CF char(16) not null UNIQUE,
-                          Stipedio double not null,
+                          Stipendio double not null,
                           UserName varchar(50) not null,
                           HashPasword varchar(50) not null,
                           isTemporary boolean not null Default false,

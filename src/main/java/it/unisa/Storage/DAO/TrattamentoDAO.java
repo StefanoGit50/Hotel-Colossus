@@ -19,13 +19,12 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>{
     public synchronized void doSave(Trattamento trattamento) throws SQLException
     {
         Connection connection = ConnectionStorage.getConnection();
-        String query = "INSERT INTO Trattamento(Nome, Prezzo, IDPrenotazione) VALUES (?,?,?) ";
+        String query = "INSERT INTO Trattamento(Nome, Prezzo) VALUES (?,?) ";
 
         try (PreparedStatement stmt = connection.prepareStatement(query))
         {
             stmt.setString(1, trattamento.getNome());
             stmt.setDouble(2, trattamento.getPrezzo());
-            stmt.setNull(3, Types.INTEGER); // gestito altrove
 
             stmt.executeUpdate();
         }finally {

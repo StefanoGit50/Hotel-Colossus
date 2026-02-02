@@ -34,7 +34,7 @@ public class CameraDaoTesting{
     public void setUp() throws SQLException {
         // Inizializza DAO e oggetto Camera
         cameraDAO = new CameraDAO();
-        camera = new Camera(104, Stato.Libera, 2, 150.0, "Camera prova");
+        camera = new Camera(104, Stato.Libera, 2, 150.0,"Camera prova","ho sole mio");
     }
 
     @Test
@@ -43,7 +43,7 @@ public class CameraDaoTesting{
     public void doSaveAllTrue(){
         ArrayList<Camera> cameras = new ArrayList<>();
         cameras.add(camera);
-        cameras.add(new Camera(105,Stato.Libera,3,155.0,"Sp"));
+      assertDoesNotThrow(()->cameras.add(new Camera(105,Stato.Libera,3,155.0,"Sp","")));
     }
     @Test
     @Tags({@Tag("Error"),@Tag("Exception")})
@@ -58,10 +58,10 @@ public class CameraDaoTesting{
 
    public void doRetriveAllTrue() throws SQLException {
         ArrayList<Camera> cameras = new ArrayList<>();
-        cameras.add(new Camera(101,Stato.Libera,2,120,"Camera doppia con vista mare"));
-        cameras.add(new Camera(102,Stato.Libera,4,180,"Camera familiare con balcone"));
-        cameras.add(new Camera(103,Stato.Libera,2,150,"Camera prova"));
-        cameras.add(new Camera(104,Stato.Libera,2,150,"Camera prova"));
+        cameras.add(new Camera(101,Stato.Libera,2,120,"Camera doppia con vista mare",""));
+        cameras.add(new Camera(102,Stato.Libera,4,180,"Camera familiare con balcone",""));
+        cameras.add(new Camera(103,Stato.Libera,2,150,"Camera prova",""));
+        cameras.add(new Camera(104,Stato.Libera,2,150,"Camera prova",""));
 
         ArrayList<Camera> cameras1 = (ArrayList<Camera>) cameraDAO.doRetriveAll("decrescente");
         assertEquals(cameras,cameras1);
@@ -111,8 +111,10 @@ public class CameraDaoTesting{
     @DisplayName("doRetriveAttribute() quando va tutto bene")
     public void doRetriveAttributeAllTrue() throws SQLException {
         ArrayList<Camera>cameras = new ArrayList<>();
-        cameras.add(new Camera(101 , Stato.Libera ,2 , 150 , "Camera prova"));
-        cameras.add(new Camera(102,Stato.Libera,4,180,"Camera familiare con balcone"));
+        cameras.add(new Camera(101 , Stato.Libera ,2 , 150 , "Camera prova","ho sole mio"));
+        cameras.add(new Camera(102,Stato.Libera,4,180,"Camera familiare con balcone","Camera 102"));
+        cameras.add(new Camera(103,Stato.Libera,2,150,"Camera prova","Camera 103"));
+        cameras.add(new Camera(104,Stato.Libera,2,150,"Camera prova","Camera 104"));
         Object og = Stato.Libera.name();
         ArrayList<Camera> cameras1 = (ArrayList<Camera>) cameraDAO.doRetriveByAttribute("Stato",og);
 
