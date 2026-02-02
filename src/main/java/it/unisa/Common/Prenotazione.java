@@ -101,6 +101,10 @@ public class Prenotazione implements Cloneable, Serializable {
      * Dice se è stato fatto il check-In della prenotazione
      */
     private boolean checkIn;
+    /**
+     * Metodo di pagamento del cliente quando fa il checkOut.
+     */
+    private String metodoPagamento;
 
     /**
      * Costruttore completo per creare una nuova istanza di {@code Prenotazione}.
@@ -118,12 +122,12 @@ public class Prenotazione implements Cloneable, Serializable {
      * @param listaCamere Lista delle camere prenotate.
      * @param listaServizi Lista dei servizi aggiuntivi.
      * @param listaClienti Lista dei clienti.
-     * @param numeroDocumento il numero del documento
+     * @param numeroDocumento il numero del documento.
      */
     public Prenotazione(int IDPrenotazione, LocalDate dataCreazionePrenotazione, LocalDate dataInizio, LocalDate dataFine,
                         Trattamento trattamento, String tipoDocumento, LocalDate dataRilascio, LocalDate dataScadenza,
                         String intestatario, String noteAggiuntive, ArrayList<Camera> listaCamere, ArrayList<Servizio> listaServizi,
-                        ArrayList<Cliente> listaClienti ,String numeroDocumento) {
+                        ArrayList<Cliente> listaClienti , String numeroDocumento) {
         this.IDPrenotazione = IDPrenotazione;
         this.dataCreazionePrenotazione = dataCreazionePrenotazione;
         this.dataInizio = dataInizio;
@@ -232,10 +236,6 @@ public class Prenotazione implements Cloneable, Serializable {
 
     public Integer getIDPrenotazione() {
         return IDPrenotazione;
-    }
-
-    public void setCodicePrenotazione(int codicePrenotazione) {
-        this.IDPrenotazione = codicePrenotazione;
     }
 
     public LocalDate getDataCreazionePrenotazione() {
@@ -390,7 +390,15 @@ public class Prenotazione implements Cloneable, Serializable {
         this.checkIn = checkIn;
     }
 
-    // --- Metodi Standard di Object ---
+    public String getMetodoPagamento() {
+        return metodoPagamento;
+    }
+
+    public void setMetodoPagamento(String metodoPagamento) {
+        this.metodoPagamento = metodoPagamento;
+    }
+
+// --- Metodi Standard di Object ---
 
     @Override
     public String toString() {
@@ -405,11 +413,13 @@ public class Prenotazione implements Cloneable, Serializable {
                 ", dataScadenza=" + dataScadenza +
                 ", intestatario='" + intestatario + '\'' +
                 ", noteAggiuntive='" + noteAggiuntive + '\'' +
-                ", numeroDocumento=" + numeroDocumento +
+                ", numeroDocumento='" + numeroDocumento + '\'' +
                 ", listaCamere=" + listaCamere +
                 ", listaServizi=" + listaServizi +
                 ", listaClienti=" + listaClienti +
                 ", statoPrenotazione=" + statoPrenotazione +
+                ", checkIn=" + checkIn +
+                ", metodoPagamento='" + metodoPagamento + '\'' +
                 '}';
     }
 
@@ -635,7 +645,7 @@ public class Prenotazione implements Cloneable, Serializable {
                         dataFine.equals(prenotazione.getDataFine()) && dataRilascio.equals(prenotazione.getDataRilascio()) && dataScadenza.equals(prenotazione.getDataScadenza())
                         && tipoDocumento.equalsIgnoreCase(prenotazione.getTipoDocumento()) && numeroDocumento.equalsIgnoreCase(prenotazione.getNumeroDocumento())
                         && intestatario.equalsIgnoreCase(prenotazione.getIntestatario()) && noteAggiuntive.equalsIgnoreCase(prenotazione.getNoteAggiuntive()) && checkIn == prenotazione.isCheckIn()
-                        && statoPrenotazione == prenotazione.getStatoPrenotazione();
+                        && statoPrenotazione == prenotazione.getStatoPrenotazione() && metodoPagamento == prenotazione.getMetodoPagamento();
 
         }else{
            if(isNullAll(prenotazione) && isNullAll(this)){
@@ -651,7 +661,7 @@ public class Prenotazione implements Cloneable, Serializable {
                 prenotazione.numeroDocumento == null && prenotazione.tipoDocumento == null && prenotazione.IDPrenotazione == null &&
                 prenotazione.dataRilascio == null && prenotazione.dataScadenza == null && prenotazione.dataInizio == null &&
                 prenotazione.dataFine == null && prenotazione.listaCamere == null && prenotazione.listaClienti == null &&
-                prenotazione.listaServizi == null && prenotazione.dataCreazionePrenotazione == null;
+                prenotazione.listaServizi == null && prenotazione.dataCreazionePrenotazione == null && metodoPagamento == null;
     }
 
 

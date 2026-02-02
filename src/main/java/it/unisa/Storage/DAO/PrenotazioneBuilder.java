@@ -26,7 +26,7 @@ public class PrenotazioneBuilder{
     public  PrenotazioneBuilder(ResultSet rs) throws SQLException {
         this.prenotazione = new Prenotazione();
         // Imposta i campi BASE (questi sono uguali in tutte le righe)
-        prenotazione.setCodicePrenotazione(rs.getInt("IDPrenotazione"));
+        prenotazione.setIDPrenotazione(rs.getInt("IDPrenotazione"));
         prenotazione.setIntestatario(rs.getString("Intestatario"));
         prenotazione.setDataInizio(rs.getDate("DataArrivoCliente").toLocalDate());
         prenotazione.setDataFine(rs.getDate("DataPartenzaCliente").toLocalDate());

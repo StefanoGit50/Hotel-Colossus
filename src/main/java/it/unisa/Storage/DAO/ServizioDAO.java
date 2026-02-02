@@ -27,7 +27,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
 
         String query = "INSERT INTO " + ServizioDAO.TABLE_NAME +
                 " (Nome, Prezzo) " +
-                " VALUES (?, ?, ?) ";
+                " VALUES (?, ?) ";
 
         try {
             connection = ConnectionStorage.getConnection();
