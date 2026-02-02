@@ -124,16 +124,15 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                     email = (String) resultSet.getObject("Email");
                     sesso = (String) resultSet.getObject("Sesso");
                     telefono = (String) resultSet.getObject("telefono");
-                    cittadinanza = (String) resultSet.getObject("Cittadinanza");
                     Date date1 = (Date) resultSet.getObject("DataDiNascita");
                     date = date1.toLocalDate();
-                    isBlackListed = (Boolean) resultSet.getObject("IsBackListed");
-                    nazionalità =  resultSet.getString("Nazionalità");
+                    isBlackListed = (Boolean) resultSet.getObject("IsBlackListed");
+                    nazionalità =  resultSet.getString("Nazionalita");
                     try(ResultSet resultSet1 = preparedStatement1.executeQuery()){
                         if(resultSet1.next()){
                             camera.setNumeroCamera(resultSet1.getInt("NumeroCamera"));
-                            camera.setCapacità(resultSet1.getInt("Capacità"));
-                            camera.setPrezzoCamera(resultSet1.getDouble(""));
+                            camera.setCapacità(resultSet1.getInt("NumeroMaxOcc"));
+                            camera.setPrezzoCamera(resultSet1.getDouble("Prezzo"));
                             camera.setStatoCamera(Stato.valueOf(resultSet1.getString("Stato")));
                             camera.setNoteCamera(resultSet1.getString("NoteCamera"));
                         }
