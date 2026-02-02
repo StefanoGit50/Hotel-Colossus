@@ -250,9 +250,5 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>{
         return lista;
     }
 
-    @Override
-    public Collection<Trattamento> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, Boolean blackListed, String orderBy) throws SQLException{
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 
 }

@@ -134,22 +134,6 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
 //        invoker.executeCommand(command);
     }
 
-    /**
-     * Metodo per recuperare tramite filtro delle prenotazioni.
-     * @param nome  nome del cliente intestatario.
-     * @param cognome  cognome del cliente intestatario.
-     * @param dataInizioSoggiorno data di inizio del soggiorno del cliente.
-     * @param dataFineSoggiorno data di fine del soggiorno del cliente.
-     * @param elementOrder ordine dei risultati per data.
-     * @return lista di prenotazione che rispettano i criteri di ricerca.
-     * @throws RemoteException .
-     */
-    @Override
-    public List<Prenotazione> filterPrenotazioni(String nome, String cognome, LocalDate dataInizioSoggiorno, LocalDate dataFineSoggiorno, String elementOrder) throws RemoteException {
-        //catalogoPrenotazioni.checkFiltroPrenotazione(nome, cognome, dataInizioSoggiorno, dataFineSoggiorno, elementOrder);
-        PrenotazioneDAO dao = new PrenotazioneDAO();
-        return dao.doFilter(nome, cognome, dataInizioSoggiorno, dataFineSoggiorno, elementOrder);
-    }
 
     // COMANDI CLIENTE
     @Override
@@ -183,29 +167,7 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     }
     //TODO: COMMAND PER RICEVERE LA LISTA UTENTI
 
-    /**
-     * @param nome nome del cliente.
-     * @param cognome cognome del cliente.
-     * @param nazionalita nazionalità del cliente.
-     * @param dataNascita data di nascita (gg/mm/aaaa) del cliente.
-     * @param blackListed stato di ban del ciente.
-     * @param orderBy criterio di ordinamento [attributo][ASC/DESC].
-     * @return lista di oggetti {@code Cliente} che rispettano i parametri della ricerca.
-     * @throws RemoteException .
-     */
-    @Override
-    public List<Cliente> filterClienti(String nome, String cognome, String nazionalita, LocalDate dataNascita, Boolean blackListed, String orderBy)
-            throws RemoteException {
 
-        CatalogoClienti.checkCliente(nome, cognome, nazionalita,  dataNascita, blackListed);
-        ClienteDAO clienteDAO = null;
-        try {
-            clienteDAO = new ClienteDAO();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return clienteDAO.doFilter(nome, cognome, nazionalita, dataNascita, blackListed, orderBy);
-    }
 
     @Override
     public Impiegato authentication(String username, String password,String pwd2) throws RemoteException, IllegalAccess {

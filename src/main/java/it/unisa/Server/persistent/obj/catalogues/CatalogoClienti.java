@@ -1,6 +1,7 @@
 package it.unisa.Server.persistent.obj.catalogues;
 
 import it.unisa.Common.Cliente;
+import it.unisa.Server.persistent.util.Util;
 import it.unisa.Storage.DAO.ClienteDAO;
 import it.unisa.Storage.Interfacce.FrontDeskStorage;
 
