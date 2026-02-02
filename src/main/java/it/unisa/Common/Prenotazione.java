@@ -22,6 +22,15 @@ public class Prenotazione implements Cloneable, Serializable {
      * Codice univoco della prenotazione.
      */
     private Integer IDPrenotazione;
+    /**
+     *  La cittadinanza del cliente
+     */
+    private String cittadinanza;
+
+    /**
+     *  il metodo Di Pagamento del cliente
+     */
+    private String metodoDiPagamento;
 
     /**
      * Data in cui è stata creata la prenotazione.
@@ -75,8 +84,6 @@ public class Prenotazione implements Cloneable, Serializable {
 
     private LocalDate dataEmissioneRicevuta;
 
-    private double prezzoAcquistoTrattamento;
-
     /**
      * Lista delle camere incluse nella prenotazione.
      */
@@ -100,8 +107,6 @@ public class Prenotazione implements Cloneable, Serializable {
      */
     private boolean checkIn;
 
-    private String metodoPagamento;
-
     /**
      * Costruttore completo per creare una nuova istanza di {@code Prenotazione}.
      *
@@ -118,7 +123,7 @@ public class Prenotazione implements Cloneable, Serializable {
      * @param listaCamere Lista delle camere prenotate.
      * @param listaServizi Lista dei servizi aggiuntivi.
      * @param listaClienti Lista dei clienti.
-     * @param numeroDocumento il numero del documento
+     * @param numeroDocumento il numero del documento.
      */
     public Prenotazione(int IDPrenotazione, LocalDate dataCreazionePrenotazione, LocalDate dataInizio, LocalDate dataFine,LocalDate dataEmissioneRicevuta,
                         Trattamento trattamento, String tipoDocumento, LocalDate dataRilascio, LocalDate dataScadenza,
@@ -142,7 +147,7 @@ public class Prenotazione implements Cloneable, Serializable {
         this.statoPrenotazione = true;
         this.checkIn = false;
         this.dataEmissioneRicevuta = dataEmissioneRicevuta;
-        this.metodoPagamento= metodoPagamento;
+        this.metodoDiPagamento= metodoPagamento;
     }
 
     public Prenotazione() {
@@ -233,16 +238,12 @@ public class Prenotazione implements Cloneable, Serializable {
     }
 
 
-    public boolean isStatoPrenotazione() {
-        return statoPrenotazione;
-    }
-
     public void setMetodoPagamento(String metodoPagamento) {
-        this.metodoPagamento = metodoPagamento;
+        this.metodoDiPagamento = metodoPagamento;
     }
 
     public String getMetodoPagamento() {
-        return metodoPagamento;
+        return metodoDiPagamento;
     }
 
     public LocalDate getDataEmissioneRicevuta() {
@@ -254,10 +255,6 @@ public class Prenotazione implements Cloneable, Serializable {
 
     public Integer getIDPrenotazione() {
         return IDPrenotazione;
-    }
-
-    public void setCodicePrenotazione(int codicePrenotazione) {
-        this.IDPrenotazione = codicePrenotazione;
     }
 
     public LocalDate getDataCreazionePrenotazione() {
@@ -425,11 +422,14 @@ public class Prenotazione implements Cloneable, Serializable {
                 ", dataScadenza=" + dataScadenza +
                 ", intestatario='" + intestatario + '\'' +
                 ", noteAggiuntive='" + noteAggiuntive + '\'' +
-                ", numeroDocumento=" + numeroDocumento +
+                ", numeroDocumento='" + numeroDocumento + '\'' +
                 ", listaCamere=" + listaCamere +
                 ", listaServizi=" + listaServizi +
                 ", listaClienti=" + listaClienti +
                 ", statoPrenotazione=" + statoPrenotazione +
+                ", checkIn=" + checkIn +
+                ", metodoPagamento=" + metodoDiPagamento + '\'' +
+                ", dataemissione=" + dataEmissioneRicevuta +
                 '}';
     }
 
@@ -544,6 +544,7 @@ public class Prenotazione implements Cloneable, Serializable {
                     if(!isNull(prenotazione.trattamento)){
                         return false;
                     }
+
                 }else{
                     if(isNull(prenotazione.trattamento)){
                         return false;
@@ -654,7 +655,7 @@ public class Prenotazione implements Cloneable, Serializable {
                         dataFine.equals(prenotazione.getDataFine()) && dataRilascio.equals(prenotazione.getDataRilascio()) && dataScadenza.equals(prenotazione.getDataScadenza())
                         && tipoDocumento.equalsIgnoreCase(prenotazione.getTipoDocumento()) && numeroDocumento.equalsIgnoreCase(prenotazione.getNumeroDocumento())
                         && intestatario.equalsIgnoreCase(prenotazione.getIntestatario()) && noteAggiuntive.equalsIgnoreCase(prenotazione.getNoteAggiuntive()) && checkIn == prenotazione.isCheckIn()
-                        && statoPrenotazione == prenotazione.getStatoPrenotazione();
+                        && statoPrenotazione == prenotazione.getStatoPrenotazione() && metodoDiPagamento == prenotazione.getMetodoPagamento() && dataEmissioneRicevuta.equals(prenotazione.getDataEmissioneRicevuta());
 
         }else{
            if(isNullAll(prenotazione) && isNullAll(this)){
@@ -666,11 +667,12 @@ public class Prenotazione implements Cloneable, Serializable {
 
     }
     private boolean isNullAll(Prenotazione prenotazione) {
+        //renato fatti ricoverare
         return prenotazione.trattamento == null && prenotazione.noteAggiuntive == null && prenotazione.intestatario == null &&
                 prenotazione.numeroDocumento == null && prenotazione.tipoDocumento == null && prenotazione.IDPrenotazione == null &&
                 prenotazione.dataRilascio == null && prenotazione.dataScadenza == null && prenotazione.dataInizio == null &&
                 prenotazione.dataFine == null && prenotazione.listaCamere == null && prenotazione.listaClienti == null &&
-                prenotazione.listaServizi == null && prenotazione.dataCreazionePrenotazione == null;
+                prenotazione.listaServizi == null && prenotazione.dataCreazionePrenotazione == null && metodoDiPagamento==null;
     }
 
 

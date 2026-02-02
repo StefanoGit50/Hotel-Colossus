@@ -19,6 +19,9 @@ public interface ManagerInterface extends Remote
     void removeImpiegato(Impiegato i) throws RemoteException;
     void updateImpiegato(Impiegato i) throws RemoteException;
 
+    // Recupera singolo impiegato
+    Impiegato getImpiegatoByCF(String Cf) throws RemoteException;
+
     // Comando undo
     void undoCommand() throws RemoteException;
 

@@ -1,6 +1,5 @@
 package it.unisa.Storage.DAO;
 
-import it.unisa.Common.Camera;
 import it.unisa.Common.Servizio;
 import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.Interfacce.FrontDeskStorage;
@@ -15,27 +14,41 @@ import java.util.NoSuchElementException;
 public class ServizioDAO implements FrontDeskStorage<Servizio>
 {
     private static final String TABLE_NAME= "Servizio";
+    private static final String[] whitelist = {
+            "nome",
+            "prezzo"
+    };
 
     @Override
     public synchronized void doSave(Servizio servizio) throws SQLException
     {
-        Connection connection = ConnectionStorage.getConnection();
-        String query = "INSERT INTO Servizio(Nome, Prezzo, IDPrenotazione) VALUES (?, ?, ?) ";
+        Connection connection = null;
+        PreparedStatement ps = null;
 
-        try (PreparedStatement stmt = connection.prepareStatement(query))
-        {
-            stmt.setString(1, servizio.getNome());
-            stmt.setDouble(2, servizio.getPrezzo());
-            stmt.setNull(3, Types.INTEGER); // gestito altrove
+        String query = "INSERT INTO " + ServizioDAO.TABLE_NAME +
+                " (Nome, Prezzo) " +
+                " VALUES (?, ?) ";
 
-            stmt.executeUpdate();
-        }finally {
-            if(connection != null){
-                ConnectionStorage.releaseConnection(connection);
+        try {
+            connection = ConnectionStorage.getConnection();
+            ps = connection.prepareStatement(query);
+
+            ps.setString(1, servizio.getNome());
+            ps.setDouble(2, servizio.getPrezzo());
+
+            ps.executeUpdate();
+        } catch(SQLException e) {
+            throw e;
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } finally {
+                if (connection != null)
+                    connection.close();
             }
         }
     }
-
     /**
      * @param list
      * @throws SQLException
@@ -48,88 +61,112 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
     @Override
     public synchronized void doDelete(Servizio servizio) throws SQLException
     {
-        if(servizio != null && servizio.getNome() != null){
-            Connection connection = ConnectionStorage.getConnection();
-            String query = "DELETE FROM servizio WHERE Nome = ?";
+        if(servizio == null || servizio.getNome() == null || servizio.getNome().isBlank())
+            throw new SQLException("ERRORE: servizio nullo oppure nomeServizio nullo/vuoto");
 
-            try (PreparedStatement stmt = connection.prepareStatement(query))
-            {
-                stmt.setString(1, servizio.getNome());
-                stmt.executeUpdate();
-            }finally {
-                if(connection != null){
-                    ConnectionStorage.releaseConnection(connection);
-                }
+        Connection connection = null;
+        PreparedStatement ps = null;
+        connection = ConnectionStorage.getConnection();
+
+        String query = "DELETE FROM " + ServizioDAO.TABLE_NAME
+                + " WHERE Nome = ?";
+
+        try {
+            connection =  ConnectionStorage.getConnection();
+            ps = connection.prepareStatement(query);
+
+            ps.setString(1, servizio.getNome());
+            ps.executeUpdate();
+        } catch(SQLException e) {
+            throw e;
+        }finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } finally {
+                if (connection != null)
+                    connection.close();
             }
-        }else{
-            throw new SQLException("servizio o è uguale a null oppure la chiave di servizio è uguale a null");
         }
     }
 
     @Override
     public synchronized Servizio doRetriveByKey(Object nome) throws SQLException
     {
-        if(nome instanceof String){
-            Connection connection = ConnectionStorage.getConnection();
-            String query = "SELECT * FROM servizio WHERE Nome = ?";
+        if ( !(nome instanceof String)) throw new SQLException("ERROR: chiave non valida");
 
-            try (PreparedStatement stmt = connection.prepareStatement(query))
-            {
-                stmt.setString(1, (String) nome);
+        Connection connection = null;
+        PreparedStatement ps = null;
+        Servizio servizio = new Servizio();
+        String query = "SELECT * FROM " + ServizioDAO.TABLE_NAME + " WHERE Nome = ?";
 
-                try (ResultSet rs = stmt.executeQuery())
-                {
-                    if (rs.next())
-                    {
-                        return new Servizio(
-                                rs.getString("Nome"),
-                                rs.getDouble("Prezzo"));
-                    }
-                }
-            }finally {
-                if(connection != null){
-                    ConnectionStorage.releaseConnection(connection);
-                }
+        try {
+            connection = ConnectionStorage.getConnection();
+            ps = connection.prepareStatement(query);
+
+            ps.setString(1, (String) nome);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                servizio.setNome(rs.getString("Nome"));
+                servizio.setPrezzo(rs.getDouble("Prezzo"));
+            } else {
+                throw new NoSuchElementException("ERRORE: servizio non trovato");
             }
-        }else{
-            throw new SQLException();
+        }finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } finally {
+                if (connection != null)
+                    connection.close();
+            }
         }
-       throw new NoSuchElementException("servizio non trovato");
+        return servizio;
     }
 
     @Override
     public synchronized Collection<Servizio> doRetriveAll(String order) throws SQLException
     {
-        Connection connection = ConnectionStorage.getConnection();
-        String query = "SELECT * FROM servizio ";
-        if(order.equalsIgnoreCase("decrescente")){
-            query += " ORDER BY Nome DESC " ;
-        }else{
-            query += " ORDER BY Nome ASC" ;
-        }
+        Connection connection = null;
+        PreparedStatement ps = null;
+        String query = "SELECT * FROM " + ServizioDAO.TABLE_NAME;
 
         Collection<Servizio> servizi = new ArrayList<>();
+        Servizio servizio = null;
 
-        try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(query))
-        {
-            while (rs.next())
-            {
+        if (order != null && !order.isBlank() && DaoUtils.checkWhitelist(whitelist, order)) {
+            query += " ORDER BY " + order;
+        }
 
-                Servizio s = new Servizio(
-                        rs.getString("Nome"),
-                        rs.getDouble("Prezzo"));
+        try {
+            connection = ConnectionStorage.getConnection();
+            ps = connection.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
 
-                servizi.add(s);
+            if (rs.next()) {
+                do {
+                    servizio = new Servizio();
+                    servizio.setNome(rs.getString("Nome"));
+                    servizio.setPrezzo(rs.getDouble("Prezzo"));
+                    servizi.add(servizio);
+                } while (rs.next());
+            } else {
+                throw new NoSuchElementException("ERRORE: nessun servizio non trovato");
             }
         }finally {
-            if(connection != null){
-                ConnectionStorage.releaseConnection(connection);
+            try {
+                if (ps != null)
+                    ps.close();
+            } finally {
+                if (connection != null)
+                    connection.close();
             }
         }
 
         return servizi;
     }
-
     /**
      * Aggiorna il prezzo di un servizio esistente nel database.
      *
@@ -149,29 +186,30 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
     @Override
     public synchronized void doUpdate(Servizio servizio) throws SQLException
     {
-        if(servizio != null)
-        {
-            Connection connection = ConnectionStorage.getConnection();
-            String query = "UPDATE servizio SET Prezzo = ? WHERE Nome = ?";
+        if(servizio == null || servizio.getNome() == null || servizio.getNome().isBlank())
+            throw new SQLException("ERRORE: servizio nullo oppure nomeServizio nullo/vuoto");
 
-            try (PreparedStatement stmt = connection.prepareStatement(query))
-            {
-                stmt.setDouble(1, servizio.getPrezzo());
-                stmt.setString(2, servizio.getNome());
+        Connection connection = null;
+        PreparedStatement ps = null;
+        String query = "UPDATE " + ServizioDAO.TABLE_NAME +  " SET Prezzo = ? WHERE Nome = ?";
 
-                stmt.executeUpdate();
+        try {
+            connection = ConnectionStorage.getConnection();
+            ps = connection.prepareStatement(query);
+
+            ps.setDouble(1, servizio.getPrezzo());
+            ps.setString(2, servizio.getNome());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } finally {
+                if (connection != null)
+                    connection.close();
             }
-            finally
-            {
-                if(connection != null)
-                {
-                    ConnectionStorage.releaseConnection(connection);
-                }
-            }
-        }
-        else
-        {
-            throw new SQLException();
         }
     }
 

@@ -67,8 +67,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                 preparedStatement.setString(10,o.getSesso());
                 preparedStatement.setString(11,o.getNumeroTelefono());
                 preparedStatement.setString(12,o.getNazionalita());
-                Date date = Date.valueOf(o.getDataNascita());
-                preparedStatement.setDate(13,date);
+                preparedStatement.setDate(13,Date.valueOf(o.getDataNascita()));
                 preparedStatement.setBoolean(14,o.isBlacklisted());
                 preparedStatement.executeUpdate();
             }finally{
@@ -126,8 +125,8 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                     try(ResultSet resultSet1 = preparedStatement1.executeQuery()){
                         if(resultSet1.next()){
                             camera.setNumeroCamera(resultSet1.getInt("NumeroCamera"));
-                            camera.setCapacità(resultSet1.getInt("Capacità"));
-                            camera.setPrezzoCamera(resultSet1.getDouble(""));
+                            camera.setCapacità(resultSet1.getInt("NumeroMaxOcc"));
+                            camera.setPrezzoCamera(resultSet1.getDouble("Prezzo"));
                             camera.setStatoCamera(Stato.valueOf(resultSet1.getString("Stato")));
                             camera.setNoteCamera(resultSet1.getString("NoteCamera"));
                         }
@@ -329,7 +328,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                             camera.setStatoCamera(Stato.valueOf(resultSet1.getString("Stato")));
                         }
                     }
-                    cliente.setCamere(camera);
+                    cliente.setCamera(camera);
 
                     lista.add(cliente);
                 }

@@ -1,7 +1,5 @@
 package it.unisa.Storage.Interfacce;
 
-import it.unisa.Common.Cliente;
-
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Collection;

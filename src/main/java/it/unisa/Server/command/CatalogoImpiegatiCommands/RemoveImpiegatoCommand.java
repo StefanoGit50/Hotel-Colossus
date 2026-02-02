@@ -14,16 +14,14 @@ import java.util.ArrayList;
  */
 public class RemoveImpiegatoCommand implements Command {
 
-    private CatalogoImpiegati catalogue;
+    private CatalogoImpiegati catalogue = new CatalogoImpiegati();
     private Impiegato impiegato;
 
     /**
      * Costruttore del comando.
-     * @param catalogue Catalogo dei impiegati per poter completare il comando.
      * @param impiegato   Impiegato da eliminare.
      */
-    public RemoveImpiegatoCommand(CatalogoImpiegati catalogue, Impiegato impiegato) {
-        this.catalogue = catalogue;
+    public RemoveImpiegatoCommand(Impiegato impiegato) {
         this.impiegato = impiegato;
     }
 

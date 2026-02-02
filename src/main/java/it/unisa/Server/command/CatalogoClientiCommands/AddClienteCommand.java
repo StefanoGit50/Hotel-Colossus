@@ -14,16 +14,14 @@ import java.util.Collection;
  */
 public class AddClienteCommand implements Command {
 
-    private CatalogoClienti catalogue;
+    private CatalogoClienti catalogue = new CatalogoClienti();
     private Cliente cliente;
 
     /**
      * Costruttore del comando.
-     * @param catalogue Catalogo dei clienti per poter completare il comando.
      * @param cliente   Cliente da registrare.
      */
-    public AddClienteCommand(CatalogoClienti catalogue, Cliente cliente) {
-        this.catalogue = catalogue;
+    public AddClienteCommand(Cliente cliente) {
         this.cliente = cliente;
     }
 

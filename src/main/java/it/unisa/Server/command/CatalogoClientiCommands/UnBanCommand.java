@@ -14,16 +14,14 @@ import java.util.Iterator;
  */
 public class UnBanCommand implements Command {
 
-    private CatalogoClienti catalogue;
+    private CatalogoClienti catalogue = new CatalogoClienti();
     private String CFCliente;
 
     /**
      * Costruttore del comando.
-     * @param catalogue Catalogo dei clienti.
      * @param CFCliente Codice fiscale del cliente a cui si vuole rimuovere il ban.
      */
-    public UnBanCommand(CatalogoClienti catalogue, String CFCliente) {
-        this.catalogue = catalogue;
+    public UnBanCommand(String CFCliente) {
         this.CFCliente = CFCliente;
     }
 
@@ -55,8 +53,7 @@ public class UnBanCommand implements Command {
     public void execute() {
         try {
             Cliente c = catalogue.getCliente(CFCliente);
-            CatalogoClienti catalogoClienti = new CatalogoClienti();
-            ArrayList<Cliente> lc = catalogoClienti.getListaClienti(), lcb = catalogoClienti.getListaClientiBannati();
+            ArrayList<Cliente> lc = catalogue.getListaClienti(), lcb = catalogue.getListaClientiBannati();
 
             Cliente cli;
             for(int i = 0; i < lcb.size(); i++){
@@ -88,8 +85,7 @@ public class UnBanCommand implements Command {
     public void undo() {
         try{
             Cliente c = catalogue.getCliente(CFCliente);
-            CatalogoClienti catalogoClienti = new CatalogoClienti();
-            ArrayList<Cliente> lc = catalogoClienti.getListaClienti(), lcb = catalogoClienti.getListaClientiBannati();
+            ArrayList<Cliente> lc = catalogue.getListaClienti(), lcb = catalogue.getListaClientiBannati();
 
             Cliente cli;
             for(int i = 0; i < lc.size(); i++){

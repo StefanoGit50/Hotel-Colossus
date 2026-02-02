@@ -1,5 +1,6 @@
 package WhiteBox.Server.command.CatalogoClientiCommands;
 
+import it.unisa.Common.Camera;
 import it.unisa.Common.Cliente;
 import it.unisa.Server.command.CatalogoClientiCommands.BanCommand;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
@@ -31,9 +32,9 @@ class BanCommandTester {
         catalogue = mock(CatalogoClienti.class);
         CFCliente = "RSSMRA90E15H501Z";
 
-        //clienteTest = new Cliente("Mario", "Rossi", "Italiana", "Roma", "Roma", "Via del Corso", 10, 18600, "3331234567", "M", LocalDate.of(1990, 5, 15), "RSSMRA90E15H501Z", "mario.rossi@email.com","Italiana");
+        clienteTest = new Cliente("Mario", "Rossi", "Italiana", "Roma", "Roma", "Via del Corso", 10, 18600, "3331234567", "M", LocalDate.of(1990, 5, 15), "RSSMRA90E15H501Z", "mario.rossi@email.com","Italiana", new Camera());
 
-        command = new BanCommand(catalogue, CFCliente);
+        command = new BanCommand(CFCliente);
     }
 
     // testo costruttore con parametri

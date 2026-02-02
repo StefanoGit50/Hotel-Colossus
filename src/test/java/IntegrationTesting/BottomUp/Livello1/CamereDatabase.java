@@ -37,7 +37,7 @@ public class CamereDatabase {
     @DisplayName("Bottom up: CameraDAO e aggiornamento stato camera da catalogo")
     @Tag("integration")
     public void aggiornaStatoCameraDB() throws RemoteException {
-        camera = new Camera(101, Stato.Libera,2,80,"");
+        camera = new Camera(101, Stato.Libera,2,80,"","");
         Camera camera1;
 
         try {
@@ -64,8 +64,8 @@ public class CamereDatabase {
     @Tag("integration")
     public void aggiuntaCameraDB() {
         ArrayList<Camera> camere = new ArrayList<>();
-        camere.add(new Camera(114,Stato.Libera,3,89,""));
-        camere.add(new Camera(104,Stato.Libera,2,114,""));
+        camere.add(new Camera(114,Stato.Libera,3,89,"",""));
+        camere.add(new Camera(104,Stato.Libera,2,114,"",""));
         catalogoCamere.addCamere(camere);
 
         Camera c1=null;

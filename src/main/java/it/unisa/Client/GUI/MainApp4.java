@@ -44,20 +44,22 @@ public class MainApp4 extends Application {
     }
 
     private Prenotazione creaPrenotazioneDiProva() {
-        // Camera
-        Camera camera101 = new Camera(101, Stato.Occupata, 2, 89.50, "Piano Terra");
-        ArrayList<Camera> camere = new ArrayList<>(List.of(camera101));
+        ArrayList<Camera> camere = new ArrayList<>(List.of(new Camera(101, Stato.Occupata,2,35,"asdasd", "Paolo Brosio")));
+        ArrayList<Cliente> arrayCliente = new ArrayList<>(List.of(new Cliente("Alessio","Colardi","napoli","caserta","via fas",234,234,"3243543","M", LocalDate.of(2001,01,30),"23rtygfds2",
+                "luca@smdb", "Italiana", camere.getFirst())));
+        ArrayList<Servizio> servizio = new ArrayList<>(List.of(new Servizio("Bottiglia Vino",60)));
 
         // Clienti
+
         Cliente alessio = new Cliente(
-                "Alessio", "Colardi", "italiana", "napoli", "caserta",
+                "Alessio", "Colardi", "napoli", "caserta",
                 "via fas", 234, 234, "3243543", "M",
                 LocalDate.of(2001, 1, 30), "23rtygfds2",
-                "luca@smdb", "italiana", camera101
+                "luca@smdb", "italiana", camere.getFirst()
         );
-        alessio.setIntestatario(true); // ✅ Intestatario della prenotazione
+       // alessio.setIntestatario(true); // ✅ Intestatario della prenotazione
 
-        ArrayList<Cliente> arrayCliente = new ArrayList<>(List.of(alessio));
+        arrayCliente = new ArrayList<>(List.of(alessio));
 
         // Servizi prenotati (quello che il cliente ha già ordinato)
         ArrayList<Servizio> serviziPrenotati = new ArrayList<>(List.of(

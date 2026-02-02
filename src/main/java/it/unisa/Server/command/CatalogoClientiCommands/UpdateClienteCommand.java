@@ -1,6 +1,5 @@
 package it.unisa.Server.command.CatalogoClientiCommands;
 
-import com.mysql.cj.xdevapi.Client;
 import it.unisa.Common.Cliente;
 import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
@@ -16,16 +15,14 @@ import java.util.Iterator;
  */
 public class UpdateClienteCommand implements Command {
 
-    private CatalogoClienti catalogue;
+    private CatalogoClienti catalogue = new CatalogoClienti();
     private Cliente cliente;
     private Cliente clienteNonModificato;
     /**
      * Costruttore del comando.
-     * @param catalogue Catalogo dei clienti per poter completare il comando.
      * @param cliente   Cliente da modificare.
      */
-    public UpdateClienteCommand(CatalogoClienti catalogue, Cliente cliente) {
-        this.catalogue = catalogue;
+    public UpdateClienteCommand(Cliente cliente) {
         this.cliente = cliente;
     }
 
@@ -56,8 +53,7 @@ public class UpdateClienteCommand implements Command {
     public void execute() {
         try {
             Cliente c = catalogue.getCliente(cliente.getCf());
-            CatalogoClienti catalogoClienti = new CatalogoClienti();
-            ArrayList<Cliente> lc = catalogoClienti.getListaClienti(), lcb = catalogoClienti.getListaClientiBannati();
+            ArrayList<Cliente> lc = catalogue.getListaClienti(), lcb = catalogue.getListaClientiBannati();
 
             // Ricerca in entrambe le liste (clienti bannati e non)
             Iterator<Cliente> it = lc.iterator(); // Evita di modificare l'array metre lo si itera
@@ -99,8 +95,7 @@ public class UpdateClienteCommand implements Command {
     public void undo() {
         try {
             Cliente c = catalogue.getCliente(cliente.getCf());
-            CatalogoClienti catalogoClienti = new CatalogoClienti();
-            ArrayList<Cliente> lc = catalogoClienti.getListaClienti(), lcb = catalogoClienti.getListaClientiBannati();
+            ArrayList<Cliente> lc = catalogue.getListaClienti(), lcb = catalogue.getListaClientiBannati();
 
             // Ricerca in entrambe le liste (clienti bannati e non)
             Iterator<Cliente> it = lc.iterator(); // Evita di modificare l'array metre lo si itera

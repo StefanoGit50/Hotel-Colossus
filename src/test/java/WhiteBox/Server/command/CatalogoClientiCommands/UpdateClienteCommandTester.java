@@ -1,5 +1,6 @@
 package WhiteBox.Server.command.CatalogoClientiCommands;
 
+import it.unisa.Common.Camera;
 import it.unisa.Common.Cliente;
 import it.unisa.Server.command.CatalogoClientiCommands.UpdateClienteCommand;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
@@ -32,15 +33,16 @@ class UpdateClienteCommandTester {
     void setUp() {
         catalogue = mock(CatalogoClienti.class);
 
-       // clienteTest = new Cliente("Maria", "Rosso", "Italiana", "Roma", "Roma", "Via del Corso", 10, 18600, "3331234561", "M", LocalDate.of(1990, 5, 15), "RSSMRA90E15H501G", "maria.rossi@email.com","Italiana");
 
-       // clienteModificato = new Cliente("Mario", "Rossa", "Italiana", "Roma", "Romolo", "Via del Corso", 10, 18600, "3331234562", "F", LocalDate.of(1990, 5, 15), "RSSMRA90E15H501Z", "mari.rossi@email.com","Italiana");
+       clienteTest = new Cliente("Maria", "Rosso", "Italiana", "Roma", "Roma", "Via del Corso", 10, 18600, "3331234561", "M", LocalDate.of(1990, 5, 15), "RSSMRA90E15H501G", "maria.rossi@email.com","Italiana", new Camera());
 
-       // clienteBannatoTest = new Cliente("Mauro", "Rosse", "Italiana", "Roma", "Remo", "Via del Corso", 10, 18600, "3331234563", "M", LocalDate.of(1990, 5, 15), "RSSMRA90E15H501X", "marik.rossi@email.com","Italiana");
+       clienteModificato = new Cliente("Mario", "Rossa", "Italiana", "Roma", "Romolo", "Via del Corso", 10, 18600, "3331234562", "F", LocalDate.of(1990, 5, 15), "RSSMRA90E15H501Z", "mari.rossi@email.com","Italiana", new Camera());
 
-       // clienteBannatoModificato = new Cliente("Marco", "Rossi", "Italiana", "Roma", "Rana", "Via del Corso", 10, 18600, "3331234564", "M", LocalDate.of(1990, 5, 15), "RSSMRA90E15H501J", "marii.rossi@email.com","Italiana");
+       clienteBannatoTest = new Cliente("Mauro", "Rosse", "Italiana", "Roma", "Remo", "Via del Corso", 10, 18600, "3331234563", "M", LocalDate.of(1990, 5, 15), "RSSMRA90E15H501X", "marik.rossi@email.com","Italiana", new Camera());
 
-        command = new UpdateClienteCommand(catalogue, clienteModificato);
+       clienteBannatoModificato = new Cliente("Marco", "Rossi", "Italiana", "Roma", "Rana", "Via del Corso", 10, 18600, "3331234564", "M", LocalDate.of(1990, 5, 15), "RSSMRA90E15H501J", "marii.rossi@email.com","Italiana", new Camera());
+
+        command = new UpdateClienteCommand(clienteModificato);
     }
 
     // testo costruttore con parametri

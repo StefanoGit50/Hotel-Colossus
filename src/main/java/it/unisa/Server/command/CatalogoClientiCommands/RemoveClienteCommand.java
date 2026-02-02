@@ -13,16 +13,14 @@ import java.util.ArrayList;
  */
 public class RemoveClienteCommand implements Command {
 
-    private CatalogoClienti catalogue;
+    private CatalogoClienti catalogue = new CatalogoClienti();
     private Cliente cliente;
 
     /**
      * Costruttore del comando.
-     * @param catalogue Catalogo dei clienti per poter completare il comando.
      * @param cliente   Cliente da eliminare.
      */
-    public RemoveClienteCommand(CatalogoClienti catalogue, Cliente cliente) {
-        this.catalogue = catalogue;
+    public RemoveClienteCommand(Cliente cliente) {
         this.cliente = cliente;
     }
 
@@ -52,14 +50,13 @@ public class RemoveClienteCommand implements Command {
     public void execute() {
         try {
             // Riprendi il cliente come lo è attualmente nel catalogo
-            CatalogoClienti catalogoClienti = new CatalogoClienti();
             Cliente c = catalogue.getCliente(cliente.getCf());
             ArrayList<Cliente> lc;
             if(c.isBlacklisted()) {
-                lc = catalogoClienti.getListaClientiBannati();
+                lc = catalogue.getListaClientiBannati();
                 lc.remove(c);
             } else {
-                lc = catalogoClienti.getListaClienti();
+                lc = catalogue.getListaClienti();
                 lc.remove(c);
             }
 
@@ -75,9 +72,8 @@ public class RemoveClienteCommand implements Command {
     @Override
     public void undo() {
         ArrayList<Cliente> lc;
-        CatalogoClienti catalogoClienti = new CatalogoClienti();
         if(cliente.isBlacklisted()) {
-            lc = catalogoClienti.getListaClientiBannati();
+            lc = catalogue.getListaClientiBannati();
             lc.add(cliente);
             try{
                 ClienteDAO clienteDAO = new ClienteDAO();
@@ -86,7 +82,7 @@ public class RemoveClienteCommand implements Command {
                 sqlException.printStackTrace();
             }
         } else {
-            lc = catalogoClienti.getListaClienti();
+            lc = catalogue.getListaClienti();
             lc.add(cliente);
             try{
                 ClienteDAO clienteDAO = new ClienteDAO();

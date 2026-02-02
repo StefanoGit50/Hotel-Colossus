@@ -11,10 +11,16 @@ import java.util.Objects;
  * del cliente, oltre a un flag per indicare se è inserito nella blacklist.
  */
 public class Cliente implements Cloneable, Serializable {
+
     /**
      * Il nome del cliente.
      */
     private String nome;
+
+    /**
+     * Il cognome del cliente.
+     */
+    private String cognome;
 
     /**
      * Il codice fiscale del cliente
@@ -27,10 +33,6 @@ public class Cliente implements Cloneable, Serializable {
      */
     private String email;
 
-    /**
-     * Il cognome del cliente.
-     */
-    private String cognome;
 
 
     /**
@@ -105,15 +107,6 @@ public class Cliente implements Cloneable, Serializable {
         return camera;
     }
 
-    private boolean isIntestatario= false;
-
-    public boolean isIntestatario() {
-        return isIntestatario;
-    }
-    public void setIntestatario(boolean isIntestatario) {
-        this.isIntestatario = isIntestatario;
-    }
-
     /**
      * Costruttore completo per creare una nuova istanza di {@code Cliente}
      * (l'attributo {@code isBlacklisted} Flag che indica se il cliente è in lista nera di default {@code false}).
@@ -146,7 +139,6 @@ public class Cliente implements Cloneable, Serializable {
         this.email = email;
         this.nazionalità = nazionalità;
         this.camera = camera;
-        this.isIntestatario = false;
     }
 
     /**
@@ -407,9 +399,7 @@ public class Cliente implements Cloneable, Serializable {
         return email;
     }
 
-    public void setCamere(Camera camere){
-        this.camera = camere;
-    }
+
 
     @Override
     public String toString() {
@@ -445,7 +435,7 @@ public class Cliente implements Cloneable, Serializable {
         if (obj == null || getClass() != obj.getClass()) return false;
         Cliente cliente = (Cliente) obj;
         return numeroCivico.equals(cliente.getNumeroCivico()) && nome.equalsIgnoreCase(cliente.getNome()) && cognome.equalsIgnoreCase(cliente.getCognome()) &&
-                cf.equalsIgnoreCase(cliente.getCf()) && email.equalsIgnoreCase(cliente.getEmail())  && provincia.equalsIgnoreCase(cliente.getProvincia())
+                cf.equalsIgnoreCase(cliente.getCf()) && email.equalsIgnoreCase(cliente.getEmail()) && provincia.equalsIgnoreCase(cliente.getProvincia())
                 && comune.equalsIgnoreCase(cliente.getComune()) && via.equalsIgnoreCase(cliente.getVia()) && CAP.equals(cliente.getCAP()) && numeroTelefono.equalsIgnoreCase(cliente.getNumeroTelefono())
                 && isBlacklisted == cliente.isBlacklisted() && sesso.equalsIgnoreCase(cliente.getSesso()) && camera.equals(cliente.getCamera()) && dataNascita.equals(cliente.getDataNascita())
                 && nazionalità.equalsIgnoreCase(cliente.getNazionalita());

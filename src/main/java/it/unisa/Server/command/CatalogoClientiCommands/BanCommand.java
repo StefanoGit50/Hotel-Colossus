@@ -7,23 +7,20 @@ import it.unisa.Storage.DAO.ClienteDAO;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Comando per poter bannare un cliente.
  */
 public class BanCommand implements Command {
 
-    private CatalogoClienti catalogue;
+    private CatalogoClienti catalogue = new CatalogoClienti();
     private String CFCliente;
 
     /**
      * Costruttore del comando.
-     * @param catalogue Catalogo dei clienti.
      * @param CFCliente Codice fiscale del cliente a cui si vuole rimuovere il ban.
      */
-    public BanCommand(CatalogoClienti catalogue, String CFCliente) {
-        this.catalogue = catalogue;
+    public BanCommand(String CFCliente) {
         this.CFCliente = CFCliente;
     }
 
@@ -56,8 +53,7 @@ public class BanCommand implements Command {
     public void execute() {
         try {
             Cliente c = catalogue.getCliente(CFCliente);
-           CatalogoClienti catalogoClienti = new CatalogoClienti();
-            ArrayList<Cliente> lc = catalogoClienti.getListaClienti(), lcb = catalogoClienti.getListaClientiBannati();
+            ArrayList<Cliente> lc = catalogue.getListaClienti(), lcb = catalogue.getListaClientiBannati();
 
             Cliente cli;
             for(int i = 0; i < lc.size(); i++) {
@@ -91,8 +87,7 @@ public class BanCommand implements Command {
     public void undo() {
         try {
             Cliente c = catalogue.getCliente(CFCliente);
-            CatalogoClienti catalogoClienti = new CatalogoClienti();
-            ArrayList<Cliente> lc = catalogoClienti.getListaClienti(), lcb = catalogoClienti.getListaClientiBannati();
+            ArrayList<Cliente> lc = catalogue.getListaClienti(), lcb = catalogue.getListaClientiBannati();
 
             Cliente cli;
             for (int i = 0; i < lcb.size(); i++) {

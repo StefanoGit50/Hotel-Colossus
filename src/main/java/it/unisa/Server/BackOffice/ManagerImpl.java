@@ -112,21 +112,39 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
     public void addImpiegato(Impiegato i) throws RemoteException {
         CatalogueUtils.checkNull(i);            // Lancia InvalidInputException
         CatalogoImpiegati.checkImpiegato(i);    // Lancia InvalidInputException
-        AddImpiegatoCommand command = new AddImpiegatoCommand(catalogoImpiegati, i);
+        AddImpiegatoCommand command = new AddImpiegatoCommand(i);
         invoker.executeCommand(command);
     }
 
     @Override
     public void removeImpiegato(Impiegato i) throws RemoteException {
-        RemoveImpiegatoCommand command = new RemoveImpiegatoCommand(catalogoImpiegati, i);
+        RemoveImpiegatoCommand command = new RemoveImpiegatoCommand(i);
         invoker.executeCommand(command);
 
     }
 
     @Override
     public void updateImpiegato(Impiegato i) throws RemoteException {
-        UpdateImpiegatoCommand command = new UpdateImpiegatoCommand(catalogoImpiegati, i);
+        UpdateImpiegatoCommand command = new UpdateImpiegatoCommand(i);
         invoker.executeCommand(command);
+    }
+
+    /**
+     * @param Cf dell'impiegato.
+     * @return l'oggetto {@code Impiegato} il cui Cf corrisponde a quello passato come parametro, {@code null} altrimenti.
+     * @throws RemoteException .
+     */
+    @Override
+    public Impiegato getImpiegatoByCF(String Cf) throws RemoteException {
+        ImpiegatoDAO dao = new ImpiegatoDAO();
+        Impiegato impiegato = null;
+        try {
+            impiegato =  dao.doRetriveByKey(Cf);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return impiegato;
     }
 
     // Comando undo
@@ -191,11 +209,10 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
         ArrayList<Servizio> listaServizi = new ArrayList<Servizio>();
         listaServizi.add(new Servizio("Spa", 325));
         ArrayList<Camera> c = new ArrayList<Camera>();
-        c.add(new Camera(112, Stato.Occupata, 2, 50.5, "o babba"));
+        c.add(new Camera(112, Stato.Occupata, 2, 50.5, "o babba",""));
         ArrayList<Cliente> clist = new ArrayList<>();
         Cliente cliente = new Cliente("Luca",
                 "Marole",
-                "Italiana",
                 "Napoli",
                 "NA",
                 "via barbone",
@@ -204,7 +221,7 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
                 "3233452",
                 "m",
                 LocalDate.of(2022, 1, 6),
-                "SDFGANNSOLF", "Libero@asfnai","Italiana",new Camera());
+                "SDFGANNSOLF", "Libero@asfnai","Italiana", new Camera());
         clist.add(cliente);
 
         Prenotazione p1 = new Prenotazione(1,
