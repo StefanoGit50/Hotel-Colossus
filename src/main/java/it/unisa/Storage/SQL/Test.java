@@ -7,13 +7,14 @@ import it.unisa.Storage.DAO.ServizioDAO;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 public class Test {
 
     static void main() throws SQLException, ClassNotFoundException {
         PrenotazioneDAO dao = new PrenotazioneDAO();
-        Prenotazione p = dao.doRetriveByKey(1);
-        System.out.println(p);
+        List<Prenotazione> p = (List<Prenotazione>) dao.doRetriveAll("idPrenotazione DESC");
+        p.forEach(System.out::println);
     }
 }
