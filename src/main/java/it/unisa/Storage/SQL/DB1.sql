@@ -1,6 +1,6 @@
-drop database HotelColossus;
-create database HotelColossus;
-use HotelColossus;
+drop database hotelcolossus;
+create database hotelColossus;
+use hotelColossus;
 
 create table Cliente(
                         CF char(16) not null,
@@ -116,3 +116,6 @@ create table Impiegato(
                           primary key(IDImpiegato,CF),
                           foreign key(IDManager,CFManager) references Impiegato(IDImpiegato,CF) on delete cascade on update cascade
 );
+
+
+
