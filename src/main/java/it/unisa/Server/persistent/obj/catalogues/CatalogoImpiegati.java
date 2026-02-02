@@ -1,9 +1,14 @@
 package it.unisa.Server.persistent.obj.catalogues;
 
+import it.unisa.Common.Cliente;
 import it.unisa.Common.Impiegato;
+import it.unisa.Server.gestionePrenotazioni.FrontDesk;
 import it.unisa.Server.persistent.util.Ruolo;
+import it.unisa.Server.persistent.util.Util;
+import it.unisa.Storage.DAO.ClienteDAO;
 import it.unisa.Storage.DAO.ImpiegatoDAO;
 import it.unisa.Storage.Interfacce.BackofficeStorage;
+import it.unisa.Storage.Interfacce.FrontDeskStorage;
 
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -56,21 +61,21 @@ public class CatalogoImpiegati implements Serializable {
     }
 
 
-    public  boolean aggiungiImpiegato(Impiegato imp) {
-        if (listaImpiegati.contains(imp)){
+    public synchronized static boolean aggiungiImpiegato(Impiegato imp) {
+        if (!listaImpiegati.contains(imp)){
             try {
                 backOfficeStorage.doSave(imp);
             } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
             }
-            listaImpiegati.remove(imp);
+            listaImpiegati.add(imp);
             return true;
         }
         return false;
     }
 
-    public boolean eliminaImpiegato(Impiegato imp){
+    public static boolean eliminaImpiegato(Impiegato imp){
         if(listaImpiegati.contains(imp)){
             try{
                 backOfficeStorage.doDelete(imp);
@@ -83,7 +88,7 @@ public class CatalogoImpiegati implements Serializable {
         }
         return false;
     }
-    public boolean updateImpiegato(Impiegato imp){
+    public static boolean updateImpiegato(Impiegato imp){
         if(listaImpiegati.contains(imp)){
             try{
                 backOfficeStorage.doUpdate(imp);
@@ -91,16 +96,16 @@ public class CatalogoImpiegati implements Serializable {
                 e.printStackTrace();
                 return false;
             }
-                boolean flag=false;
-                Iterator<Impiegato> it = listaImpiegati.iterator();
-                while (it.hasNext()){
-                    Impiegato i =  it.next();
-                    if(i.getCodiceFiscale().equals(imp.getCodiceFiscale()) && !i.equals(imp)){
-                        it.remove();
-                        listaImpiegati.add(imp);
-                        return true;
-                    }
+
+            Iterator<Impiegato> it = listaImpiegati.iterator();
+            while (it.hasNext()){
+                Impiegato i =  it.next();
+                if(i.getCodiceFiscale().equals(imp.getCodiceFiscale()) && !i.equals(imp)){
+                    it.remove();
+                    listaImpiegati.add(imp);
+                    return true;
                 }
+            }
 
         }
         return false;
@@ -116,12 +121,22 @@ public class CatalogoImpiegati implements Serializable {
      * @return Una deep copy dell'oggetto Impiegato trovato, o {@code null} se non ne esiste nessuno con quel CF.
      * @throws CloneNotSupportedException Se l'oggetto Impiegato non supporta la clonazione.
      */
-    public Impiegato getImpiegato(String CFImpiegato) throws CloneNotSupportedException{
+    public static Impiegato getImpiegato(String CFImpiegato) throws CloneNotSupportedException{
         for (Impiegato i : listaImpiegati) {
             if (i.getCodiceFiscale().equals(CFImpiegato))
                 return i.clone();
         }
         return null;
+    }
+
+    public static synchronized boolean aggiornaLista() {
+        backOfficeStorage= new ImpiegatoDAO();
+        try{
+            listaImpiegati= (ArrayList<Impiegato>) backOfficeStorage.doRetriveAll("decrescente");
+        }catch (SQLException e){
+            return false;
+        }
+        return true;
     }
 
     /**

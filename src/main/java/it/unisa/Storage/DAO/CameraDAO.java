@@ -275,17 +275,6 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
         if(lista.isEmpty()) throw new NoSuchElementException("Nessuna camera con " + attribute + " = " + value + "!");
         return lista;
     }
-
-    /**
-     * @param nome;
-     * @param cognome;
-     * @param nazionalita;
-     * @param dataDiNascita;
-     * @param orderBy;
-     * @throws UnsupportedOperationException;
-     */
-    @Override
-    public Collection<Camera> doFilter(String nome, String cognome, String nazionalita, LocalDate dataDiNascita, Boolean blackListed, String orderBy)  throws SQLException{
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }
+
+

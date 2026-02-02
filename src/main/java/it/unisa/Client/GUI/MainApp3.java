@@ -405,7 +405,7 @@ public class MainApp3 extends Application {
         Trattamento trattamento = new Trattamento("MEZZA PENSIONE", 55.5);
 
         // Prenotazione
-        Prenotazione p = new Prenotazione(
+        /*Prenotazione p = new Prenotazione(
                 1234,                                   // ID
                 LocalDate.of(2026, 1, 31),             // Data creazione
                 LocalDate.of(2026, 2, 11),             // Data inizio
@@ -424,7 +424,8 @@ public class MainApp3 extends Application {
 
         p.setCheckIn(false); // Check-in non ancora fatto
 
-        return p;
+        return p;*/
+        return null;
     }
 
     public static void main(String[] args) {

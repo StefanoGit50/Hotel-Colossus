@@ -85,7 +85,7 @@ public class PrenotazioneBuilder{
             cliente.setCAP(Integer.parseInt(rs.getString("Cap")));
             cliente.setSesso(rs.getString("Sesso"));
             cliente.setNazionalita(rs.getString("Nazionalità"));
-            cliente.setCamere(camera);
+            cliente.setCamera(camera);
             clientiMap.put(cf, cliente);
         }
         // Se il cliente c'è già, NON fare nulla (evita duplicati)
