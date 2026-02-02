@@ -260,5 +260,26 @@ VALUES
 -- =============================================
 -- FINE INSERT
 -- =============================================
+INSERT INTO Camera
+(NumeroCamera, NomeCamera, NumeroMaxOcc, NoteCamera, Stato, Prezzo)
+VALUES
+    (101, 'Camera 101', 2, 'Camera doppia con vista mare', 'Libera', 120);
+
+INSERT INTO Camera
+(NumeroCamera, NomeCamera, NumeroMaxOcc, NoteCamera, Stato, Prezzo)
+VALUES
+    (102, 'Camera 102', 4, 'Camera familiare con balcone', 'Libera', 180);
+
+INSERT INTO Camera
+(NumeroCamera, NomeCamera, NumeroMaxOcc, NoteCamera, Stato, Prezzo)
+VALUES
+    (103, 'Camera 103', 2, 'Camera prova', 'Libera', 150);
+
+INSERT INTO Camera
+(NumeroCamera, NomeCamera, NumeroMaxOcc, NoteCamera, Stato, Prezzo)
+VALUES
+    (104, 'Camera 104', 2, 'Camera prova', 'Libera', 150);
+
+
 
 SELECT 'Database popolato con successo!' AS Messaggio;

@@ -49,7 +49,6 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
             }
         }
     }
-
     /**
      * @param list
      * @throws SQLException
@@ -168,7 +167,6 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
 
         return servizi;
     }
-
     /**
      * Aggiorna il prezzo di un servizio esistente nel database.
      *

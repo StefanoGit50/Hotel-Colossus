@@ -19,6 +19,15 @@ public class Prenotazione implements Cloneable, Serializable {
      * Codice univoco della prenotazione.
      */
     private Integer IDPrenotazione;
+    /**
+     *  La cittadinanza del cliente
+     */
+    private String cittadinanza;
+
+    /**
+     *  il metodo Di Pagamento del cliente
+     */
+    private String metodoDiPagamento;
 
     /**
      * Data in cui è stata creata la prenotazione.
@@ -515,6 +524,7 @@ public class Prenotazione implements Cloneable, Serializable {
                     if(!isNull(prenotazione.trattamento)){
                         return false;
                     }
+
                 }else{
                     if(isNull(prenotazione.trattamento)){
                         return false;

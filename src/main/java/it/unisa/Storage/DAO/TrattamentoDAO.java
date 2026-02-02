@@ -29,7 +29,6 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>{
         try {
             connection = ConnectionStorage.getConnection();
             ps = connection.prepareStatement(query);
-
             ps.setString(1, trattamento.getNome());
             ps.setDouble(2, trattamento.getPrezzo());
 

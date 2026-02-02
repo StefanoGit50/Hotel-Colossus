@@ -11,5 +11,4 @@ From  Prenotazione p
           join Associato_a a ON p.IDPrenotazione = a.IDPrenotazione
           JOIN Cliente c ON a.CF = c.CF
           JOIN Camera cam ON a.NumeroCamera = cam.NumeroCamera
-          LEFT JOIN Servizio s ON s.IDPrenotazione = p.IDPrenotazione
 

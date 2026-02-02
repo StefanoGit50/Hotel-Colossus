@@ -46,7 +46,7 @@ public class TestCasesRegistraPrenotazione {
         // Lista clienti
 
         Cliente cliente1 = new Cliente(
-                "Giulia", "Verdi", "Italiana", "Milano", "Milano",
+                "Giulia", "Verdi", "Milano", "Milano",
                 "Corso Vittorio Emanuele", 22, 20121, "3479876543", "F",
                 LocalDate.of(1992, 8, 15), "VRDGLI92M55F205W",
                 "giulia.verdi@gmail.com",
@@ -55,7 +55,7 @@ public class TestCasesRegistraPrenotazione {
         );
 
         Cliente cliente2 = new Cliente(
-                "Marco", "Neri", "Italiana", "Roma", "Roma",
+                "Marco", "Neri", "Roma", "Roma",
                 "Via dei Condotti", 5, 11187, "3351122334", "M",
                 LocalDate.of(1978, 11, 3), "NREMRA78S03H501U",
                 "m.neri@provider.it","Italiana",
@@ -63,7 +63,7 @@ public class TestCasesRegistraPrenotazione {
         );
 
         Cliente cliente3 = new Cliente(
-                "Sofia", "Bruno", "Italiana", "Firenze", "Firenze",
+                "Sofia", "Bruno", "Firenze", "Firenze",
                 "Piazza della Signoria", 1, 50122, "3294455667", "F",
                 LocalDate.of(2001, 1, 25), "BRNSFO01A65D612Y",
                 "sofia.bruno@studio.it","Italiana",
@@ -81,7 +81,8 @@ public class TestCasesRegistraPrenotazione {
                 Stato.Libera,
                 1,
                 85.0,
-                "Singola lato giardino, molto silenziosa"
+                "Singola lato giardino, molto silenziosa",
+                ""
         );
 
         Camera camera205 = new Camera(
@@ -89,7 +90,8 @@ public class TestCasesRegistraPrenotazione {
                 Stato.Occupata,
                 2,
                 150.0,
-                "Deluxe con idromassaggio e minibar rifornito"
+                "Deluxe con idromassaggio e minibar rifornito",
+                ""
         );
 
         Camera camera404 = new Camera(
@@ -97,7 +99,8 @@ public class TestCasesRegistraPrenotazione {
                 Stato.Libera,
                 4,
                 250.0,
-                "Suite Familiare, due stanze comunicanti, balcone ampio"
+                "Suite Familiare, due stanze comunicanti, balcone ampio",
+                ""
         );
 
         listaCamere.add(camera102);

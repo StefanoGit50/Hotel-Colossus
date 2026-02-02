@@ -209,11 +209,10 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
         ArrayList<Servizio> listaServizi = new ArrayList<Servizio>();
         listaServizi.add(new Servizio("Spa", 325));
         ArrayList<Camera> c = new ArrayList<Camera>();
-        c.add(new Camera(112, Stato.Occupata, 2, 50.5, "o babba"));
+        c.add(new Camera(112, Stato.Occupata, 2, 50.5, "o babba",""));
         ArrayList<Cliente> clist = new ArrayList<>();
         Cliente cliente = new Cliente("Luca",
                 "Marole",
-                "Italiana",
                 "Napoli",
                 "NA",
                 "via barbone",

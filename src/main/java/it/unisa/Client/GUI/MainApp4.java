@@ -44,19 +44,20 @@ public class MainApp4 extends Application {
     }
 
     private Prenotazione creaPrenotazioneDiProva() {
-        ArrayList<Camera> camere = new ArrayList<>(List.of(new Camera(101, Stato.Occupata,2,35,"asdasd")));
-        ArrayList<Cliente> arrayCliente = new ArrayList<>(List.of(new Cliente("Alessio","Colardi","italiana","napoli","caserta","via fas",234,234,"3243543","M", LocalDate.of(2001,01,30),"23rtygfds2",
+        ArrayList<Camera> camere = new ArrayList<>(List.of(new Camera(101, Stato.Occupata,2,35,"asdasd", "Paolo Brosio")));
+        ArrayList<Cliente> arrayCliente = new ArrayList<>(List.of(new Cliente("Alessio","Colardi","napoli","caserta","via fas",234,234,"3243543","M", LocalDate.of(2001,01,30),"23rtygfds2",
                 "luca@smdb", "Italiana", camere.getFirst())));
         ArrayList<Servizio> servizio = new ArrayList<>(List.of(new Servizio("Bottiglia Vino",60)));
 
         // Clienti
+
         Cliente alessio = new Cliente(
-                "Alessio", "Colardi", "italiana", "napoli", "caserta",
+                "Alessio", "Colardi", "napoli", "caserta",
                 "via fas", 234, 234, "3243543", "M",
                 LocalDate.of(2001, 1, 30), "23rtygfds2",
                 "luca@smdb", "italiana", camere.getFirst()
         );
-        alessio.setIntestatario(true); // ✅ Intestatario della prenotazione
+       // alessio.setIntestatario(true); // ✅ Intestatario della prenotazione
 
         arrayCliente = new ArrayList<>(List.of(alessio));
 
