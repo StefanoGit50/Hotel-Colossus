@@ -72,7 +72,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
         String query = "DELETE FROM " + ServizioDAO.TABLE_NAME
                 + " WHERE Nome = ?";
 
-        try {
+        try{
             connection =  ConnectionStorage.getConnection();
             ps = connection.prepareStatement(query);
 

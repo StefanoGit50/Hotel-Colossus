@@ -31,9 +31,10 @@ create table Camera(
 );
 
 create table Servizio(
+                         IDServizio int not null auto_increment,
                          Nome varchar(50) not null,
                          Prezzo double not null,
-                         primary key(Nome)
+                         primary key(IDServizio)
 );
 
 
