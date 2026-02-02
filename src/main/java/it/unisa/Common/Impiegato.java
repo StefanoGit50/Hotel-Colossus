@@ -1,6 +1,8 @@
 package it.unisa.Common;
 
 import it.unisa.Server.persistent.util.Ruolo;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -12,6 +14,7 @@ import java.util.Objects;
  * Contiene i dati anagrafici, i dettagli lavorativi e le informazioni di contatto dell'impiegato.
  */
 public class Impiegato implements Cloneable, Serializable {
+    private static final Logger log = LogManager.getLogger(Impiegato.class);
     private String username;
     private String password;
     private Instant expires;
@@ -21,13 +24,14 @@ public class Impiegato implements Cloneable, Serializable {
      */
     private String nome;
 
-    private String userName;
 
     private String hashPassword;
 
-    private boolean isTempurali;
+    private boolean isTemporary;
 
-    private Instant dataScadenzaToken;
+
+
+    private int id;
 
     /**
      * Cognome dell'impiegato.
@@ -145,11 +149,12 @@ public class Impiegato implements Cloneable, Serializable {
      * @param cittadinanza Cittadinanza.
      * @param dataScadenza Data di scadenza del documento
      */
-    public Impiegato(String username, String hashedPassword,boolean isTempurali,Instant dataScadenzaToken, String nome, String cognome, String sesso, String tipoDocumento,
+    public Impiegato(int id,String username, String hashedPassword,boolean isTemporary,Instant dataScadenzaToken, String nome, String cognome, String sesso, String tipoDocumento,
                      String numeroDocumento, int CAP, String via, String provincia, String comune, int numeroCivico,
                      String codiceFiscale, String telefono, Ruolo ruolo, double stipendio, LocalDate dataAssunzione,
                      LocalDate dataRilascio, String emailAziendale, String cittadinanza , LocalDate dataScadenza) {
-        this.userName = username;
+        this.id = id;
+        this.username = username;
         this.hashPassword = hashedPassword;
         this.nome = nome;
         this.cognome = cognome;
@@ -170,12 +175,12 @@ public class Impiegato implements Cloneable, Serializable {
         this.emailAziendale = emailAziendale;
         this.cittadinanza = cittadinanza;
         this.dataScadenza = dataScadenza;
-        this.isTempurali = isTempurali;
-        this.dataScadenzaToken = dataScadenzaToken;
+        this.isTemporary = isTemporary;
+        this.expires = dataScadenzaToken;
     }
 
     public Impiegato(){
-        this.userName = "";
+        this.username = "";
         this.hashPassword = "";
         this.nome = "";
         this.cognome = "";
@@ -196,8 +201,8 @@ public class Impiegato implements Cloneable, Serializable {
         this.emailAziendale = "";
         this.cittadinanza = "";
         this.dataScadenza = null;
-        this.isTempurali = false;
-        this.dataScadenzaToken = null;
+        this.isTemporary = false;
+        this.expires = null;
     }
 
     // --- Getter e Setter ---
@@ -234,13 +239,23 @@ public class Impiegato implements Cloneable, Serializable {
         return change;
     }
 
-    public String getUserName() {
-        return userName;
+
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setTemporary(boolean temporary) {
+        isTemporary = temporary;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public boolean isTemporary() {
+        return isTemporary;
+    }
+
 
     public String getHashPassword() {
         return hashPassword;
@@ -401,21 +416,8 @@ public class Impiegato implements Cloneable, Serializable {
         this.dataScadenza = localDate;
     }
 
-    public boolean isTempurali() {
-        return isTempurali;
-    }
 
-    public void setTempurali(boolean tempurali) {
-        isTempurali = tempurali;
-    }
 
-    public Instant getDataScadenzaToken() {
-        return dataScadenzaToken;
-    }
-
-    public void setDataScadenzaToken(Instant dataScadenzaToken) {
-        this.dataScadenzaToken = dataScadenzaToken;
-    }
 
     // --- Metodi Standard di Object ---
 
@@ -424,10 +426,10 @@ public class Impiegato implements Cloneable, Serializable {
     public String toString() {
         return "Impiegato{" +
                 "nome='" + nome + '\'' +
-                ", userName='" + userName + '\'' +
+                ", userName='" + username + '\'' +
                 ", hashPassword='" + hashPassword + '\'' +
-                ", isTempurali=" + isTempurali +
-                ", dataScadenzaToken=" + dataScadenzaToken +
+                ", isTemporary=" + isTemporary +
+                ", dataScadenzaToken=" + expires+
                 ", cognome='" + cognome + '\'' +
                 ", sesso='" + sesso + '\'' +
                 ", tipoDocumento='" + tipoDocumento + '\'' +

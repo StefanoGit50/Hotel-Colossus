@@ -124,6 +124,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                     cliente.setBlacklisted(resultSet.getBoolean("IsBackListed"));
                     try(ResultSet resultSet1 = preparedStatement1.executeQuery()){
                         if(resultSet1.next()){
+                            camera.setNomeCamera(resultSet1.getString("nome"));
                             camera.setNumeroCamera(resultSet1.getInt("NumeroCamera"));
                             camera.setCapacità(resultSet1.getInt("NumeroMaxOcc"));
                             camera.setPrezzoCamera(resultSet1.getDouble("Prezzo"));
@@ -206,6 +207,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                 preparedStatement1.setString(1,resultSet.getString("CF"));
                 try(ResultSet resultSet1 = preparedStatement1.executeQuery()){
                         if(resultSet1.next()){
+                            camera.setNomeCamera(resultSet1.getString("NomeCamera"));
                             camera.setNumeroCamera(resultSet1.getInt("NumeroCamera"));
                             camera.setNoteCamera(resultSet1.getString("NoteCamera"));
                             camera.setStatoCamera(Stato.valueOf(resultSet1.getString("Stato")));

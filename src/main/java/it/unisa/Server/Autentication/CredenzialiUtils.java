@@ -12,7 +12,7 @@ public class CredenzialiUtils {
 
     public static String HashPassword(String password) {
         password=password.trim();
-        return BCrypt.withDefaults().hashToString(12, password.toCharArray());
+        return BCrypt.withDefaults().hashToString(8, password.toCharArray());
     }
 
     public static boolean checkPassword(String password, String HashedPassword) {
