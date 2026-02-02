@@ -1,6 +1,7 @@
 package it.unisa.Server.persistent.obj.catalogues;
 import it.unisa.Common.Camera;
 import it.unisa.Common.Prenotazione;
+import it.unisa.Storage.DAO.ClienteDAO;
 import it.unisa.Storage.DAO.PrenotazioneDAO;
 import it.unisa.Storage.DuplicateKeyEntry;
 import it.unisa.Storage.Interfacce.FrontDeskStorage;
@@ -118,11 +119,11 @@ public class CatalogoPrenotazioni implements Serializable {
     /**
      * Restituisce la lista di tutte le prenotazioni nel catalogo.
      */
-    public synchronized  ArrayList<Prenotazione> getListaPrenotazioni() {
+    public synchronized static   ArrayList<Prenotazione> getListaPrenotazioni() {
         return (ArrayList<Prenotazione>) listaPrenotazioni;
     }
 
-    public synchronized Prenotazione getPrenotazione(Integer ID){
+    public static synchronized Prenotazione getPrenotazione(Integer ID){
         for(Prenotazione p : listaPrenotazioni){
             if(p.getIDPrenotazione().equals(ID))
                 try {
@@ -137,7 +138,7 @@ public class CatalogoPrenotazioni implements Serializable {
     /**
      * Imposta o sostituisce l'intera lista delle prenotazioni.
      */
-    public synchronized boolean addPrenotazioni(Prenotazione prenotazione) {
+    public static synchronized boolean addPrenotazioni(Prenotazione prenotazione) {
         if(prenotazione == null|| listaPrenotazioni.contains(prenotazione)) {
             return false;
         }
@@ -152,7 +153,7 @@ public class CatalogoPrenotazioni implements Serializable {
             return true;
     }
 
-    public synchronized boolean removePrenotazioni(Prenotazione prenotazione) {
+    public static synchronized boolean removePrenotazioni(Prenotazione prenotazione) {
         if(prenotazione == null|| !listaPrenotazioni.contains(prenotazione)) {
             return false;
         }
@@ -169,7 +170,7 @@ public class CatalogoPrenotazioni implements Serializable {
 
     }
 
-    public synchronized boolean UpdatePrenotazioni(Prenotazione prenotazione) {
+    public static synchronized boolean UpdatePrenotazioni(Prenotazione prenotazione) {
         if(prenotazione == null|| !listaPrenotazioni.contains(prenotazione)) {
             return false;
         }
@@ -190,11 +191,21 @@ public class CatalogoPrenotazioni implements Serializable {
         return true;
     }
 
+    public static synchronized boolean aggiornalista(){
+        fds = new PrenotazioneDAO();
+        try{
+            listaPrenotazioni=fds.doRetriveAll("decrescente");
+        }catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
 
     /**
      * Recupera lo storico delle prenotazioni effettuate da un cliente specifico.
      */
-    public ArrayList<Prenotazione> getStoricoPrenotazioni(Object cliente) {
+    public static ArrayList<Prenotazione> getStoricoPrenotazioni(Object cliente) {
         return new ArrayList<>();
     }
 
@@ -205,7 +216,7 @@ public class CatalogoPrenotazioni implements Serializable {
      * @return Una deep copy dell'oggetto Prenotazione trovata, o {@code null} se non esiste nessuna prenotazione con quel numero.
      * @throws CloneNotSupportedException Se l'oggetto Prenotazione non supporta la clonazione.
      */
-    public Prenotazione getPrenotazione(int codicePrenotazione) throws CloneNotSupportedException{
+    public static Prenotazione getPrenotazione(int codicePrenotazione) throws CloneNotSupportedException{
         for (Prenotazione p : listaPrenotazioni) {
             if (p.getIDPrenotazione() == codicePrenotazione)
                 return p.clone();

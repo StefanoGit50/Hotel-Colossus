@@ -1,6 +1,7 @@
 package it.unisa.Server.persistent.obj.catalogues;
 
 import it.unisa.Common.Camera;
+import it.unisa.Common.Cliente;
 import it.unisa.Server.ObserverCamereInterface;
 import it.unisa.Server.SubjectCamereInterface;
 import it.unisa.Server.persistent.util.Util;
@@ -40,9 +41,9 @@ public class CatalogoCamere implements SubjectCamereInterface, Serializable {
     }
 
 
-    private static Camera lastModified;
+    private static Camera lastModified = null;
 
-    public Camera getLastModified() {
+    public static Camera getLastModified() {
         return lastModified;
     }
 
@@ -64,21 +65,35 @@ public class CatalogoCamere implements SubjectCamereInterface, Serializable {
      *
      * @return Una nuova ArrayList contenente copie (cloni) di tutti gli oggetti Camera.
      */
-    public synchronized ArrayList<Camera> getListaCamere() {
+    public synchronized static ArrayList<Camera> getListaCamere() {
         return camereList;
     }
 
-    public synchronized void addCamere(ArrayList<Camera> camere) {
+    public synchronized static void addCamere(ArrayList<Camera> camere) {
 
         try {
+            fds.doSaveAll(camere);
             for (Camera camera : camere) {
                 camereList.add(camera.clone());
             }
-            fds.doSaveAll(camere);
         } catch (CloneNotSupportedException | SQLException cloneNotSupportedException) {
             cloneNotSupportedException.printStackTrace();
         }
     }
+
+
+    public static boolean cameraIsEquals(Cliente c){
+        if(c==null)
+            return false;
+        if(!camereList.contains(c))
+            return false;
+        for(Camera cc : camereList){
+            if(cc.equals(c))
+                return true;
+        }
+        return false;
+    }
+
 
     /**
      * Cerca una camera specifica tramite il suo numero e ne restituisce una copia.
@@ -89,7 +104,7 @@ public class CatalogoCamere implements SubjectCamereInterface, Serializable {
      */
 
 
-    public Camera getCamera(int numeroCamera) throws CloneNotSupportedException{
+    public static Camera getCamera(int numeroCamera) throws CloneNotSupportedException{
         for (Camera c : camereList) {
             if (c.getNumeroCamera() == numeroCamera)
                 return c.clone();

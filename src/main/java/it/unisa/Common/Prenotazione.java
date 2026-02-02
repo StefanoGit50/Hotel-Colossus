@@ -2,6 +2,8 @@ package it.unisa.Common;
 
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Server.persistent.util.Util;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -15,6 +17,7 @@ import java.util.Objects;
  */
 public class Prenotazione implements Cloneable, Serializable {
 
+    private static final Logger log = LogManager.getLogger(Prenotazione.class);
     /**
      * Codice univoco della prenotazione.
      */
@@ -70,6 +73,10 @@ public class Prenotazione implements Cloneable, Serializable {
      */
     private String numeroDocumento;
 
+    private LocalDate dataEmissioneRicevuta;
+
+    private double prezzoAcquistoTrattamento;
+
     /**
      * Lista delle camere incluse nella prenotazione.
      */
@@ -93,6 +100,8 @@ public class Prenotazione implements Cloneable, Serializable {
      */
     private boolean checkIn;
 
+    private String metodoPagamento;
+
     /**
      * Costruttore completo per creare una nuova istanza di {@code Prenotazione}.
      *
@@ -111,10 +120,10 @@ public class Prenotazione implements Cloneable, Serializable {
      * @param listaClienti Lista dei clienti.
      * @param numeroDocumento il numero del documento
      */
-    public Prenotazione(int IDPrenotazione, LocalDate dataCreazionePrenotazione, LocalDate dataInizio, LocalDate dataFine,
+    public Prenotazione(int IDPrenotazione, LocalDate dataCreazionePrenotazione, LocalDate dataInizio, LocalDate dataFine,LocalDate dataEmissioneRicevuta,
                         Trattamento trattamento, String tipoDocumento, LocalDate dataRilascio, LocalDate dataScadenza,
                         String intestatario, String noteAggiuntive, ArrayList<Camera> listaCamere, ArrayList<Servizio> listaServizi,
-                        ArrayList<Cliente> listaClienti ,String numeroDocumento) {
+                        ArrayList<Cliente> listaClienti ,String numeroDocumento, String metodoPagamento) {
         this.IDPrenotazione = IDPrenotazione;
         this.dataCreazionePrenotazione = dataCreazionePrenotazione;
         this.dataInizio = dataInizio;
@@ -132,6 +141,8 @@ public class Prenotazione implements Cloneable, Serializable {
         this.numeroDocumento = numeroDocumento;
         this.statoPrenotazione = true;
         this.checkIn = false;
+        this.dataEmissioneRicevuta = dataEmissioneRicevuta;
+        this.metodoPagamento= metodoPagamento;
     }
 
     public Prenotazione() {
@@ -217,6 +228,26 @@ public class Prenotazione implements Cloneable, Serializable {
     // --- Getter e Setter ---
     // I getter per le liste restituiscono deep copy per l'incapsulamento
 
+    public void setDataEmissioneRicevuta(LocalDate dataEmissioneRicevuta) {
+        this.dataEmissioneRicevuta = dataEmissioneRicevuta;
+    }
+
+
+    public boolean isStatoPrenotazione() {
+        return statoPrenotazione;
+    }
+
+    public void setMetodoPagamento(String metodoPagamento) {
+        this.metodoPagamento = metodoPagamento;
+    }
+
+    public String getMetodoPagamento() {
+        return metodoPagamento;
+    }
+
+    public LocalDate getDataEmissioneRicevuta() {
+        return dataEmissioneRicevuta;
+    }
     public void setIDPrenotazione(Integer IDPrenotazione) {
         this.IDPrenotazione = IDPrenotazione;
     }
@@ -240,6 +271,7 @@ public class Prenotazione implements Cloneable, Serializable {
     public boolean getStatoPrenotazione(){
         return this.statoPrenotazione;
     }
+
     public  void setStatoPrenotazione(boolean st){
         this.statoPrenotazione = st;
     }
@@ -373,9 +405,6 @@ public class Prenotazione implements Cloneable, Serializable {
         return checkIn;
     }
 
-    public boolean isStatoPrenotazione() {
-        return statoPrenotazione;
-    }
 
     public void setCheckIn(boolean checkIn) {
         this.checkIn = checkIn;

@@ -46,7 +46,7 @@ public class CatalogoCamereTesting{
         cameras.add(camera);
         cameras.add(camera);
 
-        assertDoesNotThrow(()->catalogoCamere.addCamere(cameras));
+        assertDoesNotThrow(()->CatalogoCamere.addCamere(cameras));
     }
 
     @Test
