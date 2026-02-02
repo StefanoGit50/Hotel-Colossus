@@ -26,13 +26,11 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
         "Stato"
     };
 
-    private static final String TABLE_NAME = "Prenotazione";
-    private static final String SERVIZIO_TABLE_NAME = "Servizio";
-    private static final String TRATTAMENTO_TABLE_NAME = "Trattamento";
-    private static final String CAMERA_TABLE_NAME = "Camera";
-    private static final String CLIENTE_TABLE_NAME = "Cliente";
-    private static final String HA_TABLE_NAME = "Ha";
-    private static final String ASSOCIATO_A_TABLE_NAME = "Associato_A";
+    private static final String [] draList = {
+            "IDPrenotazione"
+    };
+
+
     private static final String VIEW_TABLE_NAME = "prenotazioneIS";
 
 
@@ -355,14 +353,41 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
         return p;
     }
 
+    /**
+     * @param order unici valori ammissibili {"IDPrenotazione ASC", "IDPrenotazione DESC"} case INsenitive.
+     * @return {@code List<Prenotazione>} tutte le prenotazioni presenti nel sistema, {@code null} in caso di errore.
+     * @throws SQLException .
+     */
     @Override
     public synchronized Collection<Prenotazione> doRetriveAll(String order) throws SQLException {
 
-        String query = "SELECT * FROM prenotazione";
-        if (order != null && !order.trim().isEmpty() && DaoUtils.checkWhitelist(whitelist, order)) {
+        createView();
+        String query = "SELECT DISTINCT IDPrenotazione FROM " + VIEW_TABLE_NAME ;
+        if (order != null && !order.trim().isEmpty() && DaoUtils.checkWhitelist(draList, order)) {
             query += " ORDER BY " + order;
         }
-        return null;
+
+        Connection connection = null;
+        PreparedStatement ps = null;
+        List<Prenotazione> prenotazioni = new ArrayList<>();
+        try {
+            connection = ConnectionStorage.getConnection();
+            ps = connection.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                try {
+                    do {
+                        prenotazioni.add(doRetriveByKey(rs.getInt("IDPrenotazione")));
+                    } while (rs.next());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            throw new SQLException(e.getMessage());
+        }
+        return prenotazioni;
     }
 
 
