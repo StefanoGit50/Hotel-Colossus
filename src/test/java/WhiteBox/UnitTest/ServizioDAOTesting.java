@@ -35,7 +35,7 @@ public class ServizioDAOTesting{
     @Test
     @Tag("True")
     public void doDeleteAllTrue() throws SQLException{
-        assertDoesNotThrow(()->servizioDAO.doDelete(new Servizio("Lavanderia",15)));
+        assertDoesNotThrow(()->servizioDAO.doDelete(new Servizio("WiFi Premium",5)));
     }
     @Test
     @DisplayName("doDelete(Servizio servizio) quando o la chiave di servizio o servizio sono uguale a null")
@@ -49,7 +49,7 @@ public class ServizioDAOTesting{
     @Tag("True")
     public void doRetriveByKeyAllTrue() throws SQLException {
         Servizio servizio1 = servizioDAO.doRetriveByKey("Spa e Benessere");
-        Servizio servizio2 = new Servizio("Spa e Benessere",40);
+        Servizio servizio2 = new Servizio("Spa e Benessere",45);
         assertEquals(servizio2,servizio1);
     }
     @DisplayName("doRetriveByKey(Object nome) quando resultSet.next() ritorno false")
@@ -88,9 +88,16 @@ public class ServizioDAOTesting{
     @DisplayName("doRetriveAll(String order) quando va tutto bene pero è crescente")
     public void doRetriveAllCrescente() throws SQLException{
         ArrayList<Servizio> servizios = new ArrayList<>();
+        servizios.add(new Servizio("Colazione in Camera",12.00));
+        servizios.add(new Servizio("Early CheckIn", 20.00));
+        servizios.add(new Servizio("Late CheckOut", 25.00));
+        servizios.add(new Servizio("Minibar", 8.00));
+        servizios.add(new Servizio("Noleggio Auto", 50.00));
+        servizios.add(new Servizio("Parcheggio", 10.00));
+        servizios.add(new Servizio("Servizio Lavanderia", 15.00));
+        servizios.add(new Servizio("Spa e Benessere", 45.00));
+        servizios.add(new Servizio("Transfer Aeroporto", 35.00));
 
-        servizios.add(new Servizio("Lavanderia",15.0));
-        servizios.add(new Servizio("Spa e Benessere",40));
         ArrayList<Servizio> servizios1 = (ArrayList<Servizio>) servizioDAO.doRetriveAll("crescente");
         assertEquals(servizios,servizios1);
     }
@@ -113,9 +120,9 @@ public class ServizioDAOTesting{
     @Test
     @DisplayName("doRetriveByAttribute(String attribute , Object value) quando va tutto bene ")
     public void doRetriveByAttributeAllTrue() throws SQLException {
-        ArrayList<Servizio> servizios = (ArrayList<Servizio>) servizioDAO.doRetriveByAttribute("Nome","Lavanderia");
+        ArrayList<Servizio> servizios = (ArrayList<Servizio>) servizioDAO.doRetriveByAttribute("Nome","Spa e Benessere");
         ArrayList<Servizio> servizios1 = new ArrayList<>();
-        servizios1.add(new Servizio("Lavanderia",15));
+        servizios1.add(new Servizio("Spa e Benessere",45));
         assertEquals(servizios,servizios1);
     }
 

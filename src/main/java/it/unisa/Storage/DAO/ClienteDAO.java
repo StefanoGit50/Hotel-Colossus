@@ -133,9 +133,10 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                         if(resultSet1.next()){
                             camera.setNumeroCamera(resultSet1.getInt("NumeroCamera"));
                             camera.setCapacità(resultSet1.getInt("Capacità"));
-                            camera.setPrezzoCamera(resultSet1.getDouble(""));
+                            camera.setPrezzoCamera(resultSet1.getDouble("Prezzo"));
                             camera.setStatoCamera(Stato.valueOf(resultSet1.getString("Stato")));
                             camera.setNoteCamera(resultSet1.getString("NoteCamera"));
+                            camera.setNomeCamera(resultSet1.getString("NomeCamera"));
                         }
                     }
                 }
@@ -151,7 +152,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
 
 
                 if(cap!=null){
-                    if (regex.matcher(cap).matches()) {
+                    if(regex.matcher(cap).matches()) {
                         cliente = new Cliente(nome, cognome, provincia, comune, via, civico, Integer.parseInt(cap), telefono, sesso, date, cf1, email,nazionalità,camera);
                         cliente.setBlacklisted(isBlackListed);
                     } else {
@@ -168,6 +169,8 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
             throw new SQLException();
         }
     }
+
+
 
     @Override
     public synchronized void doDelete(Cliente o) throws SQLException {
@@ -192,63 +195,74 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
     @Override
     public synchronized Collection<Cliente> doRetriveAll(String order) throws SQLException {
         con = ConnectionStorage.getConnection();
-        ArrayList<Cliente> clientes = new ArrayList<>();
+        ArrayList<Cliente> clienti = new ArrayList<>();
 
-        String sql =  "SELECT * FROM cliente ORDER BY ? ";
-        String sql1 = "Select * From (associato_a join camera on associato_a.NumeroCamera = camera.NumeroCamera)" +
-                "where CF = ?";
-        if(order != null){
-            if(order.equalsIgnoreCase("decrescente")){
-                sql += "DESC";
-            }else{
-
-                sql+= "ASC";
-            }
+        // Costruzione dinamica della query con ordinamento sicuro
+        String sql = "SELECT * FROM cliente ORDER BY CF";
+        if ("decrescente".equalsIgnoreCase(order)) {
+            sql += " DESC";
+        } else {
+            sql += " ASC";
         }
-        PreparedStatement preparedStatement1 = con.prepareStatement(sql1);
-        Camera camera = new Camera();
-        try(PreparedStatement preparedStatement = con.prepareStatement(sql)){
-            preparedStatement.setString(1,"CF");
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()){
-                String cf1 = (String) resultSet.getObject("CF");
-                String nome = (String) resultSet.getObject("Nome");
-                String cognome = (String) resultSet.getObject("Cognome");
-                String  cap = (String) resultSet.getObject("Cap");
-                String comune = (String) resultSet.getObject("comune");
-                Integer civico = (Integer) resultSet.getObject("civico");
-                String provincia = (String) resultSet.getObject("provincia");
-                String via = (String) resultSet.getObject("via");
-                String email = (String) resultSet.getObject("email");
-                String  sesso = (String) resultSet.getObject("Sesso");
-                String  telefono = (String) resultSet.getObject("telefono");
-                String  cittadinazione = (String) resultSet.getObject("Cittadinanza");
-                Date date1 = (Date) resultSet.getObject("DataDiNascita");
-                LocalDate date = date1.toLocalDate();
-                Boolean  isBackListed = (Boolean) resultSet.getObject("IsBackListed");
-                String nazionalità = resultSet.getString("Nazionalità");
-                preparedStatement1.setString(1,resultSet.getString("CF"));
-                try(ResultSet resultSet1 = preparedStatement1.executeQuery()){
-                        if(resultSet1.next()){
-                            camera.setNumeroCamera(resultSet1.getInt("NumeroCamera"));
-                            camera.setNoteCamera(resultSet1.getString("NoteCamera"));
-                            camera.setStatoCamera(Stato.valueOf(resultSet1.getString("Stato")));
-                            camera.setCapacità(resultSet1.getInt("NumeroMaxOcc"));
-                            camera.setPrezzoCamera(resultSet1.getDouble("Prezzo"));
-                        }
+
+        // Query per ottenere la Camera associata a ciascun cliente
+        String sqlCamera = "SELECT * FROM associato_a " +
+                "JOIN camera ON associato_a.NumeroCamera = camera.NumeroCamera " +
+                "WHERE CF = ?";
+
+        try (PreparedStatement psCliente = con.prepareStatement(sql);
+             PreparedStatement psCamera = con.prepareStatement(sqlCamera)) {
+
+            ResultSet rsCliente = psCliente.executeQuery();
+
+            while (rsCliente.next()) {
+                // Nuova Camera per ogni cliente
+                Camera camera = new Camera();
+
+                String cf = rsCliente.getString("CF");
+                String nome = rsCliente.getString("Nome");
+                String cognome = rsCliente.getString("Cognome");
+                String via = rsCliente.getString("Via");
+                String comune = rsCliente.getString("Comune");
+                String provincia = rsCliente.getString("Provincia");
+                int civico = rsCliente.getInt("Civico");
+                int cap = rsCliente.getInt("Cap");
+                String telefono = rsCliente.getString("Telefono");
+                String sesso = rsCliente.getString("Sesso");
+                LocalDate dataNascita = rsCliente.getDate("DataDiNascita").toLocalDate();
+                boolean isBlacklisted = rsCliente.getBoolean("IsBackListed");
+                String nazionalita = rsCliente.getString("Nazionalita");
+                String email = rsCliente.getString("Email");
+
+                // Recupero Camera associata
+                psCamera.setString(1, cf);
+                try (ResultSet rsCamera = psCamera.executeQuery()) {
+                    if (rsCamera.next()) {
+                        camera.setNumeroCamera(rsCamera.getInt("NumeroCamera"));
+                        camera.setNomeCamera(rsCamera.getString("NomeCamera"));
+                        camera.setPrezzoCamera(rsCamera.getDouble("Prezzo"));
+                        camera.setCapacità(rsCamera.getInt("NumeroMaxOcc"));
+                        camera.setStatoCamera(Stato.valueOf(rsCamera.getString("Stato")));
+                        camera.setNoteCamera(rsCamera.getString("NoteCamera"));
+                    }
                 }
-                cliente = new Cliente(nome,cognome,provincia,comune,via,civico,Integer.parseInt(cap),telefono,sesso,date,cf1,email,nazionalità,camera);
-                cliente.setBlacklisted(isBackListed);
-                clientes.add(cliente);
+
+                // Creazione Cliente
+                Cliente cliente = new Cliente(nome, cognome, provincia, comune, via, civico, cap, telefono,
+                        sesso, dataNascita, cf, email, nazionalita, camera);
+                cliente.setBlacklisted(isBlacklisted);
+
+                clienti.add(cliente);
             }
-            resultSet.close();
-        }finally{
-            if(con != null){
+        } finally {
+            if (con != null) {
                 ConnectionStorage.releaseConnection(con);
             }
         }
-        return clientes;
+
+        return clienti;
     }
+
 
 
     /**
