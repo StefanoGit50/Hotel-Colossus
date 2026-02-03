@@ -88,7 +88,7 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>{
     @Override
     public synchronized Trattamento doRetriveByKey(Object nome) throws SQLException
     {
-        if( !(nome instanceof String) ) throw new SQLException("ERROR: chiave non valida");
+        if(!(nome instanceof String) ) throw new SQLException("ERROR: chiave non valida");
 
         Connection connection = null;
         PreparedStatement ps = null;
@@ -144,13 +144,11 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>{
 
             ResultSet rs = ps.getResultSet();
 
-            if (rs.next()) {
+            while(rs.next()){
                 trattamento = new Trattamento();
                 trattamento.setNome(rs.getString("nome"));
                 trattamento.setPrezzo(rs.getDouble("prezzo"));
                 trattamenti.add(trattamento);
-            } else {
-                throw new NoSuchElementException("ERRORE: nessun trattamento non trovato");
             }
         } catch (SQLException e) {
             throw e;

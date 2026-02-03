@@ -87,7 +87,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
         try {
             connection = ConnectionStorage.getConnection();
             preparedStatement = connection.prepareStatement("" +
-                    "INSERT INTO prenotazione(NomeIntestatario,DataCreazionePrenotazione, DataArrivoCliente, DataPartenzaCliente,numeroDocumento" +
+                    "INSERT INTO hotelcolossus.prenotazione(NomeIntestatario,DataCreazionePrenotazione, DataArrivoCliente, DataPartenzaCliente,numeroDocumento" +
                     ",DataRilascioDocumento, DataScadenzaDocumento,NomeTrattamento,NoteAggiuntive, TipoDocumento,PrezzoAcquistoTrattamento,Cittadinanza) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ? , ?, ? , ? , ? ,?)", Statement.RETURN_GENERATED_KEYS);
 
@@ -101,7 +101,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
             if (p.getTrattamento() != null) {
                 preparedStatement.setString(8, p.getTrattamento().getNome());
                 preparedStatement.setDouble(11, p.getPrezzoAcquistoTrattamento());
-            } else {
+            }else{
                 preparedStatement.setString(8, null);
                 preparedStatement.setDouble(11, 0);
             }

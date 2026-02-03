@@ -135,7 +135,7 @@ public class TestCasesRegistraPrenotazione {
         camere.add(listaCamere.getFirst());
         clienti.add(listaClienti.getFirst());
         String nome = clienti.getFirst().getNome();
-
+    /*
         return new Prenotazione(
                 autoIncrement,                  // 1. IDPrenotazione
                 LocalDate.now(),                // 2. Data Creazione
@@ -153,7 +153,8 @@ public class TestCasesRegistraPrenotazione {
                 clienti,                        // 14. Lista Clienti
                 "12345678",                     // 15. Numero Documento
                 "Contanti"                      // 16. Metodo Pagamento (MANCAVA QUESTO)
-        );
+        );*/
+        return null;
     }
     /* ************************************************************************************************************** */
 

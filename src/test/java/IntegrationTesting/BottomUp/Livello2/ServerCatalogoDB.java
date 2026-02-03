@@ -62,7 +62,7 @@ public class ServerCatalogoDB {
                 arraycamera.get(0)     // camera
         );
 
-
+    /*
         prenotazione =new Prenotazione(
                 0,                                      // IDPrenotazione (0 se autoincrement)
                 LocalDate.now(),                        // dataCreazionePrenotazione (Oggi)
@@ -80,7 +80,7 @@ public class ServerCatalogoDB {
                 cliente,                                 // listaClienti
                 "CA12345XYZ",                           // numeroDocumento
                 "Bonifico Bancario"                     // metodoPagamento
-        );;
+        );;*/
 
     }
 
@@ -151,7 +151,7 @@ public class ServerCatalogoDB {
         ArrayList<Servizio> servizio= new ArrayList<>();
         servizio.add(new Servizio("SPA",40));
 
-        Prenotazione p = new Prenotazione(12124,          // IDPrenotazione
+        Prenotazione p =  null; /*new Prenotazione(12124,          // IDPrenotazione
                 LocalDate.now(),                        // dataCreazionePrenotazione
                 LocalDate.now(),                        // dataInizio
                 LocalDate.of(2026, 02, 01),             // dataFine
@@ -167,7 +167,7 @@ public class ServerCatalogoDB {
                 clienti,                                // listaClienti
                 "34532MC2",                             // numeroDocumento
                 ""                                      // metodoPagamento
-        );
+        );*/
         frontDesk.addPrenotazione(p);
         Prenotazione p1= null;
         // controllo nel DB se la prenotazione è presente

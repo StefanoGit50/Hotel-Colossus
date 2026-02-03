@@ -36,17 +36,16 @@ public class ServizioDAOTesting{
     @Test
     @Tag("True")
     public void doDeleteAllTrue() throws SQLException{
-        DBPopulator dbPopulator = new DBPopulator();
-        dbPopulator.cancel();
-        dbPopulator.populator();
+        DBPopulator.cancel();
+        DBPopulator.populator();
         assertDoesNotThrow(()->servizioDAO.doDelete(new Servizio("WiFi Premium",5)));
     }
     @Test
     @DisplayName("doDelete(Servizio servizio) quando o la chiave di servizio o servizio sono uguale a null")
     @Tags({@Tag("Exception"),@Tag("Error")})
      public void doDeleteException() throws SQLException {
-        DBPopulator dbPopulator = new DBPopulator();
-        dbPopulator.populator();
+        DBPopulator.cancel();
+        DBPopulator.populator();
         assertThrows(SQLException.class,()->servizioDAO.doDelete(null));
     }
 
@@ -54,8 +53,8 @@ public class ServizioDAOTesting{
     @DisplayName("doRetriveByKey(Object nome) quando vado tutto a buon fine")
     @Tag("True")
     public void doRetriveByKeyAllTrue() throws SQLException {
-        DBPopulator dbPopulator = new DBPopulator();
-        dbPopulator.populator();
+        DBPopulator.cancel();
+        DBPopulator.populator();
         Servizio servizio1 = servizioDAO.doRetriveByKey("Spa e Benessere");
         Servizio servizio2 = new Servizio("Spa e Benessere",45);
         assertEquals(servizio2,servizio1);
@@ -83,8 +82,12 @@ public class ServizioDAOTesting{
         DBPopulator dbPopulator = new DBPopulator();
         dbPopulator.populator();
         ArrayList<Servizio> servizios = new ArrayList<>();
+        servizios.add(new Servizio("Colazione in Camera",12));
+        servizios.add(new Servizio("Late CheckOut",25));
+        servizios.add(new Servizio("Parcheggio",10));
         servizios.add(new Servizio("Spa e Benessere",40));
-        ArrayList<Servizio> servizios1 = (ArrayList<Servizio>) servizioDAO.doRetriveAll("decrescente");
+        servizios.add(new Servizio("",));
+        ArrayList<Servizio> servizios1 = (ArrayList<Servizio>) servizioDAO.doRetriveAll("nome");
         assertEquals(servizios,servizios1);
     }
 

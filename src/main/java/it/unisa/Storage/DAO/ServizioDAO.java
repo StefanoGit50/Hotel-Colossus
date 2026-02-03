@@ -25,7 +25,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio> {
         PreparedStatement ps = null;
 
         String query = "INSERT INTO " + ServizioDAO.TABLE_NAME +
-                " (IDServizio,Nome, Prezzo) " +
+                " (Nome, Prezzo) " +
                 " VALUES (?,?) ";
 
         try {

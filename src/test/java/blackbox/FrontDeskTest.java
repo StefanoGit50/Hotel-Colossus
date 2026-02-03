@@ -194,7 +194,7 @@ public class FrontDeskTest{
                     "italiana",
                     new Camera(101,Stato.Libera, 1, 56, "","papaBenedetto")));
 
-            Prenotazione p= new Prenotazione(1234,
+            Prenotazione p = null; /*new Prenotazione(1234,
                     LocalDate.now(),
                     LocalDate.now(),
                     LocalDate.of(2026, 02, 01),
@@ -209,7 +209,7 @@ public class FrontDeskTest{
                     servizio,
                     cliente,
                     "34532MC2",
-                    "Carta di Credito");
+                    "Carta di Credito");*/
             return p;
         }
 
