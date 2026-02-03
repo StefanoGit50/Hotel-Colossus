@@ -31,23 +31,58 @@ public class UpdatePrenotazioneCommand implements Command {
     public UpdatePrenotazioneCommand() {
     }
 
+
+    /**
+     * Restituisce il valore di catalogue.
+     *
+     * @post result == catalogue
+     * @return catalogue
+     */
     public CatalogoPrenotazioni getCatalogue() {
         return catalogue;
     }
 
+
+    /**
+     * Imposta il valore di catalogue.
+     *
+     * @param catalogue
+     * @pre catalogue != null
+     * @post this.catalogue == catalogue
+     */
     public void setCatalogue(CatalogoPrenotazioni catalogue) {
         this.catalogue = catalogue;
     }
 
+
+    /**
+     * Restituisce prenotazione.
+     *
+     * @post result == prenotazione
+     * @return prenotazione
+     */
     public Prenotazione getPrenotazione() {
         return prenotazione;
     }
 
+
+    /**
+     * Imposta il valore di prenotazione.
+     *
+     * @param prenotazione
+     * @pre prenotazione != null
+     * @post this.prenotazione == prenotazione
+     */
     public void setPrenotazione(Prenotazione prenotazione) {
         this.prenotazione = prenotazione;
     }
 
 
+    /**
+     * Esegue il comando.
+     *
+     * @post CatalogoPrenotazioni.listaPrenotazioni.stream().anyMatch(p | p.IDPrenotazione == prenotazione.IDPrenotazione)
+     */
     @Override
     public void execute() {
        prenotazioneNonModificata = null;
@@ -72,6 +107,11 @@ public class UpdatePrenotazioneCommand implements Command {
     }
 
 
+    /**
+     * Annulla il comando precedentemente eseguito.
+     *
+     * @post CatalogoPrenotazioni.listaPrenotazioni.stream().anyMatch(p | p.IDPrenotazione == prenotazioneNonModificata.IDPrenotazione)
+     */
     @Override
     public void undo() {
 

@@ -32,22 +32,49 @@ public class AddImpiegatoCommand implements Command {
     public AddImpiegatoCommand() {
     }
 
+    /**
+     * Restituisce il valore di catalogue.
+     *
+     * @post result == catalogue
+     */
     public CatalogoImpiegati getCatalogue() {
         return catalogue;
     }
 
+    /**
+     * Imposta il valore di catalogue.
+     *
+     * @pre catalogue != null
+     * @post this.catalogue == catalogue
+     */
     public void setCatalogue(CatalogoImpiegati catalogue) {
         this.catalogue = catalogue;
     }
 
+    /**
+     * Restituisce il valore di impiegato.
+     *
+     * @post result == impiegato
+     */
     public Impiegato getImpiegato() {
         return impiegato;
     }
 
+    /**
+     * Imposta il valore di impiegato.
+     *
+     * @pre impiegato != null
+     * @post this.impiegato == impiegato
+     */
     public void setImpiegato(Impiegato impiegato) {
         this.impiegato = impiegato;
     }
 
+    /**
+     * Esegue il comando.
+     *
+     * @post CatalogoImpiegati.listaImpiegati.contains(impiegato)
+     */
     @Override
     public void execute() {
         ArrayList<Impiegato> li = CatalogoImpiegati.getListaImpiegati();
@@ -61,6 +88,11 @@ public class AddImpiegatoCommand implements Command {
         }
     }
 
+    /**
+     * Annulla il comando precedentemente eseguito.
+     *
+     * @post not CatalogoImpiegati.listaImpiegati.contains(impiegato)
+     */
     @Override
     public void undo() {
         try {

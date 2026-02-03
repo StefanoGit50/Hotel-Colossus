@@ -249,3 +249,19 @@ java.rmi.server.ExportException: object already exported
 	at java.rmi/java.rmi.server.UnicastRemoteObject.exportObject(UnicastRemoteObject.java:473)
 	at java.rmi/java.rmi.server.UnicastRemoteObject.exportObject(UnicastRemoteObject.java:358)
 	at it.unisa.Server.gestionePrenotazioni.FrontDesk.main(FrontDesk.java:81)
+Feb 02, 2026 11:44:40 AM it.unisa.Server.gestionePrenotazioni.FrontDesk main
+INFO: Avvio RMI Registry sulla porta 1099...
+Feb 02, 2026 11:44:40 AM it.unisa.Server.gestionePrenotazioni.FrontDesk main
+INFO: ✓ Connesso a RMI Registry esistente
+Feb 02, 2026 11:44:40 AM it.unisa.Server.gestionePrenotazioni.FrontDesk main
+INFO: Genero il gestore prenotazioni...
+Feb 02, 2026 11:44:40 AM it.unisa.Server.gestionePrenotazioni.FrontDesk main
+INFO: ✓ Gestore prenotazioni creato
+Feb 02, 2026 11:44:40 AM it.unisa.Server.gestionePrenotazioni.FrontDesk main
+INFO: Effettuo il rebind di gestione prenotazioni...
+Feb 02, 2026 11:44:40 AM it.unisa.Server.gestionePrenotazioni.FrontDesk main
+INFO: ✓ Gestore prenotazioni registrato con successo!
+Feb 02, 2026 11:44:40 AM it.unisa.Server.gestionePrenotazioni.FrontDesk main
+INFO: ✓ Servizio 'GestionePrenotazioni' pronto
+Feb 02, 2026 11:44:40 AM it.unisa.Server.gestionePrenotazioni.FrontDesk main
+INFO: Server in attesa di connessioni...

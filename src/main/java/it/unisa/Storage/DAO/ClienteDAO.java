@@ -45,6 +45,9 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
     };
 
     /**
+     *
+     * o non null PRECONDIZIONE
+     *
      * @param o;
      * @throws SQLException;
      */

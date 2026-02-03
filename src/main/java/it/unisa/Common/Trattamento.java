@@ -46,6 +46,8 @@ public class Trattamento implements Cloneable, Serializable {
     /**
      * Restituisce il nome del trattamento.
      *
+     * @post result == nome
+     *
      * @return Il nome del trattamento.
      */
     public String getNome() {
@@ -54,6 +56,9 @@ public class Trattamento implements Cloneable, Serializable {
 
     /**
      * Imposta il nome del trattamento.
+     *
+     * @pre nome != null && nome != ""
+     * @post this.nome == nome
      *
      * @param nome Il nuovo nome da assegnare al trattamento.
      */
@@ -64,6 +69,8 @@ public class Trattamento implements Cloneable, Serializable {
     /**
      * Restituisce il prezzo del trattamento.
      *
+     * @post result == prezzo
+     *
      * @return Il prezzo del trattamento.
      */
     public double getPrezzo() {
@@ -72,6 +79,9 @@ public class Trattamento implements Cloneable, Serializable {
 
     /**
      * Imposta il prezzo del trattamento.
+     *
+     * @pre prezzo != null
+     * @post this.prezzo == prezzo
      *
      * @param prezzo Il nuovo prezzo da assegnare al trattamento.
      */

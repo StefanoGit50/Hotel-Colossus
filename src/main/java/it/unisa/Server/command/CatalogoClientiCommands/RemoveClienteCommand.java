@@ -30,22 +30,58 @@ public class RemoveClienteCommand implements Command {
     public RemoveClienteCommand() {
     }
 
+
+    /**
+     * Restituisce il valore di catalogue.
+     *
+     * @post result == catalogue
+     * @return catalogue
+     */
     public CatalogoClienti getCatalogue() {
         return catalogue;
     }
 
+
+    /**
+     * Imposta il valore di catalogue.
+     *
+     * @param catalogue
+     * @pre catalogue != null
+     * @post this.catalogue == catalogue
+     */
     public void setCatalogue(CatalogoClienti catalogue) {
         this.catalogue = catalogue;
     }
 
+
+    /**
+     * Restituisce il valore di cliente.
+     *
+     * @post result == cliente
+     * @return cliente
+     */
     public Cliente getCliente() {
         return cliente;
     }
 
+
+    /**
+     * Imposta il valore di cliente.
+     *
+     * @param cliente
+     * @pre cliente != null
+     * @post this.cliente == cliente
+     */
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
 
+
+    /**
+     * Esegue il comando.
+     *
+     * @post not CatalogoClienti.listaClienti.contains(cliente) && !CatalogoClienti.listaClientiBannati.contains(cliente)
+     */
     @Override
     public void execute() {
         try {
@@ -69,6 +105,12 @@ public class RemoveClienteCommand implements Command {
         }
     }
 
+
+    /**
+     * Annulla il comando precedentemente eseguito.
+     *
+     * @post (cliente.isBlacklisted == true && CatalogoClienti.listaClientiBannati.contains(cliente)) || (cliente.isBlacklisted == false && CatalogoClienti.listaClienti.contains(cliente))
+     */
     @Override
     public void undo() {
         ArrayList<Cliente> lc;

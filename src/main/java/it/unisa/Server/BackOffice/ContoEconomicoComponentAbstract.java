@@ -10,12 +10,34 @@ public abstract class ContoEconomicoComponentAbstract {
     protected List<ContoEconomicoComponentAbstract> figli = new ArrayList<>();
 
 
+    /**
+     * Restituisce il valore di nomeComponente.
+     *
+     * @post result == nomevoce
+     * @return nomevoce
+     */
     public String getNomeComponente(){
         return nomevoce;
     }
+
+
+    /**
+     * Restituisce il valore di prezzo.
+     *
+     * @post result == prezzo
+     * @return prezzo
+     */
     public double getPrezzo() {
         return prezzo;
     }
+
+
+    /**
+     * Imposta il valore di prezzo.
+     *
+     * @pre prezzo != null
+     * @post this.prezzo == prezzo
+     */
     public void setPrezzo(double prezzo) {
         this.prezzo = prezzo;
     }
@@ -31,13 +53,30 @@ public abstract class ContoEconomicoComponentAbstract {
     public abstract double getImportoTotale();
 
 
+    /**
+     * Aggiunge il child alla collezione.
+     *
+     * @param child
+     * @pre child != null
+     * @post figli.contains(child)
+     */
     public void addChild(ContoEconomicoComponentAbstract child) {
         throw new UnsupportedOperationException("Foglia non supporta operazione");
     }
 
+
+    /**
+     * Rimuove child dalla collezione.
+     *
+     * @param child
+     * @pre child != null
+     * @post not figli.contains(child)
+     */
     public void removeChild(ContoEconomicoComponentAbstract child) {
         throw new UnsupportedOperationException("Foglia non supporta operazione");
     }
+
+
 
     public abstract double getTotalePerTipo(TipoVoce tipo);
 

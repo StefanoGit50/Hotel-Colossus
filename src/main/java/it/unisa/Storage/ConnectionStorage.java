@@ -24,6 +24,12 @@ public class    ConnectionStorage{
         }));
     }
 
+
+    /**
+     * Crea connessione al db
+     *
+     * @post result != null
+     */
     private static synchronized Connection createDBConnection() throws SQLException {
         Connection newConnection;
         String ip = "localhost";
@@ -37,6 +43,12 @@ public class    ConnectionStorage{
     }
 
 
+    /**
+     * Restituisce il valore di connection.
+     *
+     * @post result != null && result.isClosed() == false
+     * @return connection
+     */
     public static synchronized Connection getConnection(){
         Connection connection = null;
 
@@ -67,6 +79,15 @@ public class    ConnectionStorage{
         return connection;
     }
 
+
+    /**
+     * Esegue un'operazione specifica del metodo.
+     *
+     * @param connection
+     * @pre connection != null
+     * @post freeDbConnections.contains(connection) || connection.isClosed() == true
+     * @throws SQLException
+     */
     public static synchronized void releaseConnection(Connection connection) throws SQLException {
         if(connection!=null && freeDbConnections.size()<60){
             freeDbConnections.add(connection);
@@ -80,6 +101,12 @@ public class    ConnectionStorage{
         }
     }
 
+
+    /**
+     * Esegue un'operazione specifica del metodo.
+     *
+     * @post freeDbConnections->isEmpty() && freeDbConnections.stream().allMatch(c | c.isClosed() == true)
+     */
     public static synchronized void shutdown() {
         log.info("Chiusura connessioni...");
         for (Connection conn : freeDbConnections) {

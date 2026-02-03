@@ -32,22 +32,58 @@ public class UpdateImpiegatoCommand implements Command {
     public UpdateImpiegatoCommand() {
     }
 
+
+    /**
+     * Restituisce il valore di catalogue.
+     *
+     * @post result == catalogue
+     * @return catalogue
+     */
     public CatalogoImpiegati getCatalogue() {
         return catalogue;
     }
 
+
+    /**
+     * Imposta il valore di catalogue.
+     *
+     * @param catalogue
+     * @pre catalogue != null
+     * @post this.catalogue == catalogue
+     */
     public void setCatalogue(CatalogoImpiegati catalogue) {
         this.catalogue = catalogue;
     }
 
+
+    /**
+     * Restituisce il valore di impiegato.
+     *
+     * @post result == impiegato
+     * @return impiegato
+     */
     public Impiegato getImpiegato() {
         return impiegato;
     }
 
+
+    /**
+     * Imposta il valore di impiegato.
+     *
+     * @param impiegato
+     * @pre impiegato != null
+     * @post this.impiegato == impiegato
+     */
     public void setImpiegato(Impiegato impiegato) {
         this.impiegato = impiegato;
     }
 
+
+    /**
+     * Esegue il comando.
+     *
+     * @post CatalogoImpiegati.listaImpiegati.stream().anyMatch(i | i.codiceFiscale == impiegato.codiceFiscale)
+     */
     @Override
     public void execute() {
         try {
@@ -78,6 +114,12 @@ public class UpdateImpiegatoCommand implements Command {
         }
     }
 
+
+    /**
+     * Annulla il comando precedentemente eseguito.
+     *
+     * @post CatalogoImpiegati.listaImpiegati.stream().anyMatch(i | i.codiceFiscale == impiegatoNonModificato.codiceFiscale)
+     */
     @Override
     public void undo() {
         try {
