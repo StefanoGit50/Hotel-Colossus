@@ -270,11 +270,12 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
                 ContoEconomicoComposite prenotazioneComposite = new ContoEconomicoComposite("PRENOTAZIONE" + p.getIDPrenotazione() + " " + p.getIntestatario());
 
                 // creazione composite CAMERE
+                /*
                 if (!p.getListaCamere().isEmpty() && p.getListaCamere() != null) {
                     ContoEconomicoComposite camere = creaNodoeFoglie("CAMERE", p.getListaCamere(), room -> "CAMERA" + room.getNumeroCamera(),
                             room -> room.getPrezzoCamera(), room -> TipoVoce.CAMERA);
                     prenotazioneComposite.addChild(camere);
-                }
+                }*/
                 //creazione composite SERVIZI
                 if (!p.getListaServizi().isEmpty() && p.getListaServizi() != null) {
                     ContoEconomicoComposite servizi = creaNodoeFoglie("SERVIZI", p.getListaServizi(), s -> s.getNome(),

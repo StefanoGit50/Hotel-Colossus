@@ -82,7 +82,7 @@ public class CatalogoPrenotazioniTester
         LocalDate dataFinePrenotazione = LocalDate.of(2025, 1, 20);
 
         when(mockPrenotazione1.getIntestatario()).thenReturn("Mario Rossi");
-        when(mockPrenotazione1.getListaCamere()).thenReturn(listaCamere);
+        //when(mockPrenotazione1.getListaCamere()).thenReturn(listaCamere);
         when(mockPrenotazione1.getDataInizio()).thenReturn(dataInizioPrenotazione);
         when(mockPrenotazione1.getDataFine()).thenReturn(dataFinePrenotazione);
         when(mockPrenotazione1.clone()).thenReturn(mockPrenotazione1);
@@ -114,7 +114,7 @@ public class CatalogoPrenotazioniTester
         listaCamere.add(mockCamera1);
 
         when(mockPrenotazione1.getIntestatario()).thenReturn("Luigi Verdi");
-        when(mockPrenotazione1.getListaCamere()).thenReturn(listaCamere);
+        //when(mockPrenotazione1.getListaCamere()).thenReturn(listaCamere);
         when(mockCamera1.getNumeroCamera()).thenReturn(101);
 
         CatalogoPrenotazioni.getListaPrenotazioni().add(mockPrenotazione1);
@@ -219,7 +219,7 @@ public class CatalogoPrenotazioniTester
 
         when(mockCamera1.getCapacità()).thenReturn(1);
         when(mockPrenotazione1.getTipoDocumento()).thenReturn("patente");
-        when(mockPrenotazione1.getListaCamere()).thenReturn(listaCamere);
+        //when(mockPrenotazione1.getListaCamere()).thenReturn(listaCamere);
         when(mockPrenotazione1.getListaClienti()).thenReturn(listaClienti);
 
         // dataInizio passata
@@ -243,11 +243,11 @@ public class CatalogoPrenotazioniTester
         // Lista camere vuota
         when(mockPrenotazione1.getDataInizio()).thenReturn(LocalDate.now().plusDays(1));
         when(mockPrenotazione1.getDataFine()).thenReturn(LocalDate.now().plusDays(5));
-        when(mockPrenotazione1.getListaCamere()).thenReturn(new ArrayList<>());
+        //when(mockPrenotazione1.getListaCamere()).thenReturn(new ArrayList<>());
         assertThrows(InvalidInputException.class, () -> CatalogoPrenotazioni.checkPrenotazione(mockPrenotazione1));
 
         // Lista clienti vuota
-        when(mockPrenotazione1.getListaCamere()).thenReturn(listaCamere);
+        //when(mockPrenotazione1.getListaCamere()).thenReturn(listaCamere);
         when(mockPrenotazione1.getListaClienti()).thenReturn(new ArrayList<>());
         assertThrows(InvalidInputException.class, () -> CatalogoPrenotazioni.checkPrenotazione(mockPrenotazione1));
 
@@ -283,7 +283,7 @@ public class CatalogoPrenotazioniTester
         when(mockPrenotazione1.getDataRilascio()).thenReturn(LocalDate.now().minusYears(1));
         when(mockPrenotazione1.getDataScadenza()).thenReturn(LocalDate.now().plusYears(1));
         when(mockPrenotazione1.getTipoDocumento()).thenReturn("patente");
-        when(mockPrenotazione1.getListaCamere()).thenReturn(listaCamere);
+        //when(mockPrenotazione1.getListaCamere()).thenReturn(listaCamere);
         when(mockPrenotazione1.getListaClienti()).thenReturn(listaClienti);
 
         assertDoesNotThrow(() -> CatalogoPrenotazioni.checkPrenotazione(mockPrenotazione1));

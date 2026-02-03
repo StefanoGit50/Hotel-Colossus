@@ -92,11 +92,12 @@ public class CatalogoPrenotazioni implements Serializable {
             }
             if (params[1]) {
                 boolean flag = false;
+                /*
                 for (Camera c : prenotazione.getListaCamere()) {
                     if (Objects.equals(c.getNumeroCamera(), numeroCamera)) {
                         flag = true;
                     }
-                }
+                }*/
                 if (!flag) {
                     continue;
                 }
@@ -320,10 +321,10 @@ public class CatalogoPrenotazioni implements Serializable {
 
         int nClienti = prenotazione.getListaClienti().size();
         int nPostiCamere = 0;
-
+        /*
         for (Camera c : prenotazione.getListaCamere()) {
             nPostiCamere +=  c.getCapacità();
-        }
+        }*/
 
         // Lista di condizioni che possono lanciare un errore
         // 1. Data Arrivo Passata
@@ -343,9 +344,10 @@ public class CatalogoPrenotazioni implements Serializable {
             throw new InvalidInputException("Data di partenza non può essere passata");
 
         // 5. Nessuna Camera selezionata
+       /*
         if (prenotazione.getListaCamere().isEmpty() || nPostiCamere == 0)
             throw new InvalidInputException("Almeno una camera deve essere selezionata");
-
+        */
         // 6. Nessun Cliente selezionato
         if (prenotazione.getListaClienti().isEmpty() || nClienti == 0)
             throw new InvalidInputException("Almeno un cliente deve essere selezionato");

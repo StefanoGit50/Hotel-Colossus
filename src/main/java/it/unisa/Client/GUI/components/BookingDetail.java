@@ -545,9 +545,10 @@ public class BookingDetail extends VBox {
 
         // Calcola costo camere
         double roomCost = 0;
+        /*
         for (Camera c : prenotazione.getListaCamere()) {
             roomCost += c.getPrezzoCamera();
-        }
+        }*/
         roomCost *= notti;
 
         // Costo trattamento

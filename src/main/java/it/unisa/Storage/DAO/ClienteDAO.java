@@ -52,7 +52,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
      * @throws SQLException;
      */
     public synchronized void doSave(Cliente o) throws SQLException{
-        String insertSQL= "INSERT INTO " +  TABLE_NAME +" (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, Nazionalità,DataDiNascita, IsBackListed)"
+        String insertSQL= "INSERT INTO " +  TABLE_NAME +" (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, Nazionalita,DataDiNascita, IsBackListed)"
                 + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         try{
@@ -127,7 +127,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                     cliente.setBlacklisted(resultSet.getBoolean("IsBackListed"));
                     try(ResultSet resultSet1 = preparedStatement1.executeQuery()){
                         if(resultSet1.next()){
-                            camera.setNomeCamera(resultSet1.getString("nome"));
+                            camera.setNomeCamera(resultSet1.getString("NomeCamera"));
                             camera.setNumeroCamera(resultSet1.getInt("NumeroCamera"));
                             camera.setCapacità(resultSet1.getInt("NumeroMaxOcc"));
                             camera.setPrezzoCamera(resultSet1.getDouble("Prezzo"));
@@ -187,11 +187,12 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
             }
         }
         PreparedStatement preparedStatement1 = con.prepareStatement(sql1);
-        Camera camera = new Camera();
+
         try(PreparedStatement preparedStatement = con.prepareStatement(sql)){
             preparedStatement.setString(1,"CF");
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
+                Camera camera = new Camera();
                 String cf1 = (String) resultSet.getObject("CF");
                 String nome = (String) resultSet.getObject("Nome");
                 String cognome = (String) resultSet.getObject("Cognome");
@@ -206,7 +207,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                 Date date1 = (Date) resultSet.getObject("DataDiNascita");
                 LocalDate date = date1.toLocalDate();
                 Boolean  isBackListed = (Boolean) resultSet.getObject("IsBackListed");
-                String nazionalità = resultSet.getString("Nazionalità");
+                String nazionalità = resultSet.getString("Nazionalita");
                 preparedStatement1.setString(1,resultSet.getString("CF"));
                 try(ResultSet resultSet1 = preparedStatement1.executeQuery()){
                         if(resultSet1.next()){
@@ -254,9 +255,9 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
         if(o != null && o.getCf() != null){
             con = ConnectionStorage.getConnection();
             try(PreparedStatement preparedStatement = con.prepareStatement(
-                    "UPDATE cliente JOIN USING (CF) SET nome = ?, cognome = ?, Cap = ?, comune = ?, " +
+                    "UPDATE cliente JOIN associato_a using(CF) SET nome = ?, cognome = ?, Cap = ?, comune = ?, " +
                             "civico = ?, provincia = ?, via = ?, Email = ?, Sesso = ?, " +
-                            "telefono = ?, Nazionilita = ?, " +
+                            "telefono = ?, Nazionalita = ?, " +
                             "DataDiNascita = ?, IsBackListed = ?, NumeroCamera= ?, NumeroCameraStorico = ?,PrezzoAcquisto = ? WHERE CF = ?")){
 
                 preparedStatement.setString(1, o.getNome());
@@ -269,12 +270,13 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                 preparedStatement.setString(8, o.getEmail());
                 preparedStatement.setString(9, o.getSesso());
                 preparedStatement.setString(10, o.getNumeroTelefono());
+                preparedStatement.setString(11,o.getNazionalita());
                 preparedStatement.setDate(12, Date.valueOf(o.getDataNascita()));
                 preparedStatement.setBoolean(13, o.isBlacklisted());
-                preparedStatement.setString(14, o.getCf());
+                preparedStatement.setInt(14,o.getCamera().getNumeroCamera());
                 preparedStatement.setInt(15,o.getCamera().getNumeroCamera());
-                preparedStatement.setInt(16,o.getCamera().getNumeroCamera());
-                preparedStatement.setDouble(17,o.getCamera().getPrezzoCamera());
+                preparedStatement.setDouble(16,o.getCamera().getPrezzoCamera());
+                preparedStatement.setString(17, o.getCf());
                 preparedStatement.executeUpdate();
             }
             finally
@@ -300,8 +302,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
         if(attribute != null && !attribute.isEmpty() && value != null){
             con= ConnectionStorage.getConnection();
             selectSQL = "SELECT * FROM cliente WHERE " + attribute + " = ?";
-            Camera camera = new Camera();
-            PreparedStatement preparedStatement1 = con.prepareStatement("Select * From (associato_a join camera on associato_a.NumeroCamera = camera.NumeroCamera)" +
+            PreparedStatement preparedStatement1 = con.prepareStatement("Select camera.* From (associato_a join camera on associato_a.NumeroCamera = camera.NumeroCamera)" +
                     "where CF = ?");
             try{
                 preparedStatement = con.prepareStatement(selectSQL);
@@ -310,6 +311,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
 
                 while (resultSet.next()) {
                     cliente = new Cliente();
+                    Camera camera = new Camera();
                     cliente.setCf(resultSet.getString("CF"));
                     cliente.setNome(resultSet.getString("nome"));
                     cliente.setCognome(resultSet.getString("cognome"));
@@ -323,9 +325,10 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                     cliente.setNumeroTelefono(resultSet.getString("telefono"));
                     cliente.setBlacklisted(resultSet.getBoolean("IsBackListed"));
                     cliente.setDataNascita(resultSet.getDate("DataDiNascita").toLocalDate());
-                    cliente.setNazionalita(resultSet.getString("Nazionalità"));
+                    cliente.setNazionalita(resultSet.getString("Nazionalita"));
 
                     preparedStatement1.setString(1,resultSet.getString("CF"));
+                    System.out.println(resultSet.getString("CF"));
 
                     try(ResultSet resultSet1 = preparedStatement1.executeQuery()){
                         if(resultSet1.next()){
@@ -334,6 +337,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                             camera.setPrezzoCamera(resultSet1.getDouble("Prezzo"));
                             camera.setCapacità(resultSet1.getInt("NumeroMaxOcc"));
                             camera.setStatoCamera(Stato.valueOf(resultSet1.getString("Stato")));
+                            camera.setNomeCamera(resultSet1.getString("NomeCamera"));
                         }
                     }
                     cliente.setCamera(camera);

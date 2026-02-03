@@ -124,7 +124,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
             }
 
             // Salva i servizi associati
-            String query = "Insert into ha (IDPrenotazione,IDServizio,NomeServizioAcquistato,PrezzoServizioAcquistato) values(?,?,?,?)";
+            String query = "Insert into ha (IDPrenotazione,IDServizio,NomeServizioAcquistato,PrezzoAcquistoServizio) values(?,?,?,?)";
             PreparedStatement preparedStatement1 = connection.prepareStatement(query);
 
             for (Servizio servizio : p.getListaServizi()) {
@@ -220,7 +220,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
         Trattamento trattamento = new Trattamento();
 
         String[] sql = {
-                "SELECT NumeroCameraStorico, PrezzoAcquisto, FROM " + VIEW_TABLE_NAME + " WHERE IDPrenotazione = ?",
+                "SELECT NumeroCameraStorico, PrezzoAcquisto FROM " + VIEW_TABLE_NAME + " WHERE IDPrenotazione = ?",
                 "SELECT NomeTrattamento, PrezzoAcquistoTrattamento FROM " + VIEW_TABLE_NAME + " WHERE IDPrenotazione = ?",
                 "SELECT NomeServizioAcquistato, PrezzoAcquistoServizio FROM " + VIEW_TABLE_NAME + " WHERE IDPrenotazione = ?",
                 "SELECT CF  FROM " + VIEW_TABLE_NAME + " WHERE IDPrenotazione = ?"

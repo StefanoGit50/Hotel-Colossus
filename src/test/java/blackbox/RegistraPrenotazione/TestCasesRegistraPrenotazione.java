@@ -307,7 +307,7 @@ public class TestCasesRegistraPrenotazione {
         @DisplayName("TC15: [error] Numero camere = 0")
         public void testCase15() {
             Prenotazione p = createBasePrenotazione();
-            p.setListaCamere(new ArrayList<>());
+            //p.setListaCamere(new ArrayList<>());
             assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 

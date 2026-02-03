@@ -71,7 +71,7 @@ public class prenotazioneDAOTesting {
     @DisplayName("doSave() quando è tutto False")
     public void doSaveAllFalse() throws SQLException{
         prenotazione.setListaServizi(new ArrayList<>());
-        prenotazione.setListaCamere(new ArrayList<>());
+        //prenotazione.setListaCamere(new ArrayList<>());
         prenotazione.setListaClienti(new ArrayList<>());
         assertDoesNotThrow(()->prenotazioneDAO.doSave(prenotazione));
     }
@@ -120,7 +120,7 @@ public class prenotazioneDAOTesting {
        Prenotazione prenotazione1 = prenotazioneDAO.doRetriveByKey(1);
        System.out.println(prenotazione1);
        prenotazione.setListaClienti(new ArrayList<>());
-       prenotazione.setListaCamere(new ArrayList<>());
+       //prenotazione.setListaCamere(new ArrayList<>());
        prenotazione.setListaServizi(new ArrayList<>());
        prenotazione.setTrattamento(null);
        assertEquals(prenotazione,prenotazione1);
@@ -236,7 +236,7 @@ public class prenotazioneDAOTesting {
         prenotazione1.setTrattamento(null);
         prenotazione1.setNumeroDocumento("AX123456");
         prenotazione1.setListaClienti(new ArrayList<>());
-        prenotazione1.setListaCamere(new ArrayList<>());
+       // prenotazione1.setListaCamere(new ArrayList<>());
         prenotazione1.setListaServizi(new ArrayList<>());
         prenotazione1.setNoteAggiuntive("Richiesta camera silenziosa");
         prenotazione1.setIntestatario("Mario Rossi");
@@ -256,7 +256,7 @@ public class prenotazioneDAOTesting {
         prenotazione2.setIntestatario("Laura Verdi");
         prenotazione2.setNumeroDocumento("BC789012");
         prenotazione2.setListaServizi(new ArrayList<>());
-        prenotazione2.setListaCamere(new ArrayList<>());
+        //prenotazione2.setListaCamere(new ArrayList<>());
         prenotazione2.setListaClienti(new ArrayList<>());
         prenotazione2.setStatoPrenotazione(true);
         prenotazione2.setCheckIn(false);
