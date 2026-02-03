@@ -1,3 +1,4 @@
+
 package it.unisa.Server.persistent.obj.catalogues;
 
 import it.unisa.Common.Camera;

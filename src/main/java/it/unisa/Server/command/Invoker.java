@@ -30,6 +30,10 @@ public class Invoker {
 
     /**
      * Esegue il comando passato come parametro esplicito, lo aggiunge allo stack e svuota lo stack {@code redoStack}.
+     *
+     * @pre c != null
+     * @post undoStack.contains(c) && redoStack->isEmpty()
+     *
      * @param c Comando da eseguire.
      */
     public void executeCommand(Command c) {
@@ -39,6 +43,10 @@ public class Invoker {
     }
     /**
      * Annulla l'ultimo comando eseguito.
+     *
+     * @pre not undoStack->isEmpty()
+     * @post redoStack.size() == redoStack@pre.size() + 1
+     *
      */
     public void undoCommand() {
         if (!undoStack.isEmpty()) {
@@ -50,6 +58,10 @@ public class Invoker {
 
     /**
      * Riapplica le modifiche del comando in allo stack {@code undoStack}.
+     *
+     * @pre not redoStack->isEmpty()
+     * @post undoStack.size() == undoStack@pre.size() + 1
+     *
      */
     public void redo() {
         if (!redoStack.isEmpty()) {

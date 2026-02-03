@@ -265,3 +265,19 @@ gen 26, 2026 5:25:15 PM it.unisa.Server.gestioneImpiegati.Manager main
 INFO: ? Servizio 'GestionePrenotazioni' pronto
 gen 26, 2026 5:25:15 PM it.unisa.Server.gestioneImpiegati.Manager main
 INFO: Server in attesa di connessioni...
+Feb 02, 2026 11:44:50 AM it.unisa.Server.gestioneImpiegati.Manager main
+INFO: Avvio RMI Registry sulla porta 1099...
+Feb 02, 2026 11:44:50 AM it.unisa.Server.gestioneImpiegati.Manager main
+INFO: ✓ Connesso a RMI Registry esistente
+Feb 02, 2026 11:44:50 AM it.unisa.Server.gestioneImpiegati.Manager main
+INFO: Genero il gestore prenotazioni...
+Feb 02, 2026 11:44:50 AM it.unisa.Server.gestioneImpiegati.Manager main
+INFO: ✓ Gestore prenotazioni creato
+Feb 02, 2026 11:44:50 AM it.unisa.Server.gestioneImpiegati.Manager main
+INFO: Effettuo il rebind di gestione prenotazioni...
+Feb 02, 2026 11:44:50 AM it.unisa.Server.gestioneImpiegati.Manager main
+INFO: ✓ Gestore prenotazioni registrato con successo!
+Feb 02, 2026 11:44:50 AM it.unisa.Server.gestioneImpiegati.Manager main
+INFO: ✓ Servizio 'GestionePrenotazioni' pronto
+Feb 02, 2026 11:44:50 AM it.unisa.Server.gestioneImpiegati.Manager main
+INFO: Server in attesa di connessioni...

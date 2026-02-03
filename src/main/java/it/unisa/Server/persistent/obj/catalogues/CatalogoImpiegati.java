@@ -41,10 +41,25 @@ public class CatalogoImpiegati implements Serializable {
 
     // Getters - Setters
 
+
+    /**
+     * Restituisce il valore di listaImpiegati.
+     *
+     * @post result == listaImpiegati
+     * @return listaImpiegati
+     */
     public synchronized static ArrayList<Impiegato> getListaImpiegati() {
         return listaImpiegati;
     }
 
+
+    /**
+     * Imposta il valore di listaImpiegati.
+     *
+     * @param listaImpiegati1
+     * @pre listaImpiegati1 != null
+     * @post listaImpiegati.stream().allMatch(i | listaImpiegati1.contains(i))
+     */
     public synchronized static void setListaImpiegati(ArrayList<Impiegato> listaImpiegati1) {
         while(!listaImpiegati.isEmpty()){
             listaImpiegati.removeFirst();
@@ -61,6 +76,23 @@ public class CatalogoImpiegati implements Serializable {
     }
 
 
+
+    /**
+     * Aggiunge un nuovo impiegato alla lista degli impiegati e lo salva nel database.
+     *
+     * @param imp l'impiegato da aggiungere
+     * @return true || false
+     *
+     * @pre imp != null || listaImpiegati != null || backOfficeStorage != null
+     * @post se result == true allora !listaImpiegati@pre.contains(imp)
+     * @post se result == true allora listaImpiegati.contains(imp)
+     * @post se result == true allora listaImpiegati.size() == listaImpiegati@pre.size() + 1
+     * @post se result == true allora backOfficeStorage.doSave(imp) è stato invocato con successo
+     * @post se result == false && listaImpiegati@pre.contains(imp) allora
+     *       listaImpiegati == listaImpiegati@pre
+     * @post se result == false && !listaImpiegati@pre.contains(imp) allora
+     *       si è verificata una SQLException e listaImpiegati == listaImpiegati@pre
+     */
     public synchronized static boolean aggiungiImpiegato(Impiegato imp) {
         if (!listaImpiegati.contains(imp)){
             try {
@@ -75,6 +107,23 @@ public class CatalogoImpiegati implements Serializable {
         return false;
     }
 
+
+    /**
+     * Elimina un impiegato dalla lista degli impiegati e dal database.
+     *
+     * @param imp l'impiegato da eliminare
+     * @return true || false
+     *
+     * @pre imp != null && listaImpiegati != null && backOfficeStorage != null
+     * @post se result == true allora listaImpiegati@pre.contains(imp)
+     * @post se result == true allora !listaImpiegati.contains(imp)
+     * @post se result == true allora listaImpiegati.size() == listaImpiegati@pre.size() - 1
+     * @post se result == true allora backOfficeStorage.doDelete(imp) è stato invocato con successo
+     * @post se result == false && !listaImpiegati@pre.contains(imp) allora
+     *       listaImpiegati == listaImpiegati@pre
+     * @post se result == false && listaImpiegati@pre.contains(imp) allora
+     *       si è verificata una SQLException e listaImpiegati == listaImpiegati@pre
+     */
     public static boolean eliminaImpiegato(Impiegato imp){
         if(listaImpiegati.contains(imp)){
             try{
@@ -88,6 +137,32 @@ public class CatalogoImpiegati implements Serializable {
         }
         return false;
     }
+
+
+    /**
+     * Aggiorna un impiegato esistente nella lista sostituendolo con una versione modificata.
+     * L'aggiornamento viene effettuato anche sul database tramite backOfficeStorage.
+     * Il metodo cerca un impiegato con lo stesso codice fiscale ma con dati diversi e lo sostituisce.
+     * L'aggiornamento avviene solo se l'impiegato è presente nella lista.
+     *
+     * @param imp l'impiegato con i dati aggiornati
+     * @return true se l'aggiornamento è avvenuto con successo, false altrimenti
+     *
+     * @pre imp != null || listaImpiegati != null || backOfficeStorage != null
+     * @post se result == true allora listaImpiegati@pre.contains(imp)
+     * @post se result == true allora listaImpiegati@pre.stream().anyMatch(i ->
+     *       i.getCodiceFiscale().equals(imp.getCodiceFiscale()) && !i.equals(imp))
+     * @post se result == true allora listaImpiegati.contains(imp)
+     * @post se result == true allora !listaImpiegati.stream().anyMatch(i ->
+     *       i.getCodiceFiscale().equals(imp.getCodiceFiscale()) && !i.equals(imp))
+     * @post se result == true allora listaImpiegati.size() == listaImpiegati@pre.size()
+     * @post se result == true allora backOfficeStorage.doUpdate(imp) è stato invocato con successo
+     * @post se result == false && !listaImpiegati@pre.contains(imp) allora
+     *       listaImpiegati == listaImpiegati@pre
+     * @post se result == false && listaImpiegati@pre.contains(imp) allora
+     *       si è verificata una SQLException oppure non esiste un impiegato con stesso codice fiscale
+     *       ma dati diversi, e listaImpiegati == listaImpiegati@pre
+     */
     public static boolean updateImpiegato(Impiegato imp){
         if(listaImpiegati.contains(imp)){
             try{
@@ -117,6 +192,9 @@ public class CatalogoImpiegati implements Serializable {
     /**
      * Cerca un impiegato specifica tramite il suo codice fiscale e ne restituisce una copia.
      *
+     * @pre CFImpiegato != null && CFImpiegato != ""
+     * @post result == null || result.codiceFiscale == CFImpiegato
+     *
      * @param CFImpiegato Il codice fiscale dell'impiegato da cercare da cercare.
      * @return Una deep copy dell'oggetto Impiegato trovato, o {@code null} se non ne esiste nessuno con quel CF.
      * @throws CloneNotSupportedException Se l'oggetto Impiegato non supporta la clonazione.
@@ -143,6 +221,12 @@ public class CatalogoImpiegati implements Serializable {
      * Esegue una ricerca flessibile all'interno del catalogo impiegati basandosi su vari criteri.
      * La ricerca prende almeno un parametro in input mentre gli altri possono essere nulli.
      * Un impiegato viene selezionato solo se rispetta tutti i parametri non nulli della ricerca.
+     *
+     * @pre nome != null || cognome != null || sesso != null || ruolo != null
+     *  @post result.stream().allMatch(i | (nome == null || i.nome == nome) &&
+     *  (cognome == null || i.cognome == cognome) &&
+     *  (sesso == null || i.sesso == sesso) &&
+     *  (ruolo == null || i.ruolo == ruolo))
      *
      * @param nome Il nome dell'impiegato da cercare (può essere {@code null}).
      * @param cognome Il cognome dell'impiegato da cercare (può essere {@code null}).
@@ -199,6 +283,9 @@ public class CatalogoImpiegati implements Serializable {
 
     /**
      * Metodo usato per controllare la validità dei campi di un impiegato.
+     *
+     * @pre impiegato != null
+     *
      * @param impiegato impiegato da controllare.
      * @throws InvalidInputException se un campo presenta un valore errato.
      */

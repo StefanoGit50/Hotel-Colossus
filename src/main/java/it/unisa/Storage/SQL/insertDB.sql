@@ -1,3 +1,4 @@
+
 USE hotelColossus;
 
 -- =============================================
@@ -56,43 +57,43 @@ VALUES
 -- =============================================
 -- 6. INSERT PRENOTAZIONE
 -- =============================================
-INSERT INTO Prenotazione (NomeIntestatario, DataCreazionePrenotazione, DataArrivoCliente, DataPartenzaCliente, DataEmissioneRicevuta, NumeroDocumento, DataRilascioDocumento, DataScadenzaDocumento, NomeTrattamento, NoteAggiuntive, TipoDocumento, Stato, CheckIn, PrezzoAcquistoTrattamento, MetodoPagamento)
+INSERT INTO Prenotazione (NomeIntestatario, DataCreazionePrenotazione, DataArrivoCliente, DataPartenzaCliente, DataEmissioneRicevuta, NumeroDocumento, DataRilascioDocumento, DataScadenzaDocumento, NomeTrattamento, NoteAggiuntive, TipoDocumento, Stato, CheckIn, PrezzoAcquistoTrattamento, MetodoPagamento, Cittadinanza)
 VALUES
 -- Prenotazione 1: Mario Rossi
-('Mario Rossi', '2023-12-01', '2024-01-10', '2024-01-15', '2024-01-15', 'ID888777', '2020-01-01', '2030-01-01', 'Bed & Breakfast', 'Nessuna nota', 'Carta Identita', true, true, 15.00, 'Carta di Credito'),
+('Mario Rossi', '2023-12-01', '2024-01-10', '2024-01-15', '2024-01-15', 'ID888777', '2020-01-01', '2030-01-01', 'Bed & Breakfast', 'Nessuna nota', 'Carta Identita', true, true, 15.00, 'Carta di Credito', 'italiana'),
 
 -- Prenotazione 2: Luigi Verdi
-('Luigi Verdi', '2024-02-01', '2024-02-20', '2024-02-25', NULL, 'PT123456', '2019-05-05', '2029-05-05', 'Pensione Completa', 'Intolleranza Lattosio', 'Patente', true, true, 55.00, 'Contanti'),
+('Luigi Verdi', '2024-02-01', '2024-02-20', '2024-02-25', NULL, 'PT123456', '2019-05-05', '2029-05-05', 'Pensione Completa', 'Intolleranza Lattosio', 'Patente', true, true, 55.00, 'Contanti', 'italiana'),
 
 -- Prenotazione 3: Hans Muller
-('Hans Muller', '2024-02-15', '2024-03-01', '2024-03-07', NULL, 'PASSDE99', '2021-01-01', '2031-01-01', 'All Inclusive', 'Late arrival expected', 'Passaporto', true, false, 80.00, 'Bonifico');
+('Hans Muller', '2024-02-15', '2024-03-01', '2024-03-07', NULL, 'PASSDE99', '2021-01-01', '2031-01-01', 'All Inclusive', 'Late arrival expected', 'Passaporto', true, false, 80.00, 'Bonifico', 'italiana');
 
 -- =============================================
 -- 7. INSERT ASSOCIATO_A
 -- Importante: Inseriamo manualmente NomeOspiteStorico e CognomeOspiteStorico
 -- =============================================
-INSERT INTO Associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto, NomeOspiteStorico, CognomeOspiteStorico) VALUES
+INSERT INTO Associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto, NominativoCliente, NumeroCameraStorico ) VALUES
 -- Mario Rossi -> Camera 101 -> Prenotazione 1
-('RSSMRA80A01H501U', 101, 1, 80.00, 'Mario', 'Rossi'),
+('RSSMRA80A01H501U', 101, 1, 80.00, 'Mario Rossi',101),
 
 -- Luigi Verdi -> Suite 202 -> Prenotazione 2
-('VRDLGI90B02F205K', 202, 2, 350.00, 'Luigi', 'Verdi'),
+('VRDLGI90B02F205K', 202, 2, 350.00, 'Luigi Verdi',202),
 
 -- Hans Muller -> Camera 201 -> Prenotazione 3
-('MULLER88E05Z112K', 201, 3, 180.00, 'Hans', 'Muller');
+('MULLER88E05Z112K', 201, 3, 180.00, 'Hans Muller',201);
 
 -- =============================================
 -- 8. INSERT HA (Dettaglio Servizi)
 -- Importante: Inseriamo manualmente NomeServizioAcquistato
 -- =============================================
-INSERT INTO Ha (IDPrenotazione, IDServizio, NomeServizioAcquistato, PrezzoAcquistoServizio) VALUES
+INSERT INTO Ha (IDPrenotazione, IDServizio, quantità, NomeServizioAcquistato, PrezzoAcquistoServizio) VALUES
 -- Prenotazione 1 (Mario) prende Parcheggio(1)
-(1, 1, 'Parcheggio', 10.00),
+(1, 1, 2,'Parcheggio', 10.00),
 
 -- Prenotazione 2 (Luigi) prende Spa(5) e Colazione(3)
-(2, 5, 'Spa e Benessere', 45.00),
-(2, 3, 'Colazione in Camera', 12.00),
+(2, 5, 3,'Spa e Benessere', 45.00),
+(2, 3, 2,'Colazione in Camera', 12.00),
 
 -- Prenotazione 3 (Hans) prende Transfer(6)
-(3, 6, 'Transfer Aeroporto', 35.00);
+(3, 6, 4,'Transfer Aeroporto', 35.00);
 SELECT 'Database popolato con successo!' AS Messaggio;

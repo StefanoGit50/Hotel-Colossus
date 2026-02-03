@@ -8,6 +8,10 @@ public final class DaoUtils {
     /**
      * Verifica se la stringa {@code suspect} può essere usata come clausula ORDER BY di una query SQL.
      * Viene incluso il controllo per i parametri asc e desc di ORDER BY.
+     *
+     * @pre whitelist != null && suspect != null
+     * @post result == true || result == false
+     *
      * @param whitelist	{@code String[]} - array di tutti gli attributi della tabella
      * @param suspect {@code String} - stringa da controllare
      * @return {@code true} se la stringa suspect può essere usata in una query SQL, {@code false} altrimenti

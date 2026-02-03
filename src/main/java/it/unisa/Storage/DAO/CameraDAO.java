@@ -21,6 +21,13 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
     private Connection connection;
     private PreparedStatement preparedStatement;
     private ResultSet resultSet;
+
+
+    /**
+     * Cancella la camera dal db.
+     *
+     * @pre o != null
+     */
     @Override
     public synchronized void doDelete(Camera o) throws SQLException {
         if(o != null){
@@ -39,6 +46,13 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
         }
     }
 
+
+    /**
+     * Ottiene  oggetto da chiave.
+     *
+     * @pre oggetto != null
+     * @post result == null || (result != null && result.numeroCamera == oggetto)
+     */
     @Override
     public synchronized Camera doRetriveByKey(Object oggetto) throws SQLException {
             if(oggetto instanceof Integer){
@@ -72,6 +86,12 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
        }
     }
 
+
+    /**
+     * Salva oggetto nel db.
+     *
+     * @pre o != null
+     */
     @Override
     public synchronized void doSave(Camera o) throws SQLException {
         connection = ConnectionStorage.getConnection();
@@ -94,6 +114,12 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
     // Mock front desk, mock oggetti che chiamano il frontDesk e che vengono chiamati dal frontDesk
     // Oggetti che passati come parametri NON devono essere mock-ati
 
+
+    /**
+     * Salva tutti gli oggetti nel DB.
+     *
+     * @pre listCamera != null && listCamera.size() > 0
+     */
     @Override
     public synchronized void doSaveAll(List<Camera> listCamera) throws SQLException {
         if(!listCamera.isEmpty()){
@@ -138,6 +164,13 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
 
     }
 
+
+    /**
+     * Ottiene tutte le camere dal DB.
+     *
+     * @pre order != null && order != ""
+     * @post result != null
+     */
     @Override
     public synchronized Collection<Camera> doRetriveAll(String order) throws SQLException{
         connection = ConnectionStorage.getConnection();
@@ -229,9 +262,17 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
         throw new UnsupportedOperationException("Not supported yet.");
     }
     /**
+     *
+     *
+     * Ottiene oggetto tramite attributo.
+     *
+     * @pre attribute != null && attribute != "" && value != null && value != ""
+     * @post result != null
+     *
+     *
      * @param attribute;
      * @param value;
-     * @return Collection<Camera>;
+     * @return Collection<>;
      * @throws SQLException;
      */
     @Override

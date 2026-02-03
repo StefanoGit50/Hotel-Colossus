@@ -85,11 +85,6 @@ public class Prenotazione implements Cloneable, Serializable {
     private LocalDate dataEmissioneRicevuta;
 
     /**
-     * Lista delle camere incluse nella prenotazione.
-     */
-    private ArrayList<Camera> listaCamere;
-
-    /**
      * Lista dei servizi aggiuntivi inclusi nella prenotazione.
      */
     private ArrayList<Servizio> listaServizi;
@@ -113,27 +108,26 @@ public class Prenotazione implements Cloneable, Serializable {
      * Costruttore completo per creare una nuova istanza di {@code Prenotazione}.
      *
      * @param dataCreazionePrenotazione Data di creazione della prenotazione.
-     * @param dataInizio Data di inizio del soggiorno.
-     * @param dataFine Data di fine del soggiorno.
+     * @param dataInizioPrenotazione Data di inizio del soggiorno.
+     * @param dataFinePrenotazione Data di fine del soggiorno.
      * @param trattamento Il trattamento (es. Pensione completa).
      * @param tipoDocumento Tipo di documento di garanzia.
      * @param dataRilascio Data di rilascio del documento.
      * @param dataScadenza Data di scadenza del documento.
      * @param intestatario Nome dell'intestatario della prenotazione.
      * @param noteAggiuntive Note aggiuntive.
-     * @param listaCamere Lista delle camere prenotate.
      * @param listaServizi Lista dei servizi aggiuntivi.
      * @param listaClienti Lista dei clienti.
      * @param numeroDocumento il numero del documento.
      */
-    public Prenotazione( LocalDate dataCreazionePrenotazione, LocalDate dataInizio, LocalDate dataFine,LocalDate dataEmissioneRicevuta,
+    public Prenotazione( LocalDate dataCreazionePrenotazione, LocalDate dataInizioPrenotazione, LocalDate dataFinePrenotazione,LocalDate dataEmissioneRicevuta,
                         Trattamento trattamento,Double prezzoAcquistoTrattamento, String tipoDocumento, LocalDate dataRilascio, LocalDate dataScadenza,
-                        String intestatario, String noteAggiuntive, ArrayList<Camera> listaCamere, ArrayList<Servizio> listaServizi,
+                        String intestatario, String noteAggiuntive, ArrayList<Servizio> listaServizi,
                         ArrayList<Cliente> listaClienti ,String numeroDocumento, String metodoPagamento, String cittadinanza) {
         this.IDPrenotazione = 0; //ID è AUTOINCREMENT
         this.dataCreazionePrenotazione = dataCreazionePrenotazione;
-        this.dataInizio = dataInizio;
-        this.dataFine = dataFine;
+        this.dataInizio = dataInizioPrenotazione;
+        this.dataFine = dataFinePrenotazione;
         this.trattamento = trattamento;
         this.tipoDocumento = tipoDocumento;
         this.dataRilascio = dataRilascio;
@@ -141,7 +135,6 @@ public class Prenotazione implements Cloneable, Serializable {
         this.intestatario = intestatario;
         this.noteAggiuntive = noteAggiuntive;
         // Uso di deep copy per l'incapsulamento delle liste
-        this.listaCamere = Util.deepCopyArrayList(listaCamere);
         this.listaServizi = Util.deepCopyArrayList(listaServizi);
         this.listaClienti = Util.deepCopyArrayList(listaClienti);
         this.numeroDocumento = numeroDocumento;
@@ -161,7 +154,6 @@ public class Prenotazione implements Cloneable, Serializable {
         this.dataInizio = LocalDate.now();
         this.dataRilascio = LocalDate.now();
         this.dataScadenza = LocalDate.now();
-        this.listaCamere = new ArrayList<>();
         this.listaClienti = new ArrayList<>();
         this.listaServizi = new ArrayList<>();
         this.noteAggiuntive = "";
@@ -377,21 +369,11 @@ public class Prenotazione implements Cloneable, Serializable {
     /**
      * Restituisce una deep copy della lista delle camere.
      *
-     * @return Una nuova ArrayList contenente i cloni delle camere.
-     */
-    public ArrayList<Camera> getListaCamere() {
-        return Util.deepCopyArrayList(listaCamere);
-    }
-
-    /**
+     *
      * Imposta la lista delle camere, creando una deep copy della lista fornita.
      *
      * @param listaCamere La lista delle camere da copiare.
      */
-    public void setListaCamere(ArrayList<Camera> listaCamere) {
-        this.listaCamere = Util.deepCopyArrayList(listaCamere);
-    }
-
     /**
      * Restituisce una deep copy della lista dei servizi.
      *
@@ -453,7 +435,7 @@ public class Prenotazione implements Cloneable, Serializable {
                 ", intestatario='" + intestatario + '\'' +
                 ", noteAggiuntive='" + noteAggiuntive + '\'' +
                 ", numeroDocumento='" + numeroDocumento + '\'' +
-                ", listaCamere=" + listaCamere +
+                ", listaCamere=" + listaClienti.toString()+
                 ", listaServizi=" + listaServizi +
                 ", listaClienti=" + listaClienti +
                 ", statoPrenotazione=" + statoPrenotazione +
@@ -485,7 +467,6 @@ public class Prenotazione implements Cloneable, Serializable {
         Prenotazione prenotazione = (Prenotazione) o;
         if(!isNullAll(prenotazione) && !isNullAll(this)){
                 ArrayList<Cliente> clientes = prenotazione.getListaClienti();
-                ArrayList<Camera> cameras = prenotazione.getListaCamere();
                 ArrayList<Servizio> servizios = prenotazione.getListaServizi();
 
                 if(isNull(clientes)){
@@ -498,15 +479,6 @@ public class Prenotazione implements Cloneable, Serializable {
                     }
                 }
 
-                if(isNull(cameras)){
-                    if(!isNull(listaCamere)){
-                        return false;
-                    }
-                }else{
-                    if(isNull(listaCamere)){
-                        return false;
-                    }
-                }
 
                 if(isNull(servizios)){
                     if(!isNull(listaServizi)){
@@ -553,22 +525,7 @@ public class Prenotazione implements Cloneable, Serializable {
                 }else{
                     servi = false;
                 }
-                i = 0;
-                if(cameras.size() == listaCamere.size()){
-                    for(Camera camera : cameras){
-                        if(!listaCamere.get(i).equals(camera)){
-                            came = false;
-                            break;
-                        }
-                        i++;
-                    }
 
-                    if(came == null){
-                        came = true;
-                    }
-                }else{
-                    came = false;
-                }
 
                 if(isNull(trattamento)){
                     if(!isNull(prenotazione.trattamento)){
@@ -701,7 +658,7 @@ public class Prenotazione implements Cloneable, Serializable {
         return prenotazione.trattamento == null && prenotazione.noteAggiuntive == null && prenotazione.intestatario == null &&
                 prenotazione.numeroDocumento == null && prenotazione.tipoDocumento == null && prenotazione.IDPrenotazione == null &&
                 prenotazione.dataRilascio == null && prenotazione.dataScadenza == null && prenotazione.dataInizio == null &&
-                prenotazione.dataFine == null && prenotazione.listaCamere == null && prenotazione.listaClienti == null &&
+                prenotazione.dataFine == null && prenotazione.listaClienti == null &&
                 prenotazione.listaServizi == null && prenotazione.dataCreazionePrenotazione == null && metodoDiPagamento==null;
     }
 
@@ -716,7 +673,7 @@ public class Prenotazione implements Cloneable, Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(IDPrenotazione, dataCreazionePrenotazione, dataInizio, dataFine, trattamento, tipoDocumento, dataRilascio, dataScadenza, intestatario, noteAggiuntive, numeroDocumento, listaCamere, listaServizi, listaClienti, statoPrenotazione, checkIn);
+        return Objects.hash(IDPrenotazione, dataCreazionePrenotazione, dataInizio, dataFine, trattamento, tipoDocumento, dataRilascio, dataScadenza, intestatario, noteAggiuntive, numeroDocumento,  listaServizi, listaClienti, statoPrenotazione, checkIn);
     }
 
     /**
@@ -736,8 +693,6 @@ public class Prenotazione implements Cloneable, Serializable {
             // cloned.trattamento = this.trattamento.clone();
         }
 
-        // Deep copy delle liste
-        cloned.listaCamere = Util.deepCopyArrayList(this.listaCamere);
         cloned.listaServizi = Util.deepCopyArrayList(this.listaServizi);
         cloned.listaClienti = Util.deepCopyArrayList(this.listaClienti);
 

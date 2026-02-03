@@ -53,6 +53,12 @@ public class CatalogoPrenotazioni implements Serializable {
      * La ricerca prende almeno un parametro in input mentre gli altri possono essere nulli.
      * Una prenotazione viene selezionato solo se rispetta tutti i parametri non nulli della ricerca.
      *
+     * @pre nominativoCliente != null || numeroCamera >= 0 || dataInizio != null || dataFine != null
+     * @post result.stream().allMatch(p | (nominativoCliente == null || p.intestatario == nominativoCliente) &&
+     * (numeroCamera < 0 || p.listaCamere.stream().anyMatch(c | c.numeroCamera == numeroCamera)) &&
+     * (dataInizio == null || dataFine == null || (p.dataInizio.isAfter(dataInizio) &&
+     * p.dataFine.isBefore(dataFine))))
+     *
      * @param nominativoCliente Nome del cliente che ha registrato la prenotazione.
      * @param numeroCamera Numero (una delle/a) camera registrata con la prenotazione.
      * @param dataInizio Data prevista per il check-in.
@@ -118,11 +124,20 @@ public class CatalogoPrenotazioni implements Serializable {
 
     /**
      * Restituisce la lista di tutte le prenotazioni nel catalogo.
+     *
+     * @post result == listaPrenotazioni
+     * @return listaPrenotazioni || null
      */
     public synchronized static   ArrayList<Prenotazione> getListaPrenotazioni() {
         return (ArrayList<Prenotazione>) listaPrenotazioni;
     }
 
+    /**
+     * Restituisce una prenotazione.
+     *
+     * @pre codicePrenotazione != null
+     * @post result == null || result.IDPrenotazione == codicePrenotazione
+     */
     public static synchronized Prenotazione getPrenotazione(Integer ID){
         for(Prenotazione p : listaPrenotazioni){
             if(p.getIDPrenotazione().equals(ID))
@@ -136,7 +151,12 @@ public class CatalogoPrenotazioni implements Serializable {
     }
 
     /**
-     * Imposta o sostituisce l'intera lista delle prenotazioni.
+     * Aggiunge prenotazioni alla collezione.
+     *
+     * @param prenotazione
+     * @pre listaPrenotazioni1 != null
+     * @post listaPrenotazioni.containsAll(listaPrenotazioni1)
+     * @return true || false
      */
     public static synchronized boolean addPrenotazioni(Prenotazione prenotazione) {
         if(prenotazione == null|| listaPrenotazioni.contains(prenotazione)) {
@@ -153,6 +173,24 @@ public class CatalogoPrenotazioni implements Serializable {
             return true;
     }
 
+
+    /**
+     * Rimuove una prenotazione dalla lista delle prenotazioni e dal database.
+     *
+     * @param prenotazione la prenotazione da rimuovere
+     * @return true se la prenotazione è stata rimossa con successo, false se era null
+     *         o non presente nella lista
+     * @throws DuplicateKeyEntry se si verifica un errore SQL con codice 1062
+     *
+     * @pre prenotazione == null || listaPrenotazioni != null
+     * @post se prenotazione == null allora result == false
+     * @post se !listaPrenotazioni@pre.contains(prenotazione) allora result == false
+     * @post se result == false allora listaPrenotazioni == listaPrenotazioni@pre
+     * @post se result == true allora listaPrenotazioni@pre.contains(prenotazione)
+     * @post se result == true allora !listaPrenotazioni.contains(prenotazione)
+     * @post se result == true allora listaPrenotazioni.size() == listaPrenotazioni@pre.size() - 1
+     * @post se result == true allora PrenotazioneDAO.doDelete(prenotazione) è stato invocato
+     */
     public static synchronized boolean removePrenotazioni(Prenotazione prenotazione) {
         if(prenotazione == null|| !listaPrenotazioni.contains(prenotazione)) {
             return false;
@@ -170,6 +208,26 @@ public class CatalogoPrenotazioni implements Serializable {
 
     }
 
+
+    /**
+     * Aggiorna una prenotazione esistente nella lista sostituendola con una versione modificata.
+     *
+     * @param prenotazione la prenotazione con i dati aggiornati
+     * @return true se l'aggiornamento è avvenuto con successo, false se la prenotazione
+     *         è null, non è presente nella lista, o si è verificato un errore SQL
+     *
+     * @pre prenotazione può essere null && listaPrenotazioni != null && fds != null
+     * @post se prenotazione == null allora result == false
+     * @post se !listaPrenotazioni@pre.contains(prenotazione) allora result == false
+     * @post se result == false allora listaPrenotazioni == listaPrenotazioni@pre
+     * @post se result == true allora listaPrenotazioni@pre.stream().anyMatch(p ->
+     *       p.getIDPrenotazione().equals(prenotazione.getIDPrenotazione()))
+     * @post se result == true allora listaPrenotazioni.contains(prenotazione)
+     * @post se result == true allora !listaPrenotazioni.stream().anyMatch(p ->
+     *       p.getIDPrenotazione().equals(prenotazione.getIDPrenotazione()) && !p.equals(prenotazione))
+     * @post se result == true allora listaPrenotazioni.size() == listaPrenotazioni@pre.size()
+     * @post se result == true allora fds.doUpdate(prenotazione) è stato invocato con successo
+     */
     public static synchronized boolean UpdatePrenotazioni(Prenotazione prenotazione) {
         if(prenotazione == null|| !listaPrenotazioni.contains(prenotazione)) {
             return false;
@@ -191,6 +249,24 @@ public class CatalogoPrenotazioni implements Serializable {
         return true;
     }
 
+
+    /**
+     * Aggiorna la lista delle prenotazioni recuperando tutti i dati dal database.
+     *
+     * @return true se l'aggiornamento è avvenuto con successo, false se si è verificato
+     *         un errore SQL durante il recupero dei dati
+     *
+     * @pre listaPrenotazioni != null
+     * @post se result == true allora fds != null && fds.oclIsKindOf(PrenotazioneDAO)
+     * @post se result == true allora listaPrenotazioni != null
+     * @post se result == true allora listaPrenotazioni contiene tutte le prenotazioni
+     *       recuperate dal database tramite fds.doRetriveAll
+     * @post se result == true allora le prenotazioni in listaPrenotazioni sono ordinate
+     *       in modo decrescente
+     * @post se result == false allora si è verificata una SQLException durante
+     *       fds.doRetriveAll
+     * @post se result == false allora listaPrenotazioni potrebbe essere modificata
+     */
     public static synchronized boolean aggiornalista(){
         fds = new PrenotazioneDAO();
         try{
@@ -204,6 +280,10 @@ public class CatalogoPrenotazioni implements Serializable {
 
     /**
      * Recupera lo storico delle prenotazioni effettuate da un cliente specifico.
+     *
+     * @pre cliente != null
+     * @post result != null
+     *
      */
     public static ArrayList<Prenotazione> getStoricoPrenotazioni(Object cliente) {
         return new ArrayList<>();
@@ -226,6 +306,9 @@ public class CatalogoPrenotazioni implements Serializable {
 
     /**
      * Metodo usato per controllare la validità dei campi di una prenotazione.
+     *
+     * @pre prenotazione != null
+     *
      * @param prenotazione prenotazione da controllare.
      * @throws InvalidInputException se un campo presenta un valore errato.
      */

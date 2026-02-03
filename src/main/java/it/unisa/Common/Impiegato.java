@@ -1,3 +1,4 @@
+
 package it.unisa.Common;
 
 import it.unisa.Server.persistent.util.Ruolo;
