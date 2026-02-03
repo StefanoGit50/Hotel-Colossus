@@ -35,6 +35,21 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato> {
             "IsBackListed"
     };
 
+
+    /**
+     * Salva un nuovo impiegato nel database.
+     *
+     * @param impiegato L'impiegato da salvare
+     * @throws SQLException Se si verifica un errore di database
+     *
+     * @pre impiegato != null
+     * @pre impiegato.getCodiceFiscale() != null
+     * @pre Tutti i campi obbligatori di impiegato sono valorizzati
+     *
+     * @post Impiegato inserito nel database
+     * @post impiegato.getId() valorizzato
+     * @post impiegato.getUsername() = "Manager" + id
+     */
     @Override
     public synchronized void doSave(Impiegato impiegato) throws SQLException {
         connection = ConnectionStorage.getConnection();
@@ -80,6 +95,18 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato> {
         }
     }
 
+
+    /**
+     * Elimina un impiegato dal database.
+     *
+     * @param impiegato L'impiegato da eliminare
+     * @throws SQLException Se si verifica un errore di database
+     *
+     * @pre impiegato != null
+     * @pre impiegato.getCodiceFiscale() != null
+     *
+     * @post Impiegato rimosso dal database (se esistente)
+     */
     @Override
     public synchronized void doDelete(Impiegato impiegato) throws SQLException {
         Connection connection = ConnectionStorage.getConnection();
@@ -93,6 +120,20 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato> {
         }
     }
 
+
+    /**
+     * Recupera un impiegato tramite chiave.
+     *
+     * @param index Chiave di ricerca (String per CF, Integer per ID)
+     * @return L'impiegato trovato
+     * @throws SQLException
+     *
+     * @pre index != null
+     * @pre index instanceof String || index instanceof Integer
+     *
+     * @post result != null
+     * @post result.getCodiceFiscale() = index || result.getId() = index
+     */
     @Override
     public synchronized Impiegato doRetriveByKey(Object index) throws SQLException {
         String f = "";
@@ -195,6 +236,19 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato> {
           throw new RuntimeException("Impiegato non trovato");
     }
 
+
+    /**
+     * Recupera tutti gli impiegati dal database.
+     *
+     * @param order Campo per l'ordinamento (deve essere in whitelist)
+     * @return Collection di tutti gli impiegati
+     * @throws SQLException
+     *
+     * @pre orderBy == null || whitelist.contains(orderBy)
+     *
+     * @post result != null
+     * @post result.size() >= 0
+     */
     @Override
     public synchronized Collection<Impiegato> doRetriveAll(String order) throws SQLException{
         if(order != null){
@@ -322,6 +376,18 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato> {
         }
     }
 
+
+    /**
+     * Permette di recuperare tutte le entità sul database che hanno un attributo di nome {@code attribute}
+     * con un valore uguale a {@code valore}.
+     * @param attribute nome dell'attributo.
+     * @param value valore dell'attributo.
+     * @return  {@code Collection<T>} di oggetti per il quale {@code attribute} {@code =value}.
+     * @throws SQLException se c'è errore di accesso/connessione/retrieval col database.
+     *
+     * @pre attribute != null && attribute != "" && value != null
+     * @post result != null
+     */
     @Override
     public Collection<Impiegato> doRetriveByAttribute(String attribute, Object value) throws SQLException {
         Connection connection;
@@ -380,6 +446,22 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato> {
         return lista;
     }
 
+
+    /**
+     * Filtra gli impiegati secondo criteri specificati.
+     *
+     * @param nome
+     * @param sesso
+     * @param ruolo
+     * @param orderBy
+     * @return Collection di impiegati filtrati
+     * @throws SQLException
+     *
+     * @pre Almeno un parametro di filtro != null
+     * @pre orderBy == null || whitelist.contains(orderBy)
+     *
+     * @post result != null
+     */
     @Override
     public Collection<Impiegato> doFilter(String nome, String sesso, Ruolo ruolo, String orderBy) throws  SQLException{
                 Connection conn = null;

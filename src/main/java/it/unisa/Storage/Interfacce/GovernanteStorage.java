@@ -9,8 +9,10 @@ public interface GovernanteStorage<T>{
     /**
      * Salva un oggetto nel db
      *
+     * @param o
      * @pre o != null
      * @post inserisce l'oggetto nel database
+     * @throws SQLException
      */
     void doSave(T o) throws SQLException;
 
