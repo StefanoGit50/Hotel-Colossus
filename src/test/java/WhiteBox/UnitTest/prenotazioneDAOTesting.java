@@ -41,7 +41,7 @@ public class prenotazioneDAOTesting {
         clientes.add(new Cliente("Mario","Rossi","Napoli","Napoli","Via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana",new Camera(101,Stato.Occupata,2,120,"Camera matrimoniale vista mare","")));
         servizios.add(new Servizio("Spa",50.0));
         cameras.add(new Camera(101,Stato.Occupata,2,120,"Camera matrimoniale vista mare",""));
-        prenotazione = new Prenotazione(1,
+        prenotazione = new Prenotazione(
                 LocalDate.of(2026, 2, 1),
                 LocalDate.of(2026, 2, 10),
                 LocalDate.of(2026, 2, 15),

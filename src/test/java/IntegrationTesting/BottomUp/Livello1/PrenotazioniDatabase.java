@@ -1,6 +1,7 @@
 package IntegrationTesting.BottomUp.Livello1;
 
 import it.unisa.Common.*;
+import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.DAO.PrenotazioneDAO;
@@ -45,7 +46,7 @@ public class PrenotazioniDatabase {
 
           assertNotNull(prenotazioni);
           assertEquals(CatalogoPrenotazioni.getListaPrenotazioni().size(), prenotazioni.size());
-          for(int i=0;i<prenotazioni.size();i++){
+          for(int i=0;i<prenotazioni.size();i++){ // verifica che ogni elemento è uguale
                assertEquals(CatalogoPrenotazioni.getListaPrenotazioni().get(i), prenotazioni.get(i));
           }
     }
@@ -65,16 +66,18 @@ public class PrenotazioniDatabase {
                 LocalDate.of(2025, 12, 1),
                 LocalDate.of(2026, 1, 10),
                 LocalDate.of(2026, 1, 20),
-                LocalDate.of(2025, 12, 1),
+                null,
                 new Trattamento("Pensione Completa", 100.0),
+                100.0,
                 "Passaporto",
                 LocalDate.of(2022, 10, 10),
                 LocalDate.of(2032, 10, 10),
                 cliente.getFirst().getNome()+" "+cliente.getFirst().getCognome(),
                 "Privacy assoluta",
-                listcamera, servizio, cliente,
+                servizio, cliente,
                 "UK123456789",
-                "carta di credito"
+                "carta di credito",
+                "italiana"
         );
         CatalogoPrenotazioni.addPrenotazioni(prenotazione);
         // prendo dal database la prenotazione appena inserita
@@ -87,25 +90,34 @@ public class PrenotazioniDatabase {
     @DisplayName("Bottom up: Rimozione dalla lista e dal database")
     @Tag("integration")
     @Tag("exception")
-    public void removePrenotazione() throws CloneNotSupportedException {
+    public void removePrenotazione()  {
 
         ArrayList<Prenotazione> arrayList= CatalogoPrenotazioni.getListaPrenotazioni();
         Prenotazione p1=CatalogoPrenotazioni.getPrenotazione(arrayList.getFirst().getIDPrenotazione());
 
         CatalogoPrenotazioni.removePrenotazioni(p1);
 
-        assertThrows(SQLException.class,()-> fds.doRetriveByKey(p1.getIDPrenotazione()));
+        assertThrows(SQLException.class,()-> {
+            assertNotNull(p1);
+            fds.doRetriveByKey(p1.getIDPrenotazione());
+        });
         assertNotEquals(CatalogoPrenotazioni.getListaPrenotazioni().size(), arrayList.size());
     }
 
     @Test
     @DisplayName("Bottom up: Update della lista del catalogo e del database")
     @Tag("integration")
-    public void updatePrenotazione() throws SQLException, CloneNotSupportedException {
+    public void updatePrenotazione() throws SQLException {
 
+        Cliente c1 = new Cliente("luca","pizzuto","cagliari","cagliari","via minerva",123,123,"12334","m",LocalDate.of(2001,12,30),"asdafahfasf","luca@email","italiana",
+                CatalogoCamere.getCamera(101));
+        Cliente c2 = new Cliente("pagliaro","minosto","milano","milano","via andrea ", 1234,1234,"234567","m",LocalDate.of(2001,12,30),"ajhfdbhdafba","asdadsf","nigeria",
+                CatalogoCamere.getCamera(102));
+        ArrayList<Cliente> clienteArray=new ArrayList<>();
+        clienteArray.add(c1); clienteArray.add(c2);
         ArrayList<Prenotazione> catalogop= CatalogoPrenotazioni.getListaPrenotazioni();
         Prenotazione prenotazione = catalogop.getFirst();
-        prenotazione.setCheckIn(true);
+        prenotazione.setListaClienti(clienteArray);
 
         CatalogoPrenotazioni.UpdatePrenotazioni(prenotazione);
 
