@@ -9,18 +9,36 @@ public class ContoEconomicoLeaf extends ContoEconomicoComponentAbstract {
         this.importo = importo;
         this.tipo = tipo;
     }
+
+
+    /**
+     * Restituisce il valore di importoTotale.
+     *
+     * @post result == importo
+     */
     @Override
     public double getImportoTotale() {
         return importo;
     }
 
 
+    /**
+     * Restituisce il valore di totalePerTipo.
+     *
+     * @pre t != null
+     * @post result == (tipo == t implies result == importo) && (tipo != t implies result == 0)
+     */
     // nuovo metodo minimo per tipo
     public double getTotalePerTipo(TipoVoce t) {
         return tipo == t ? importo : 0;
     }
 
 
+    /**
+     * Esegue un'operazione specifica del metodo.
+     *
+     * @pre indent != null
+     */
     @Override
     public void stampaAlbero(String indent, boolean ultimo) {
 

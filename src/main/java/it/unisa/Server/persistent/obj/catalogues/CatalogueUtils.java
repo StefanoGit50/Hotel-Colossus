@@ -8,6 +8,9 @@ public class CatalogueUtils {
     /**
      * Verifica se le variabili d'istanza di un oggetto sono nulle (o vuote nel caso particolare delle stringhe)
      * oppure no.
+     *
+     * @pre oggetto != null
+     *
      * @param oggetto un oggetto qualsiasi.
      * @param <T> tipo dell'oggetto.
      * @throws InvalidInputException se un field di un oggetto è {@code null} (o vuoto nel caso che il campo sia una stringa)

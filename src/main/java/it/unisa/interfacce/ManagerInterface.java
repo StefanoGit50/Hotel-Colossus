@@ -15,20 +15,53 @@ public interface ManagerInterface extends Remote
     List<Impiegato> filtroImpiegati(String nome, String sesso, Ruolo ruolo, String orderBy) throws RemoteException;
 
     // Comandi impiegato
+
+
+    /**
+     * Aggiunge impiegato alla collezione.
+     *
+     * @pre i != null
+     * @post Impiegato..contains(i)
+     */
     void addImpiegato(Impiegato i) throws RemoteException;
+
+
+    /**
+     * Rimuove impiegato dalla collezione.
+     *
+     * @pre i != null
+     * @post not Impiegato..contains(i)
+     */
     void removeImpiegato(Impiegato i) throws RemoteException;
+
+
+    /**
+     * Aggiorna i dati di impiegato.
+     *
+     * @pre i != null
+     * @post Impiegato..contains(i)
+     */
     void updateImpiegato(Impiegato i) throws RemoteException;
 
     // Recupera singolo impiegato
     Impiegato getImpiegatoByCF(String Cf) throws RemoteException;
 
-    // Comando undo
+    /**
+     * Annulla il comando precedentemente eseguito.
+     *
+     */
     void undoCommand() throws RemoteException;
 
-    // Comando redo
+    /**
+     * Esegue redo
+     *
+     */
     void redoCommand() throws RemoteException;
 
     /**
+     *
+     * @post result != null && result != ""
+     *
      * @return password temporanea.
      * @throws RemoteException .
      */
@@ -42,6 +75,14 @@ public interface ManagerInterface extends Remote
      * - servizi = ricavi derivanti dai servizi
      * - trattamenti = ricavi derivanti dai trattamenti
      * - passivita = totale ricavi dalle passività
+     *
+     * @post result != null &&
+     * result.contains("prenotazioni") &&
+     * result.contains("camere") &&
+     * result.contains("servizi") &&
+     * result.contains("trattamenti") &&
+     * result.contains("passivita")
+     *
      * @return {@code Map<String, Double>} ricavi-passività conto economico.
      * @throws RemoteException .
      */

@@ -27,27 +27,59 @@ public class AddPrenotazioneCommand implements Command {
     public AddPrenotazioneCommand(){
     }
 
+    /**
+     * Restituisce il valore di catalogue.
+     *
+     * @post result == catalogue
+     */
     public CatalogoPrenotazioni getCatalogue() {
         return catalogue;
     }
 
+    /**
+     * Imposta il valore di catalogue.
+     *
+     * @pre catalogue != null
+     * @post this.catalogue == catalogue
+     */
     public void setCatalogue(CatalogoPrenotazioni catalogue) {
         this.catalogue = catalogue;
     }
 
+    /**
+     * Restituisce il valore di prenotazione.
+     *
+     * @post result == prenotazione
+     */
     public Prenotazione getPrenotazione() {
         return prenotazione;
     }
 
+    /**
+     * Imposta il valore di prenotazione.
+     *
+     * @pre prenotazione != null
+     * @post this.prenotazione == prenotazione
+     */
     public void setPrenotazione(Prenotazione prenotazione) {
         this.prenotazione = prenotazione;
     }
 
+    /**
+     * Esegue il comando.
+     *
+     * @post CatalogoPrenotazioni.listaPrenotazioni.contains(prenotazione)
+     */
     @Override
     public void execute() {
         catalogue.addPrenotazioni(prenotazione);
     }
 
+    /**
+     * Annulla il comando precedentemente eseguito.
+     *
+     * @post not CatalogoPrenotazioni.listaPrenotazioni.contains(prenotazione)
+     */
     @Override
     public void undo() {
 

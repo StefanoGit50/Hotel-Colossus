@@ -85,7 +85,7 @@ public class ManagerClient {
     public static void startRMI() throws RemoteException, MalformedURLException, NotBoundException {
         logger.info("Sto cercando l'oggetto remoto GestoreImpiegati ...");
 
-        ManagerInterface managerInterface = (ManagerInterface) Naming.lookup("rmi://localhost/GestioneImpiegati");
+        ManagerInterface managerInterface = (ManagerInterface) Naming.lookup("rmi://localhost/gestioneImpiegati");
         logger.info("T\n" +
                 "           // GovernanteInterface governanteInterface = (GovernanteInterface) Naming.lookup(\"rmi://localhost/GestoreImpiegati\");\n" +
                 "           // logger.info(\"Trovato GestioneCamere! ...\");\n" +

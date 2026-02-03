@@ -43,6 +43,17 @@ public class CatalogoClienti implements Serializable {
         }
     }
 
+
+
+    /**
+     * Verifica se un cliente è presente nella lista dei clienti ed è uguale a uno di essi.
+     * Questo metodo controlla prima se il cliente è null, poi se è contenuto nella lista,
+     * e infine verifica l'uguaglianza con almeno un cliente nella lista.
+     *
+     * @param c il cliente da verificare
+     * @return true se il cliente è presente nella lista ed esiste un cliente uguale, false altrimenti
+     *
+     */
     public static boolean clienteIsEquals(Cliente c){
         if(c==null)
             return false;
@@ -56,7 +67,18 @@ public class CatalogoClienti implements Serializable {
     }
 
 
-
+    /**
+     * Aggiorna un cliente esistente nella lista sostituendolo con una versione modificata.
+     * L'aggiornamento viene effettuato anche sul database tramite frontDeskStorage.
+     * Se il cliente aggiornato è blacklisted, viene aggiunto alla lista dei clienti bannati.
+     * Il metodo cerca un cliente con lo stesso codice fiscale ma con dati diversi e lo sostituisce.
+     *
+     * @param cliente il cliente con i dati aggiornati
+     * @return true se l'aggiornamento è avvenuto con successo, false altrimenti
+     *
+     * @pre cliente != null && listaClienti != null && frontDeskStorage != null
+     *
+     */
     public static boolean updateCliente(Cliente cliente){
          boolean flag=false;
          if(listaClienti.contains(cliente)){
@@ -81,6 +103,20 @@ public class CatalogoClienti implements Serializable {
          return flag;
     }
 
+
+
+    /**
+     * Aggiunge un nuovo cliente alla lista dei clienti e lo salva nel database.
+     * Il cliente viene aggiunto solo se non è già presente nella lista.
+     * In caso di errore durante il salvataggio nel database, l'operazione viene annullata.
+     *
+     * @param cliente il cliente da aggiungere
+     * @return true se il cliente è stato aggiunto con successo, false se era già presente
+     *         o si è verificato un errore durante il salvataggio
+     *
+     * @pre cliente != null && listaClienti != null && frontDeskStorage != null
+     *
+     */
     public static boolean aggiungiCliente(Cliente cliente){
         if(!listaClienti.contains(cliente)){
             try{
@@ -113,6 +149,8 @@ public class CatalogoClienti implements Serializable {
     /**
      * Restituisce una deep copy dell'elenco completo dei clienti.
      *
+     * @post result == listaClienti
+     *
      * @return Un nuovo ArrayList contenente copie (cloni) di tutti gli oggetti Cliente.
      */
     public synchronized static ArrayList<Cliente> getListaClienti() {
@@ -121,6 +159,8 @@ public class CatalogoClienti implements Serializable {
 
     /**
      * Restituisce una deep copy dell'elenco dei clienti bannati.
+     *
+     *  @post result == listaClientiBannati
      *
      * @return Uno nuovo ArrayList contenente copie (cloni) dei clienti bannati.
      */
@@ -143,6 +183,10 @@ public class CatalogoClienti implements Serializable {
 
     /**
      * Imposta una deep copy della lista clienti.
+     *
+     * @pre listaClienti1 != null
+     * @post listaClienti.stream().allMatch(c | listaClienti1.contains(c))
+     *
      * @param listaClienti1 {@code ArrayList<Cliente>} da impostare.
      */
     public synchronized static void setListaClienti(ArrayList<Cliente> listaClienti1){
@@ -161,6 +205,10 @@ public class CatalogoClienti implements Serializable {
 
     /**
      * Imposta una deep copy della lista clienti bannati.
+     *
+     * @pre listaClientiBannati1 != null
+     * @post listaClientiBannati == listaClientiBannati1
+     *
      * @param listaClientiBannati1 {@code ArrayList<Cliente>} da impostare.
      */
     public synchronized static void setListaClientiBannati(ArrayList<Cliente> listaClientiBannati1) {
@@ -175,6 +223,13 @@ public class CatalogoClienti implements Serializable {
      * Esegue una ricerca flessibile all'interno del catalogo clienti basandosi su vari criteri.
      * La ricerca prende almeno un parametro in input mentre gli altri possono essere nulli.
      * Un cliente viene selezionato solo se rispetta tutti i parametri non nulli della ricerca.
+     *
+     * @pre nome != null || cognome != null || nazionalita != null || dataNascita != null || sesso != null
+     * @post result.stream().allMatch(c | (nome == null || c.nome == nome) &&
+     * (cognome == null || c.cognome == cognome) &&
+     * (nazionalita == null || c.nazionalità == nazionalita) &&
+     * (dataNascita == null || c.dataNascita.isBefore(dataNascita)) &&
+     * (sesso == null || c.sesso == sesso))
      *
      * @param nome Il nome del cliente da cercare (può essere {@code null}).
      * @param cognome Il cognome del cliente da cercare (può essere {@code null}).
@@ -235,6 +290,9 @@ public class CatalogoClienti implements Serializable {
     /**
      * Cerca un cliente specifica tramite il suo codice fiscale e ne restituisce una copia.
      *
+     * @pre CFCliente != null && CFCliente != ""
+     * @post result == null || result.cf == CFCliente
+     *
      * @param CFCliente Il codice fiscale del cliente da cercare da cercare.
      * @return Una deep copy dell'oggetto Cliente trovato, o {@code null} se non esiste nessun cliente con quel CF.
      * @throws CloneNotSupportedException Se l'oggetto Cliente non supporta la clonazione.
@@ -251,6 +309,12 @@ public class CatalogoClienti implements Serializable {
         return null;
     }
 
+
+    /**
+     * Verifica la validità di cliente.
+     *
+     * @pre nome != null || cognome != null || nazionalita != null || dataNascita != null || blackListed != null
+     */
     public static void checkCliente(String nome, String cognome, String nazionalita, LocalDate dataNascita, Boolean blackListed) throws InvalidInputException{
         Pattern namePattern = Pattern.compile("^[A-Za-z\\s]{0,49}$");
 

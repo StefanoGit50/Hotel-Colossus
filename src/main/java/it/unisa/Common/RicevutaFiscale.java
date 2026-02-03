@@ -67,6 +67,9 @@ public class RicevutaFiscale implements Serializable, Cloneable {
     public RicevutaFiscale() {};
 
     /**
+     *
+     * @post result == IDRicevutaFiscale
+     *
      * @return l'identificativo univoco della ricevuta.
      */
     public int getIDRicevutaFiscale() {
@@ -74,6 +77,10 @@ public class RicevutaFiscale implements Serializable, Cloneable {
     }
 
     /**
+     *
+     * @pre IDRicevutaFiscale != null
+     * @post this.IDRicevutaFiscale == IDRicevutaFiscale
+     *
      * @param IDRicevutaFiscale l'identificativo da assegnare.
      */
     public void setIDRicevutaFiscale(int IDRicevutaFiscale) {
@@ -81,6 +88,9 @@ public class RicevutaFiscale implements Serializable, Cloneable {
     }
 
     /**
+     *
+     * @post result == Totale
+     *
      * @return l'importo totale della ricevuta.
      */
     public double getTotale() {
@@ -88,6 +98,10 @@ public class RicevutaFiscale implements Serializable, Cloneable {
     }
 
     /**
+     *
+     * @pre totale != null
+     * @post Totale == totale
+     *
      * @param totale l'importo complessivo da impostare.
      */
     public void setTotale(double totale) {
@@ -95,6 +109,9 @@ public class RicevutaFiscale implements Serializable, Cloneable {
     }
 
     /**
+     *
+     * @post result == dataEmissione
+     *
      * @return la data di emissione del documento.
      */
     public LocalDate getDataEmissione() {
@@ -102,6 +119,10 @@ public class RicevutaFiscale implements Serializable, Cloneable {
     }
 
     /**
+     *
+     * @pre dataEmissione != null
+     * @post this.dataEmissione == dataEmissione
+     *
      * @param dataEmissione la data di emissione da impostare.
      */
     public void setDataEmissione(LocalDate dataEmissione) {
@@ -109,6 +130,9 @@ public class RicevutaFiscale implements Serializable, Cloneable {
     }
 
     /**
+     *
+     * @post result == prenotazione
+     *
      * @return l'id univoco della prenotazione.
      */
     public Prenotazione getPrenotazione() {
@@ -116,37 +140,63 @@ public class RicevutaFiscale implements Serializable, Cloneable {
     }
 
     /**
+     *
+     * @pre prenotazione != null
+     * @post this.prenotazione == prenotazione
+     *
      * @param prenotazione l'id univoco della prenotazione.
      */
     public void setPrenotazione(Prenotazione prenotazione) {
         this.prenotazione = prenotazione;
     }
+
+
     /**
+     *
+     * @post result == metodoPagamento
+     *
      * @return metodoPagamento ritorna il metodo di pagamento scelto dal Cliente
      */
     public String getMetodoPagamento() {
         return metodoPagamento;
     }
+
+
     /**
+     *
+     * @pre metodoPagamento != null && metodoPagamento != ""
+     * @post this.metodoPagamento == metodoPagamento
+     *
      * @param metodoPagamento è il metodo di pagamento scelto dal cliente
      * */
     public void setMetodoPagamento(String metodoPagamento) {
         this.metodoPagamento = metodoPagamento;
     }
+
+
     /**
+     *
+     * @post result == dataPrenotazione
+     *
      * @return datPrenotazione restituisce il la data della prenotazione
      * */
-
     public LocalDate getDataPrenotazione() {
         return dataPrenotazione;
     }
     /**
+     *
+     * @pre dataPrenotazione != null
+     * @post this.dataPrenotazione == dataPrenotazione
+     *
      * @param dataPrenotazione la data della prenotazione
      * */
     public void setDataPrenotazione(LocalDate dataPrenotazione) {
         this.dataPrenotazione = dataPrenotazione;
     }
     /**
+     *
+     * @post result == prezzoTrattamento
+     *
      * @return prezzoTrattamento il prezzo del trattamento
      * */
     public double getPrezzoTrattamento() {
@@ -154,13 +204,21 @@ public class RicevutaFiscale implements Serializable, Cloneable {
     }
 
     /**
+     *
+     * @pre prezzoTrattamento != null
+     * @post this.prezzoTrattamento == prezzoTrattamento
+     *
      * @param prezzoTrattamento il prezzo del trattamento
      * */
-
     public void setPrezzoTrattamento(double prezzoTrattamento) {
         this.prezzoTrattamento = prezzoTrattamento;
     }
+
+
     /**
+     *
+     * @post result == tipoTrattamento
+     *
      * @return tipoTrattamento il tipo di trattamento
      * */
     public String getTipoTrattamento() {
@@ -168,13 +226,24 @@ public class RicevutaFiscale implements Serializable, Cloneable {
     }
 
     /**
+     *
+     * @pre tipoTrattamento != null && tipoTrattamento != ""
+     * @post this.tipoTrattamento == tipoTrattamento
+     *
      * @param tipoTrattamento il tipo di trattamento
      * */
-
     public void setTipoTrattamento(String tipoTrattamento) {
         this.tipoTrattamento = tipoTrattamento;
     }
 
+
+    /**
+     * Imposta servizios.
+     *
+     * @param servizios
+     * @pre servizios != null
+     * @post this.servizios.stream().allMatch(s | servizios.contains(s))
+     */
     public void setServizios(ArrayList<Servizio> servizios){
         for(Servizio servizio: servizios){
             try{
@@ -185,6 +254,14 @@ public class RicevutaFiscale implements Serializable, Cloneable {
         }
     }
 
+
+    /**
+     * Imposta cameras.
+     *
+     * @param cameras
+     * @pre cameras != null
+     * @post this.cameras.stream().allMatch(c | cameras.contains(c))
+     */
     public void setCameras(ArrayList<Camera> cameras) {
         for(Camera camera: cameras){
             try{
@@ -195,6 +272,14 @@ public class RicevutaFiscale implements Serializable, Cloneable {
         }
     }
 
+
+    /**
+     * Imposta clientes.
+     *
+     * @param clientes
+     * @pre clientes != null
+     * @post this.clientes.stream().allMatch(c | clientes.contains(c))
+     */
     public void setClientes(ArrayList<Cliente> clientes){
         for (Cliente cliente: clientes){
             try{
@@ -205,6 +290,13 @@ public class RicevutaFiscale implements Serializable, Cloneable {
         }
     }
 
+
+    /**
+     * Restituisce il valore di clientes.
+     *
+     * @post result.stream().allMatch(c | clientes.contains(c))
+     * @return clientes
+     */
     public ArrayList<Cliente> getClientes(){
         ArrayList<Cliente> clientes1 = new ArrayList<>();
         for(Cliente cliente: clientes){
@@ -217,6 +309,13 @@ public class RicevutaFiscale implements Serializable, Cloneable {
         return clientes1;
     }
 
+
+    /**
+     * Restituisce il valore di cameras.
+     *
+     * @post result.stream().allMatch(c | cameras.contains(c))
+     * @return cameras
+     */
     public ArrayList<Camera> getCameras(){
         ArrayList<Camera> cameras1 = new ArrayList<>();
         for(Camera camera: cameras){
@@ -229,6 +328,13 @@ public class RicevutaFiscale implements Serializable, Cloneable {
         return cameras1;
     }
 
+
+    /**
+     * Restituisce il valore di servizi.
+     *
+     * @post result.stream().allMatch(s | servizios.contains(s))
+     * @return servizi
+     */
     public ArrayList<Servizio> getServizi(){
         ArrayList<Servizio> servizios1 = new ArrayList<>();
         for(Servizio servizio: servizios){

@@ -229,6 +229,8 @@ public class Cliente implements Cloneable, Serializable {
     /**
      * Restituisce il nome del cliente.
      *
+     * @post result == nome
+     *
      * @return Il nome del cliente.
      */
     public String getNome() {
@@ -237,6 +239,9 @@ public class Cliente implements Cloneable, Serializable {
 
     /**
      * Imposta il nome del cliente.
+     *
+     * @pre nome != null && nome != ""
+     * @post this.nome == nome
      *
      * @param nome Il nuovo nome del cliente.
      */
@@ -247,6 +252,8 @@ public class Cliente implements Cloneable, Serializable {
     /**
      * Restituisce il cognome del cliente.
      *
+     * @post result == cognome
+     *
      * @return Il cognome del cliente.
      */
     public String getCognome() {
@@ -255,6 +262,9 @@ public class Cliente implements Cloneable, Serializable {
 
     /**
      * Imposta il cognome del cliente.
+     *
+     * @pre cognome != null && cognome != ""
+     * @post this.cognome == cognome
      *
      * @param cognome Il nuovo cognome del cliente.
      */
@@ -265,6 +275,8 @@ public class Cliente implements Cloneable, Serializable {
     /**
      * Restituisce la provincia di residenza.
      *
+     * @post result == provincia
+     *
      * @return La provincia.
      */
     public String getProvincia() {
@@ -273,6 +285,9 @@ public class Cliente implements Cloneable, Serializable {
 
     /**
      * Imposta la provincia di residenza.
+     *
+     * @pre provincia != null && provincia != ""
+     * @post this.provincia == provincia
      *
      * @param provincia La nuova provincia.
      */
@@ -283,6 +298,8 @@ public class Cliente implements Cloneable, Serializable {
     /**
      * Restituisce il comune di residenza.
      *
+     * @post result == comune
+     *
      * @return Il comune.
      */
     public String getComune() {
@@ -291,6 +308,9 @@ public class Cliente implements Cloneable, Serializable {
 
     /**
      * Imposta il comune di residenza.
+     *
+     * @pre comune != null && comune != ""
+     * @post this.comune == comune
      *
      * @param comune Il nuovo comune.
      */
@@ -301,6 +321,8 @@ public class Cliente implements Cloneable, Serializable {
     /**
      * Restituisce la via di residenza.
      *
+     * @post result == via
+     *
      * @return La via.
      */
     public String getVia() {
@@ -309,6 +331,9 @@ public class Cliente implements Cloneable, Serializable {
 
     /**
      * Imposta la via di residenza.
+     *
+     * @pre via != null && via != ""
+     * @post this.via == via
      *
      * @param via La nuova via.
      */
@@ -319,6 +344,8 @@ public class Cliente implements Cloneable, Serializable {
     /**
      * Restituisce il numero civico.
      *
+     * @post result == numeroCivico
+     *
      * @return Il numero civico.
      */
     public Integer getNumeroCivico() {
@@ -327,6 +354,9 @@ public class Cliente implements Cloneable, Serializable {
 
     /**
      * Imposta il numero civico.
+     *
+     * @pre numeroCivico != null
+     * @post this.numeroCivico == numeroCivico
      *
      * @param numeroCivico Il nuovo numero civico.
      */
@@ -337,6 +367,8 @@ public class Cliente implements Cloneable, Serializable {
     /**
      * Restituisce il CAP.
      *
+     * @post result == CAP
+     *
      * @return Il CAP.
      */
     public Integer getCAP() {
@@ -345,6 +377,9 @@ public class Cliente implements Cloneable, Serializable {
 
     /**
      * Imposta il CAP.
+     *
+     * @pre CAP != null
+     * @post this.CAP == CAP
      *
      * @param CAP Il nuovo CAP.
      */
@@ -355,6 +390,8 @@ public class Cliente implements Cloneable, Serializable {
     /**
      * Restituisce il numero di telefono.
      *
+     * @post result == numeroTelefono
+     *
      * @return Il numero di telefono.
      */
     public String getNumeroTelefono() {
@@ -363,6 +400,9 @@ public class Cliente implements Cloneable, Serializable {
 
     /**
      * Imposta il numero di telefono.
+     *
+     * @pre numeroTelefono != null && numeroTelefono != ""
+     * @post this.numeroTelefono == numeroTelefono
      *
      * @param numeroTelefono Il nuovo numero di telefono.
      */
@@ -391,6 +431,8 @@ public class Cliente implements Cloneable, Serializable {
     /**
      * Restituisce il sesso del cliente.
      *
+     * @post result == sesso
+     *
      * @return Il sesso del cliente.
      */
     public String getSesso() {
@@ -399,6 +441,9 @@ public class Cliente implements Cloneable, Serializable {
 
     /**
      * Imposta il sesso del cliente.
+     *
+     * @pre sesso != null && sesso != ""
+     * @post this.sesso == sesso
      *
      * @param sesso Il nuovo sesso del cliente.
      */
@@ -409,6 +454,8 @@ public class Cliente implements Cloneable, Serializable {
     /**
      * Restituisce la data di nascita del cliente.
      *
+     * @post result == dataNascita
+     *
      * @return La data di nascita.
      */
     public LocalDate getDataNascita() {
@@ -417,6 +464,9 @@ public class Cliente implements Cloneable, Serializable {
 
     /**
      * Imposta la data di nascita del cliente.
+     *
+     * @pre dataNascita != null
+     * @post this.dataNascita == dataNascita
      *
      * @param dataNascita La nuova data di nascita.
      */
@@ -427,6 +477,8 @@ public class Cliente implements Cloneable, Serializable {
     /**
      * Restituisce la nazionalità del cliente.
      *
+     * @post result == nazionalità
+     *
      * @return La nazionalità del cliente.
      */
     public String getNazionalita() {
@@ -436,13 +488,20 @@ public class Cliente implements Cloneable, Serializable {
     /**
      * Imposta la nazionalità del cliente.
      *
+     * @pre nazionalita != null && nazionalita != ""
+     * @post nazionalità == nazionalita
+     *
      * @param nazionalita La nuova nazionalità del cliente.
      */
     public void setNazionalita(String nazionalita) {
         this.nazionalità = nazionalita;
     }
+
     /**
      * Imposta il codice fiscale del cliente
+     *
+     * @pre cf != null && cf != ""
+     * @post this.cf == cf
      *
      * @param cf il nuovo codice fiscale
      */
@@ -453,6 +512,8 @@ public class Cliente implements Cloneable, Serializable {
     /**
      * Mostra il codice fiscale del cliente
      *
+     * @post result == cf
+     *
      * @return cf il codice fiscale del cliente
      */
     public String getCf() {
@@ -462,9 +523,11 @@ public class Cliente implements Cloneable, Serializable {
     /**
      * Setta l'email del cliente
      *
+     * @pre email != null && email != ""
+     * @post this.email == email
+     *
      * @param email l'email nuova del cliente
      */
-
     public void setEmail(String email) {
         this.email = email;
     }
@@ -472,9 +535,10 @@ public class Cliente implements Cloneable, Serializable {
     /**
      * Mostra l'email di un cliente
      *
+     * @post result == email
+     *
      * @return email l'email del cliente
      */
-
     public String getEmail() {
         return email;
     }

@@ -32,23 +32,59 @@ public class UpdateClienteCommand implements Command {
     public UpdateClienteCommand() {
     }
 
+
+    /**
+     * Restituisce il valore di catalogue.
+     *
+     * @post result == catalogue
+     * @return catalogue
+     */
     public CatalogoClienti getCatalogue() {
         return catalogue;
     }
 
+
+    /**
+     * Imposta il valore di catalogue.
+     *
+     * @param catalogue
+     * @pre catalogue != null
+     * @post this.catalogue == catalogue
+     */
     public void setCatalogue(CatalogoClienti catalogue) {
         this.catalogue = catalogue;
     }
 
+
+    /**
+     * Restituisce il valore di cliente.
+     *
+     * @post result == cliente
+     * @return cliente
+     */
     public Cliente getCliente() {
         return cliente;
     }
 
+
+    /**
+     * Imposta il valore di cliente.
+     *
+     * @param cliente
+     * @pre cliente != null
+     * @post this.cliente == cliente
+     */
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
 
 
+
+    /**
+     * Esegue il comando.
+     *
+     * @post CatalogoClienti.listaClienti.stream().anyMatch(c | c.cf == cliente.cf) || CatalogoClienti.listaClientiBannati.stream().anyMatch(c | c.cf == cliente.cf)
+     */
     @Override
     public void execute() {
         try {
@@ -91,6 +127,12 @@ public class UpdateClienteCommand implements Command {
         }
     }
 
+
+    /**
+     * Annulla il comando precedentemente eseguito.
+     *
+     * @post CatalogoClienti.listaClienti.stream().anyMatch(c | c.cf == clienteNonModificato.cf) || CatalogoClienti.listaClientiBannati.stream().anyMatch(c | c.cf == clienteNonModificato.cf)
+     */
     @Override
     public void undo() {
         try {
