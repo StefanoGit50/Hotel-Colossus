@@ -137,18 +137,22 @@ public class TestCasesRegistraPrenotazione {
         String nome = clienti.getFirst().getNome();
 
         return new Prenotazione(
-                autoIncrement,  // ID
-                LocalDate.now(), // Data Creazione
-                LocalDate.now().plusDays(1),            // Data arrivo
-                LocalDate.now().plusDays(5),            // Data partenza
-                trattamento, "Patente",
-                LocalDate.of(2020, 1, 10),
-                LocalDate.of(2030, 1, 10),
-                "NNN", "",
-                camere, // lista camere
-                listaServizi, // lista servizi
-                clienti, // lista clienti
-                "12345678"
+                autoIncrement,                  // 1. IDPrenotazione
+                LocalDate.now(),                // 2. Data Creazione
+                LocalDate.now().plusDays(1),    // 3. Data Inizio
+                LocalDate.now().plusDays(5),    // 4. Data Fine
+                null,                           // 5. DataEmissioneRicevuta (MANCAVA QUESTO)
+                trattamento,                    // 6. Trattamento
+                "Patente",                      // 7. Tipo Documento
+                LocalDate.of(2020, 1, 10),      // 8. Data Rilascio
+                LocalDate.of(2030, 1, 10),      // 9. Data Scadenza
+                "NNN",                          // 10. Intestatario
+                "",                             // 11. Note Aggiuntive
+                camere,                         // 12. Lista Camere
+                listaServizi,                   // 13. Lista Servizi
+                clienti,                        // 14. Lista Clienti
+                "12345678",                     // 15. Numero Documento
+                "Contanti"                      // 16. Metodo Pagamento (MANCAVA QUESTO)
         );
     }
     /* ************************************************************************************************************** */

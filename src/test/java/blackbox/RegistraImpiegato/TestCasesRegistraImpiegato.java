@@ -38,29 +38,30 @@ public class TestCasesRegistraImpiegato {
      */
     public Impiegato createBaseImpiegato() {
         return new Impiegato(
-                "mario.rossi",                  // username
-                "passwordSicura123!",      // hashedPassword
-                true,
-                Instant.now().plusSeconds(3600),
-                "Mario",               // nome
-                "Rossi",                     // cognome
-                "Maschio",                   // sesso
-                "CID",                       // tipoDocumento
-                "AB1234567",                 // numeroDocumento
-                80100,                       // CAP
-                "Via Roma",                  // via
-                "Napoli",                    // provincia
-                "Napoli",                    // comune
-                10,                          // numeroCivico
-                generateRandomCF(),          // codiceFiscale
-                "1",                         // telefono
-                Ruolo.Manager,               // ruolo (mappato dal testo "Front desk")
-                2500.00,                     // stipendio
-                LocalDate.of(2024, 1, 15),   // dataAssunzione
-                LocalDate.of(2020, 1, 20),   // dataRilascio
-                "mario.rossi@HotelColossus.it", // emailAziendale
-                "Italiana",                  // cittadinanza
-                LocalDate.of(2099, 1, 20)    // dataScadenza
+                0,                              // 1. ID (Mancava questo all'inizio!)
+                "mario.rossi",                  // 2. Username
+                "$2a$10$EIX...HashedPasswordSimulata...LunghezzaGiusta", // 3. HashedPassword (Simulata lunga per evitare errori DB)
+                true,                           // 4. isTemporary
+                Instant.now().plusSeconds(3600),// 5. ScadenzaToken
+                "Mario",                        // 6. Nome
+                "Rossi",                        // 7. Cognome
+                "M",                            // 8. Sesso (Meglio "M" di "Maschio" per il DB)
+                "Carta d'Identità",             // 9. TipoDocumento (CID è ok, ma esteso è meglio)
+                "AB1234567",                    // 10. NumeroDocumento
+                80100,                          // 11. CAP
+                "Via Roma",                     // 12. Via
+                "Napoli",                       // 13. Provincia
+                "Napoli",                       // 14. Comune
+                10,                             // 15. NumeroCivico
+                generateRandomCF(),             // 16. CodiceFiscale
+                "3331234567",                   // 17. Telefono (Ho messo un numero vero invece di "1")
+                Ruolo.Manager,                  // 18. Ruolo
+                2500.00,                        // 19. Stipendio
+                LocalDate.of(2024, 1, 15),      // 20. DataAssunzione
+                LocalDate.of(2020, 1, 20),      // 21. DataRilascio
+                "mario.rossi@HotelColossus.it", // 22. Email
+                "Italiana",                     // 23. Cittadinanza
+                LocalDate.of(2030, 1, 20)       // 24. DataScadenza
         );
     }
 

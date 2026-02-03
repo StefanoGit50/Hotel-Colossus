@@ -28,14 +28,15 @@ public class ServerCatalogoDB {
     private static FrontDesk frontDesk;
     private static ArrayList<Camera> arraycamera = new ArrayList<>();
     private static Prenotazione prenotazione;
-    private static ArrayList<Servizio>  servizio;
-    private static ArrayList<Cliente> cliente;
+    private static ArrayList<Servizio>  servizio= new ArrayList<>();
+    private static ArrayList<Cliente> cliente = new ArrayList<>();
     private static FrontDeskStorage frontDeskStorage;
 
     @BeforeAll
     static void setAllup() throws RemoteException {
         //inizializzazione variabili di default
         //si suppone che il DB contenga queste variabili per il corretto funzionamento del test
+
         Invoker invoker = new Invoker();
         CatalogoPrenotazioni catPrenotazioni = new CatalogoPrenotazioni();
         CatalogoClienti catClienti = new CatalogoClienti();
@@ -44,8 +45,43 @@ public class ServerCatalogoDB {
 
         servizio.add( new Servizio("Piscina",20));
         arraycamera.add(new Camera(112, Stato.Occupata,2,45.50,"",""));
-        prenotazione =new Prenotazione(1234, LocalDate.now(),LocalDate.now(),LocalDate.of(2026,02,01),new Trattamento("MEZZA PENSIONE", 60),"Passaporto",LocalDate.of(2012,03,11),LocalDate.of(2044,12,11),"Mario Biondi","",arraycamera,servizio,cliente,"34532MC2");
-        cliente.add( new Cliente("mario","Rossi","Burundi","napoli","napoli","via manzo",12,45,"323425","M",LocalDate.of(1998,12,1),"CF234rdfcfg","luca@gmail.com","italiana", new Camera()));
+        new Cliente(
+                "mario",               // nome
+                "Rossi",               // cognome
+                "Burundi",             // provincia (o Nazione se intendevi quello, ma va nello slot provincia)
+                "napoli",              // comune
+                "via manzo",           // via (Ho spostato 'via manzo' qui al posto del secondo 'napoli')
+                12,                    // numeroCivico (Intero)
+                45,                    // CAP (Intero - Attenzione: 45 è un po' basso per un CAP!)
+                "323425",              // numeroTelefono (Stringa)
+                "M",                   // sesso
+                LocalDate.of(1998,12,1), // dataNascita
+                "CF234rdfcfg",         // cf
+                "luca@gmail.com",      // email
+                "italiana",            // nazionalità
+                arraycamera.get(0)     // camera
+        );
+
+
+        prenotazione =new Prenotazione(
+                0,                                      // IDPrenotazione (0 se autoincrement)
+                LocalDate.now(),                        // dataCreazionePrenotazione (Oggi)
+                LocalDate.of(2024, 8, 10),              // dataInizio
+                LocalDate.of(2024, 8, 20),              // dataFine
+                null,                                   // dataEmissioneRicevuta (null se non ha ancora pagato)
+                new Trattamento("Pensione Completa",45),           // trattamento (Assumendo sia un Enum)
+                "Carta d'Identità",                     // tipoDocumento
+                LocalDate.of(2020, 5, 20),              // dataRilascio (documento)
+                LocalDate.of(2030, 5, 19),              // dataScadenza (documento)
+                "Mario Rossi",                          // intestatario
+                "Richiesta culla in camera",            // noteAggiuntive
+                arraycamera,                        // listaCamere
+                servizio,                          // listaServizi
+                cliente,                                 // listaClienti
+                "CA12345XYZ",                           // numeroDocumento
+                "Bonifico Bancario"                     // metodoPagamento
+        );;
+
     }
 
     @AfterEach
@@ -115,7 +151,23 @@ public class ServerCatalogoDB {
         ArrayList<Servizio> servizio= new ArrayList<>();
         servizio.add(new Servizio("SPA",40));
 
-        Prenotazione p = new Prenotazione(12124, LocalDate.now(),LocalDate.now(),LocalDate.of(2026,02,01),new Trattamento("MEZZA PENSIONE", 60),"Passaporto",LocalDate.of(2012,03,11),LocalDate.of(2044,12,11),"Mario Biondi","",arrcam,servizio,clienti,"34532MC2");
+        Prenotazione p = new Prenotazione(12124,          // IDPrenotazione
+                LocalDate.now(),                        // dataCreazionePrenotazione
+                LocalDate.now(),                        // dataInizio
+                LocalDate.of(2026, 02, 01),             // dataFine
+                null,                                   // <--- MANCAVA QUESTO! (dataEmissioneRicevuta)
+                new Trattamento("MEZZA PENSIONE", 60),  // trattamento
+                "Passaporto",                           // tipoDocumento
+                LocalDate.of(2012, 03, 11),             // dataRilascio
+                LocalDate.of(2044, 12, 11),             // dataScadenza
+                "Mario Biondi",                         // intestatario
+                "",                                     // noteAggiuntive
+                arrcam,                                 // listaCamere
+                servizio,                               // listaServizi (Assicurati che sia un ArrayList!)
+                clienti,                                // listaClienti
+                "34532MC2",                             // numeroDocumento
+                ""                                      // metodoPagamento
+        );
         frontDesk.addPrenotazione(p);
         Prenotazione p1= null;
         // controllo nel DB se la prenotazione è presente

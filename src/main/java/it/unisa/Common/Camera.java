@@ -55,12 +55,26 @@ public class Camera implements Cloneable, Serializable {
      * @param nomeCamera
      */
     public Camera(int numeroCamera, Stato statoCamera, int capacità , double prezzoCamera , String noteCamera , String nomeCamera) {
+
         this.numeroCamera = numeroCamera;
-        this.statoCamera = statoCamera;
+        if(statoCamera != null){
+            this.statoCamera = statoCamera;
+        }else{
+            this.statoCamera = Stato.Libera;
+        }
         this.numeroMaxOccupanti = capacità;
         this.prezzoCamera = prezzoCamera;
-        this.noteCamera = noteCamera;
-        this.nomeCamera = nomeCamera;
+        if(noteCamera != null){
+            this.noteCamera = noteCamera;
+        }else{
+            this.noteCamera = "";
+        }
+        if(nomeCamera != null){
+            this.nomeCamera = nomeCamera;
+        }else{
+            this.nomeCamera = "";
+        }
+
     }
 
     /**
@@ -226,6 +240,34 @@ public class Camera implements Cloneable, Serializable {
     public boolean equals(Object obj) {
         if (obj == null || getClass() != obj.getClass()) return false;
         Camera camera = (Camera) obj;
+        if(statoCamera == null || camera.statoCamera == null){
+            if(statoCamera == null){
+                statoCamera = Stato.Libera;
+            }
+            if(camera.statoCamera == null){
+                camera.statoCamera = Stato.Libera;
+            }
+        }
+
+        if(noteCamera == null || camera.noteCamera == null){
+            if(noteCamera == null){
+                noteCamera = "";
+            }
+            if(camera.noteCamera == null){
+                camera.noteCamera = "";
+            }
+        }
+
+        if(nomeCamera == null || camera.nomeCamera == null){
+            if(nomeCamera == null){
+                nomeCamera = "";
+            }
+            if(camera.nomeCamera == null){
+                camera.nomeCamera = "";
+            }
+        }
+
+
         return numeroCamera == camera.numeroCamera && numeroMaxOccupanti.equals(camera.numeroMaxOccupanti) &&
                 statoCamera.equals(camera.statoCamera) && Math.abs(prezzoCamera - camera.prezzoCamera) < EPSILON &&
                 noteCamera.equalsIgnoreCase(camera.noteCamera) && nomeCamera.equalsIgnoreCase(nomeCamera);

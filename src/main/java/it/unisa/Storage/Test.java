@@ -42,14 +42,14 @@ public class Test {
                 "Marco", "Neri", "Roma", "Roma",
                 "Via dei Condotti", 5, 11187, "3351122334", "M",
                 LocalDate.of(1978, 11, 3), "NREMRA78S03H501U",
-                "m.neri@provider.it","Italiana", new Camera()
+                "m.neri@provider.it", "Italiana", new Camera()
         );
 
         Cliente cliente3 = new Cliente(
                 "Sofia", "Bruno", "Firenze", "Firenze",
                 "Piazza della Signoria", 1, 50122, "3294455667", "F",
                 LocalDate.of(2001, 1, 25), "BRNSFO01A65D612Y",
-                "sofia.bruno@studio.it","Italiana", new Camera()
+                "sofia.bruno@studio.it", "Italiana", new Camera()
         );
 
         listaClienti.add(cliente1);
@@ -103,7 +103,7 @@ public class Test {
 
         trattamento = new Trattamento("Mezza Pensione", 180);
     }
-
+}
     /* ************************************************************************************************************** */
 
     /**
@@ -111,8 +111,8 @@ public class Test {
      *
      * @return {@code Prenotazione} base.
      */
-    public static Prenotazione createBasePrenotazione() {
-        ArrayList<Camera> camere = new ArrayList<>();
+   /* public static Prenotazione createBasePrenotazione() {
+       /* ArrayList<Camera> camere = new ArrayList<>();
         ArrayList<Cliente> clienti = new ArrayList<>();
         camere.add(listaCamere.getFirst());
         clienti.add(listaClienti.getFirst());
@@ -191,4 +191,4 @@ public class Test {
             e.printStackTrace();
         }
     }
-}
+}*/

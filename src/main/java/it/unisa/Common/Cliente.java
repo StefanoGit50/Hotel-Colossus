@@ -124,27 +124,107 @@ public class Cliente implements Cloneable, Serializable {
      * @param email l'email del cliente
      */
     public Cliente(String nome, String cognome, String provincia, String comune, String via, Integer numeroCivico, Integer CAP, String numeroTelefono, String sesso, LocalDate dataNascita ,String cf , String email,String nazionalità,Camera camera) {
-        this.nome = nome;
-        this.cognome = cognome;
-        this.provincia = provincia;
-        this.comune = comune;
-        this.via = via;
-        this.numeroCivico = numeroCivico;
-        this.CAP = CAP;
-        this.numeroTelefono = numeroTelefono;
-        this.isBlacklisted = false;
-        this.sesso = sesso;
-        this.dataNascita = dataNascita;
-        this.cf = cf;
-        this.email = email;
-        this.nazionalità = nazionalità;
-        this.camera = camera;
+        if(nome != null){
+            this.nome = nome;
+        }else{
+            this.nome = "";
+        }
+
+        if(cognome != null){
+            this.cognome = cognome;
+        }else{
+            this.cognome = "";
+        }
+
+        if(provincia != null){
+            this.provincia = provincia;
+        }else{
+            this.provincia = "";
+        }
+        if(comune != null){
+            this.comune = comune;
+        }else{
+            this.comune = "";
+        }
+        if(via != null){
+            this.via = via;
+        }else{
+            this.via = "";
+        }
+        if(numeroCivico != null){
+            this.numeroCivico = numeroCivico;
+        } else{
+            this.numeroCivico = 0;
+        }
+
+        if(CAP != null){
+           this.CAP = CAP;
+        }else{
+            this.CAP = 0;
+        }
+
+        if(numeroCivico != null){
+            this.numeroTelefono = numeroTelefono;
+        }else{
+            this.numeroTelefono = "";
+        }
+
+        if(sesso != null){
+            this.sesso = sesso;
+        }else{
+            this.sesso = "";
+        }
+
+        if(dataNascita != null){
+            this.dataNascita = dataNascita;
+        }else{
+            this.dataNascita = LocalDate.now();
+        }
+
+        if(cf != null){
+            this.cf = cf;
+        }else{
+            this.cf = "";
+        }
+
+        if(email != null){
+            this.email = email;
+        }else{
+            this.email = "";
+        }
+
+        if(nazionalità != null){
+            this.nazionalità = nazionalità;
+        }else{
+            this.nazionalità = "";
+        }
+        if(camera != null){
+            this.camera = camera;
+        }else{
+            this.camera = new Camera();
+        }
     }
 
     /**
      * Costruttore vuoto.
      */
-    public Cliente() {}
+    public Cliente() {
+        this.nome = "";
+        this.cognome = "";
+        this.provincia = "";
+        this.comune = "";
+        this.via = "";
+        this.numeroCivico = 0;
+        this.CAP = 0;
+        this.numeroTelefono = "";
+        this.isBlacklisted = false;
+        this.sesso = "";
+        this.dataNascita = LocalDate.now();
+        this.cf = "";
+        this.email = "";
+        this.nazionalità = "";
+        this.camera = new Camera();
+    }
 
     /**
      * Restituisce il nome del cliente.

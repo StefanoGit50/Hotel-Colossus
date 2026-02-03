@@ -224,6 +224,7 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
                 "SDFGANNSOLF", "Libero@asfnai","Italiana", new Camera());
         clist.add(cliente);
 
+<<<<<<< HEAD
         Prenotazione p1 = new Prenotazione(
                 3,  // ID
                 LocalDate.now(), // Data Creazione
@@ -241,6 +242,20 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
                 "In natura"
         );
         p1.setStatoPrenotazione(false);
+=======
+        /*Prenotazione p1 = new Prenotazione(1,
+                LocalDate.now(),
+                LocalDate.of(2026, 1, 10),
+                LocalDate.of(2026, 1, 15),
+                new Trattamento("MEZZA PENSIONE", 24),
+                "PASSAPORTO",
+                LocalDate.of(2026, 1, 15),
+                LocalDate.of(2030, 5, 20),
+                cliente.getNome() + " " + cliente.getCognome(),
+                "renato ti massaggiA",
+                c, listaServizi, clist, "CA345C69","lpdfokgibjsokij","carta") */
+       // p1.setStatoPrenotazione(false);
+>>>>>>> b483af9d9a11f85982d74a41dfa61e6fad66fce2
 
         CatalogoPrenotazioni catalogoPrenotazioni = new CatalogoPrenotazioni();
 
@@ -248,7 +263,7 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
 
         ContoEconomicoComposite prenotazioni = new ContoEconomicoComposite("PRENOTAZIONI");
 
-        catalogoPrenotazioni.getListaPrenotazioni().add(p1);
+        //catalogoPrenotazioni.getListaPrenotazioni().add(p1);
         //mostra solo le prenotazioni completate
         for (Prenotazione p : catalogoPrenotazioni.getListaPrenotazioni()) {
             if (p.getStatoPrenotazione() == false) {

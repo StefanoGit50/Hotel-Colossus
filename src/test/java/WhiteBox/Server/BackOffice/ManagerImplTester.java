@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,58 +40,60 @@ class ManagerImplTest {
 
         // Crea un impiegato di test
         impiegatoTest = new Impiegato(
-                "mrossi",
-                "hashedPassword123",
-                false,
-                Instant.now(),
-                "Mario",
-                "Rossi",
-                "M",
-                "Carta d'identità",
-                "AB12345",
-                80100,
-                "Via Roma",
-                "NA",
-                "Napoli",
-                10,
-                "RSSMRA80A01H501X",
-                "3331234567",
-                Ruolo.FrontDesk,
-                2500.00,
-                LocalDate.of(2020, 1, 15),
-                LocalDate.of(2020, 1, 1),
-                "mario.rossi@hotel.it",
-                "Italiana",
-                LocalDate.of(2030, 1, 1)
+                0,                                      // id (0 se è auto-increment nel DB)
+                "mario.rossi",                          // username
+                "$2a$10$DUMMYHASHPERLApASSwORD...",     // hashedPassword (lunga per evitare troncamento!)
+                false,                                  // isTemporary
+                Instant.now().plus(24, ChronoUnit.HOURS), // dataScadenzaToken (Impostata a domani!)
+                "Mario",                                // nome
+                "Rossi",                                // cognome
+                "M",                                    // sesso
+                "Carta d'Identità",                     // tipoDocumento
+                "CA12345BA",                            // numeroDocumento
+                84084,                                  // CAP (int come da costruttore)
+                "Via dei Mille",                        // via
+                "Salerno",                              // provincia
+                "Fisciano",                             // comune
+                15,                                     // numeroCivico
+                "RSSMRA80A01H703F",                     // codiceFiscale (16 char)
+                "3331234567",                           // telefono
+                Ruolo.FrontDesk,                        // ruolo (Assumendo sia un Enum)
+                1550.00,                                // stipendio
+                LocalDate.of(2023, 1, 10),              // dataAssunzione
+                LocalDate.of(2020, 5, 15),              // dataRilascioDocumento
+                "mario.rossi@hotel.it",                 // emailAziendale
+                "Italiana",                             // cittadinanza
+                LocalDate.of(2030, 5, 14)               // dataScadenzaDocumento
         );
 
         // Crea una lista di impiegati di test
         listaImpiegatiTest = new ArrayList<>();
         listaImpiegatiTest.add(impiegatoTest);
         listaImpiegatiTest.add(new Impiegato(
-                "lbianchi",
-                "hashedPassword456",
-                false,
-                Instant.now(),
-                "Laura",
-                "Bianchi",
-                "F",
-                "Passaporto",
-                "CD9876543",
-                20100,
-                "Via Milano",
-                "MI",
-                "Milano",
-                25,
-                "BNCLRA90B55F205Y",
-                "3497654321",
-                Ruolo.Manager,
-                3000.00,
-                LocalDate.of(2021, 3, 15),
-                LocalDate.of(2021, 3, 1),
-                "laura.bianchi@hotel.it",
-                "Italiana",
-                LocalDate.of(2031, 3, 1)
+                0,                                      // id
+                "giulia.bianchi",                       // username
+                "$2a$10$eDhncGf/5.K2s3d4f5g6h7j8k9l0m1n2o3p4q5r6s7t8u9v0w", // Hash realistico (60 char)
+                true,                                   // isTemporary (Testiamo TRUE stavolta)
+                Instant.now().plus(7, ChronoUnit.DAYS), // dataScadenzaToken (Scade tra una settimana)
+                "Giulia",                               // nome
+                "Bianchi",                              // cognome
+                "F",                                    // sesso
+                "Passaporto",                           // tipoDocumento (Diverso da prima)
+                "YA8877665",                            // numeroDocumento
+                20121,                                  // CAP (Milano centro)
+                "Piazza del Duomo",                     // via
+                "Milano",                               // provincia
+                "Milano",                               // comune
+                1,                                      // numeroCivico
+                "BNCGLA85T45F205Z",                     // codiceFiscale (Femminile)
+                "3409876543",                           // telefono
+                Ruolo.Manager,                          // ruolo (Testiamo il Manager)
+                2800.00,                                // stipendio (Più alto)
+                LocalDate.of(2015, 9, 1),               // dataAssunzione (Più anzianità)
+                LocalDate.of(2022, 6, 20),              // dataRilascioDocumento
+                "dir.bianchi@hotel.it",                 // emailAziendale
+                "Italiana",                             // cittadinanza
+                LocalDate.of(2032, 6, 19)               // dataScadenzaDocumento
         ));
     }
 

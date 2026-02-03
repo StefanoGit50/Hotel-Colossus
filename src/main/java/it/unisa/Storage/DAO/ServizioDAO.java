@@ -11,13 +11,13 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 
-public class ServizioDAO implements FrontDeskStorage<Servizio>
-{
+public class ServizioDAO implements FrontDeskStorage<Servizio> {
     private static final String TABLE_NAME= "Servizio";
     private static final String[] whitelist = {
             "nome",
             "prezzo"
     };
+    private Connection connection;
 
 
     /**
@@ -29,19 +29,17 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
      * @throws SQLException
      */
     @Override
-    public synchronized void doSave(Servizio servizio) throws SQLException
-    {
-        Connection connection = null;
+    public synchronized void doSave(Servizio servizio) throws SQLException    {
+        connection = null;
         PreparedStatement ps = null;
 
         String query = "INSERT INTO " + ServizioDAO.TABLE_NAME +
-                " (Nome, Prezzo) " +
-                " VALUES (?, ?) ";
+                " (IDServizio,Nome, Prezzo) " +
+                " VALUES (?,?) ";
 
         try {
             connection = ConnectionStorage.getConnection();
             ps = connection.prepareStatement(query);
-
             ps.setString(1, servizio.getNome());
             ps.setDouble(2, servizio.getPrezzo());
 
@@ -54,7 +52,8 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
                     ps.close();
             } finally {
                 if (connection != null)
-                    connection.close();
+                    ConnectionStorage.releaseConnection(connection);
+
             }
         }
     }
@@ -86,18 +85,18 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
         if(servizio == null || servizio.getNome() == null || servizio.getNome().isBlank())
             throw new SQLException("ERRORE: servizio nullo oppure nomeServizio nullo/vuoto");
 
-        Connection connection = null;
+
         PreparedStatement ps = null;
         connection = ConnectionStorage.getConnection();
 
         String query = "DELETE FROM " + ServizioDAO.TABLE_NAME
-                + " WHERE Nome = ?";
+                + " WHERE IDServizio = ?";
 
         try {
             connection =  ConnectionStorage.getConnection();
             ps = connection.prepareStatement(query);
 
-            ps.setString(1, servizio.getNome());
+            ps.setInt(1, servizio.getId());
             ps.executeUpdate();
         } catch(SQLException e) {
             throw e;
@@ -107,7 +106,8 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
                     ps.close();
             } finally {
                 if (connection != null)
-                    connection.close();
+                    ConnectionStorage.releaseConnection(connection);
+
             }
         }
     }
@@ -127,7 +127,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
     {
         if ( !(nome instanceof String)) throw new SQLException("ERROR: chiave non valida");
 
-        Connection connection = null;
+         connection = null;
         PreparedStatement ps = null;
         Servizio servizio = new Servizio();
         String query = "SELECT * FROM " + ServizioDAO.TABLE_NAME + " WHERE Nome = ?";
@@ -141,6 +141,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
+                servizio.setId(rs.getInt("IDServizio"));
                 servizio.setNome(rs.getString("Nome"));
                 servizio.setPrezzo(rs.getDouble("Prezzo"));
             } else {
@@ -152,7 +153,8 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
                     ps.close();
             } finally {
                 if (connection != null)
-                    connection.close();
+                    ConnectionStorage.releaseConnection(connection);
+
             }
         }
         return servizio;
@@ -171,7 +173,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
     @Override
     public synchronized Collection<Servizio> doRetriveAll(String order) throws SQLException
     {
-        Connection connection = null;
+         connection = null;
         PreparedStatement ps = null;
         String query = "SELECT * FROM " + ServizioDAO.TABLE_NAME;
 
@@ -190,6 +192,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
             if (rs.next()) {
                 do {
                     servizio = new Servizio();
+                    servizio.setId(rs.getInt("IDServizio"));
                     servizio.setNome(rs.getString("Nome"));
                     servizio.setPrezzo(rs.getDouble("Prezzo"));
                     servizi.add(servizio);
@@ -203,7 +206,8 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
                     ps.close();
             } finally {
                 if (connection != null)
-                    connection.close();
+                    ConnectionStorage.releaseConnection(connection);
+
             }
         }
 
@@ -231,7 +235,6 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
         if(servizio == null || servizio.getNome() == null || servizio.getNome().isBlank())
             throw new SQLException("ERRORE: servizio nullo oppure nomeServizio nullo/vuoto");
 
-        Connection connection = null;
         PreparedStatement ps = null;
         String query = "UPDATE " + ServizioDAO.TABLE_NAME +  " SET Prezzo = ? WHERE Nome = ?";
 
@@ -250,7 +253,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
                     ps.close();
             } finally {
                 if (connection != null)
-                    connection.close();
+                    ConnectionStorage.releaseConnection(connection);
             }
         }
     }
@@ -270,7 +273,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
      * @throws SQLException;
      */
     public synchronized Collection<Servizio> doRetriveByAttribute(String attribute, Object value) throws SQLException {
-        Connection connection;
+
         PreparedStatement preparedStatement = null;
         ArrayList<Servizio> lista = new ArrayList<>();
         String selectSQL;
@@ -286,6 +289,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
                 Servizio servizio;
                 while (resultSet.next()) {
                     servizio = new Servizio();
+                    servizio.setId(resultSet.getInt("IDServizio"));
                     servizio.setNome(resultSet.getString("Nome"));
                     servizio.setPrezzo(resultSet.getDouble("Prezzo"));
 

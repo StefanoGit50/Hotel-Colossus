@@ -85,7 +85,7 @@ class CredenzialiUtilsTest
         // Arrange
         when(impiegatoStorage.doRetriveByKey(testUsername)).thenReturn(impiegato);
         when(impiegato.getHashPassword()).thenReturn(hashedPassword);
-        when(impiegato.getUserName()).thenReturn(testUsername);
+        when(impiegato.getUsername()).thenReturn(testUsername);
 
         // Act
        // boolean result = CredenzialiUtils.checkAccount(testUsername, testPassword, impiegatoStorage);
@@ -94,7 +94,7 @@ class CredenzialiUtilsTest
        // assertTrue(result);
         verify(impiegatoStorage).doRetriveByKey(testUsername);
         verify(impiegato).getHashPassword();
-        verify(impiegato).getUserName();
+        verify(impiegato).getUsername();
     }
 
 
@@ -140,7 +140,7 @@ class CredenzialiUtilsTest
         String wrongUsername = "usernameDiverso";
         when(impiegatoStorage.doRetriveByKey(testUsername)).thenReturn(impiegato);
         when(impiegato.getHashPassword()).thenReturn(hashedPassword);
-        when(impiegato.getUserName()).thenReturn(wrongUsername);
+        when(impiegato.getUsername()).thenReturn(wrongUsername);
 
         // Act
         //boolean result = CredenzialiUtils.checkAccount(testUsername, testPassword, impiegatoStorage);
@@ -149,7 +149,7 @@ class CredenzialiUtilsTest
         //assertFalse(result);
         verify(impiegatoStorage).doRetriveByKey(testUsername);
         verify(impiegato).getHashPassword();
-        verify(impiegato).getUserName();
+        verify(impiegato).getUsername();
     }
 
 
