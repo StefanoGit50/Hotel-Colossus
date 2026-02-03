@@ -1,10 +1,11 @@
+
 USE hotelColossus;
 
 -- =============================================
 -- 1. INSERT TRATTAMENTO
 -- =============================================
 INSERT INTO Trattamento (Nome, Prezzo) VALUES
-                                           ('Solo Pernottamento', 1.00),
+                                           ('Solo Pernottamento', 0.00),
                                            ('Bed & Breakfast', 15.00),
                                            ('Mezza Pensione', 35.00),
                                            ('Pensione Completa', 55.00),

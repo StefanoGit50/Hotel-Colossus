@@ -85,11 +85,6 @@ public class Prenotazione implements Cloneable, Serializable {
     private LocalDate dataEmissioneRicevuta;
 
     /**
-     * Lista delle camere incluse nella prenotazione.
-     */
-    private ArrayList<Camera> listaCamere;
-
-    /**
      * Lista dei servizi aggiuntivi inclusi nella prenotazione.
      */
     private ArrayList<Servizio> listaServizi;
@@ -113,27 +108,26 @@ public class Prenotazione implements Cloneable, Serializable {
      * Costruttore completo per creare una nuova istanza di {@code Prenotazione}.
      *
      * @param dataCreazionePrenotazione Data di creazione della prenotazione.
-     * @param dataInizio Data di inizio del soggiorno.
-     * @param dataFine Data di fine del soggiorno.
+     * @param dataInizioPrenotazione Data di inizio del soggiorno.
+     * @param dataFinePrenotazione Data di fine del soggiorno.
      * @param trattamento Il trattamento (es. Pensione completa).
      * @param tipoDocumento Tipo di documento di garanzia.
      * @param dataRilascio Data di rilascio del documento.
      * @param dataScadenza Data di scadenza del documento.
      * @param intestatario Nome dell'intestatario della prenotazione.
      * @param noteAggiuntive Note aggiuntive.
-     * @param listaCamere Lista delle camere prenotate.
      * @param listaServizi Lista dei servizi aggiuntivi.
      * @param listaClienti Lista dei clienti.
      * @param numeroDocumento il numero del documento.
      */
-    public Prenotazione( LocalDate dataCreazionePrenotazione, LocalDate dataInizio, LocalDate dataFine,LocalDate dataEmissioneRicevuta,
+    public Prenotazione( LocalDate dataCreazionePrenotazione, LocalDate dataInizioPrenotazione, LocalDate dataFinePrenotazione,LocalDate dataEmissioneRicevuta,
                         Trattamento trattamento,Double prezzoAcquistoTrattamento, String tipoDocumento, LocalDate dataRilascio, LocalDate dataScadenza,
-                        String intestatario, String noteAggiuntive, ArrayList<Camera> listaCamere, ArrayList<Servizio> listaServizi,
+                        String intestatario, String noteAggiuntive, ArrayList<Servizio> listaServizi,
                         ArrayList<Cliente> listaClienti ,String numeroDocumento, String metodoPagamento, String cittadinanza) {
         this.IDPrenotazione = 0; //ID è AUTOINCREMENT
         this.dataCreazionePrenotazione = dataCreazionePrenotazione;
-        this.dataInizio = dataInizio;
-        this.dataFine = dataFine;
+        this.dataInizio = dataInizioPrenotazione;
+        this.dataFine = dataFinePrenotazione;
         this.trattamento = trattamento;
         this.tipoDocumento = tipoDocumento;
         this.dataRilascio = dataRilascio;
@@ -141,7 +135,6 @@ public class Prenotazione implements Cloneable, Serializable {
         this.intestatario = intestatario;
         this.noteAggiuntive = noteAggiuntive;
         // Uso di deep copy per l'incapsulamento delle liste
-        this.listaCamere = Util.deepCopyArrayList(listaCamere);
         this.listaServizi = Util.deepCopyArrayList(listaServizi);
         this.listaClienti = Util.deepCopyArrayList(listaClienti);
         this.numeroDocumento = numeroDocumento;
@@ -161,7 +154,6 @@ public class Prenotazione implements Cloneable, Serializable {
         this.dataInizio = LocalDate.now();
         this.dataRilascio = LocalDate.now();
         this.dataScadenza = LocalDate.now();
-        this.listaCamere = new ArrayList<>();
         this.listaClienti = new ArrayList<>();
         this.listaServizi = new ArrayList<>();
         this.noteAggiuntive = "";
@@ -173,9 +165,6 @@ public class Prenotazione implements Cloneable, Serializable {
      /**
      * Aggiunge un cliente alla lista dei clienti.
      *
-      * @pre cliente != null
-      * @post listaClienti.contains(cliente)
-      *
      * @param cliente Il {@code Cliente} da aggiungere.
      */
     public void aggiungiCliente(Cliente cliente) {
@@ -191,9 +180,6 @@ public class Prenotazione implements Cloneable, Serializable {
     /**
      * Rimuove un cliente dalla lista dei clienti basandosi sull'uguaglianza.
      *
-     * @pre cliente != null
-     * @post result == (not listaClienti.contains(cliente))
-     *
      * @param cliente Il {@code Cliente} da rimuovere.
      * @return {@code true} se il cliente è stato rimosso, {@code false} altrimenti.
      */
@@ -203,9 +189,6 @@ public class Prenotazione implements Cloneable, Serializable {
 
     /**
      * Aggiunge un servizio alla lista dei servizi.
-     *
-     * @pre servizio != null
-     * @post listaServizi.contains(servizio)
      *
      * @param servizio Il {@code Servizio} da aggiungere.
      */
@@ -221,9 +204,6 @@ public class Prenotazione implements Cloneable, Serializable {
 
     /**
      * Rimuove un servizio dalla lista dei servizi basandosi sull'uguaglianza.
-     *
-     * @pre servizio != null
-     * @post result == (not listaServizi.contains(servizio))
      *
      * @param servizio Il {@code Servizio} da rimuovere.
      * @return {@code true} se il servizio è stato rimosso, {@code false} altrimenti.
@@ -291,280 +271,109 @@ public class Prenotazione implements Cloneable, Serializable {
     public LocalDate getDataEmissioneRicevuta() {
         return dataEmissioneRicevuta;
     }
-
-    /**
-     * Imposta il valore di IDPrenotazione.
-     *
-     * @pre IDPrenotazione != null
-     * @post IDPrenotazione == IDPrenotazione
-     */
     public void setIDPrenotazione(Integer IDPrenotazione) {
         this.IDPrenotazione = IDPrenotazione;
     }
 
-
-    /**
-     * Restituisce il valore di iDPrenotazione.
-     *
-     * @post result == IDPrenotazione
-     */
     public Integer getIDPrenotazione() {
         return IDPrenotazione;
     }
 
-
-    /**
-     * Restituisce il valore di dataCreazionePrenotazione.
-     *
-     * @post result == dataCreazionePrenotazione
-     */
     public LocalDate getDataCreazionePrenotazione() {
         return dataCreazionePrenotazione;
     }
 
-
-    /**
-     * Imposta il valore di dataCreazionePrenotazione.
-     *
-     * @pre dataCreazionePrenotazione != null
-     * @post this.dataCreazionePrenotazione == dataCreazionePrenotazione
-     */
     public void setDataCreazionePrenotazione(LocalDate dataCreazionePrenotazione) {
         this.dataCreazionePrenotazione = dataCreazionePrenotazione;
     }
 
-
-    /**
-     * Restituisce il valore di statoPrenotazione.
-     *
-     * @post result == statoPrenotazione
-     */
     public boolean getStatoPrenotazione(){
         return this.statoPrenotazione;
     }
 
-
-    /**
-     * Imposta il valore di statoPrenotazione.
-     *
-     * @post statoPrenotazione == st
-     */
     public  void setStatoPrenotazione(boolean st){
         this.statoPrenotazione = st;
     }
 
-
-    /**
-     * Restituisce il valore di dataInizio.
-     *
-     * @post result == dataInizio
-     */
     public LocalDate getDataInizio() {
         return dataInizio;
     }
 
-
-    /**
-     * Imposta il valore di dataInizio.
-     *
-     * @pre dataInizio != null
-     * @post this.dataInizio == dataInizio
-     */
     public void setDataInizio(LocalDate dataInizio) {
         this.dataInizio = dataInizio;
     }
 
-
-    /**
-     * Restituisce il valore di dataFine.
-     *
-     * @post result == dataFine
-     */
     public LocalDate getDataFine() {
         return dataFine;
     }
 
-
-    /**
-     * Imposta il valore di dataFine.
-     *
-     * @pre dataFine != null
-     * @post this.dataFine == dataFine
-     */
     public void setDataFine(LocalDate dataFine) {
         this.dataFine = dataFine;
     }
 
-
-    /**
-     * Restituisce il valore di trattamento.
-     *
-     * @post result == trattamento
-     */
     public Trattamento getTrattamento() {
         return trattamento;
     }
 
-
-    /**
-     * Imposta il valore di trattamento.
-     *
-     * @pre trattamento != null
-     * @post this.trattamento == trattamento
-     */
     public void setTrattamento(Trattamento trattamento) {
         this.trattamento = trattamento;
     }
 
-
-    /**
-     * Restituisce il valore di tipoDocumento.
-     *
-     * @post result == tipoDocumento
-     */
     public String getTipoDocumento() {
         return tipoDocumento;
     }
 
-
-    /**
-     * Imposta il valore di tipoDocumento.
-     *
-     * @pre tipoDocumento != null && tipoDocumento != ""
-     * @post this.tipoDocumento == tipoDocumento
-     */
     public void setTipoDocumento(String tipoDocumento) {
         this.tipoDocumento = tipoDocumento;
     }
 
-
-    /**
-     * Restituisce il valore di dataRilascio.
-     *
-     * @post result == dataRilascio
-     */
     public LocalDate getDataRilascio() {
         return dataRilascio;
     }
 
-
-    /**
-     * Imposta il valore di dataRilascio.
-     *
-     * @pre dataRilascio != null
-     * @post this.dataRilascio == dataRilascio
-     */
     public void setDataRilascio(LocalDate dataRilascio) {
         this.dataRilascio = dataRilascio;
     }
 
-
-    /**
-     * Restituisce il valore di dataScadenza.
-     *
-     * @post result == dataScadenza
-     */
     public LocalDate getDataScadenza() {
         return dataScadenza;
     }
 
-
-    /**
-     * Imposta il valore di dataScadenza.
-     *
-     * @pre dataScadenza != null
-     * @post this.dataScadenza == dataScadenza
-     */
     public void setDataScadenza(LocalDate dataScadenza) {
         this.dataScadenza = dataScadenza;
     }
 
-
-    /**
-     * Restituisce il valore di intestatario.
-     *
-     * @post result == intestatario
-     */
     public String getIntestatario() {
         return intestatario;
     }
 
-
-    /**
-     * Imposta il valore di intestatario.
-     *
-     * @pre intestatario != null && intestatario != ""
-     * @post this.intestatario == intestatario
-     */
     public void setIntestatario(String intestatario) {
         this.intestatario = intestatario;
     }
 
-
-    /**
-     * Restituisce il valore di noteAggiuntive.
-     *
-     * @post result == noteAggiuntive
-     */
     public String getNoteAggiuntive() {
         return noteAggiuntive;
     }
 
-
-    /**
-     * Imposta il valore di noteAggiuntive.
-     *
-     * @post this.noteAggiuntive == noteAggiuntive
-     */
     public void setNoteAggiuntive(String noteAggiuntive) {
         this.noteAggiuntive = noteAggiuntive;
     }
 
-
-    /**
-     * Imposta il valore di numeroDocumento.
-     *
-     * @pre numeroDocumento != null
-     * @post this.numeroDocumento == numeroDocumento
-     */
     public void setNumeroDocumento(String numeroDocumento){
         this.numeroDocumento = numeroDocumento;
     }
 
-
-    /**
-     * Restituisce il valore di numeroDocumento.
-     *
-     * @post result == numeroDocumento
-     */
     public String getNumeroDocumento(){
         return numeroDocumento;
     }
-
-
     /**
      * Restituisce una deep copy della lista delle camere.
      *
-     * @post result.stream().allMatch(c | listaCamere.contains(c))
      *
-     * @return Una nuova ArrayList contenente i cloni delle camere.
-     */
-    public ArrayList<Camera> getListaCamere() {
-        return Util.deepCopyArrayList(listaCamere);
-    }
-
-    /**
      * Imposta la lista delle camere, creando una deep copy della lista fornita.
-     *
-     * @pre listaCamere != null
-     * @post this.listaCamere.stream().allMatch(c | listaCamere.contains(c))
      *
      * @param listaCamere La lista delle camere da copiare.
      */
-    public void setListaCamere(ArrayList<Camera> listaCamere) {
-        this.listaCamere = Util.deepCopyArrayList(listaCamere);
-    }
-
     /**
      * Restituisce una deep copy della lista dei servizi.
      *
@@ -601,23 +410,11 @@ public class Prenotazione implements Cloneable, Serializable {
         this.listaClienti = Util.deepCopyArrayList(listaClienti);
     }
 
-
-    /**
-     * Esegue un'operazione specifica del metodo.
-     *
-     * @post result == checkIn
-     */
     public boolean isCheckIn() {
         return checkIn;
     }
 
 
-
-    /**
-     * Imposta il valore di checkIn.
-     *
-     * @post this.checkIn == checkIn
-     */
     public void setCheckIn(boolean checkIn) {
         this.checkIn = checkIn;
     }
@@ -638,7 +435,7 @@ public class Prenotazione implements Cloneable, Serializable {
                 ", intestatario='" + intestatario + '\'' +
                 ", noteAggiuntive='" + noteAggiuntive + '\'' +
                 ", numeroDocumento='" + numeroDocumento + '\'' +
-                ", listaCamere=" + listaCamere +
+                ", listaCamere=" + listaClienti.toString()+
                 ", listaServizi=" + listaServizi +
                 ", listaClienti=" + listaClienti +
                 ", statoPrenotazione=" + statoPrenotazione +
@@ -670,7 +467,6 @@ public class Prenotazione implements Cloneable, Serializable {
         Prenotazione prenotazione = (Prenotazione) o;
         if(!isNullAll(prenotazione) && !isNullAll(this)){
                 ArrayList<Cliente> clientes = prenotazione.getListaClienti();
-                ArrayList<Camera> cameras = prenotazione.getListaCamere();
                 ArrayList<Servizio> servizios = prenotazione.getListaServizi();
 
                 if(isNull(clientes)){
@@ -683,15 +479,6 @@ public class Prenotazione implements Cloneable, Serializable {
                     }
                 }
 
-                if(isNull(cameras)){
-                    if(!isNull(listaCamere)){
-                        return false;
-                    }
-                }else{
-                    if(isNull(listaCamere)){
-                        return false;
-                    }
-                }
 
                 if(isNull(servizios)){
                     if(!isNull(listaServizi)){
@@ -738,22 +525,7 @@ public class Prenotazione implements Cloneable, Serializable {
                 }else{
                     servi = false;
                 }
-                i = 0;
-                if(cameras.size() == listaCamere.size()){
-                    for(Camera camera : cameras){
-                        if(!listaCamere.get(i).equals(camera)){
-                            came = false;
-                            break;
-                        }
-                        i++;
-                    }
 
-                    if(came == null){
-                        came = true;
-                    }
-                }else{
-                    came = false;
-                }
 
                 if(isNull(trattamento)){
                     if(!isNull(prenotazione.trattamento)){
@@ -886,7 +658,7 @@ public class Prenotazione implements Cloneable, Serializable {
         return prenotazione.trattamento == null && prenotazione.noteAggiuntive == null && prenotazione.intestatario == null &&
                 prenotazione.numeroDocumento == null && prenotazione.tipoDocumento == null && prenotazione.IDPrenotazione == null &&
                 prenotazione.dataRilascio == null && prenotazione.dataScadenza == null && prenotazione.dataInizio == null &&
-                prenotazione.dataFine == null && prenotazione.listaCamere == null && prenotazione.listaClienti == null &&
+                prenotazione.dataFine == null && prenotazione.listaClienti == null &&
                 prenotazione.listaServizi == null && prenotazione.dataCreazionePrenotazione == null && metodoDiPagamento==null;
     }
 
@@ -901,7 +673,7 @@ public class Prenotazione implements Cloneable, Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(IDPrenotazione, dataCreazionePrenotazione, dataInizio, dataFine, trattamento, tipoDocumento, dataRilascio, dataScadenza, intestatario, noteAggiuntive, numeroDocumento, listaCamere, listaServizi, listaClienti, statoPrenotazione, checkIn);
+        return Objects.hash(IDPrenotazione, dataCreazionePrenotazione, dataInizio, dataFine, trattamento, tipoDocumento, dataRilascio, dataScadenza, intestatario, noteAggiuntive, numeroDocumento,  listaServizi, listaClienti, statoPrenotazione, checkIn);
     }
 
     /**
@@ -921,8 +693,6 @@ public class Prenotazione implements Cloneable, Serializable {
             // cloned.trattamento = this.trattamento.clone();
         }
 
-        // Deep copy delle liste
-        cloned.listaCamere = Util.deepCopyArrayList(this.listaCamere);
         cloned.listaServizi = Util.deepCopyArrayList(this.listaServizi);
         cloned.listaClienti = Util.deepCopyArrayList(this.listaClienti);
 

@@ -52,7 +52,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
      * @throws SQLException;
      */
     public synchronized void doSave(Cliente o) throws SQLException{
-        String insertSQL= "INSERT INTO " +  TABLE_NAME +" (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, Nazionalita,DataDiNascita, IsBackListed)"
+        String insertSQL= "INSERT INTO " +  TABLE_NAME +" (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, Nazionalità,DataDiNascita, IsBackListed)"
                 + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         try{
@@ -254,10 +254,10 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
         if(o != null && o.getCf() != null){
             con = ConnectionStorage.getConnection();
             try(PreparedStatement preparedStatement = con.prepareStatement(
-                    "UPDATE cliente SET nome = ?, cognome = ?, Cap = ?, comune = ?, " +
+                    "UPDATE cliente JOIN USING (CF) SET nome = ?, cognome = ?, Cap = ?, comune = ?, " +
                             "civico = ?, provincia = ?, via = ?, Email = ?, Sesso = ?, " +
-                            "telefono = ?, Nazionalita = ?, " +
-                            "DataDiNascita = ?, IsBackListed = ? WHERE CF = ?")){
+                            "telefono = ?, Nazionilita = ?, " +
+                            "DataDiNascita = ?, IsBackListed = ?, NumeroCamera= ?, NumeroCameraStorico = ?,PrezzoAcquisto = ? WHERE CF = ?")){
 
                 preparedStatement.setString(1, o.getNome());
                 preparedStatement.setString(2, o.getCognome());
@@ -272,6 +272,9 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                 preparedStatement.setDate(12, Date.valueOf(o.getDataNascita()));
                 preparedStatement.setBoolean(13, o.isBlacklisted());
                 preparedStatement.setString(14, o.getCf());
+                preparedStatement.setInt(15,o.getCamera().getNumeroCamera());
+                preparedStatement.setInt(16,o.getCamera().getNumeroCamera());
+                preparedStatement.setDouble(17,o.getCamera().getPrezzoCamera());
                 preparedStatement.executeUpdate();
             }
             finally

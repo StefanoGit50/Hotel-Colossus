@@ -39,11 +39,20 @@ public class ServizioDAO implements FrontDeskStorage<Servizio> {
 
         try {
             connection = ConnectionStorage.getConnection();
-            ps = connection.prepareStatement(query);
+            ps = connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, servizio.getNome());
             ps.setDouble(2, servizio.getPrezzo());
 
             ps.executeUpdate();
+
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    int idGenerato = generatedKeys.getInt(1);
+                    servizio.setId(idGenerato);
+                }
+            }
+
+
         } catch(SQLException e) {
             throw e;
         } finally {
