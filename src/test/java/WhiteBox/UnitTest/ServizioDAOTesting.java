@@ -79,14 +79,17 @@ public class ServizioDAOTesting{
     @Tag("True")
     @DisplayName("doRetriveAll(String order) quando va tutto bene")
     public void doRetriveAllAllTrue() throws SQLException {
-        DBPopulator dbPopulator = new DBPopulator();
-        dbPopulator.populator();
+        DBPopulator.cancel();
+        DBPopulator.populator();
         ArrayList<Servizio> servizios = new ArrayList<>();
+
+        servizios.add(new Servizio("Parcheggio",10));
+        servizios.add(new Servizio("WiFi Premium",5));
         servizios.add(new Servizio("Colazione in Camera",12));
         servizios.add(new Servizio("Late CheckOut",25));
-        servizios.add(new Servizio("Parcheggio",10));
-        servizios.add(new Servizio("Spa e Benessere",40));
-        servizios.add(new Servizio("",));
+        servizios.add(new Servizio("Spa e Benessere",45));
+        servizios.add(new Servizio("Transfer Aeroporto",35));
+
         ArrayList<Servizio> servizios1 = (ArrayList<Servizio>) servizioDAO.doRetriveAll("nome");
         assertEquals(servizios,servizios1);
     }
@@ -95,29 +98,24 @@ public class ServizioDAOTesting{
     @Test
     @DisplayName("doRetriveAll(String order) quando resultSet.next() restituisce uguale a false")
     public void doRetriveAllResultSetIsFalse() throws SQLException{
-        DBPopulator dbPopulator = new DBPopulator();
-        dbPopulator.cancel();
-        assertEquals(new ArrayList<Servizio>(),servizioDAO.doRetriveAll("decrescente"));
+        DBPopulator.cancel();
+        assertThrows(NoSuchElementException.class,()->servizioDAO.doRetriveAll("nome"));
     }
 
     @Tag("True")
     @Test
-    @DisplayName("doRetriveAll(String order) quando va tutto bene pero è crescente")
+    @DisplayName("doRetriveAll(String order) quando va tutto bene pero order = null")
     public void doRetriveAllCrescente() throws SQLException{
         ArrayList<Servizio> servizios = new ArrayList<>();
-        DBPopulator dbPopulator = new DBPopulator();
-        dbPopulator.populator();
-        servizios.add(new Servizio("Colazione in Camera",12.00));
-        servizios.add(new Servizio("Early CheckIn", 20.00));
-        servizios.add(new Servizio("Late CheckOut", 25.00));
-        servizios.add(new Servizio("Minibar", 8.00));
-        servizios.add(new Servizio("Noleggio Auto", 50.00));
-        servizios.add(new Servizio("Parcheggio", 10.00));
-        servizios.add(new Servizio("Servizio Lavanderia", 15.00));
-        servizios.add(new Servizio("Spa e Benessere", 45.00));
-        servizios.add(new Servizio("Transfer Aeroporto", 35.00));
-
-        ArrayList<Servizio> servizios1 = (ArrayList<Servizio>) servizioDAO.doRetriveAll("crescente");
+        DBPopulator.cancel();
+        DBPopulator.populator();
+        servizios.add(new Servizio("Parcheggio",10));
+        servizios.add(new Servizio("WiFi Premium",5));
+        servizios.add(new Servizio("Colazione in Camera",12));
+        servizios.add(new Servizio("Late CheckOut",25));
+        servizios.add(new Servizio("Spa e Benessere",45));
+        servizios.add(new Servizio("Transfer Aeroporto",35));
+        ArrayList<Servizio> servizios1 = (ArrayList<Servizio>) servizioDAO.doRetriveAll(null);
         assertEquals(servizios,servizios1);
     }
 
@@ -133,8 +131,7 @@ public class ServizioDAOTesting{
     @Test
     @DisplayName("doUpdate(Servizio servizio) quando servizio è uguale a null")
     public void doUpdatException(){
-        DBPopulator dbPopulator = new DBPopulator();
-        dbPopulator.cancel();
+        DBPopulator.cancel();
         assertThrows(SQLException.class,()->servizioDAO.doUpdate(null));
     }
 
@@ -142,6 +139,8 @@ public class ServizioDAOTesting{
     @Test
     @DisplayName("doRetriveByAttribute(String attribute , Object value) quando va tutto bene ")
     public void doRetriveByAttributeAllTrue() throws SQLException {
+        DBPopulator.cancel();
+        DBPopulator.populator();
         ArrayList<Servizio> servizios = (ArrayList<Servizio>) servizioDAO.doRetriveByAttribute("Nome","Spa e Benessere");
         ArrayList<Servizio> servizios1 = new ArrayList<>();
         servizios1.add(new Servizio("Spa e Benessere",45));
@@ -152,8 +151,7 @@ public class ServizioDAOTesting{
     @Test
     @DisplayName("doRetriveByAttribute() quando resultSet.next() ritorna false")
     public void doRetriveByAttributeResultSetIsFalse() throws SQLException {
-       DBPopulator dbPopulator = new DBPopulator();
-       dbPopulator.cancel();
+       DBPopulator.cancel();
        assertThrows(NoSuchElementException.class,()->servizioDAO.doRetriveByAttribute("Nome","Piscina"));
     }
     @Test

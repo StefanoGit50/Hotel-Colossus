@@ -190,13 +190,13 @@ public class ServizioDAO implements FrontDeskStorage<Servizio> {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                do {
+                do{
                     servizio = new Servizio();
                     servizio.setId(rs.getInt("IDServizio"));
                     servizio.setNome(rs.getString("Nome"));
                     servizio.setPrezzo(rs.getDouble("Prezzo"));
                     servizi.add(servizio);
-                } while (rs.next());
+                }while (rs.next());
             } else {
                 throw new NoSuchElementException("ERRORE: nessun servizio non trovato");
             }
