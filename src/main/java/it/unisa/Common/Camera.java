@@ -52,6 +52,7 @@ public class Camera implements Cloneable, Serializable {
      * @param capacità        Il numero massimo di persone che può ospitare.
      * @param prezzoCamera    il prezzo della camera in quel momento
      * @param noteCamera      le informazioni aggiunti
+     * @param nomeCamera
      */
     public Camera(int numeroCamera, Stato statoCamera, int capacità , double prezzoCamera , String noteCamera , String nomeCamera) {
         this.numeroCamera = numeroCamera;
@@ -83,6 +84,10 @@ public class Camera implements Cloneable, Serializable {
 
     /**
      * Restituisce il numero identificativo della camera.
+     *
+     * @pre numeroCamera != null
+     * @post this.numeroCamera == numeroCamera
+     *
      * @return Il numero di camera.
      */
     public int getNumeroCamera() {
@@ -99,6 +104,9 @@ public class Camera implements Cloneable, Serializable {
 
     /**
      * Restituisce lo stato corrente della camera.
+     *
+     * @post result == statoCamera
+     *
      * @return Lo stato attuale della camera, come valore dell'enumerazione {@link Stato}.
      */
     public Stato getStatoCamera() {
@@ -107,6 +115,10 @@ public class Camera implements Cloneable, Serializable {
 
     /**
      * Imposta un nuovo stato per la camera.
+     *
+     * @pre statoCamera != null
+     * @post this.statoCamera == statoCamera
+     *
      * @param statoCamera Il nuovo stato della camera.
      */
     public void setStatoCamera(Stato statoCamera) {
@@ -115,6 +127,7 @@ public class Camera implements Cloneable, Serializable {
 
     /**
      * Restituisce la capacità massima di persone che la camera può ospitare.
+     * @post result == numeroMaxOccupanti
      * @return La capacità massima della camera.
      */
     public int getCapacità() {
@@ -123,6 +136,10 @@ public class Camera implements Cloneable, Serializable {
 
     /**
      * Imposta una nuova capacità massima di persone per la camera.
+     *
+     * @pre capacità != null
+     * @post numeroMaxOccupanti == capacità
+     *
      * @param capacità La nuova capacità massima della camera.
      */
     public void setCapacità(int capacità) {
@@ -131,6 +148,9 @@ public class Camera implements Cloneable, Serializable {
 
     /**
      * Imposta una nota alla camera
+     *
+     * @post this.noteCamera == noteCamera
+     *
      * @param noteCamera
      */
     public void setNoteCamera(String noteCamera){
@@ -139,6 +159,9 @@ public class Camera implements Cloneable, Serializable {
 
     /**
      * restituisce le note della camera
+     *
+     * @post result == noteCamera
+     *
      * @return notecamera
      */
     public String getNoteCamera(){
@@ -147,19 +170,36 @@ public class Camera implements Cloneable, Serializable {
 
     /**
      * Restituisce il prezzo della camera
+     *
+     * @post result == prezzoCamera
+     *
      * @return prezzoCamera
      */
-
     public double getPrezzoCamera() {
         return prezzoCamera;
     }
 
 
-
+    /**
+     * Restituisce il nome della camera
+     *
+     * @post result == nomeCamera
+     *
+     * @return nomeCamera
+     */
     public String getNomeCamera(){
         return nomeCamera;
     }
 
+    /**
+     * Imposta il nome della camera.
+     *
+     * @param nomeCamera
+     *
+     * @pre nomeCamera != null
+     * @post this.nomeCamera == nomeCamera
+     *
+     */
     public void setNomeCamera(String nomeCamera){
         this.nomeCamera = nomeCamera;
     }
@@ -167,11 +207,12 @@ public class Camera implements Cloneable, Serializable {
 
     /**
      * Imposta il prezzo della camera
+     *
+     * @pre prezzoCamera != null
+     * @post this.prezzoCamera == prezzoCamera
+     *
      * @param prezzoCamera il nuovo prezzo della camera
      */
-
-
-
     public void setPrezzoCamera(double prezzoCamera) {
         this.prezzoCamera = prezzoCamera;
     }
@@ -181,8 +222,6 @@ public class Camera implements Cloneable, Serializable {
      * @param obj   L'oggetto da confrontare.
      * @return {@code true} se l'oggetto obj è un'istanza di Camera, {@code false} altrimenti.
      */
-
-
     @Override
     public boolean equals(Object obj) {
         if (obj == null || getClass() != obj.getClass()) return false;

@@ -224,17 +224,22 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
                 "SDFGANNSOLF", "Libero@asfnai","Italiana", new Camera());
         clist.add(cliente);
 
-        Prenotazione p1 = new Prenotazione(1,
+        Prenotazione p1 = new Prenotazione(
+                3,  // ID
+                LocalDate.now(), // Data Creazione
+                LocalDate.now().plusDays(1),            // Data arrivo
+                LocalDate.now().plusDays(5),            // Data partenza
                 LocalDate.now(),
-                LocalDate.of(2026, 1, 10),
-                LocalDate.of(2026, 1, 15),
-                new Trattamento("MEZZA PENSIONE", 24),
-                "PASSAPORTO",
-                LocalDate.of(2026, 1, 15),
-                LocalDate.of(2030, 5, 20),
-                cliente.getNome() + " " + cliente.getCognome(),
-                "renato ti massaggiA",
-                c, listaServizi, clist, "CA345C69");
+                new Trattamento(), "Patente",
+                LocalDate.of(2020, 1, 10),
+                LocalDate.of(2030, 1, 10),
+                "NNN", "",
+                c, // lista camere
+                listaServizi, // lista servizi
+                clist, // lista clienti
+                "12345678",
+                "In natura"
+        );
         p1.setStatoPrenotazione(false);
 
         CatalogoPrenotazioni catalogoPrenotazioni = new CatalogoPrenotazioni();

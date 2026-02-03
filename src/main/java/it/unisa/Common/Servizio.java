@@ -40,6 +40,8 @@ public class Servizio implements Cloneable, Serializable {
     /**
      * Restituisce il nome del servizio.
      *
+     * @post result == nome
+     *
      * @return Il nome del servizio.
      */
     public String getNome() {
@@ -48,6 +50,9 @@ public class Servizio implements Cloneable, Serializable {
 
     /**
      * Imposta il nome del servizio.
+     *
+     * @pre nome != null && nome != ""
+     * @post this.nome == nome
      *
      * @param nome Il nuovo nome da assegnare al servizio.
      */
@@ -58,6 +63,8 @@ public class Servizio implements Cloneable, Serializable {
     /**
      * Restituisce il prezzo del servizio.
      *
+     * @post result == prezzo
+     *
      * @return Il prezzo del servizio.
      */
     public double getPrezzo() {
@@ -66,6 +73,9 @@ public class Servizio implements Cloneable, Serializable {
 
     /**
      * Imposta il prezzo del servizio.
+     *
+     * @pre prezzo != null
+     * @post this.prezzo == prezzo
      *
      * @param prezzo Il nuovo prezzo da assegnare al servizio.
      */

@@ -21,11 +21,9 @@ public class Impiegato implements Cloneable, Serializable {
      */
     private String nome;
 
-    private String userName;
-
     private String hashPassword;
 
-    private boolean isTempurali;
+    private boolean isTemporaly;
 
     private Instant dataScadenzaToken;
 
@@ -145,11 +143,11 @@ public class Impiegato implements Cloneable, Serializable {
      * @param cittadinanza Cittadinanza.
      * @param dataScadenza Data di scadenza del documento
      */
-    public Impiegato(String username, String hashedPassword,boolean isTempurali,Instant dataScadenzaToken, String nome, String cognome, String sesso, String tipoDocumento,
+    public Impiegato(String username, String hashedPassword,boolean isTemporaly,Instant dataScadenzaToken, String nome, String cognome, String sesso, String tipoDocumento,
                      String numeroDocumento, int CAP, String via, String provincia, String comune, int numeroCivico,
                      String codiceFiscale, String telefono, Ruolo ruolo, double stipendio, LocalDate dataAssunzione,
                      LocalDate dataRilascio, String emailAziendale, String cittadinanza , LocalDate dataScadenza) {
-        this.userName = username;
+        this.username = username;
         this.hashPassword = hashedPassword;
         this.nome = nome;
         this.cognome = cognome;
@@ -170,12 +168,12 @@ public class Impiegato implements Cloneable, Serializable {
         this.emailAziendale = emailAziendale;
         this.cittadinanza = cittadinanza;
         this.dataScadenza = dataScadenza;
-        this.isTempurali = isTempurali;
+        this.isTemporaly = isTemporaly;
         this.dataScadenzaToken = dataScadenzaToken;
     }
 
     public Impiegato(){
-        this.userName = "";
+        this.username = "";
         this.hashPassword = "";
         this.nome = "";
         this.cognome = "";
@@ -196,223 +194,549 @@ public class Impiegato implements Cloneable, Serializable {
         this.emailAziendale = "";
         this.cittadinanza = "";
         this.dataScadenza = null;
-        this.isTempurali = false;
+        this.isTemporaly = false;
         this.dataScadenzaToken = null;
     }
 
     // --- Getter e Setter ---
 
+
+    /**
+     * Imposta il valore di usename.
+     *
+     * @pre username != null && username != ""
+     * @post this.username == username
+     */
     public void setUsername(String username) {
         this.username = username;
     }
 
+
+    /**
+     * Imposta il valore di password.
+     *
+     * @pre password != null && password != ""
+     * @post this.password == password
+     */
     public void setPassword(String password) {
         this.password = password;
     }
 
+
+    /**
+     * Imposta il valore di expires.
+     *
+     * @pre expires != null && expires != ""
+     * @post this.expires == expires
+     */
     public void setExpires(Instant expires) {
         this.expires = expires;
     }
 
+
+    /**
+     * Imposta il valore di change.
+     *
+     * @pre change != null && change != ""
+     * @post this.nome == nome
+     */
     public void setChange(boolean change) {
         this.change = change;
     }
 
+    /**
+     * Restituisce il valore di username.
+     *
+     * @post result == username
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Restituisce la password.
+     *
+     * @post result == password
+     */
     public String getPassword() {
         return password;
     }
 
+
+    /**
+     * Restituisce la scadenza.
+     *
+     * @post result == expires
+     */
     public Instant getExpires() {
         return expires;
     }
 
+
+    /**
+     * Verifica valore variabile isChange.
+     *
+     * @post true o false
+     */
     public boolean isChange() {
         return change;
     }
 
-    public String getUserName() {
-        return userName;
-    }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
+    /**
+     * Restituisce lo hashPassword.
+     *
+     * @post result == hashPassword
+     */
     public String getHashPassword() {
         return hashPassword;
     }
 
+
+    /**
+     * Imposta il valore di hashPassword.
+     *
+     * @pre hashPassword != null && hashPassword != ""
+     * @post this.hashPassword == hashPassword
+     */
     public void setHashPassword(String hashPassword) {
         this.hashPassword = hashPassword;
     }
 
+
+    /**
+     * Restituisce il valore di nome.
+     *
+     * @post result == nome
+     */
     public String getNome() {
         return nome;
     }
 
+
+    /**
+     * Imposta il valore di nome.
+     *
+     * @pre nome != null && nome != ""
+     * @post this.nome == nome
+     */
     public void setNome(String nome) {
         this.nome = nome;
     }
 
+
+    /**
+     * Restituisce il valore di cognome.
+     *
+     * @post result == cognome
+     */
     public String getCognome() {
         return cognome;
     }
 
+
+    /**
+     * Imposta il valore di cognome.
+     *
+     * @pre cognome != null && cognome != ""
+     * @post this.cognome == cognome
+     */
     public void setCognome(String cognome) {
         this.cognome = cognome;
     }
 
+
+    /**
+     * Restituisce il valore di sesso.
+     *
+     * @post result == sesso
+     */
     public String getSesso() {
         return sesso;
     }
 
+
+    /**
+     * Imposta il valore di sesso.
+     *
+     * @pre sesso != null && sesso != ""
+     * @post this.sesso == sesso
+     */
     public void setSesso(String sesso) {
         this.sesso = sesso;
     }
 
+
+    /**
+     * Restituisce il valore di tipoDocumento.
+     *
+     * @post result == tipoDocumento
+     */
     public String getTipoDocumento() {
         return tipoDocumento;
     }
 
+
+    /**
+     * Imposta il valore di tipoDocumento.
+     *
+     * @pre tipoDocumento != null && tipoDocumento != ""
+     * @post this.tipoDocumento == tipoDocumento
+     */
     public void setTipoDocumento(String tipoDocumento) {
         this.tipoDocumento = tipoDocumento;
     }
 
+
+    /**
+     * Restituisce il valore di numeroDocumento.
+     *
+     * @post result == numeroDocumento
+     */
     public String getNumeroDocumento() {
         return numeroDocumento;
     }
 
+
+    /**
+     * Imposta il valore di numeroDocumento.
+     *
+     * @pre numeroDocumento != null && numeroDocumento != ""
+     * @post this.numeroDocumento == numeroDocumento
+     */
     public void setNumeroDocumento(String numeroDocumento) {
         this.numeroDocumento = numeroDocumento;
     }
 
+
+    /**
+     * Restituisce il valore di cAP.
+     *
+     * @post result == CAP
+     */
     public int getCAP() {
         return CAP;
     }
 
+
+    /**
+     * Imposta il valore di cAP.
+     *
+     * @pre CAP != null
+     * @post this.CAP == CAP
+     */
     public void setCAP(int CAP) {
         this.CAP = CAP;
     }
 
+
+    /**
+     * Restituisce il valore di via.
+     *
+     * @post result == via
+     */
     public String getVia() {
         return via;
     }
 
+
+    /**
+     * Imposta il valore di via.
+     *
+     * @pre via != null && via != ""
+     * @post this.via == via
+     */
     public void setVia(String via) {
         this.via = via;
     }
 
+
+    /**
+     * Restituisce il valore di provincia.
+     *
+     * @post result == provincia
+     */
     public String getProvincia() {
         return provincia;
     }
 
+
+    /**
+     * Imposta il valore di provincia.
+     *
+     * @pre provincia != null && provincia != ""
+     * @post this.provincia == provincia
+     */
     public void setProvincia(String provincia) {
         this.provincia = provincia;
     }
 
+
+    /**
+     * Restituisce il valore di comune.
+     *
+     * @post result == comune
+     */
     public String getComune() {
         return comune;
     }
 
+
+    /**
+     * Imposta il valore di comune.
+     *
+     * @pre comune != null && comune != ""
+     * @post this.comune == comune
+     */
     public void setComune(String comune) {
         this.comune = comune;
     }
 
+
+    /**
+     * Restituisce il valore di numeroCivico.
+     *
+     * @post result == numeroCivico
+     */
     public int getNumeroCivico() {
         return numeroCivico;
     }
 
+
+    /**
+     * Imposta il valore di numeroCivico.
+     *
+     * @pre numeroCivico != null
+     * @post this.numeroCivico == numeroCivico
+     */
     public void setNumeroCivico(int numeroCivico) {
         this.numeroCivico = numeroCivico;
     }
 
+
+    /**
+     * Restituisce il valore di codiceFiscale.
+     *
+     * @post result == codiceFiscale
+     */
     public String getCodiceFiscale() {
         return codiceFiscale;
     }
 
+
+    /**
+     * Imposta il valore di codiceFiscale.
+     *
+     * @pre codiceFiscale != null && codiceFiscale != ""
+     * @post this.codiceFiscale == codiceFiscale
+     */
     public void setCodiceFiscale(String codiceFiscale) {
         this.codiceFiscale = codiceFiscale;
     }
 
+
+    /**
+     * Restituisce il valore di telefono.
+     *
+     * @post result == telefono
+     */
     public String getTelefono() {
         return telefono;
     }
 
+
+    /**
+     * Imposta il valore di telefono.
+     *
+     * @pre telefono != null && telefono != ""
+     * @post this.telefono == telefono
+     */
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
 
+
+    /**
+     * Restituisce il valore di ruolo.
+     *
+     * @post result == ruolo
+     */
     public Ruolo getRuolo() {
         return ruolo;
     }
 
+
+    /**
+     * Imposta il valore di ruolo.
+     *
+     * @pre ruolo != null
+     * @post this.ruolo == ruolo
+     */
     public void setRuolo(Ruolo ruolo) {
         this.ruolo = ruolo;
     }
 
+
+    /**
+     * Restituisce il valore di stipendio.
+     *
+     * @post result == stipendio
+     */
     public double getStipendio() {
         return stipendio;
     }
 
+
+    /**
+     * Imposta il valore di stipendio.
+     *
+     * @pre stipendio != null
+     * @post this.stipendio == stipendio
+     */
     public void setStipendio(double stipendio) {
         this.stipendio = stipendio;
     }
 
+
+    /**
+     * Restituisce il valore di dataAssunzione.
+     *
+     * @post result == dataAssunzione
+     */
     public LocalDate getDataAssunzione() {
         return dataAssunzione;
     }
 
+
+    /**
+     * Imposta il valore di dataAssunzione.
+     *
+     * @pre dataAssunzione != null
+     * @post this.dataAssunzione == dataAssunzione
+     */
     public void setDataAssunzione(LocalDate dataAssunzione) {
         this.dataAssunzione = dataAssunzione;
     }
 
+
+    /**
+     * Restituisce il valore di dataRilascio.
+     *
+     * @post result == dataRilascio
+     */
     public LocalDate getDataRilascio() {
         return dataRilascio;
     }
 
+
+    /**
+     * Imposta il valore di dataRilascio.
+     *
+     * @pre dataRilascio != null
+     * @post this.dataRilascio == dataRilascio
+     */
     public void setDataRilascio(LocalDate dataRilascio) {
         this.dataRilascio = dataRilascio;
     }
 
+
+    /**
+     * Restituisce il valore di emailAziendale.
+     *
+     * @post result == emailAziendale
+     */
     public String getEmailAziendale() {
         return emailAziendale;
     }
 
+
+    /**
+     * Imposta il valore di emailAziendale.
+     *
+     * @pre emailAziendale != null && emailAziendale != ""
+     * @post this.emailAziendale == emailAziendale
+     */
     public void setEmailAziendale(String emailAziendale) {
         this.emailAziendale = emailAziendale;
     }
 
+    /**
+     * Restituisce il valore di cittadinanza.
+     *
+     * @post result == cittadinanza
+     */
     public String getCittadinanza() {
         return cittadinanza;
     }
 
+    /**
+     * Imposta il valore di cittadinanza.
+     *
+     * @pre cittadinanza != null && cittadinanza != ""
+     * @post this.cittadinanza == cittadinanza
+     */
     public void setCittadinanza(String cittadinanza) {
         this.cittadinanza = cittadinanza;
     }
 
+
+    /**
+     * Restituisce il valore di dataScadenza.
+     *
+     * @post result == dataScadenza
+     */
     public LocalDate getDataScadenza() {
         return dataScadenza;
     }
+
+
+    /**
+     * Imposta il valore di dataScadenza.
+     *
+     * @pre localDate != null
+     * @post dataScadenza == localDate
+     */
     public void setDataScadenza(LocalDate localDate){
         this.dataScadenza = localDate;
     }
 
-    public boolean isTempurali() {
-        return isTempurali;
+
+    /**
+     * Verifica valore variabile isTemporaly.
+     *
+     * @post true o false
+     */
+    public boolean isTemporaly() {
+        return isTemporaly;
     }
 
-    public void setTempurali(boolean tempurali) {
-        isTempurali = tempurali;
+
+    /**
+     * Imposta valore variabile isTemporaly.
+     *
+     * @pre temporaly != null
+     */
+    public void setTemporaly(boolean temporaly) {
+        isTemporaly = temporaly;
     }
 
+
+    /**
+     * Restituisce il valore di DataScadenzaToken.
+     *
+     * @post result == dataScadenzaToken
+     */
     public Instant getDataScadenzaToken() {
         return dataScadenzaToken;
     }
 
+
+    /**
+     * Imposta valore variabile DataScadenzaToken.
+     *
+     * @pre dataScadenzaToken != null
+     * @post this.dataScadenzaToken = dataScadenzaToken
+     */
     public void setDataScadenzaToken(Instant dataScadenzaToken) {
         this.dataScadenzaToken = dataScadenzaToken;
     }
@@ -424,9 +748,9 @@ public class Impiegato implements Cloneable, Serializable {
     public String toString() {
         return "Impiegato{" +
                 "nome='" + nome + '\'' +
-                ", userName='" + userName + '\'' +
+                ", username='" + username + '\'' +
                 ", hashPassword='" + hashPassword + '\'' +
-                ", isTempurali=" + isTempurali +
+                ", isTemporaly=" + isTemporaly +
                 ", dataScadenzaToken=" + dataScadenzaToken +
                 ", cognome='" + cognome + '\'' +
                 ", sesso='" + sesso + '\'' +

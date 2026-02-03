@@ -19,6 +19,15 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
             "prezzo"
     };
 
+
+    /**
+     * Salva un oggetto nel db
+     *
+     * @param servizio
+     * @pre o != null
+     * @post inserisce l'oggetto nel database
+     * @throws SQLException
+     */
     @Override
     public synchronized void doSave(Servizio servizio) throws SQLException
     {
@@ -51,6 +60,10 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
     }
     /**
      * @param list
+     *
+     * @pre list != null
+     * @post inserisce gli oggetti nel database
+     *
      * @throws SQLException
      */
     @Override
@@ -58,6 +71,15 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
         throw new  UnsupportedOperationException("Not supported yet.");
     }
 
+
+    /**
+     * Cancella l oggetto dal db.
+     *
+     * @param servizio
+     * @pre o != null
+     * @post l'oggetto non c'è piu nel db
+     * @throws SQLException
+     */
     @Override
     public synchronized void doDelete(Servizio servizio) throws SQLException
     {
@@ -90,6 +112,16 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
         }
     }
 
+
+    /**
+     * Ottiene  oggetto da chiave.
+     *
+     * @param nome
+     * @pre oggetto != null
+     * @post result == null || result != null
+     * @return Servizio
+     * @throws SQLException
+     */
     @Override
     public synchronized Servizio doRetriveByKey(Object nome) throws SQLException
     {
@@ -126,6 +158,16 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
         return servizio;
     }
 
+
+    /**
+     * Ottiene tutti gli oggetti dal DB.
+     *
+     * @param order
+     * @pre order != null && order != ""
+     * @post result != null
+     * @return {@link Collection}
+     * @throws SQLException
+     */
     @Override
     public synchronized Collection<Servizio> doRetriveAll(String order) throws SQLException
     {
@@ -213,6 +255,20 @@ public class ServizioDAO implements FrontDeskStorage<Servizio>
         }
     }
 
+
+    /**
+     *
+     * Ottiene oggetto tramite attributo.
+     *
+     * @pre attribute != null && attribute != "" && value != null && value != ""
+     * @post result != null
+     *
+     *
+     * @param attribute;
+     * @param value;
+     * @return Collection<>;
+     * @throws SQLException;
+     */
     public synchronized Collection<Servizio> doRetriveByAttribute(String attribute, Object value) throws SQLException {
         Connection connection;
         PreparedStatement preparedStatement = null;

@@ -30,24 +30,57 @@ public class UnBanCommand implements Command {
      */
     public UnBanCommand() {}
 
+
+    /**
+     * Restituisce il valore di catalogue.
+     *
+     * @post result == catalogue
+     * @return catalogue
+     */
     public CatalogoClienti getCatalogue() {
         return catalogue;
     }
 
+
+    /**
+     * Imposta il valore di catalogue.
+     *
+     * @param catalogue
+     * @pre catalogue != null
+     * @post this.catalogue == catalogue
+     */
     public void setCatalogue(CatalogoClienti catalogue) {
         this.catalogue = catalogue;
     }
 
+
+    /**
+     * Restituisce il valore di cFCliente.
+     *
+     * @post result == CFCliente
+     * @return cFCliente
+     */
     public String getCFCliente() {
         return CFCliente;
     }
 
+
+    /**
+     * Imposta il valore di cFCliente.
+     *
+     * @param CFCliente
+     * @pre CFCliente != null && CFCliente != ""
+     * @post this.CFCliente == CFCliente
+     */
     public void setCFCliente(String CFCliente) {
         this.CFCliente = CFCliente;
     }
 
     /**
      * Rimuovi il ban al cliente.
+     *
+     * @post CatalogoClienti.listaClienti.stream().anyMatch(c | c.cf == CFCliente && c.isBlacklisted == false)
+     *
      */
     @Override
     public void execute() {
@@ -80,6 +113,9 @@ public class UnBanCommand implements Command {
 
     /**
      * Rimetti il ban cl cliente.
+     *
+     * @post CatalogoClienti.listaClientiBannati.stream().anyMatch(c | c.cf == CFCliente && c.isBlacklisted == true)
+     *
      */
     @Override
     public void undo() {

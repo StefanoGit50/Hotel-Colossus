@@ -45,7 +45,7 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato> {
             preparedStatement.setDouble(2, impiegato.getStipendio());
             preparedStatement.setString(3, impiegato.getUserName());
             preparedStatement.setString(4, impiegato.getHashPassword());
-            preparedStatement.setBoolean(5, impiegato.isTempurali());
+            preparedStatement.setBoolean(5, impiegato.isTemporaly());
             preparedStatement.setTimestamp(6, Timestamp.from(impiegato.getDataScadenzaToken()));
             preparedStatement.setString(7, impiegato.getNome());
             preparedStatement.setString(8, impiegato.getCognome());
@@ -109,7 +109,7 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato> {
                         String cognome = resultSet.getString("Cognome");
                         String userName = resultSet.getString("UserName");
                         String hashPassword = resultSet.getString("HashPasword");
-                        Boolean isTempurali = resultSet.getBoolean("isTempurali");
+                        Boolean isTempurali = resultSet.getBoolean("isTemporaly");
                         Instant dataScadenzaToken = resultSet.getTimestamp("").toInstant();
                         String sesso = resultSet.getString("Sesso");
                         String tipoDocumento = resultSet.getString("TipoDocumento");
@@ -159,7 +159,7 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato> {
                     String cognome = resultSet.getString("Cognome");
                     String userName = resultSet.getString("UserName");
                     String hashPassword = resultSet.getString("HashPasword");
-                    Boolean isTempurali = resultSet.getBoolean("isTempurali");
+                    Boolean isTempurali = resultSet.getBoolean("isTemporaly");
                     Instant dataScadenzaToken = resultSet.getTimestamp("").toInstant();
                     String sesso = resultSet.getString("Sesso");
                     String tipoDocumento = resultSet.getString("TipoDocumento");
@@ -203,7 +203,7 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato> {
                     String cognome = resultSet.getString("Cognome");
                     String userName = resultSet.getString("UserName");
                     String HashPassword = resultSet.getString("HashPasword");
-                    boolean isTempurali = resultSet.getBoolean("isTempurali");
+                    boolean isTempurali = resultSet.getBoolean("isTemporaly");
                     Instant dataScadenzaToken = resultSet.getTimestamp("dataScadenzaToken").toInstant();
                     String sesso = resultSet.getString("Sesso");
                     String tipoDocumento = resultSet.getString("TipoDocumento");
@@ -276,7 +276,7 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato> {
                         preparedStatement.setString(1,impiegato.getNome());
                         preparedStatement.setString(2,impiegato.getCognome());
                         preparedStatement.setString(3,impiegato.getUserName());
-                        preparedStatement.setBoolean(4,impiegato.isTempurali());
+                        preparedStatement.setBoolean(4,impiegato.isTemporaly());
                         preparedStatement.setString(5,impiegato.getHashPassword());
                         preparedStatement.setTimestamp(6,Timestamp.from(impiegato.getDataScadenzaToken()));
                         preparedStatement.setString(7,"" + impiegato.getCAP());
@@ -333,7 +333,7 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato> {
                     impiegato.setNome(resultSet.getString("Nome"));
                     impiegato.setCognome(resultSet.getString("Cognome"));
                     impiegato.setSesso(resultSet.getString("Sesso"));
-                    impiegato.setTempurali(resultSet.getBoolean("isTempurali"));
+                    impiegato.setTemporaly(resultSet.getBoolean("isTemporaly"));
                     impiegato.setDataScadenzaToken(resultSet.getTimestamp("DataScadenzaToken").toInstant());
                     impiegato.setTipoDocumento(resultSet.getString("TipoDocumento"));
                     impiegato.setNumeroDocumento(resultSet.getString("NumeroDocumento"));
@@ -443,7 +443,7 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato> {
                 impiegato.setStipendio(rs.getDouble("Stipedio"));
                 impiegato.setUserName(rs.getString("UserName"));
                 impiegato.setHashPassword(rs.getString("HashPasword"));
-                impiegato.setTempurali(rs.getBoolean("isTempurali"));
+                impiegato.setTemporaly(rs.getBoolean("isTemporaly"));
                 impiegato.setDataScadenzaToken(rs.getTimestamp("dataScadenzaToken").toInstant());
                 impiegato.setNome(rs.getString("nome"));
                 impiegato.setCognome(rs.getString("Cognome"));

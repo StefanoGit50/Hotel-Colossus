@@ -63,12 +63,21 @@ public class CatalogoCamere implements SubjectCamereInterface, Serializable {
      * Restituisce una deep copy dell'elenco completo delle camere.
      * Questo impedisce modifiche esterne alla lista interna del catalogo.
      *
+     * @post result == camereList
+     *
      * @return Una nuova ArrayList contenente copie (cloni) di tutti gli oggetti Camera.
      */
     public synchronized static ArrayList<Camera> getListaCamere() {
         return camereList;
     }
 
+
+    /**
+     * Aggiunge camere alla collezione.
+     *
+     * @pre camere != null
+     * @post camereList.containsAll(camere)
+     */
     public synchronized static void addCamere(ArrayList<Camera> camere) {
 
         try {
@@ -98,12 +107,13 @@ public class CatalogoCamere implements SubjectCamereInterface, Serializable {
     /**
      * Cerca una camera specifica tramite il suo numero e ne restituisce una copia.
      *
+     * @pre numeroCamera != null
+     * @post result == null || result.numeroCamera == numeroCamera
+     *
      * @param numeroCamera Il numero identificativo della camera da cercare.
      * @return Una deep copy dell'oggetto Camera trovato, o {@code null} se non esiste nessuna camera con quel numero.
      * @throws CloneNotSupportedException Se l'oggetto Camera non supporta la clonazione.
      */
-
-
     public static Camera getCamera(int numeroCamera) throws CloneNotSupportedException{
         for (Camera c : camereList) {
             if (c.getNumeroCamera() == numeroCamera)
@@ -112,6 +122,13 @@ public class CatalogoCamere implements SubjectCamereInterface, Serializable {
         return null;
     }
 
+
+    /**
+     * Aggiorna lo stato di statoCamera.
+     *
+     * @pre c != null
+     * @post result == (camereList.stream().anyMatch(cam | cam.numeroCamera == c.numeroCamera && cam.statoCamera == c.statoCamera))
+     */
     public boolean aggiornaStatoCamera(Camera c) throws RemoteException {
 
             for(Camera cam : camereList){
@@ -136,17 +153,37 @@ public class CatalogoCamere implements SubjectCamereInterface, Serializable {
 
 
     // metodi per fare l'iscrizione la disiscrizione al publisher e la notifica agli observer quando ce un update
+
+
+    /**
+     * Registra un observer per ricevere notifiche.
+     *
+     * @pre observer != null
+     * @post observers.contains(observer)
+     */
     @Override
     public void attach(ObserverCamereInterface observer) {
         observers.add(observer);
     }
 
+
+    /**
+     * Rimuove un observer dalla lista di notifica.
+     *
+     * @pre observer != null
+     * @post not observers.contains(observer)
+     */
     @Override
     public void detach(ObserverCamereInterface observer) {
         observers.remove(observer);
 
     }
 
+
+    /**
+     * Notifica tutti gli observer registrati.
+     *
+     */
     @Override
     public void notifyObservers() throws RemoteException {  // notifico agli observer che una camera è stata cambiata
         for (ObserverCamereInterface observer : observers) {

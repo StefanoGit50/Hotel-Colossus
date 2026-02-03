@@ -10,11 +10,25 @@ public class CredenzialiUtils {
 
     private static final Base64.Encoder encoder = Base64.getUrlEncoder().withoutPadding();
 
+
+    /**
+     * Effettua l'hash della password.
+     *
+     * @pre password != null && password != ""
+     * @post result != null && result != "" && result != password
+     */
     public static String HashPassword(String password) {
         password=password.trim();
         return BCrypt.withDefaults().hashToString(12, password.toCharArray());
     }
 
+
+    /**
+     * Verifica la validità di password.
+     *
+     * @pre password != null && password != "" && HashedPassword != null && HashedPassword != ""
+     * @post result == true || result == false
+     */
     public static boolean checkPassword(String password, String HashedPassword) {
         password=password.trim();
         BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), HashedPassword.toCharArray());

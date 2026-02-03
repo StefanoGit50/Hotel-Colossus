@@ -30,24 +30,53 @@ public class BanCommand implements Command {
     public BanCommand() {
     }
 
+
+    /**
+     * Restituisce il valore di catalogue.
+     *
+     * @post result == catalogue
+     */
     public CatalogoClienti getCatalogue() {
         return catalogue;
     }
 
+
+    /**
+     * Imposta il valore di catalogue.
+     *
+     * @pre catalogue != null
+     * @post this.catalogue == catalogue
+     */
     public void setCatalogue(CatalogoClienti catalogue) {
         this.catalogue = catalogue;
     }
 
+
+    /**
+     * Restituisce il valore di cFCliente.
+     *
+     * @post result == CFCliente
+     */
     public String getCFCliente() {
         return CFCliente;
     }
 
+
+    /**
+     * Imposta il valore di cFCliente.
+     *
+     * @pre CFCliente != null && CFCliente != ""
+     * @post this.CFCliente == CFCliente
+     */
     public void setCFCliente(String CFCliente) {
         this.CFCliente = CFCliente;
     }
 
+
     /**
-     * Banna il cliente.
+     * Esegue il comando.
+     *
+     * @post CatalogoClienti.listaClientiBannati.stream().anyMatch(c | c.cf == CFCliente && c.isBlacklisted == true)
      */
     @Override
     public void execute() {
@@ -80,8 +109,11 @@ public class BanCommand implements Command {
 
     }
 
+
     /**
-     * Rimuovi il ban al cliente.
+     * Annulla il comando precedentemente eseguito.
+     *
+     * @post CatalogoClienti.listaClienti.stream().anyMatch(c | c.cf == CFCliente && c.isBlacklisted == false)
      */
     @Override
     public void undo() {

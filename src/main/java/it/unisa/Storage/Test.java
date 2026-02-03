@@ -123,6 +123,7 @@ public class Test {
                 LocalDate.now(), // Data Creazione
                 LocalDate.now().plusDays(1),            // Data arrivo
                 LocalDate.now().plusDays(5),            // Data partenza
+                LocalDate.now(),
                 trattamento, "Patente",
                 LocalDate.of(2020, 1, 10),
                 LocalDate.of(2030, 1, 10),
@@ -130,7 +131,8 @@ public class Test {
                 camere, // lista camere
                 listaServizi, // lista servizi
                 clienti, // lista clienti
-                "12345678"
+                "12345678",
+                "In natura"
         );
     }
 
