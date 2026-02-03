@@ -104,10 +104,14 @@ public class CatalogoCamere implements SubjectCamereInterface, Serializable {
      */
 
 
-    public static Camera getCamera(int numeroCamera) throws CloneNotSupportedException{
-        for (Camera c : camereList) {
-            if (c.getNumeroCamera() == numeroCamera)
-                return c.clone();
+    public static Camera getCamera(int numeroCamera) {
+        try {
+            for (Camera c : camereList) {
+                if (c.getNumeroCamera() == numeroCamera)
+                    return c.clone();
+            }
+        }catch (CloneNotSupportedException cloneNotSupportedException) {
+            cloneNotSupportedException.printStackTrace();
         }
         return null;
     }

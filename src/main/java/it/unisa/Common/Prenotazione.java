@@ -107,10 +107,11 @@ public class Prenotazione implements Cloneable, Serializable {
      */
     private boolean checkIn;
 
+    private double prezzoAcquistoTrattamento;
+
     /**
      * Costruttore completo per creare una nuova istanza di {@code Prenotazione}.
      *
-     * @param IDPrenotazione Codice univoco della prenotazione.
      * @param dataCreazionePrenotazione Data di creazione della prenotazione.
      * @param dataInizio Data di inizio del soggiorno.
      * @param dataFine Data di fine del soggiorno.
@@ -125,11 +126,11 @@ public class Prenotazione implements Cloneable, Serializable {
      * @param listaClienti Lista dei clienti.
      * @param numeroDocumento il numero del documento.
      */
-    public Prenotazione(int IDPrenotazione, LocalDate dataCreazionePrenotazione, LocalDate dataInizio, LocalDate dataFine,LocalDate dataEmissioneRicevuta,
-                        Trattamento trattamento, String tipoDocumento, LocalDate dataRilascio, LocalDate dataScadenza,
+    public Prenotazione( LocalDate dataCreazionePrenotazione, LocalDate dataInizio, LocalDate dataFine,LocalDate dataEmissioneRicevuta,
+                        Trattamento trattamento,Double prezzoAcquistoTrattamento, String tipoDocumento, LocalDate dataRilascio, LocalDate dataScadenza,
                         String intestatario, String noteAggiuntive, ArrayList<Camera> listaCamere, ArrayList<Servizio> listaServizi,
-                        ArrayList<Cliente> listaClienti ,String numeroDocumento, String metodoPagamento) {
-        this.IDPrenotazione = IDPrenotazione;
+                        ArrayList<Cliente> listaClienti ,String numeroDocumento, String metodoPagamento, String cittadinanza) {
+        this.IDPrenotazione = 0; //ID è AUTOINCREMENT
         this.dataCreazionePrenotazione = dataCreazionePrenotazione;
         this.dataInizio = dataInizio;
         this.dataFine = dataFine;
@@ -148,6 +149,8 @@ public class Prenotazione implements Cloneable, Serializable {
         this.checkIn = false;
         this.dataEmissioneRicevuta = dataEmissioneRicevuta;
         this.metodoDiPagamento= metodoPagamento;
+        this.prezzoAcquistoTrattamento= prezzoAcquistoTrattamento;
+        this.cittadinanza= cittadinanza;
     }
 
     public Prenotazione() {
@@ -237,6 +240,33 @@ public class Prenotazione implements Cloneable, Serializable {
         this.dataEmissioneRicevuta = dataEmissioneRicevuta;
     }
 
+    public void setPrezzoAcquistoTrattamento(double prezzoAcquistoTrattamento) {
+        this.prezzoAcquistoTrattamento = prezzoAcquistoTrattamento;
+    }
+
+    public void setMetodoDiPagamento(String metodoDiPagamento) {
+        this.metodoDiPagamento = metodoDiPagamento;
+    }
+
+    public void setCittadinanza(String cittadinanza) {
+        this.cittadinanza = cittadinanza;
+    }
+
+    public String getCittadinanza() {
+        return cittadinanza;
+    }
+
+    public String getMetodoDiPagamento() {
+        return metodoDiPagamento;
+    }
+
+    public boolean isStatoPrenotazione() {
+        return statoPrenotazione;
+    }
+
+    public double getPrezzoAcquistoTrattamento() {
+        return prezzoAcquistoTrattamento;
+    }
 
     public void setMetodoPagamento(String metodoPagamento) {
         this.metodoDiPagamento = metodoPagamento;

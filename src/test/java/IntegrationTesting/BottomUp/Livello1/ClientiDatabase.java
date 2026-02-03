@@ -16,17 +16,16 @@ public class ClientiDatabase {
 
 
     private FrontDeskStorage <Cliente>  fds;
-    private CatalogoClienti catalogoClienti;
     Cliente cliente = new Cliente("nome","cognome","milano","milano","via milano",23,12453,"32345672","m", LocalDate.of(2001,12,13),"CSDFHWSDO2","luca@email","italiana",new Camera());
 
     @BeforeEach
     public void setUp() {
         fds = new ClienteDAO();
-        catalogoClienti = new CatalogoClienti();
+        CatalogoClienti.aggiornalista();
     }
     @AfterEach
     public void tearDown() {
-        catalogoClienti.getListaClienti().clear();
+        CatalogoClienti.getListaClienti().clear();
     }
 
 
@@ -34,10 +33,10 @@ public class ClientiDatabase {
     @DisplayName("Bottom up: simulazione della chiamata update tramite catalogo")
     @Tag("integration")
     public void updateCatalogoClienti() throws CloneNotSupportedException {
-        catalogoClienti.aggiungiCliente(cliente);
+        CatalogoClienti.aggiungiCliente(cliente);
         Cliente copia = cliente.clone();
         cliente.setCognome("Nicolussi");
-        catalogoClienti.updateCliente(cliente);
+        CatalogoClienti.updateCliente(cliente); // fa la chiamata al db
 
         //verifica se i cambiamenti sono effettivi nel db
         try{
@@ -51,7 +50,7 @@ public class ClientiDatabase {
     @DisplayName("Bottom up: simulazione della chiamata save tramite catalogo")
     @Tag("integration")
     public void aggiungiCliente() {
-        catalogoClienti.aggiungiCliente(cliente);
+        CatalogoClienti.aggiungiCliente(cliente);
         Cliente c2=null;
         try{
             c2=fds.doRetriveByKey(cliente.getCf());
@@ -65,31 +64,30 @@ public class ClientiDatabase {
     @DisplayName("Bottom up: simulazione della chiamata di retrieve dal DB")
     @Tag("integration")
     public void retrievelistaCliente() {
-        CatalogoClienti cat = new CatalogoClienti();
-        ArrayList<Cliente> prova = new ArrayList<>();
+        ArrayList<Cliente> testarray = new ArrayList<>();
 
         try{
-            prova= (ArrayList<Cliente>) fds.doRetriveAll("decrescente");
+           testarray= (ArrayList<Cliente>) fds.doRetriveAll("decrescente");
         }catch (Exception e){
             e.printStackTrace();
         }
 
-        assertEquals(prova,cat.getListaClienti());
+        assertEquals(testarray,CatalogoClienti.getListaClienti());
     }
 
     @Test
     @DisplayName("Bottom up: simulazione della chiamata di eliminazione dal DB")
     @Tag("integration")
     public void eliminazioneCliente() {
-        catalogoClienti.aggiungiCliente(cliente);
-        ArrayList<Cliente> prova =catalogoClienti.getListaClienti();
+        CatalogoClienti.aggiungiCliente(cliente);
+        ArrayList<Cliente> prova=null;
         try{
             prova= (ArrayList<Cliente>) fds.doRetriveAll("decrescente");
         }catch (Exception e){
             e.printStackTrace();
         }
-        catalogoClienti.removeCliente(cliente);
-        assertNotEquals(prova,catalogoClienti.getListaClienti());
+        CatalogoClienti.removeCliente(cliente);
+        assertNotEquals(prova,CatalogoClienti.getListaClienti());
     }
 
 }

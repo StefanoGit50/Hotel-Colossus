@@ -1,5 +1,6 @@
 package IntegrationTesting.BottomUp.Livello1;
 
+import WhiteBox.UnitTest.DBPopulator;
 import it.unisa.Common.Camera;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
 import it.unisa.Server.persistent.util.Stato;
@@ -28,7 +29,7 @@ public class CamereDatabase {
          fds = new CameraDAO();
     }
     @AfterEach
-    public void tearDown() throws RemoteException, SQLException {
+    public void tearDown()   {
         catalogoCamere.getListaCamere().clear();
         camera = new Camera();
     }
@@ -37,9 +38,9 @@ public class CamereDatabase {
     @DisplayName("Bottom up: CameraDAO e aggiornamento stato camera da catalogo")
     @Tag("integration")
     public void aggiornaStatoCameraDB() throws RemoteException {
-        camera = new Camera(101, Stato.Libera,2,80,"","");
+        DBPopulator.cancel();
+        camera=CatalogoCamere.getCamera(101);
         Camera camera1;
-
         try {
            camera1 = fds.doRetriveByKey(camera.getNumeroCamera());
         } catch (SQLException e) {
@@ -64,9 +65,9 @@ public class CamereDatabase {
     @Tag("integration")
     public void aggiuntaCameraDB() {
         ArrayList<Camera> camere = new ArrayList<>();
-        camere.add(new Camera(114,Stato.Libera,3,89,"",""));
-        camere.add(new Camera(104,Stato.Libera,2,114,"",""));
-        catalogoCamere.addCamere(camere);
+        camere.add(new Camera(114,Stato.Libera,3,89,"","Posillipo"));
+        camere.add(new Camera(104,Stato.Libera,2,114,"","Amalfi"));
+        CatalogoCamere.addCamere(camere); // fa la chiamata al db
 
         Camera c1=null;
         Camera c2=null;
@@ -87,10 +88,10 @@ public class CamereDatabase {
     @DisplayName("Bottom up: ottenere le camere dal DB")
     @Tag("integration")
     public void getCamereFromDb(){
-        List<Camera> cameraList= catalogoCamere.getListaCamere();
+        List<Camera> cameraList= CatalogoCamere.getListaCamere();
         List<Camera> cameraList2 = List.of();
         try{
-            cameraList2= (List<Camera>) fds.doRetriveAll("discendente");
+            cameraList2= (List<Camera>) fds.doRetriveAll("decrescente");
         }catch (SQLException e){
             e.printStackTrace();
         }

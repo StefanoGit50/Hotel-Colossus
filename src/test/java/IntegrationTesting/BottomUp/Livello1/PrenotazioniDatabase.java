@@ -19,36 +19,34 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PrenotazioniDatabase {
-
-    private CatalogoPrenotazioni catprenotazioni;
-
+    
     private FrontDeskStorage<Prenotazione> fds = new PrenotazioneDAO();
 
     @AfterEach
     public void setup()  {
-        catprenotazioni = new CatalogoPrenotazioni();
+        CatalogoPrenotazioni.aggiornalista();
     }
     @AfterEach
     public void tearDown()  {
-        catprenotazioni.getListaPrenotazioni().clear();
+        CatalogoPrenotazioni.getListaPrenotazioni().clear();
     }
 
     @Test
     @DisplayName("Bottom up: Retrieve della lista nel catalogo prenotazioni")
     @Tag("Integration")
-    public void Prenotazioni()  {
-        catprenotazioni.getListaPrenotazioni();
+    public void RetrievePrenotazioni()  {
+
         List<Prenotazione> prenotazioni= null;
           try{
-            prenotazioni= (List<Prenotazione>) fds.doRetriveAll("discendente");
+            prenotazioni= (List<Prenotazione>) fds.doRetriveAll("decrescente");
           }catch (SQLException e){
               e.printStackTrace();
           }
 
           assertNotNull(prenotazioni);
-          assertEquals(catprenotazioni.getListaPrenotazioni().size(), prenotazioni.size());
+          assertEquals(CatalogoPrenotazioni.getListaPrenotazioni().size(), prenotazioni.size());
           for(int i=0;i<prenotazioni.size();i++){
-               assertEquals(catprenotazioni.getListaPrenotazioni().get(i), prenotazioni.get(i));
+               assertEquals(CatalogoPrenotazioni.getListaPrenotazioni().get(i), prenotazioni.get(i));
           }
     }
 
@@ -58,27 +56,27 @@ public class PrenotazioniDatabase {
     public void addPrenotazione() throws  SQLException {
 
         ArrayList<Camera> listcamera=new ArrayList<>();
-        listcamera.add(new Camera(112, Stato.Occupata,2,45.50,"",""));
+        listcamera.add(new Camera(112, Stato.Occupata,2,45.50,"","Pino"));
         ArrayList<Servizio> servizio=new ArrayList<>();
         servizio.add(new Servizio("Piscina",20));
         ArrayList<Cliente> cliente=new ArrayList<>();
-        cliente.add(new Cliente("mario","Rossi","napoli","napoli","via manzo",12,45,"323425","M",LocalDate.of(1998,12,1),"CF234rdfcfg","luca@gmail.com","italiana",new Camera()));
-        Prenotazione prenotazione =new Prenotazione(5,
+        cliente.add(new Cliente("mario","Rossi","napoli","napoli","via manzo",12,45,"323425","M",LocalDate.of(1998,12,1),"CF234rdfcfg","luca@gmail.com","italiana",listcamera.getFirst()));
+        Prenotazione prenotazione =new Prenotazione(
                 LocalDate.of(2025, 12, 1),
                 LocalDate.of(2026, 1, 10),
                 LocalDate.of(2026, 1, 20),
                 LocalDate.of(2025, 12, 1),
-                new Trattamento("Pensione Completa Deluxe", 5000.0),
+                new Trattamento("Pensione Completa", 100.0),
                 "Passaporto",
                 LocalDate.of(2022, 10, 10),
                 LocalDate.of(2032, 10, 10),
-                "Mr. John Smith",
+                cliente.getFirst().getNome()+" "+cliente.getFirst().getCognome(),
                 "Privacy assoluta",
                 listcamera, servizio, cliente,
                 "UK123456789",
-                "Amex Black"
+                "carta di credito"
         );
-        catprenotazioni.addPrenotazioni(prenotazione);
+        CatalogoPrenotazioni.addPrenotazioni(prenotazione);
         // prendo dal database la prenotazione appena inserita
         Prenotazione p =fds.doRetriveByKey(prenotazione.getIDPrenotazione());
 
@@ -91,13 +89,13 @@ public class PrenotazioniDatabase {
     @Tag("exception")
     public void removePrenotazione() throws CloneNotSupportedException {
 
-        ArrayList<Prenotazione> arrayList= catprenotazioni.getListaPrenotazioni();
-        Prenotazione p1=catprenotazioni.getPrenotazione(arrayList.getFirst().getIDPrenotazione());
+        ArrayList<Prenotazione> arrayList= CatalogoPrenotazioni.getListaPrenotazioni();
+        Prenotazione p1=CatalogoPrenotazioni.getPrenotazione(arrayList.getFirst().getIDPrenotazione());
 
-        catprenotazioni.removePrenotazioni(p1);
+        CatalogoPrenotazioni.removePrenotazioni(p1);
 
         assertThrows(SQLException.class,()-> fds.doRetriveByKey(p1.getIDPrenotazione()));
-        assertNotEquals(catprenotazioni.getListaPrenotazioni().size(), arrayList.size());
+        assertNotEquals(CatalogoPrenotazioni.getListaPrenotazioni().size(), arrayList.size());
     }
 
     @Test
@@ -105,14 +103,14 @@ public class PrenotazioniDatabase {
     @Tag("integration")
     public void updatePrenotazione() throws SQLException, CloneNotSupportedException {
 
-        ArrayList<Prenotazione> catalogop= catprenotazioni.getListaPrenotazioni();
+        ArrayList<Prenotazione> catalogop= CatalogoPrenotazioni.getListaPrenotazioni();
         Prenotazione prenotazione = catalogop.getFirst();
         prenotazione.setCheckIn(true);
 
-        catprenotazioni.UpdatePrenotazioni(prenotazione);
+        CatalogoPrenotazioni.UpdatePrenotazioni(prenotazione);
 
         fds.doRetriveByKey(prenotazione.getIDPrenotazione());
 
-        assertEquals(prenotazione,catprenotazioni.getPrenotazione(prenotazione.getIDPrenotazione()));
+        assertEquals(prenotazione,CatalogoPrenotazioni.getPrenotazione(prenotazione.getIDPrenotazione()));
     }
 }

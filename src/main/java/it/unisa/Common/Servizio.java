@@ -21,6 +21,7 @@ public class Servizio implements Cloneable, Serializable {
      */
     private double prezzo;
 
+    private int id;
     /**
      * Costruttore per creare una nuova istanza di {@code Servizio}.
      *
@@ -28,6 +29,7 @@ public class Servizio implements Cloneable, Serializable {
      * @param prezzo Il prezzo del servizio.
      */
     public Servizio(String nome, double prezzo) {
+        this.id=0;  //l'id viene settato quando fatto il retrieve
         this.nome = nome;
         this.prezzo = prezzo;
     }
@@ -73,6 +75,13 @@ public class Servizio implements Cloneable, Serializable {
         this.prezzo = prezzo;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     @Override
     public String toString() {

@@ -64,7 +64,7 @@ public class CameraDaoTesting{
         cameras.add(new Camera(104,Stato.Libera,2,150,"Camera prova",""));
 
         ArrayList<Camera> cameras1 = (ArrayList<Camera>) cameraDAO.doRetriveAll("decrescente");
-        assertEquals(cameras,cameras1);
+        assertEquals(cameras1,cameras);
     }
 
     @Test
@@ -78,6 +78,7 @@ public class CameraDaoTesting{
     @Tag("False")
     @DisplayName("doRetriveAll() quando è tutto false")
     public void doRetriveAllFalseTranneOrder() throws SQLException {
+        DBPopulator.cancel();
         ArrayList<Camera> cameras;
 
         cameras = (ArrayList<Camera>) cameraDAO.doRetriveAll("crescente");

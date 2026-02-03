@@ -44,26 +44,23 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
             if(oggetto instanceof Integer){
                 Integer integer = (Integer) oggetto;
                 connection = ConnectionStorage.getConnection();
+                Camera camera = new Camera();
                 try{
                     preparedStatement = connection.prepareStatement("SELECT * FROM camera WHERE NumeroCamera = ?");
                     preparedStatement.setInt(1,integer);
                     resultSet = preparedStatement.executeQuery();
-                    Integer numeroCamera = null,numeroMaxOcc = null,piano = null;
-                    String noteCamera = null, TipologiaCamera = null,nomeCamera = null;
-                    Stato stato = null;
-                    Double prezzo = null;
+
 
                     if(resultSet.next()){
-                        numeroCamera = resultSet.getInt("NumeroCamera");
-                        numeroMaxOcc = resultSet.getInt("NumeroMaxOcc");
-                        noteCamera = resultSet.getString("NoteCamera");
-                        String c = resultSet.getString("Stato");
-                        stato = Stato.valueOf(c);
-                        prezzo = resultSet.getDouble("Prezzo");
-                        nomeCamera = resultSet.getString("NoteCamera");
+                        camera.setNumeroCamera(resultSet.getInt("NumeroCamera"));
+                        camera.setCapacità(resultSet.getInt("NumeroMaxOcc"));
+                        camera.setNoteCamera( resultSet.getString("NoteCamera"));
+                        camera.setStatoCamera(Stato.valueOf(resultSet.getString("Stato")));
+                        camera.setPrezzoCamera( resultSet.getDouble("Prezzo"));
+                        camera.setNomeCamera( resultSet.getString("NomeCamera"));
                     }
 
-                    return new Camera(numeroCamera , stato , numeroMaxOcc , prezzo , noteCamera,nomeCamera);
+                    return camera;
                 }finally{
                      if(connection != null){
                          ConnectionStorage.releaseConnection(connection);

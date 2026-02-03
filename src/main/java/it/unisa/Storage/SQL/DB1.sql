@@ -58,7 +58,7 @@ create table Prenotazione(
                              NomeTrattamento varchar(50),
                              NoteAggiuntive varchar(1000),
                              TipoDocumento varchar(50) not null,
-                             Stato boolean not null,
+                             Stato boolean not null Default true,
                              CheckIn boolean not null,
                              PrezzoAcquistoTrattamento double,
                              MetodoPagamento varchar(50),
