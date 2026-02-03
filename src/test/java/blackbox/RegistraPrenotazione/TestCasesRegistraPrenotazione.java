@@ -15,7 +15,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -46,27 +45,27 @@ public class TestCasesRegistraPrenotazione {
         // Lista clienti
 
         Cliente cliente1 = new Cliente(
-                "Giulia", "Verdi", "Milano", "Milano",
-                "Corso Vittorio Emanuele", 22, 20121, "3479876543", "F",
-                LocalDate.of(1992, 8, 15), "VRDGLI92M55F205W",
-                "giulia.verdi@gmail.com",
+                "Luigi", "Verdi", "Milano", "Milano",
+                "Corso Buenos Aires", 20, 20100, "3339876543", "M",
+                LocalDate.of(1990, 2, 2), "VRDLGI90B02F205K",
+                "luigi.verdi@email.com",
                 "Italiana",
                 new Camera()
         );
 
         Cliente cliente2 = new Cliente(
-                "Marco", "Neri", "Roma", "Roma",
-                "Via dei Condotti", 5, 11187, "3351122334", "M",
-                LocalDate.of(1978, 11, 3), "NREMRA78S03H501U",
-                "m.neri@provider.it","Italiana",
+                "Mario", "Rossi", "Roma", "Roma",
+                "Via del Corso", 10, 10000, "3331234567", "M",
+                LocalDate.of(1920, 1, 1), "RSSMRA80A01H501U",
+                "mario.rossi@email.com","Italiana",
                 new Camera()
         );
 
         Cliente cliente3 = new Cliente(
-                "Sofia", "Bruno", "Firenze", "Firenze",
-                "Piazza della Signoria", 1, 50122, "3294455667", "F",
-                LocalDate.of(2001, 1, 25), "BRNSFO01A65D612Y",
-                "sofia.bruno@studio.it","Italiana",
+                "Lucia", "Bianchi", "Palermo", "Palermo",
+                "Via Roma", 5, 90100, "3381122334", "F",
+                LocalDate.of(1985, 3, 3), "BNCLCU85C03G273Z",
+                "lucia.bianchi@email.com","Italiana",
                 new Camera()
         );
 
@@ -76,41 +75,41 @@ public class TestCasesRegistraPrenotazione {
 
         // Lista camere
 
+        Camera camera101 = new Camera(
+                101,
+                Stato.Libera,
+                2,
+                80.0,
+                "Vista interna",
+                "Camera Standard"
+        );
+
         Camera camera102 = new Camera(
                 102,
-                Stato.Libera,
-                1,
-                85.0,
-                "Singola lato giardino, molto silenziosa",
-                ""
-        );
-
-        Camera camera205 = new Camera(
-                205,
                 Stato.Occupata,
                 2,
-                150.0,
-                "Deluxe con idromassaggio e minibar rifornito",
-                ""
+                80,
+                "Vista strada",
+                "Camera Standard"
         );
 
-        Camera camera404 = new Camera(
-                404,
-                Stato.Libera,
-                4,
-                250.0,
-                "Suite Familiare, due stanze comunicanti, balcone ampio",
-                ""
+        Camera camera201 = new Camera(
+                201,
+                Stato.Prenotata,
+                3,
+                180.0,
+                "Vista mare laterale",
+                "Junior Suite"
         );
 
+        listaCamere.add(camera101);
         listaCamere.add(camera102);
-        listaCamere.add(camera205);
-        listaCamere.add(camera404);
+        listaCamere.add(camera201);
 
         // Lista servizi
 
-        Servizio servizioMinibar = new Servizio("Consumazione Minibar", 15.50);
-        Servizio servizioParcheggio = new Servizio("Parcheggio Coperto", 10.00);
+        Servizio servizioMinibar = new Servizio("Parcheggio", 10.00);
+        Servizio servizioParcheggio = new Servizio("WiFi Premium", 5.00);
         Servizio servizioColazione = new Servizio("Colazione in Camera", 12.00);
 
         listaServizi.add(servizioMinibar);
@@ -119,7 +118,7 @@ public class TestCasesRegistraPrenotazione {
 
         // Trattamento
 
-        trattamento = new Trattamento("Mezza Pensione", 200);
+        trattamento = new Trattamento("Mezza Pensione", 35);
     }
 
     /* ************************************************************************************************************** */
@@ -137,22 +136,23 @@ public class TestCasesRegistraPrenotazione {
         String nome = clienti.getFirst().getNome();
 
         return new Prenotazione(
-                autoIncrement,                  // 1. IDPrenotazione
                 LocalDate.now(),                // 2. Data Creazione
-                LocalDate.now().plusDays(1),    // 3. Data Inizio
-                LocalDate.now().plusDays(5),    // 4. Data Fine
+                LocalDate.of(2026, 3, 17),    // 3. Data Inizio
+                LocalDate.of(2026, 3, 20),    // 4. Data Fine
                 null,                           // 5. DataEmissioneRicevuta (MANCAVA QUESTO)
-                trattamento,                    // 6. Trattamento
-                "Patente",                      // 7. Tipo Documento
+                null,                    // 6. Trattamento
+                trattamento.getPrezzo(),                      // 7. Tipo Documento
+                "Patente",
                 LocalDate.of(2020, 1, 10),      // 8. Data Rilascio
                 LocalDate.of(2030, 1, 10),      // 9. Data Scadenza
-                "NNN",                          // 10. Intestatario
-                "",                             // 11. Note Aggiuntive
+                clienti.getFirst().getNome(),                          // 10. Intestatario
+                "-",                             // 11. Note Aggiuntive
                 camere,                         // 12. Lista Camere
                 listaServizi,                   // 13. Lista Servizi
                 clienti,                        // 14. Lista Clienti
-                "12345678",                     // 15. Numero Documento
-                "Contanti"                      // 16. Metodo Pagamento (MANCAVA QUESTO)
+                "CA123AA",                     // 15. Numero Documento
+                "",
+                "Italiana"// 16. Metodo Pagamento (MANCAVA QUESTO)
         );
     }
     /* ************************************************************************************************************** */
@@ -178,7 +178,6 @@ public class TestCasesRegistraPrenotazione {
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
-
         }
 
         @Test

@@ -30,7 +30,7 @@ public class    ConnectionStorage{
         String port = "3306";
         String db = "hotelcolossus";
         String username = "root";
-        String password = "123456";  //_MySqlServer2024 E' mia --Giovanni
+        String password = "_MySqlServer2024";  //_MySqlServer2024 E' mia --Giovanni
 
         newConnection = DriverManager.getConnection("jdbc:mysql://"+ ip+":"+ port+"/"+db+"?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", username, password);
         return newConnection;
