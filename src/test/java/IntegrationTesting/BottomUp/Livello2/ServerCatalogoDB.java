@@ -34,6 +34,7 @@ public class ServerCatalogoDB {
 
     @BeforeAll
     static void setAllup() throws RemoteException {
+
         //inizializzazione variabili di default
         //si suppone che il DB contenga queste variabili per il corretto funzionamento del test
 
@@ -62,25 +63,25 @@ public class ServerCatalogoDB {
                 arraycamera.get(0)     // camera
         );
 
-    /*
+
         prenotazione =new Prenotazione(
-                0,                                      // IDPrenotazione (0 se autoincrement)
                 LocalDate.now(),                        // dataCreazionePrenotazione (Oggi)
                 LocalDate.of(2024, 8, 10),              // dataInizio
                 LocalDate.of(2024, 8, 20),              // dataFine
                 null,                                   // dataEmissioneRicevuta (null se non ha ancora pagato)
-                new Trattamento("Pensione Completa",45),           // trattamento (Assumendo sia un Enum)
+                new Trattamento("Pensione Completa",45),
+                45.0,
                 "Carta d'Identità",                     // tipoDocumento
                 LocalDate.of(2020, 5, 20),              // dataRilascio (documento)
                 LocalDate.of(2030, 5, 19),              // dataScadenza (documento)
                 "Mario Rossi",                          // intestatario
                 "Richiesta culla in camera",            // noteAggiuntive
-                arraycamera,                        // listaCamere
                 servizio,                          // listaServizi
                 cliente,                                 // listaClienti
                 "CA12345XYZ",                           // numeroDocumento
-                "Bonifico Bancario"                     // metodoPagamento
-        );;*/
+                "Bonifico Bancario",
+                "Italiano"
+        );
 
     }
 
@@ -145,29 +146,31 @@ public class ServerCatalogoDB {
     @Tag("integration-LV2")
     public void addPrenotazioneTest() throws RemoteException, CloneNotSupportedException {
         ArrayList<Camera> arrcam= new ArrayList<>();
-        arrcam.add(catCamere.getCamera(102));
+        arrcam.add(CatalogoCamere.getCamera(102));
         ArrayList<Cliente> clienti= new ArrayList<>();
-        clienti.add(catClienti.getListaClienti().get(0));
+        clienti.add(CatalogoClienti.getListaClienti().get(0));
         ArrayList<Servizio> servizio= new ArrayList<>();
         servizio.add(new Servizio("SPA",40));
 
-        Prenotazione p =  null; /*new Prenotazione(12124,          // IDPrenotazione
+        Prenotazione p = new Prenotazione(        // IDPrenotazione
                 LocalDate.now(),                        // dataCreazionePrenotazione
                 LocalDate.now(),                        // dataInizio
                 LocalDate.of(2026, 02, 01),             // dataFine
                 null,                                   // <--- MANCAVA QUESTO! (dataEmissioneRicevuta)
-                new Trattamento("MEZZA PENSIONE", 60),  // trattamento
+                new Trattamento("MEZZA PENSIONE", 60),
+                60.0,
                 "Passaporto",                           // tipoDocumento
                 LocalDate.of(2012, 03, 11),             // dataRilascio
                 LocalDate.of(2044, 12, 11),             // dataScadenza
                 "Mario Biondi",                         // intestatario
                 "",                                     // noteAggiuntive
-                arrcam,                                 // listaCamere
                 servizio,                               // listaServizi (Assicurati che sia un ArrayList!)
                 clienti,                                // listaClienti
                 "34532MC2",                             // numeroDocumento
-                ""                                      // metodoPagamento
-        );*/
+                "",
+                "italiana"
+        );
+
         frontDesk.addPrenotazione(p);
         Prenotazione p1= null;
         // controllo nel DB se la prenotazione è presente
@@ -290,6 +293,6 @@ public class ServerCatalogoDB {
         }catch (SQLException e){
             e.printStackTrace();
         }
-        assertEquals(clienti,catClienti.getListaClienti());
+        assertEquals(clienti,CatalogoClienti.getListaClienti());
     }
 }

@@ -18,7 +18,7 @@ public class MainApp4 extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Hotel Colossus - Booking Detail Test");
 
-        // ✅ UNA SOLA CHIAMATA - Dati passati al costruttore
+        // UNA SOLA CHIAMATA - Dati passati al costruttore
         BookingDetail bookingDetail = new BookingDetail(
                 creaPrenotazioneDiProva(),
                 creaCatalogo()
@@ -57,7 +57,7 @@ public class MainApp4 extends Application {
                 LocalDate.of(2001, 1, 30), "23rtygfds2",
                 "luca@smdb", "italiana", camere.getFirst()
         );
-       // alessio.setIntestatario(true); // ✅ Intestatario della prenotazione
+       // alessio.setIntestatario(true); //  Intestatario della prenotazione
 
         arrayCliente = new ArrayList<>(List.of(alessio));
 

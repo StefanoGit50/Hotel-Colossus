@@ -68,58 +68,7 @@ public class CatalogoPrenotazioni implements Serializable {
      * @return Una deep copy dell'ArrayList contenente tutte le prenotazioni che corrispondono ai criteri di ricerca.
      * @throws CloneNotSupportedException Se il metodo clone non è supportato dalla classe {@code Prenotazione}
      */
-    public ArrayList<Prenotazione> cercaPrenotazioni(String nominativoCliente, int numeroCamera,
-                                           LocalDate dataInizio, LocalDate dataFine, boolean sort) throws CloneNotSupportedException{
 
-        ArrayList<Prenotazione> risultati = new ArrayList<>();
-
-        // Flags per verificare se almeno un parametro è stato fornito
-        boolean[] params = new boolean[4];
-        params[0] = nominativoCliente != null;
-        params[1] = numeroCamera >= 0;
-        params[2] = dataInizio != null;
-        params[3] = dataFine != null;
-
-        // Tutti i parametri sono nulli
-        if( !params[0] && !params[1] && !params[2] && !params[3] ){return null;}
-
-        for (Prenotazione prenotazione : listaPrenotazioni) {
-
-            if (params[0]) { // Se la flag è vera allora il parametro è presente ed è usato come criterio per la ricerca
-                if (!Objects.equals(prenotazione.getIntestatario(), nominativoCliente)) { // Il criterio non è rispettato
-                    continue; // L'oggetto cliente non viene aggiunto
-                }
-            }
-            if (params[1]) {
-                boolean flag = false;
-                /*
-                for (Camera c : prenotazione.getListaCamere()) {
-                    if (Objects.equals(c.getNumeroCamera(), numeroCamera)) {
-                        flag = true;
-                    }
-                }*/
-                if (!flag) {
-                    continue;
-                }
-            }
-            if (params[2] && params[3]) {
-                if ( !(prenotazione.getDataInizio().isAfter(dataInizio) && prenotazione.getDataFine().isBefore(dataFine)) ) {
-                    continue;
-                }
-            }
-
-            risultati.add(prenotazione.clone());
-        }
-
-        if (sort) {
-            // ASC
-            risultati.sort((p1, p2) -> p1.getDataInizio().compareTo(p2.getDataInizio()));
-        } else {
-            // DESC
-            risultati.sort((p1, p2) -> p2.getDataInizio().compareTo(p1.getDataInizio()));
-        }
-        return risultati;
-    }
 
     //  Getters / Setters
 
@@ -321,11 +270,10 @@ public class CatalogoPrenotazioni implements Serializable {
 
         int nClienti = prenotazione.getListaClienti().size();
         int nPostiCamere = 0;
-        /*
-        for (Camera c : prenotazione.getListaCamere()) {
+
+       /* for (Camera c : prenotazione.getListaCamere()) {
             nPostiCamere +=  c.getCapacità();
         }*/
-
         // Lista di condizioni che possono lanciare un errore
         // 1. Data Arrivo Passata
         if (inizio.isBefore(LocalDate.now()))
@@ -344,10 +292,9 @@ public class CatalogoPrenotazioni implements Serializable {
             throw new InvalidInputException("Data di partenza non può essere passata");
 
         // 5. Nessuna Camera selezionata
-       /*
-        if (prenotazione.getListaCamere().isEmpty() || nPostiCamere == 0)
-            throw new InvalidInputException("Almeno una camera deve essere selezionata");
-        */
+     /*   if (prenotazione.getListaCamere().isEmpty() || nPostiCamere == 0)
+            throw new InvalidInputException("Almeno una camera deve essere selezionata");*/
+
         // 6. Nessun Cliente selezionato
         if (prenotazione.getListaClienti().isEmpty() || nClienti == 0)
             throw new InvalidInputException("Almeno un cliente deve essere selezionato");
