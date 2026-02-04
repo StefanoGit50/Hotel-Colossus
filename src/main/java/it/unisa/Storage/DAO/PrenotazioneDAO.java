@@ -269,7 +269,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                 try {
                     Servizio servizio = null;
                     do {
-                        servizio = dao3.doRetriveByKey(rs.getString("NomeServizio"));
+                        servizio = dao3.doRetriveByKey(rs.getString("NomeServizioAcquistato"));
                         servizio.setPrezzo(rs.getDouble("PrezzoAcquistoServizio"));
                     } while (rs.next());
                 } catch (SQLException ex) {

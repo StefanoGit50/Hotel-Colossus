@@ -52,7 +52,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
      * @throws SQLException;
      */
     public synchronized void doSave(Cliente o) throws SQLException{
-        String insertSQL= "INSERT INTO " +  TABLE_NAME +" (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, Nazionalità,DataDiNascita, IsBackListed)"
+        String insertSQL= "INSERT INTO " +  TABLE_NAME +" (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, Nazionalita,DataDiNascita, IsBackListed)"
                 + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         try{
@@ -127,7 +127,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                     cliente.setBlacklisted(resultSet.getBoolean("IsBackListed"));
                     try(ResultSet resultSet1 = preparedStatement1.executeQuery()){
                         if(resultSet1.next()){
-                            camera.setNomeCamera(resultSet1.getString("nome"));
+                            camera.setNomeCamera(resultSet1.getString("NomeCamera"));
                             camera.setNumeroCamera(resultSet1.getInt("NumeroCamera"));
                             camera.setCapacità(resultSet1.getInt("NumeroMaxOcc"));
                             camera.setPrezzoCamera(resultSet1.getDouble("Prezzo"));
@@ -256,7 +256,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
             try(PreparedStatement preparedStatement = con.prepareStatement(
                     "UPDATE cliente JOIN associato_a USING (CF) SET nome = ?, cognome = ?, Cap = ?, comune = ?, " +
                             "civico = ?, provincia = ?, via = ?, Email = ?, Sesso = ?, " +
-                            "telefono = ?, Nazionilita = ?, " +
+                            "telefono = ?, Nazionalita = ?, " +
                             "DataDiNascita = ?, IsBackListed = ?, NumeroCamera= ?, NumeroCameraStorico = ?,PrezzoAcquisto = ? WHERE CF = ?")){
 
                 preparedStatement.setString(1, o.getNome());

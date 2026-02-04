@@ -28,8 +28,9 @@ import static org.mockito.Mockito.*;
 /*
 * da finire
 * */
+
 @ExtendWith(MockitoExtension.class)
-public class prenotazioneDAOTesting {
+public class prenotazioneDAOTesting{
 
     private PrenotazioneDAO prenotazioneDAO;
     private Prenotazione prenotazione;
@@ -78,6 +79,7 @@ public class prenotazioneDAOTesting {
     public void doSaveAllTrue() throws SQLException{
        assertDoesNotThrow(()->prenotazioneDAO.doSave(prenotazione));
     }
+
     @Test
     @Tag("False")
     @DisplayName("doSave() quando è tutto False")

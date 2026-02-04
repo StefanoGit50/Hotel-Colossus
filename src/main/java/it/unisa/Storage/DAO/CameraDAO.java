@@ -121,7 +121,7 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
      * @pre listCamera != null && listCamera.size() > 0
      */
     @Override
-    public synchronized void doSaveAll(List<Camera> listCamera) throws SQLException {
+    public synchronized void doSaveAll(List<Camera> listCamera) throws SQLException{
         if(!listCamera.isEmpty()){
             StringBuilder insertSQL = new StringBuilder();
             String values = " (?,?,?,?,?,?) ";
