@@ -35,7 +35,7 @@ public class CamereDatabase {
     }
 
     @Test
-    @DisplayName("Bottom up: CameraDAO e aggiornamento stato camera da catalogo")
+    @DisplayName("Bottom up TC1: CameraDAO e aggiornamento stato camera da catalogo")
     @Tag("integration")
     public void aggiornaStatoCameraDB() throws RemoteException {
         DBPopulator.cancel();
@@ -62,7 +62,7 @@ public class CamereDatabase {
     }
 
     @Test
-    @DisplayName("Bottom up: CameraDao aggiuntaCamera da catalogo")
+    @DisplayName("Bottom up TC2: CameraDao aggiuntaCamera da catalogo")
     @Tag("integration")
     public void aggiuntaCameraDB() {
         ArrayList<Camera> camere = new ArrayList<>();
@@ -86,7 +86,7 @@ public class CamereDatabase {
     }
 
     @Test
-    @DisplayName("Bottom up: ottenere le camere dal DB")
+    @DisplayName("Bottom up TC3: ottenere le camere dal DB")
     @Tag("integration")
     public void getCamereFromDb(){
         assertTrue(CatalogoCamere.aggiornalista());
