@@ -35,7 +35,7 @@ public class Autentication {
             return false;
 
 
-        if (password.contains("PWD-TMP-") && pwd2!=null) {
+        if (pwd2!=null && pwd2.contains("PWD-TMP-")) {
             bo = new ImpiegatoDAO();
             try {
                 String soloNumeri = matcher.group(2);

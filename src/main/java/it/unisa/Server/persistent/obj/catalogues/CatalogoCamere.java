@@ -7,6 +7,7 @@ import it.unisa.Server.ObserverCamereInterface;
 import it.unisa.Server.SubjectCamereInterface;
 import it.unisa.Server.persistent.util.Util;
 import it.unisa.Storage.DAO.CameraDAO;
+import it.unisa.Storage.DAO.ClienteDAO;
 import it.unisa.Storage.Interfacce.FrontDeskStorage;
 
 import java.io.Serializable;
@@ -37,6 +38,7 @@ public class CatalogoCamere implements SubjectCamereInterface, Serializable {
         fds = new CameraDAO();
         try {
             camereList = new ArrayList<>(fds.doRetriveAll("decrescente"));
+            System.out.println(camereList.size());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -108,6 +110,20 @@ public class CatalogoCamere implements SubjectCamereInterface, Serializable {
             cloneNotSupportedException.printStackTrace();
         }
     }
+
+
+    public synchronized static boolean aggiornalista(){
+        fds = new CameraDAO();
+        try{
+            camereList= (ArrayList<Camera>) fds.doRetriveAll("decrescente");
+        }catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+        return !camereList.isEmpty();
+    }
+
+
 
 
     /**

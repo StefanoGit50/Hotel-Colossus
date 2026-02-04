@@ -26,7 +26,7 @@ INSERT INTO Servizio (Nome, Prezzo) VALUES
 -- 3. INSERT CAMERA
 -- =============================================
 INSERT INTO Camera (NumeroCamera, NomeCamera, NumeroMaxOcc, NoteCamera, Stato, Prezzo) VALUES
-                                                                                           (101, 'Camera Standard', 2, 'Vista interna', 'Occupata', 80.00),
+                                                                                           (101, 'Camera Standard', 2, 'Vista interna', 'Libera', 80.00),
                                                                                            (102, 'Camera Standard', 2, 'Vista strada', 'Occupata', 80.00),
                                                                                            (201, 'Junior Suite', 3, 'Vista mare laterale', 'Prenotata', 180.00),
                                                                                            (202, 'Suite Presidenziale', 2, 'Jacuzzi privata', 'Occupata', 350.00),
