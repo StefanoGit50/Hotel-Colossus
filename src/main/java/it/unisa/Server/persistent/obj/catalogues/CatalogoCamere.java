@@ -44,6 +44,15 @@ public class CatalogoCamere implements SubjectCamereInterface, Serializable {
 
     private static Camera lastModified = null;
 
+
+    /**
+     * Restituisce l'ultima camera modificata.
+     *
+     * @return Ultima camera modificata, null se nessuna modifica
+     *
+     * @pre Nessuna
+     * @post result = lastModified
+     */
     public static Camera getLastModified() {
         return lastModified;
     }
@@ -61,15 +70,32 @@ public class CatalogoCamere implements SubjectCamereInterface, Serializable {
     public CatalogoCamere(){}
 
     /**
-     * Restituisce una deep copy dell'elenco completo delle camere.
-     * Questo impedisce modifiche esterne alla lista interna del catalogo.
+     * Restituisce la lista completa delle camere.
      *
-     * @return Una nuova ArrayList contenente copie (cloni) di tutti gli oggetti Camera.
+     * @return ArrayList delle camere
+     *
+     * @pre Nessuna
+     * @post result != null
+     * @post result è sincronizzato (thread-safe)
      */
     public synchronized static ArrayList<Camera> getListaCamere() {
         return camereList;
     }
 
+
+    /**
+     * Aggiunge camere al catalogo e le persiste.
+     *
+     * @param camere ArrayList di camere da aggiungere
+     * @throws CloneNotSupportedException Se le camere non supportano la clonazione
+     * @throws SQLException Se si verifica un errore di database
+     *
+     * @pre camere != null
+     * @pre camere.size() > 0
+     *
+     * @post ∀ camera ∈ camere: camereList.contains(camera.clone())
+     * @post Camere salvate nel database
+     */
     public synchronized static void addCamere(ArrayList<Camera> camere) {
 
         try {
@@ -83,6 +109,16 @@ public class CatalogoCamere implements SubjectCamereInterface, Serializable {
     }
 
 
+    /**
+     * Verifica se un cliente corrisponde a una camera nel catalogo.
+     *
+     * @param c Cliente da verificare
+     * @return true se trovata corrispondenza, false altrimenti
+     *
+     * @pre Nessuna
+     * @post result = false se c == null
+     * @post result = true ⟺ ∃ camera ∈ camereList: camera.equals(c)
+     */
     public static boolean cameraIsEquals(Cliente c){
         if(c==null)
             return false;
@@ -97,14 +133,16 @@ public class CatalogoCamere implements SubjectCamereInterface, Serializable {
 
 
     /**
-     * Cerca una camera specifica tramite il suo numero e ne restituisce una copia.
+     * Cerca una camera per numero e ne restituisce una copia.
      *
-     * @param numeroCamera Il numero identificativo della camera da cercare.
-     * @return Una deep copy dell'oggetto Camera trovato, o {@code null} se non esiste nessuna camera con quel numero.
-     * @throws CloneNotSupportedException Se l'oggetto Camera non supporta la clonazione.
+     * @param numeroCamera Numero identificativo della camera
+     * @return Clone della camera trovata, null se non esiste
+     *
+     * @pre numeroCamera > 0
+     *
+     * @post result != null ⟺ ∃ camera ∈ camereList: camera.getNumeroCamera() = numeroCamera
+     * @post result != camera originale (è un clone)
      */
-
-
     public static Camera getCamera(int numeroCamera) {
         try {
             for (Camera c : camereList) {
@@ -117,6 +155,22 @@ public class CatalogoCamere implements SubjectCamereInterface, Serializable {
         return null;
     }
 
+
+    /**
+     * Aggiorna lo stato di una camera.
+     *
+     * @param c Camera con il nuovo stato
+     * @return true se aggiornamento riuscito, false altrimenti
+     * @throws RemoteException Se si verifica un errore remoto
+     *
+     * @pre c != null
+     * @pre c.getNumeroCamera() > 0
+     *
+     * @post result = true ⟺ stato camera aggiornato nel catalogo e nel database
+     * @post result = true ⟹ lastModified = camera aggiornata
+     * @post result = true ⟹ observers notificati
+     * @post result = false se stato non modificabile o camera non presente
+     */
     public boolean aggiornaStatoCamera(Camera c) throws RemoteException {
 
             for(Camera cam : camereList){
@@ -141,17 +195,45 @@ public class CatalogoCamere implements SubjectCamereInterface, Serializable {
 
 
     // metodi per fare l'iscrizione la disiscrizione al publisher e la notifica agli observer quando ce un update
+
+
+    /**
+     * Iscrive un observer al catalogo.
+     *
+     * @param observer Observer da iscrivere
+     *
+     * @pre observer != null
+     * @post observers.contains(observer)
+     */
     @Override
     public void attach(ObserverCamereInterface observer) {
         observers.add(observer);
     }
 
+
+    /**
+     * Disiscrive un observer dal catalogo.
+     *
+     * @param observer Observer da disiscrivere
+     *
+     * @pre observer != null
+     * @post !observers.contains(observer)
+     */
     @Override
     public void detach(ObserverCamereInterface observer) {
         observers.remove(observer);
 
     }
 
+
+    /**
+     * Notifica tutti gli observer di un aggiornamento.
+     *
+     * @throws RemoteException Se si verifica un errore nella notifica remota
+     *
+     * @pre Nessuna
+     * @post ∀ observer ∈ observers: observer.update() chiamato
+     */
     @Override
     public void notifyObservers() throws RemoteException {  // notifico agli observer che una camera è stata cambiata
         for (ObserverCamereInterface observer : observers) {

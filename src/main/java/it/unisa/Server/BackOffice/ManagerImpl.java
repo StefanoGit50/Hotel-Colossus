@@ -7,10 +7,8 @@ import it.unisa.Server.command.CatalogoImpiegatiCommands.RemoveImpiegatoCommand;
 import it.unisa.Server.command.CatalogoImpiegatiCommands.UpdateImpiegatoCommand;
 import it.unisa.Server.command.Invoker;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoImpiegati;
-import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
 import it.unisa.Server.persistent.obj.catalogues.CatalogueUtils;
 import it.unisa.Server.persistent.util.Ruolo;
-import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.DAO.ImpiegatoDAO;
 import it.unisa.interfacce.ManagerInterface;
 
@@ -18,13 +16,9 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
-import java.security.SecureRandom;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.*;
-import java.util.function.Function;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
 {
@@ -93,6 +87,11 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
     public String generatePassword(){
         TokenGenerator token = new TokenGenerator(30);
         return token.getToken();
+    }
+
+    @Override
+    public Map<String, Double> calcolaContoHotel() throws RemoteException {
+        return Map.of();
     }
 
     @Override
@@ -202,14 +201,14 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
 
         return result.toString();
     }
-*/
+
 
     @Override
-    public Map<String, Double> calcolaContoHotel() throws RemoteException{
+    public Map<String, Double> calcolaContoHotel() throws RemoteException {
         ArrayList<Servizio> listaServizi = new ArrayList<Servizio>();
         listaServizi.add(new Servizio("Spa", 325));
         ArrayList<Camera> c = new ArrayList<Camera>();
-        c.add(new Camera(112, Stato.Occupata, 2, 50.5, "o babba",""));
+        c.add(new Camera(112, Stato.Occupata, 2, 50.5, "o babba", ""));
         ArrayList<Cliente> clist = new ArrayList<>();
         Cliente cliente = new Cliente("Luca",
                 "Marole",
@@ -221,9 +220,31 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
                 "3233452",
                 "m",
                 LocalDate.of(2022, 1, 6),
-                "SDFGANNSOLF", "Libero@asfnai","Italiana", new Camera());
+                "SDFGANNSOLF", "Libero@asfnai", "Italiana", new Camera());
         clist.add(cliente);
 
+<<<<<<< HEAD
+=======
+        Prenotazione p1 = new Prenotazione(
+                java.time.LocalDate.now(),                    // dataCreazionePrenotazione
+                java.time.LocalDate.of(2025, 8, 15),          // dataInizioPrenotazione
+                java.time.LocalDate.of(2025, 8, 22),          // dataFinePrenotazione
+                null,                                         // dataEmissioneRicevuta (null se non emessa)
+                new Trattamento("All Inclusive", 100.0),      // trattamento (Creato al volo)
+                700.00,                                       // prezzoAcquistoTrattamento
+                "Passaporto",                                 // tipoDocumento
+                java.time.LocalDate.of(2018, 5, 20),          // dataRilascio
+                java.time.LocalDate.of(2028, 5, 19),          // dataScadenza
+                "Mario Rossi",                                // intestatario
+                "Camera silenziosa, piano alto",              // noteAggiuntive
+                listaServizi,
+                clist,
+                "YA1234567",                                  // numeroDocumento
+                "Bancomat",                                   // metodoPagamento
+                "Italiana"                                    // cittadinanza
+        );
+        p1.setStatoPrenotazione(false);
+>>>>>>> cd6c0aa2842bc9d47936da18eb4183ba5ae110d0
 
         Prenotazione p1 = new Prenotazione();
 /*
@@ -233,14 +254,18 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
 
         ContoEconomicoComposite prenotazioni = new ContoEconomicoComposite("PRENOTAZIONI");
 
-        //catalogoPrenotazioni.getListaPrenotazioni().add(p1);
-        //mostra solo le prenotazioni completate
-        for (Prenotazione p : catalogoPrenotazioni.getListaPrenotazioni()) {
+
+        ArrayList<Camera> listaCamere = new ArrayList<>();
+
+
+        //int i = 0;
+        //for (Prenotazione p : CatalogoPrenotazioni.getListaPrenotazioni()) {
+            /*
             if (p.getStatoPrenotazione() == false) {
                 ContoEconomicoComposite prenotazioneComposite = new ContoEconomicoComposite("PRENOTAZIONE" + p.getIDPrenotazione() + " " + p.getIntestatario());
 
                 // creazione composite CAMERE
-                if (!p.getListaCamere().isEmpty() && p.getListaCamere() != null) {
+                if (!p.getListaClienti().isEmpty() ) {
                     ContoEconomicoComposite camere = creaNodoeFoglie("CAMERE", p.getListaCamere(), room -> "CAMERA" + room.getNumeroCamera(),
                             room -> room.getPrezzoCamera(), room -> TipoVoce.CAMERA);
                     prenotazioneComposite.addChild(camere);
@@ -258,7 +283,7 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
                             TipoVoce.TRATTAMENTO
                     ));
                 }
-
+                    i++;
                 // aggiunta della prenotazione al nodo prenotazioni
                 prenotazioni.addChild(prenotazioneComposite);
             }
@@ -315,8 +340,13 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
                 Impiegato::getNome,  //uso di method reference syntax
                 Impiegato::getStipendio,
                 i -> TipoVoce.STIPENDI
+<<<<<<< HEAD
         );*/
 /*
+=======
+        );
+
+>>>>>>> cd6c0aa2842bc9d47936da18eb4183ba5ae110d0
         ContoEconomicoLeaf manutenzione = new ContoEconomicoLeaf("Manutenzione Camere", 540, TipoVoce.ALTRO);
 
         ContoEconomicoComponentAbstract passivita = new ContoEconomicoComposite("PASSIVITA");
@@ -351,7 +381,7 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
         System.out.println("Totale Passività = " + totalePassivita);
         System.out.println("Totale Ricavi = " + totaleRicavi);
         System.out.println("Totale Conto Economico = " + totaleVeroContoEconomico);
-        */
+
 
 //        return conto;
         return null;
@@ -378,5 +408,8 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
     public static final String TRATTAMENTO_KEY = "totaleTrattamenti";
     public static final String PASSIVITA_KEY = "totalePassivita";
     public static final String RICAVI_KEY = "totaleRicavi";
-    public static final String CONTOECONOMICO_KEY = "totaleContoEconomico";
+    public static final String CONTOECONOMICO_KEY = "totaleContoEconomico";*/
+
+
 }
+

@@ -34,6 +34,7 @@ public class ServerCatalogoDB {
 
     @BeforeAll
     static void setAllup() throws RemoteException {
+
         //inizializzazione variabili di default
         //si suppone che il DB contenga queste variabili per il corretto funzionamento del test
 
@@ -79,9 +80,8 @@ public class ServerCatalogoDB {
                 cliente,                                 // listaClienti
                 "CA12345XYZ",                           // numeroDocumento
                 "Bonifico Bancario",
-                "Italiana"// metodoPagamento
-        );;
-
+                "Italiano"
+        );
     }
 
     @AfterEach
@@ -145,18 +145,18 @@ public class ServerCatalogoDB {
     @Tag("integration-LV2")
     public void addPrenotazioneTest() throws RemoteException, CloneNotSupportedException {
         ArrayList<Camera> arrcam= new ArrayList<>();
-        arrcam.add(catCamere.getCamera(102));
+        arrcam.add(CatalogoCamere.getCamera(102));
         ArrayList<Cliente> clienti= new ArrayList<>();
-        clienti.add(catClienti.getListaClienti().get(0));
+        clienti.add(CatalogoClienti.getListaClienti().get(0));
         ArrayList<Servizio> servizio= new ArrayList<>();
         servizio.add(new Servizio("SPA",40));
 
-        Prenotazione p = new Prenotazione(
-                LocalDate.now(),          // IDPrenotazione
-                LocalDate.now().plusDays(5),                        // dataCreazionePrenotazione
-                LocalDate.now().plusDays(10),                        // dataInizio
+        Prenotazione p = new Prenotazione(        // IDPrenotazione
+                LocalDate.now(),                        // dataCreazionePrenotazione
+                LocalDate.now(),                        // dataInizio
                 LocalDate.of(2026, 02, 01),             // dataFine
-                new Trattamento("MEZZA PENSIONE", 60),  // trattamento
+                null,                                   // <--- MANCAVA QUESTO! (dataEmissioneRicevuta)
+                new Trattamento("MEZZA PENSIONE", 60),
                 60.0,
                 "Passaporto",                           // tipoDocumento
                 LocalDate.of(2012, 03, 11),             // dataRilascio
@@ -166,9 +166,10 @@ public class ServerCatalogoDB {
                 servizio,                               // listaServizi (Assicurati che sia un ArrayList!)
                 clienti,                                // listaClienti
                 "34532MC2",                             // numeroDocumento
-                "",                                     // metodoPagamento
-                "Albanese"
+                "",
+                "italiana"
         );
+
         frontDesk.addPrenotazione(p);
         Prenotazione p1= null;
         // controllo nel DB se la prenotazione è presente
@@ -291,6 +292,6 @@ public class ServerCatalogoDB {
         }catch (SQLException e){
             e.printStackTrace();
         }
-        assertEquals(clienti,catClienti.getListaClienti());
+        assertEquals(clienti,CatalogoClienti.getListaClienti());
     }
 }

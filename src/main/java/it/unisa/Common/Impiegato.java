@@ -208,211 +208,684 @@ public class Impiegato implements Cloneable, Serializable {
 
     // --- Getter e Setter ---
 
+
+    /**
+     * Imposta il nome utente.
+     *
+     * @param username Nome utente
+     *
+     * @pre username != null
+     * @post this.username = username
+     */
     public void setUsername(String username) {
         this.username = username;
     }
 
+
+    /**
+     * Imposta la password.
+     *
+     * @param password Password
+     *
+     * @pre password != null
+     * @post this.password = password
+     */
     public void setPassword(String password) {
         this.password = password;
     }
 
+
+    /**
+     * Imposta la data di scadenza del token.
+     *
+     * @param expires Data scadenza
+     *
+     * @pre expires != null
+     * @post this.expires = expires
+     */
     public void setExpires(Instant expires) {
         this.expires = expires;
     }
 
+
+    /**
+     * Imposta il flag di cambio password.
+     *
+     * @param change Flag cambio
+     *
+     * @pre Nessuna
+     * @post this.change = change
+     */
     public void setChange(boolean change) {
         this.change = change;
     }
 
+
+    /**
+     * Restituisce il nome utente.
+     *
+     * @return Nome utente
+     *
+     * @pre Nessuna
+     * @post result = this.username
+     */
     public String getUsername() {
         return username;
     }
 
+
+    /**
+     * Restituisce la password.
+     *
+     * @return Password
+     *
+     * @pre Nessuna
+     * @post result = this.password
+     */
     public String getPassword() {
         return password;
     }
 
+
+    /**
+     * Restituisce la data di scadenza del token.
+     *
+     * @return Data scadenza token
+     *
+     * @pre Nessuna
+     * @post result = this.expires
+     */
     public Instant getExpires() {
         return expires;
     }
 
+
+    /**
+     * Verifica se è richiesto il cambio password.
+     *
+     * @return true se cambio richiesto, false altrimenti
+     *
+     * @pre Nessuna
+     * @post result = this.change
+     */
     public boolean isChange() {
         return change;
     }
 
 
+    /**
+     * Imposta l'identificativo.
+     *
+     * @param id Identificativo
+     *
+     * @pre id >= 0
+     * @post this.id = id
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+
+    /**
+     * Imposta il flag temporaneo.
+     *
+     * @param temporary Flag temporaneo
+     *
+     * @pre Nessuna
+     * @post this.isTemporary = temporary
+     */
     public void setTemporary(boolean temporary) {
         isTemporary = temporary;
     }
 
+
+    /**
+     * Restituisce l'identificativo.
+     *
+     * @return Identificativo
+     *
+     * @pre Nessuna
+     * @post result = this.id
+     * @post result >= 0
+     */
     public int getId() {
         return id;
     }
 
+
+    /**
+     * Verifica se l'impiegato è temporaneo.
+     *
+     * @return true se temporaneo, false altrimenti
+     *
+     * @pre Nessuna
+     * @post result = this.isTemporary
+     */
     public boolean isTemporary() {
         return isTemporary;
     }
 
 
+    /**
+     * Restituisce la password hashata.
+     *
+     * @return Password hashata
+     *
+     * @pre Nessuna
+     * @post result = this.hashPassword
+     */
     public String getHashPassword() {
         return hashPassword;
     }
 
+
+    /**
+     * Imposta la password hashata.
+     *
+     * @param hashPassword Password hashata
+     *
+     * @pre hashPassword != null
+     * @post this.hashPassword = hashPassword
+     */
     public void setHashPassword(String hashPassword) {
         this.hashPassword = hashPassword;
     }
 
+
+    /**
+     * Restituisce il nome.
+     *
+     * @return Nome dell'impiegato
+     *
+     * @pre Nessuna
+     * @post result = this.nome
+     */
     public String getNome() {
         return nome;
     }
 
+
+    /**
+     * Imposta il nome.
+     *
+     * @param nome Nome dell'impiegato
+     *
+     * @pre nome != null
+     * @post this.nome = nome
+     */
     public void setNome(String nome) {
         this.nome = nome;
     }
 
+
+    /**
+     * Restituisce il cognome.
+     *
+     * @return Cognome dell'impiegato
+     *
+     * @pre Nessuna
+     * @post result = this.cognome
+     */
     public String getCognome() {
         return cognome;
     }
 
+
+    /**
+     * Imposta il cognome.
+     *
+     * @param cognome Cognome dell'impiegato
+     *
+     * @pre cognome != null
+     * @post this.cognome = cognome
+     */
     public void setCognome(String cognome) {
         this.cognome = cognome;
     }
 
+
+    /**
+     * Restituisce il sesso.
+     *
+     * @return Sesso
+     *
+     * @pre Nessuna
+     * @post result = this.sesso
+     */
     public String getSesso() {
         return sesso;
     }
 
+
+    /**
+     * Imposta il sesso.
+     *
+     * @param sesso Sesso
+     *
+     * @pre sesso != null
+     * @post this.sesso = sesso
+     */
     public void setSesso(String sesso) {
         this.sesso = sesso;
     }
 
+
+    /**
+     * Restituisce il tipo di documento.
+     *
+     * @return Tipo documento
+     *
+     * @pre Nessuna
+     * @post result = this.tipoDocumento
+     */
     public String getTipoDocumento() {
         return tipoDocumento;
     }
 
+
+    /**
+     * Imposta il tipo di documento.
+     *
+     * @param tipoDocumento Tipo documento
+     *
+     * @pre tipoDocumento != null
+     * @post this.tipoDocumento = tipoDocumento
+     */
     public void setTipoDocumento(String tipoDocumento) {
         this.tipoDocumento = tipoDocumento;
     }
 
+
+    /**
+     * Restituisce il numero del documento.
+     *
+     * @return Numero documento
+     *
+     * @pre Nessuna
+     * @post result = this.numeroDocumento
+     */
     public String getNumeroDocumento() {
         return numeroDocumento;
     }
 
+
+    /**
+     * Imposta il numero del documento.
+     *
+     * @param numeroDocumento Numero documento
+     *
+     * @pre numeroDocumento != null
+     * @post this.numeroDocumento = numeroDocumento
+     */
     public void setNumeroDocumento(String numeroDocumento) {
         this.numeroDocumento = numeroDocumento;
     }
 
+
+    /**
+     * Restituisce il CAP.
+     *
+     * @return CAP
+     *
+     * @pre Nessuna
+     * @post result = this.CAP
+     * @post result >= 0 && result <= 99999
+     */
     public int getCAP() {
         return CAP;
     }
 
+
+    /**
+     * Imposta il CAP.
+     *
+     * @param CAP Codice Avviamento Postale
+     *
+     * @pre CAP >= 0 && CAP <= 99999
+     * @post this.CAP = CAP
+     */
     public void setCAP(int CAP) {
         this.CAP = CAP;
     }
 
+
+    /**
+     * Restituisce la via.
+     *
+     * @return Via
+     *
+     * @pre Nessuna
+     * @post result = this.via
+     */
     public String getVia() {
         return via;
     }
 
+
+    /**
+     * Imposta la via.
+     *
+     * @param via Via
+     *
+     * @pre via != null
+     * @post this.via = via
+     */
     public void setVia(String via) {
         this.via = via;
     }
 
+
+    /**
+     * Restituisce la provincia.
+     *
+     * @return Provincia
+     *
+     * @pre Nessuna
+     * @post result = this.provincia
+     */
     public String getProvincia() {
         return provincia;
     }
 
+
+    /**
+     * Imposta la provincia.
+     *
+     * @param provincia Provincia
+     *
+     * @pre provincia != null
+     * @post this.provincia = provincia
+     */
     public void setProvincia(String provincia) {
         this.provincia = provincia;
     }
 
+
+    /**
+     * Restituisce il comune.
+     *
+     * @return Comune
+     *
+     * @pre Nessuna
+     * @post result = this.comune
+     */
     public String getComune() {
         return comune;
     }
 
+
+    /**
+     * Imposta il comune.
+     *
+     * @param comune Comune
+     *
+     * @pre comune != null
+     * @post this.comune = comune
+     */
     public void setComune(String comune) {
         this.comune = comune;
     }
 
+
+    /**
+     * Restituisce il numero civico.
+     *
+     * @return Numero civico
+     *
+     * @pre Nessuna
+     * @post result = this.numeroCivico
+     * @post result > 0
+     */
     public int getNumeroCivico() {
         return numeroCivico;
     }
 
+
+    /**
+     * Imposta il numero civico.
+     *
+     * @param numeroCivico Numero civico
+     *
+     * @pre numeroCivico > 0
+     * @post this.numeroCivico = numeroCivico
+     */
     public void setNumeroCivico(int numeroCivico) {
         this.numeroCivico = numeroCivico;
     }
 
+
+    /**
+     * Restituisce il codice fiscale.
+     *
+     * @return Codice fiscale
+     *
+     * @pre Nessuna
+     * @post result = this.codiceFiscale
+     */
     public String getCodiceFiscale() {
         return codiceFiscale;
     }
 
+
+    /**
+     * Imposta il codice fiscale.
+     *
+     * @param codiceFiscale Codice fiscale
+     *
+     * @pre codiceFiscale != null
+     * @post this.codiceFiscale = codiceFiscale
+     */
     public void setCodiceFiscale(String codiceFiscale) {
         this.codiceFiscale = codiceFiscale;
     }
 
+
+    /**
+     * Restituisce il numero di telefono.
+     *
+     * @return Telefono
+     *
+     * @pre Nessuna
+     * @post result = this.telefono
+     */
     public String getTelefono() {
         return telefono;
     }
 
+
+    /**
+     * Imposta il numero di telefono.
+     *
+     * @param telefono Telefono
+     *
+     * @pre telefono != null
+     * @post this.telefono = telefono
+     */
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
 
+
+    /**
+     * Restituisce il ruolo lavorativo.
+     *
+     * @return Ruolo
+     *
+     * @pre Nessuna
+     * @post result = this.ruolo
+     * @post result != null
+     */
     public Ruolo getRuolo() {
         return ruolo;
     }
 
+
+    /**
+     * Imposta il ruolo lavorativo.
+     *
+     * @param ruolo Ruolo
+     *
+     * @pre ruolo != null
+     * @post this.ruolo = ruolo
+     */
     public void setRuolo(Ruolo ruolo) {
         this.ruolo = ruolo;
     }
 
+
+    /**
+     * Restituisce lo stipendio.
+     *
+     * @return Stipendio mensile
+     *
+     * @pre Nessuna
+     * @post result = this.stipendio
+     * @post result >= 0
+     */
     public double getStipendio() {
         return stipendio;
     }
 
+
+    /**
+     * Imposta lo stipendio.
+     *
+     * @param stipendio Stipendio mensile
+     *
+     * @pre stipendio >= 0
+     * @post this.stipendio = stipendio
+     */
     public void setStipendio(double stipendio) {
         this.stipendio = stipendio;
     }
 
+
+    /**
+     * Restituisce la data di assunzione.
+     *
+     * @return Data assunzione
+     *
+     * @pre Nessuna
+     * @post result = this.dataAssunzione
+     * @post result != null
+     */
     public LocalDate getDataAssunzione() {
         return dataAssunzione;
     }
 
+
+    /**
+     * Imposta la data di assunzione.
+     *
+     * @param dataAssunzione Data assunzione
+     *
+     * @pre dataAssunzione != null
+     * @post this.dataAssunzione = dataAssunzione
+     */
     public void setDataAssunzione(LocalDate dataAssunzione) {
         this.dataAssunzione = dataAssunzione;
     }
 
+
+    /**
+     * Restituisce la data di rilascio del documento.
+     *
+     * @return Data rilascio
+     *
+     * @pre Nessuna
+     * @post result = this.dataRilascio
+     */
     public LocalDate getDataRilascio() {
         return dataRilascio;
     }
 
+
+    /**
+     * Imposta la data di rilascio del documento.
+     *
+     * @param dataRilascio Data rilascio
+     *
+     * @pre dataRilascio != null
+     * @post this.dataRilascio = dataRilascio
+     */
     public void setDataRilascio(LocalDate dataRilascio) {
         this.dataRilascio = dataRilascio;
     }
 
+
+    /**
+     * Restituisce l'email aziendale.
+     *
+     * @return Email aziendale
+     *
+     * @pre Nessuna
+     * @post result = this.emailAziendale
+     */
     public String getEmailAziendale() {
         return emailAziendale;
     }
 
+
+    /**
+     * Imposta l'email aziendale.
+     *
+     * @param emailAziendale Email aziendale
+     *
+     * @pre emailAziendale != null
+     * @post this.emailAziendale = emailAziendale
+     */
     public void setEmailAziendale(String emailAziendale) {
         this.emailAziendale = emailAziendale;
     }
 
+
+    /**
+     * Restituisce la cittadinanza.
+     *
+     * @return Cittadinanza
+     *
+     * @pre Nessuna
+     * @post result = this.cittadinanza
+     */
     public String getCittadinanza() {
         return cittadinanza;
     }
 
+
+    /**
+     * Imposta la cittadinanza.
+     *
+     * @param cittadinanza Cittadinanza
+     *
+     * @pre cittadinanza != null
+     * @post this.cittadinanza = cittadinanza
+     */
     public void setCittadinanza(String cittadinanza) {
         this.cittadinanza = cittadinanza;
     }
 
+
+    /**
+     * Restituisce la data di scadenza del documento.
+     *
+     * @return Data scadenza
+     *
+     * @pre Nessuna
+     * @post result = this.dataScadenza
+     */
     public LocalDate getDataScadenza() {
         return dataScadenza;
     }
+
+
+    /**
+     * Imposta la data di scadenza del documento.
+     *
+     * @param localDate Data scadenza
+     *
+     * @pre localDate != null
+     * @post this.dataScadenza = localDate
+     */
     public void setDataScadenza(LocalDate localDate){
         this.dataScadenza = localDate;
     }
