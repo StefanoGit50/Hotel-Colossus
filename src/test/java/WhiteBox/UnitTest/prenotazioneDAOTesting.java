@@ -41,24 +41,9 @@ public class prenotazioneDAOTesting{
         clientes.add(new Cliente("Mario","Rossi","Napoli","Napoli","Via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana",new Camera(101,Stato.Occupata,2,120,"Camera matrimoniale vista mare","")));
         servizios.add(servizio);
         cameras.add(new Camera(101,Stato.Occupata,2,120,"Camera matrimoniale vista mare",""));
+        Prenotazione prenotazione = new Prenotazione(
+            LocalDate.o
 
-        prenotazione = new Prenotazione(
-                LocalDate.of(2026, 2, 1),
-                LocalDate.of(2026, 2, 10),
-                LocalDate.of(2026, 2, 15),
-                null,
-                new Trattamento("Pensione Completa", 300.0),
-                300.0,
-                "CartaIdentità",
-                LocalDate.of(2020, 1, 1),
-                LocalDate.of(2030, 2, 9),
-                "Mario Rossi",
-                "Nessuna nota",
-                servizios,
-                clientes,
-                "AA123456",
-                "Bancomat",
-                "Italiano"
         );
         prenotazioneDAO = new PrenotazioneDAO();
     }
@@ -307,9 +292,11 @@ public class prenotazioneDAOTesting{
     @DisplayName("doRetriveByAttribute() quando va male")
     public void doRetriveByAttributeAllFalse() throws SQLException {
        Prenotazione or = new Prenotazione();
-       Object c = "";
-       ArrayList<Prenotazione> prenotazione1 = (ArrayList<Prenotazione>) prenotazioneDAO.doRetriveByAttribute("Intestatario",c);
-
+       Object c = "Nessuna nota";
+       ArrayList<Prenotazione> prenotazione1 = (ArrayList<Prenotazione>) prenotazioneDAO.doRetriveByAttribute("NoteAggiuntive",c);
+       ArrayList<Prenotazione> prenotaziones = new ArrayList<>();
+       prenotaziones.add(new Prenotazione());
+       assertEquals();
     }
 
 
