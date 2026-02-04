@@ -220,10 +220,10 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
         Trattamento trattamento = new Trattamento();
 
         String[] sql = {
-                "SELECT NumeroCameraStorico, PrezzoAcquisto, FROM " + VIEW_TABLE_NAME + " WHERE IDPrenotazione = ?",
-                "SELECT NomeTrattamento, PrezzoAcquistoTrattamento FROM " + VIEW_TABLE_NAME + " WHERE IDPrenotazione = ?",
+                "SELECT NumeroCameraStorico, PrezzoAcquisto FROM " + VIEW_TABLE_NAME + " WHERE IDPrenotazione = ? ",
+                "SELECT NomeTrattamento, PrezzoAcquistoTrattamento FROM " + VIEW_TABLE_NAME + " WHERE IDPrenotazione = ? ",
                 "SELECT NomeServizioAcquistato, PrezzoAcquistoServizio FROM " + VIEW_TABLE_NAME + " WHERE IDPrenotazione = ?",
-                "SELECT CF  FROM " + VIEW_TABLE_NAME + " WHERE IDPrenotazione = ?"
+                "SELECT CF  FROM " + VIEW_TABLE_NAME + " WHERE IDPrenotazione = ? "
         };
 
         String selectSql = "SELECT * FROM Prenotazione "+" WHERE IDPrenotazione = ?";
@@ -270,7 +270,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                 try {
                     Servizio servizio = null;
                     do {
-                        servizio = dao3.doRetriveByKey(rs.getString("NomeServizio"));
+                        servizio = dao3.doRetriveByKey(rs.getString("NomeServizioAcquistato"));
                         servizio.setPrezzo(rs.getDouble("PrezzoAcquistoServizio"));
                     } while (rs.next());
                 } catch (SQLException ex) {
@@ -410,7 +410,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
         ServizioDAO serviziDAO = new ServizioDAO();
 
         String [] sql = new String [2];
-        sql[0] = "UPDATE prenotazione " +"SET IDPrenotazione = ? , NomeIntestatario = ? , DataCreazionePrenotazione = ? , DataArrivoCliente = ? , DataPartenzaCliente = ?, DataEmissioneRicevuta = ? , " +
+        sql[0] = " UPDATE prenotazione " + " SET IDPrenotazione = ? , NomeIntestatario = ? , DataCreazionePrenotazione = ? , DataArrivoCliente = ? , DataPartenzaCliente = ?, DataEmissioneRicevuta = ? , " +
                 "NumeroDocumento = ? , DataRilascioDocumento = ? , DataScadenzaDocumento = ? , NomeTrattamento = ? , NoteAggiuntive = ? ," +
                 "TipoDocumento = ? , Stato = ? , CheckIn = ? , PrezzoAcquistoTrattamento = ? , MetodoPagamento = ? , Cittadinanza = ?" +
                 " Where IDPrenotazione = ?" ;

@@ -130,7 +130,6 @@ public class PrenotazioneBuilder{
     public Prenotazione build() {
         // Converti Map → List
         prenotazione.setListaClienti(new ArrayList<>(clientiMap.values()));
-        prenotazione.setListaCamere(new ArrayList<>(camereMap.values()));
         prenotazione.setListaServizi(new ArrayList<>(serviziMap.values()));
 
         return prenotazione;

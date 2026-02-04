@@ -224,39 +224,9 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
                 "SDFGANNSOLF", "Libero@asfnai","Italiana", new Camera());
         clist.add(cliente);
 
-<<<<<<< HEAD
-        Prenotazione p1 = new Prenotazione(
-                3,  // ID
-                LocalDate.now(), // Data Creazione
-                LocalDate.now().plusDays(1),            // Data arrivo
-                LocalDate.now().plusDays(5),            // Data partenza
-                LocalDate.now(),
-                new Trattamento(), "Patente",
-                LocalDate.of(2020, 1, 10),
-                LocalDate.of(2030, 1, 10),
-                "NNN", "",
-                c, // lista camere
-                listaServizi, // lista servizi
-                clist, // lista clienti
-                "12345678",
-                "In natura"
-        );
-        p1.setStatoPrenotazione(false);
-=======
-        /*Prenotazione p1 = new Prenotazione(1,
-                LocalDate.now(),
-                LocalDate.of(2026, 1, 10),
-                LocalDate.of(2026, 1, 15),
-                new Trattamento("MEZZA PENSIONE", 24),
-                "PASSAPORTO",
-                LocalDate.of(2026, 1, 15),
-                LocalDate.of(2030, 5, 20),
-                cliente.getNome() + " " + cliente.getCognome(),
-                "renato ti massaggiA",
-                c, listaServizi, clist, "CA345C69","lpdfokgibjsokij","carta") */
-       // p1.setStatoPrenotazione(false);
->>>>>>> b483af9d9a11f85982d74a41dfa61e6fad66fce2
 
+        Prenotazione p1 = new Prenotazione();
+/*
         CatalogoPrenotazioni catalogoPrenotazioni = new CatalogoPrenotazioni();
 
         List<ContoEconomicoComposite> ComponentList = new ArrayList<ContoEconomicoComposite>();
@@ -346,7 +316,7 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
                 Impiegato::getStipendio,
                 i -> TipoVoce.STIPENDI
         );*/
-
+/*
         ContoEconomicoLeaf manutenzione = new ContoEconomicoLeaf("Manutenzione Camere", 540, TipoVoce.ALTRO);
 
         ContoEconomicoComponentAbstract passivita = new ContoEconomicoComposite("PASSIVITA");
@@ -383,7 +353,8 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
         System.out.println("Totale Conto Economico = " + totaleVeroContoEconomico);
         */
 
-        return conto;
+//        return conto;
+        return null;
     }
 
     private static <T> ContoEconomicoComposite creaNodoeFoglie(String nomeComposite,

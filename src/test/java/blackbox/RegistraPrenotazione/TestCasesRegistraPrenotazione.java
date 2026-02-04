@@ -69,10 +69,6 @@ public class TestCasesRegistraPrenotazione {
                 new Camera()
         );
 
-        listaClienti.add(cliente1);
-        listaClienti.add(cliente2);
-        listaClienti.add(cliente3);
-
         // Lista camere
 
         Camera camera101 = new Camera(
@@ -102,6 +98,15 @@ public class TestCasesRegistraPrenotazione {
                 "Junior Suite"
         );
 
+        cliente1.setCamera(camera101);
+        cliente2.setCamera(camera102);
+        cliente3.setCamera(camera201);
+        listaClienti.add(cliente1);
+        listaClienti.add(cliente2);
+        listaClienti.add(cliente3);
+
+        //
+
         listaCamere.add(camera101);
         listaCamere.add(camera102);
         listaCamere.add(camera201);
@@ -129,9 +134,7 @@ public class TestCasesRegistraPrenotazione {
      * @return {@code Prenotazione} base.
      */
     public Prenotazione createBasePrenotazione() {
-        ArrayList<Camera> camere = new ArrayList<>();
         ArrayList<Cliente> clienti = new ArrayList<>();
-        camere.add(listaCamere.getFirst());
         clienti.add(listaClienti.getFirst());
         String nome = clienti.getFirst().getNome();
 
@@ -140,14 +143,13 @@ public class TestCasesRegistraPrenotazione {
                 LocalDate.of(2026, 3, 17),    // 3. Data Inizio
                 LocalDate.of(2026, 3, 20),    // 4. Data Fine
                 null,                           // 5. DataEmissioneRicevuta (MANCAVA QUESTO)
-                null,                    // 6. Trattamento
+                trattamento,                    // 6. Trattamento
                 trattamento.getPrezzo(),                      // 7. Tipo Documento
                 "Patente",
                 LocalDate.of(2020, 1, 10),      // 8. Data Rilascio
                 LocalDate.of(2030, 1, 10),      // 9. Data Scadenza
                 clienti.getFirst().getNome(),                          // 10. Intestatario
                 "-",                             // 11. Note Aggiuntive
-                camere,                         // 12. Lista Camere
                 listaServizi,                   // 13. Lista Servizi
                 clienti,                        // 14. Lista Clienti
                 "CA123AA",                     // 15. Numero Documento
@@ -168,7 +170,8 @@ public class TestCasesRegistraPrenotazione {
         void testCase1() throws RemoteException{
             Prenotazione p = createBasePrenotazione(), campione;
             p.setTrattamento(null);
-            p.setListaServizi(new ArrayList<>(listaServizi));
+            p.setPrezzoAcquistoTrattamento(null);
+            p.setListaServizi(null);
             Assertions.assertDoesNotThrow(() -> frontDesk.addPrenotazione(p));
             System.out.println(p);
             System.out.println(autoIncrement);
@@ -305,7 +308,6 @@ public class TestCasesRegistraPrenotazione {
         @DisplayName("TC15: [error] Numero camere = 0")
         public void testCase15() {
             Prenotazione p = createBasePrenotazione();
-            p.setListaCamere(new ArrayList<>());
             assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 

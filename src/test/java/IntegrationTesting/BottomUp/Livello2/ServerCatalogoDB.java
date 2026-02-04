@@ -64,22 +64,22 @@ public class ServerCatalogoDB {
 
 
         prenotazione =new Prenotazione(
-                0,                                      // IDPrenotazione (0 se autoincrement)
                 LocalDate.now(),                        // dataCreazionePrenotazione (Oggi)
                 LocalDate.of(2024, 8, 10),              // dataInizio
                 LocalDate.of(2024, 8, 20),              // dataFine
-                null,                                   // dataEmissioneRicevuta (null se non ha ancora pagato)
+                LocalDate.of(2024, 8,20),
                 new Trattamento("Pensione Completa",45),           // trattamento (Assumendo sia un Enum)
+                45.0,
                 "Carta d'Identità",                     // tipoDocumento
                 LocalDate.of(2020, 5, 20),              // dataRilascio (documento)
                 LocalDate.of(2030, 5, 19),              // dataScadenza (documento)
                 "Mario Rossi",                          // intestatario
                 "Richiesta culla in camera",            // noteAggiuntive
-                arraycamera,                        // listaCamere
                 servizio,                          // listaServizi
                 cliente,                                 // listaClienti
                 "CA12345XYZ",                           // numeroDocumento
-                "Bonifico Bancario"                     // metodoPagamento
+                "Bonifico Bancario",
+                "Italiana"// metodoPagamento
         );;
 
     }
@@ -151,22 +151,23 @@ public class ServerCatalogoDB {
         ArrayList<Servizio> servizio= new ArrayList<>();
         servizio.add(new Servizio("SPA",40));
 
-        Prenotazione p = new Prenotazione(12124,          // IDPrenotazione
-                LocalDate.now(),                        // dataCreazionePrenotazione
-                LocalDate.now(),                        // dataInizio
+        Prenotazione p = new Prenotazione(
+                LocalDate.now(),          // IDPrenotazione
+                LocalDate.now().plusDays(5),                        // dataCreazionePrenotazione
+                LocalDate.now().plusDays(10),                        // dataInizio
                 LocalDate.of(2026, 02, 01),             // dataFine
-                null,                                   // <--- MANCAVA QUESTO! (dataEmissioneRicevuta)
                 new Trattamento("MEZZA PENSIONE", 60),  // trattamento
+                60.0,
                 "Passaporto",                           // tipoDocumento
                 LocalDate.of(2012, 03, 11),             // dataRilascio
                 LocalDate.of(2044, 12, 11),             // dataScadenza
                 "Mario Biondi",                         // intestatario
                 "",                                     // noteAggiuntive
-                arrcam,                                 // listaCamere
                 servizio,                               // listaServizi (Assicurati che sia un ArrayList!)
                 clienti,                                // listaClienti
                 "34532MC2",                             // numeroDocumento
-                ""                                      // metodoPagamento
+                "",                                     // metodoPagamento
+                "Albanese"
         );
         frontDesk.addPrenotazione(p);
         Prenotazione p1= null;

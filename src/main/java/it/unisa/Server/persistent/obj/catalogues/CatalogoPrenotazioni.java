@@ -1,5 +1,6 @@
 package it.unisa.Server.persistent.obj.catalogues;
 import it.unisa.Common.Camera;
+import it.unisa.Common.Cliente;
 import it.unisa.Common.Prenotazione;
 import it.unisa.Storage.DAO.ClienteDAO;
 import it.unisa.Storage.DAO.PrenotazioneDAO;
@@ -92,8 +93,8 @@ public class CatalogoPrenotazioni implements Serializable {
             }
             if (params[1]) {
                 boolean flag = false;
-                for (Camera c : prenotazione.getListaCamere()) {
-                    if (Objects.equals(c.getNumeroCamera(), numeroCamera)) {
+                for (Cliente c : prenotazione.getListaClienti()) {
+                    if (Objects.equals(c.getCamera().getCapacità(), numeroCamera)) {
                         flag = true;
                     }
                 }
@@ -321,8 +322,8 @@ public class CatalogoPrenotazioni implements Serializable {
         int nClienti = prenotazione.getListaClienti().size();
         int nPostiCamere = 0;
 
-        for (Camera c : prenotazione.getListaCamere()) {
-            nPostiCamere +=  c.getCapacità();
+        for (Cliente c : prenotazione.getListaClienti()) {
+            nPostiCamere +=  c.getCamera().getCapacità();
         }
 
         // Lista di condizioni che possono lanciare un errore
@@ -343,7 +344,13 @@ public class CatalogoPrenotazioni implements Serializable {
             throw new InvalidInputException("Data di partenza non può essere passata");
 
         // 5. Nessuna Camera selezionata
-        if (prenotazione.getListaCamere().isEmpty() || nPostiCamere == 0)
+        boolean flag = true; // True: ogni camera è selezionata
+        for (Cliente c : prenotazione.getListaClienti()) {
+            if (c.getCamera() == null || c.getCamera().equals(new Camera())) {
+                flag = false; // False: almeno una camera è nulla / vuota
+            }
+        }
+        if (!flag)
             throw new InvalidInputException("Almeno una camera deve essere selezionata");
 
         // 6. Nessun Cliente selezionato

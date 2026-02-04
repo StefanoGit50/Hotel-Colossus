@@ -102,7 +102,7 @@ public class Prenotazione implements Cloneable, Serializable {
      */
     private boolean checkIn;
 
-    private double prezzoAcquistoTrattamento;
+    private Double prezzoAcquistoTrattamento;
 
     /**
      * Costruttore completo per creare una nuova istanza di {@code Prenotazione}.
@@ -232,7 +232,7 @@ public class Prenotazione implements Cloneable, Serializable {
         this.dataEmissioneRicevuta = dataEmissioneRicevuta;
     }
 
-    public void setPrezzoAcquistoTrattamento(double prezzoAcquistoTrattamento) {
+    public void setPrezzoAcquistoTrattamento(Double prezzoAcquistoTrattamento) {
         this.prezzoAcquistoTrattamento = prezzoAcquistoTrattamento;
     }
 
@@ -256,7 +256,7 @@ public class Prenotazione implements Cloneable, Serializable {
         return statoPrenotazione;
     }
 
-    public double getPrezzoAcquistoTrattamento() {
+    public Double getPrezzoAcquistoTrattamento() {
         return prezzoAcquistoTrattamento;
     }
 

@@ -2,24 +2,14 @@ package WhiteBox.UnitTest;
 
 import it.unisa.Common.*;
 import it.unisa.Server.persistent.util.Stato;
-import it.unisa.Storage.ConnectionStorage;
-import it.unisa.Storage.DAO.ClienteDAO;
 import it.unisa.Storage.DAO.PrenotazioneDAO;
-import net.bytebuddy.asm.Advice;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.sql.DataSource;
-import java.io.Serializable;
-import java.lang.invoke.SwitchPoint;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,22 +31,23 @@ public class prenotazioneDAOTesting {
         clientes.add(new Cliente("Mario","Rossi","Napoli","Napoli","Via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana",new Camera(101,Stato.Occupata,2,120,"Camera matrimoniale vista mare","")));
         servizios.add(new Servizio("Spa",50.0));
         cameras.add(new Camera(101,Stato.Occupata,2,120,"Camera matrimoniale vista mare",""));
-        prenotazione = new Prenotazione(1,
+        prenotazione = new Prenotazione(
+                LocalDate.now(),
                 LocalDate.of(2026, 2, 1),
                 LocalDate.of(2026, 2, 10),
                 LocalDate.of(2026, 2, 15),
-                null,
                 new Trattamento("Pensione Completa", 300.0),
+                300.0,
                 "CartaIdentità",
                 LocalDate.of(2020, 1, 1),
                 LocalDate.of(2030, 2, 9),
                 "Mario Rossi",
                 "Nessuna nota",
-                cameras,
                 servizios,
                 clientes,
                 "AA123456",
-                "Bancomat");
+                "Bancomat",
+                "Italiana");
         prenotazioneDAO = new PrenotazioneDAO();
     }
 
@@ -71,7 +62,6 @@ public class prenotazioneDAOTesting {
     @DisplayName("doSave() quando è tutto False")
     public void doSaveAllFalse() throws SQLException{
         prenotazione.setListaServizi(new ArrayList<>());
-        prenotazione.setListaCamere(new ArrayList<>());
         prenotazione.setListaClienti(new ArrayList<>());
         assertDoesNotThrow(()->prenotazioneDAO.doSave(prenotazione));
     }
@@ -120,7 +110,6 @@ public class prenotazioneDAOTesting {
        Prenotazione prenotazione1 = prenotazioneDAO.doRetriveByKey(1);
        System.out.println(prenotazione1);
        prenotazione.setListaClienti(new ArrayList<>());
-       prenotazione.setListaCamere(new ArrayList<>());
        prenotazione.setListaServizi(new ArrayList<>());
        prenotazione.setTrattamento(null);
        assertEquals(prenotazione,prenotazione1);
@@ -139,77 +128,90 @@ public class prenotazioneDAOTesting {
         cameras.add(new Camera(102,Stato.Libera,4,180.0,"Camera familiare con balcone",""));
         servizios.add(new Servizio("Spa e Benessere",40.0));
         prenotaziones1.add(prenotazione);
-        prenotaziones1.add(new Prenotazione(1,                                          // ID
-                LocalDate.of(2026, 6, 1),                   // Data Creazione
-                LocalDate.of(2026, 8, 10),                  // Inizio
-                LocalDate.of(2026, 8, 20),                  // Fine
-                LocalDate.of(2026, 6, 1),                   // Data Ricevuta (Pagato subito)
-                new Trattamento("All Inclusive", 1500.0),   // Trattamento
-                "Carta Identità",                           // Doc Tipo
-                LocalDate.of(2020, 5, 10),                  // Doc Rilascio
-                LocalDate.of(2030, 5, 10),                  // Doc Scadenza
-                "Marco Verdi",                              // Intestatario
-                "Bambino di 2 anni",                        // Note
-                cameras, servizios, clientes,                // Liste
-                "CA123456",                                 // Num Doc
-                "Carta di Credito"                          // Pagamento
+        prenotaziones1.add(new Prenotazione(
+                LocalDate.now(),              // ID
+                LocalDate.of(2026, 8, 10),                // Inizio
+                LocalDate.of(2026, 8, 20),               // Fine
+                LocalDate.of(2026, 6, 1),               // Data Ricevuta (Pagato subito)
+                new Trattamento("All Inclusive", 1500.0),       // Trattamento
+                1500.0,
+                "Carta Identità",                      // Doc Tipo
+                LocalDate.of(2020, 5, 10),  // Doc Rilascio
+                LocalDate.of(2030, 5, 10), // Doc Scadenza
+                "Marco Verdi",                                   // Intestatario
+                "Bambino di 2 anni",                            // Note
+                 servizios, clientes,                          // Liste
+                "CA123456",                                   // Num Doc
+                "Carta di Credito",                          // Pagamento
+                "Italiana"
                  ));
-        prenotaziones1.add(new Prenotazione(2,
+        prenotaziones1.add(new Prenotazione(
+                LocalDate.now(),
                 LocalDate.now(),
                 LocalDate.now().plusDays(2),                // Arriva tra 2 giorni
                 LocalDate.now().plusDays(4),
-                null,                                       // NULL: Non ha ancora pagato
                 new Trattamento("Pernottamento e Colazione", 120.0),
+                120.0,
                 "Patente",
                 LocalDate.of(2018, 1, 1),
                 LocalDate.of(2028, 1, 1),
                 "Tech Solutions SRL",                       // Intestatario Azienda
                 "Fattura elettronica richiesta",
-                cameras, servizios, clientes,
+                servizios, clientes,
                 "PAT98765",
-                "Bonifico Bancario"));
-        prenotaziones1.add(new Prenotazione(3,
-                LocalDate.of(2026, 2, 1),
+                "Bonifico Bancario",
+                "Italiana"));
+
+        prenotaziones1.add(new Prenotazione(
+                LocalDate.now(),
                 LocalDate.of(2026, 2, 14),                  // San Valentino
                 LocalDate.of(2026, 2, 16),
                 LocalDate.of(2026, 2, 1),
                 new Trattamento("Mezza Pensione", 300.0),
+                300.0,
                 "Passaporto",
                 LocalDate.of(2019, 6, 15),
                 LocalDate.of(2029, 6, 14),
                 "Luca Bianchi",
                 "Bottiglia di vino in camera",
-                cameras, servizios, clientes,
+                servizios, clientes,
                 "YA556677",
-                "Paypal"));
-        prenotaziones1.add(new Prenotazione(4,
+                "Paypal",
+                "Monete"));
+
+        prenotaziones1.add(new Prenotazione(
+                LocalDate.now(),
                 LocalDate.of(2026, 7, 1),
                 LocalDate.of(2026, 8, 1),
                 LocalDate.of(2026, 8, 8),
-                null,                                       // Acconto versato ma saldo al check-in
                 new Trattamento("Solo Pernottamento", 800.0),
+                800.0,
                 "Carta Identità",
                 LocalDate.of(2021, 1, 1),
                 LocalDate.of(2031, 1, 1),
                 "Anna Gialli",
                 "Camere vicine se possibile",
-                cameras, servizios, clientes,
+                servizios, clientes,
                 "CA998877",
-                "Contanti"));
-        prenotaziones1.add(new Prenotazione(5,
-                LocalDate.of(2025, 12, 1),
+                "Contanti",
+                "Bancomat"));
+
+        prenotaziones1.add(new Prenotazione(
+                LocalDate.now(),
                 LocalDate.of(2026, 1, 10),
                 LocalDate.of(2026, 1, 20),
                 LocalDate.of(2025, 12, 1),
                 new Trattamento("Pensione Completa Deluxe", 5000.0),
+                5000.0,
                 "Passaporto",
                 LocalDate.of(2022, 10, 10),
                 LocalDate.of(2032, 10, 10),
                 "Mr. John Smith",
                 "Privacy assoluta",
-                cameras, servizios, clientes,
+                servizios, clientes,
                 "UK123456789",
-                "Amex Black"));
+                "Amex Black",
+                "Monete"));
         assertEquals(prenotaziones1,prenotaziones);
     }
 
@@ -236,7 +238,6 @@ public class prenotazioneDAOTesting {
         prenotazione1.setTrattamento(null);
         prenotazione1.setNumeroDocumento("AX123456");
         prenotazione1.setListaClienti(new ArrayList<>());
-        prenotazione1.setListaCamere(new ArrayList<>());
         prenotazione1.setListaServizi(new ArrayList<>());
         prenotazione1.setNoteAggiuntive("Richiesta camera silenziosa");
         prenotazione1.setIntestatario("Mario Rossi");
@@ -256,7 +257,6 @@ public class prenotazioneDAOTesting {
         prenotazione2.setIntestatario("Laura Verdi");
         prenotazione2.setNumeroDocumento("BC789012");
         prenotazione2.setListaServizi(new ArrayList<>());
-        prenotazione2.setListaCamere(new ArrayList<>());
         prenotazione2.setListaClienti(new ArrayList<>());
         prenotazione2.setStatoPrenotazione(true);
         prenotazione2.setCheckIn(false);
@@ -285,20 +285,22 @@ public class prenotazioneDAOTesting {
         clientes.add(new Cliente("Mario","Rossi","Napoli","Napoli","via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana",new Camera(101,Stato.Libera,2,120,"Camera doppia con vista mare","")));
         servizios.add(new Servizio("Lavanderia",15.0));
         cameras.add(new Camera(101,Stato.Libera,2,120,"Camera doppia con vista mare",""));
-       assertDoesNotThrow(()->prenotazioneDAO.doUpdate(new Prenotazione(5,
-               LocalDate.of(2025, 12, 1),
+       assertDoesNotThrow(()->prenotazioneDAO.doUpdate(new Prenotazione(
+               LocalDate.now(),
                LocalDate.of(2026, 1, 10),
                LocalDate.of(2026, 1, 20),
                LocalDate.of(2025, 12, 1),
                new Trattamento("Pensione Completa Deluxe", 5000.0),
+               5000.0,
                "Passaporto",
                LocalDate.of(2022, 10, 10),
                LocalDate.of(2032, 10, 10),
                "Mr. John Smith",
                "Privacy assoluta",
-               cameras, servizios, clientes,
+               servizios, clientes,
                "UK123456789",
-               "Amex Black")));
+               "Amex Black",
+               "Italiana")));
     }
 
     @Test
@@ -310,20 +312,23 @@ public class prenotazioneDAOTesting {
         ArrayList<Servizio> servizios = new ArrayList<>();
         clientes.add(new Cliente("Mario","Rossi","Napoli","Napoli","via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana",new Camera(101,Stato.Libera,2,120,"Camera doppia con vista mare","")));
         cameras.add(new Camera(101,Stato.Libera,2,120,"Camera doppia con vista mare",""));
-        assertDoesNotThrow(()->prenotazioneDAO.doUpdate(new Prenotazione(4,
+        assertDoesNotThrow(() -> prenotazioneDAO.doUpdate(
+                new Prenotazione(
+                        LocalDate.now(),
                 LocalDate.of(2026, 7, 1),
                 LocalDate.of(2026, 8, 1),
                 LocalDate.of(2026, 8, 8),
-                null,                                       // Acconto versato ma saldo al check-in
                 new Trattamento("Solo Pernottamento", 800.0),
+                800.0,
                 "Carta Identità",
                 LocalDate.of(2021, 1, 1),
                 LocalDate.of(2031, 1, 1),
                 "Anna Gialli",
                 "Camere vicine se possibile",
-                cameras, servizios, clientes,
+                servizios, clientes,
                 "CA998877",
-                "Contanti")));
+                "Contanti",
+                        "Italiana")));
     }
 
     @Test
@@ -335,20 +340,23 @@ public class prenotazioneDAOTesting {
         ArrayList<Camera> cameras = new ArrayList<>();
         ArrayList<Servizio> servizios = new ArrayList<>();
         servizios.add(new Servizio("Lavanderia",15.0));
-        prenotaziones.add(new Prenotazione(4,
+        prenotaziones.add(
+                new Prenotazione(
+                        LocalDate.now(),
                 LocalDate.of(2026, 7, 1),
                 LocalDate.of(2026, 8, 1),
                 LocalDate.of(2026, 8, 8),
-                null,                                       // Acconto versato ma saldo al check-in
                 new Trattamento("Solo Pernottamento", 800.0),
+                800.0,
                 "Carta Identità",
                 LocalDate.of(2021, 1, 1),
                 LocalDate.of(2031, 1, 1),
                 "Anna Gialli",
                 "Camere vicine se possibile",
-                cameras, servizios, clientes,
+                servizios, clientes,
                 "CA998877",
-                "Contanti"));
+                "Contanti",
+                        "Italiana"));
         Object o = "AX123456";
         assertEquals(prenotaziones,prenotazioneDAO.doRetriveByAttribute("numeroDocumento",o));
     }
