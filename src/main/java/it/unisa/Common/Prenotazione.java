@@ -1,14 +1,13 @@
 package it.unisa.Common;
 
 import it.unisa.Server.persistent.util.Stato;
-import it.unisa.Server.persistent.util.Util;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import it.unisa.Server.persistent.util.*;
+import org.apache.logging.log4j.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
+
 
 /**
  * Rappresenta una Prenotazione di un soggiorno in hotel.
