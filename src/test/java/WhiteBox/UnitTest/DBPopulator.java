@@ -4,6 +4,7 @@ import it.unisa.Storage.ConnectionStorage;
 import org.apache.ibatis.jdbc.ScriptRunner;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
 import java.sql.Connection;
@@ -23,7 +24,7 @@ public class DBPopulator{
 
             // Leggi il file
 
-            Reader reader = new BufferedReader(new FileReader("src/main/java/it/unisa/Storage/SQL/insertDB.sql"));
+            Reader reader = new BufferedReader(new FileReader("C:/Users/renat/Desktop/universita/Progetti/Hotel-Colossus/src/main/java/it/unisa/Storage/SQL/insertDB.sql"));
 
             runner.runScript(reader);
 
@@ -46,7 +47,7 @@ public class DBPopulator{
             runner.setStopOnError(true); // Si ferma se c'è un errore SQL
 
            //lettura file
-            Reader reader = new BufferedReader(new FileReader("src/main/java/it/unisa/Storage/SQL/DB1.sql"));
+            Reader reader = new BufferedReader(new FileReader("C:/Users/renat/Desktop/universita/Progetti/Hotel-Colossus/src/main/java/it/unisa/Storage/SQL/DB1.sql"));
 
             runner.runScript(reader);
 
@@ -56,4 +57,20 @@ public class DBPopulator{
             e.printStackTrace();
         }
     }
+
+    public static void AggiungiAssociazione(){
+        ScriptRunner scriptRunner = new ScriptRunner(connection);
+
+        scriptRunner.setLogWriter(null);
+        scriptRunner.setStopOnError(true);
+        try{
+            Reader reader = new BufferedReader(new FileReader("C:/Users/renat/Desktop/universita/Progetti/Hotel-Colossus/src/main/java/it/unisa/Storage/SQL/insertServizioDB.sql"));
+             scriptRunner.runScript(reader);
+        }catch(FileNotFoundException fileNotFoundException){
+            throw new RuntimeException(fileNotFoundException);
+        }
+
+
+    }
+
 }

@@ -29,13 +29,13 @@ public class ServizioDAO implements FrontDeskStorage<Servizio> {
      * @throws SQLException
      */
     @Override
-    public synchronized void doSave(Servizio servizio) throws SQLException    {
+    public synchronized void doSave(Servizio servizio) throws SQLException{
         connection = null;
         PreparedStatement ps = null;
 
         String query = "INSERT INTO " + ServizioDAO.TABLE_NAME +
                 " (Nome, Prezzo) " +
-                " VALUES (?,?) ";
+                " VALUES (?,?)";
 
         try {
             connection = ConnectionStorage.getConnection();
@@ -53,9 +53,9 @@ public class ServizioDAO implements FrontDeskStorage<Servizio> {
             }
 
 
-        } catch(SQLException e) {
+        } catch(SQLException e){
             throw e;
-        } finally {
+        }finally{
             try {
                 if (ps != null)
                     ps.close();
@@ -149,7 +149,7 @@ public class ServizioDAO implements FrontDeskStorage<Servizio> {
 
             ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
+            if (rs.next()){
                 servizio.setId(rs.getInt("IDServizio"));
                 servizio.setNome(rs.getString("Nome"));
                 servizio.setPrezzo(rs.getDouble("Prezzo"));

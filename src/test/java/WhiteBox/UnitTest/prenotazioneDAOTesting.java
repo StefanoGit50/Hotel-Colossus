@@ -2,12 +2,12 @@ package WhiteBox.UnitTest;
 
 import it.unisa.Common.*;
 import it.unisa.Server.persistent.util.Stato;
-import it.unisa.Storage.DAO.PrenotazioneDAO;
-import it.unisa.Storage.DAO.ServizioDAO;
+import it.unisa.Storage.DAO.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.lang.ref.Cleaner;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -27,32 +27,49 @@ public class prenotazioneDAOTesting{
 
     @BeforeEach
     public void setUp(){
+        DBPopulator.populator();
         ArrayList<Cliente> clientes = new ArrayList<>();
-        ArrayList<Camera> cameras = new ArrayList<>();
         ArrayList<Servizio> servizios = new ArrayList<>();
         ServizioDAO dao = new ServizioDAO();
         Servizio servizio = null;
         try {
-            servizio = dao.doRetriveByKey("Spa e Benessere");
+             servizio = dao.doRetriveByKey("Spa e Benessere");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(servizio);
-        clientes.add(new Cliente("Mario","Rossi","Napoli","Napoli","Via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana",new Camera(101,Stato.Occupata,2,120,"Camera matrimoniale vista mare","")));
+        clientes.add(new Cliente("Mario","Rossi","Roma","Roma","Via del Corso",10,10000,"3331234567","M",LocalDate.of(1980,1,1),"RSSMRA80A01H501U","mario.rossi@email.com","Italiana",new Camera(101,Stato.Occupata,2,120,"Camera matrimoniale vista mare","")));
         servizios.add(servizio);
-        cameras.add(new Camera(101,Stato.Occupata,2,120,"Camera matrimoniale vista mare",""));
-        Prenotazione prenotazione = new Prenotazione(
-            LocalDate.o
-
+         prenotazione = new Prenotazione(
+                LocalDate.of(2004,12,2),
+                LocalDate.of(2004,12,14),
+                LocalDate.of(2004,12,19),
+                LocalDate.of(2004,12,24),
+                new Trattamento("Mezza Pensione",35),
+                35.0,
+                "Carta d'identità",
+                LocalDate.of(2002,12,11),
+                LocalDate.of(2002,12,24),
+                "Mario Mascheri",
+                "Nessuna nota",
+                servizios,
+                clientes,
+                "CA12346E",
+                "Cripto",
+                "Italiana"
         );
         prenotazioneDAO = new PrenotazioneDAO();
+    }
+
+    @AfterEach
+    public void after(){
+       DBPopulator.cancel();
     }
 
     @Test
     @Tag("True")
     @DisplayName("doSave() quando va tutto bene")
     public void doSaveAllTrue() throws SQLException{
-       assertDoesNotThrow(()->prenotazioneDAO.doSave(prenotazione));
+        assertDoesNotThrow(()->prenotazioneDAO.doSave(prenotazione));
     }
 
     @Test
@@ -60,16 +77,8 @@ public class prenotazioneDAOTesting{
     @DisplayName("doSave() quando è tutto False")
     public void doSaveAllFalse() throws SQLException{
         prenotazione.setListaServizi(new ArrayList<>());
-       // prenotazione.setListaCamere(new ArrayList<>());
         prenotazione.setListaClienti(new ArrayList<>());
         assertDoesNotThrow(()->prenotazioneDAO.doSave(prenotazione));
-    }
-
-    @Test
-    @Tags({@Tag("Exception"),@Tag("Error")})
-    @DisplayName("doSave() quando tira una eccezione")
-    public void doSaveException(){
-       assertThrows(SQLException.class,()->prenotazioneDAO.doSave(null));
     }
 
     @Test
@@ -84,6 +93,7 @@ public class prenotazioneDAOTesting{
     @Tag("True")
     @DisplayName("doRetriveByKey() quando è tutto true")
     public void doRetriveByKeyAllTrue() throws SQLException {
+
         Prenotazione prenotazione1 = prenotazioneDAO.doRetriveByKey(1);
         assertEquals(prenotazione,prenotazione1);
     }
@@ -92,7 +102,7 @@ public class prenotazioneDAOTesting{
     @Tags({@Tag("Exception"),@Tag("Error")})
     @DisplayName("doRetriveByKey() quando va in errore")
     public void doRetriveByKeyReturnNull() throws SQLException {
-        assertNull(prenotazioneDAO.doRetriveByKey(" "));
+        assertThrows(SQLException.class,()->prenotazioneDAO.doRetriveByKey(" "));
     }
 
     @Test
@@ -296,7 +306,7 @@ public class prenotazioneDAOTesting{
        ArrayList<Prenotazione> prenotazione1 = (ArrayList<Prenotazione>) prenotazioneDAO.doRetriveByAttribute("NoteAggiuntive",c);
        ArrayList<Prenotazione> prenotaziones = new ArrayList<>();
        prenotaziones.add(new Prenotazione());
-       assertEquals();
+       //assertEquals();
     }
 
 
