@@ -132,7 +132,6 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                 preparedStatement.setInt(2,servizio.getId());
                 preparedStatement1.setString(3, servizio.getNome());
                 preparedStatement1.setDouble(4, servizio.getPrezzo());
-
                 preparedStatement1.executeUpdate();
             }
 

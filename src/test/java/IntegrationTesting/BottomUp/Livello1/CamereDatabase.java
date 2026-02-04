@@ -39,14 +39,15 @@ public class CamereDatabase {
     @Tag("integration")
     public void aggiornaStatoCameraDB() throws RemoteException {
         DBPopulator.cancel();
-        camera=CatalogoCamere.getCamera(101);
+        DBPopulator.populator();
+        camera = CatalogoCamere.getCamera(101);
         Camera camera1;
         try {
            camera1 = fds.doRetriveByKey(camera.getNumeroCamera());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
+        camera.setStatoCamera(Stato.Occupata);
         assertTrue(catalogoCamere.aggiornaStatoCamera(camera));
 
         //controllo se nel DB è cambiata la camera
