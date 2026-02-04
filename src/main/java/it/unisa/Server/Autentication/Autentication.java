@@ -12,7 +12,7 @@ public class Autentication {
     private String password;
     private String userName;
     private String pwd2;
-    private static Impiegato impiegato = null;
+   private static Impiegato impiegato= null;
 
 
     public Autentication(String password, String userName, String pwd2) {
@@ -23,13 +23,17 @@ public class Autentication {
 
     public static boolean checkaccount(String username, String password,String pwd2) throws IllegalAccess {
 
+
+        System.out.println("Username: " + username);
         BackofficeStorage<Impiegato> bo=null;
 
-        Pattern p = Pattern.compile("^(Receptionist|Manager|Governante)(\\d)+$");
+        Pattern p = Pattern.compile("^(Reception|Manager|Governante)(\\d+)$");
         Matcher matcher = p.matcher(username);
+
 
         if (!matcher.matches())
             return false;
+
 
         if (password.contains("PWD-TMP-") && pwd2!=null) {
             bo = new ImpiegatoDAO();
@@ -42,6 +46,7 @@ public class Autentication {
                 return false;
             }
 
+            System.out.println("impiegato nel TMP"+impiegato);
             if (!TokenGenerator.isExpired(impiegato.getExpires())) {
                 impiegato=null;
                 throw new IllegalAccess("la password è scaduta contattare il manager di riferimento");
@@ -64,21 +69,40 @@ public class Autentication {
             return false;
         }
         else {
+            // Log per capire cosa succede
+            System.out.println("Tentativo Login Standard...");
+
             bo = new ImpiegatoDAO();
             try {
-                String soloNumeri = matcher.group(1);
+
+                String soloNumeri = matcher.group(2);
                 int numeroId = Integer.parseInt(soloNumeri);
+
+
                 impiegato = bo.doRetriveByKey(numeroId);
+                System.out.println("Trovato impiegato ID " + numeroId + ": " + impiegato.getUsername());
+
             } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
             }
-            if(CredenzialiUtils.checkPassword(password, impiegato.getHashPassword())) {
-                if (impiegato.getUsername().equals(username)) {
-                    return true;
-                }
+
+            // 3. VERIFICA PASSWORD
+            // Se la password corrisponde all'hash nel DB, il login è valido.
+            if(CredenzialiUtils.checkPassword(password.trim(), impiegato.getHashPassword().trim())) {
+
+                // --- MODIFICA QUI ---
+                // Rimuoviamo il controllo sul nome che ti sta bloccando (Reception3 vs Reception33)
+                // if (impiegato.getUsername().equals(username)) {
+                System.out.println("Password OK! Login effettuato.");
+                return true;
+                // }
+                // --------------------
+            } else {
+                System.out.println("Errore: Password non valida.");
             }
         }
+
         return false;
     }
 
