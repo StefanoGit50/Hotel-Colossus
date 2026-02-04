@@ -17,7 +17,7 @@ import java.util.Objects;
 public class Impiegato implements Cloneable, Serializable {
     private static final Logger log = LogManager.getLogger(Impiegato.class);
     private String username;
-    private String password;
+
     private Instant expires;
     private boolean change;
     /**
@@ -222,17 +222,6 @@ public class Impiegato implements Cloneable, Serializable {
     }
 
 
-    /**
-     * Imposta la password.
-     *
-     * @param password Password
-     *
-     * @pre password != null
-     * @post this.password = password
-     */
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
 
     /**
@@ -274,17 +263,6 @@ public class Impiegato implements Cloneable, Serializable {
     }
 
 
-    /**
-     * Restituisce la password.
-     *
-     * @return Password
-     *
-     * @pre Nessuna
-     * @post result = this.password
-     */
-    public String getPassword() {
-        return password;
-    }
 
 
     /**

@@ -26,7 +26,7 @@ import java.util.Objects;
 
 public class MainApp3 extends Application {
 
-    private FrontDeskClient frontDeskClient;
+    private final FrontDeskClient frontDeskClient =  new FrontDeskClient();
     private Impiegato imp;
     private String exception;
     // ===== STAGE E SCENE =====
@@ -117,14 +117,12 @@ public class MainApp3 extends Application {
     }
 
     /**
-     *  AUTENTICAZIONE (MOCK - sostituire con chiamata server)
+     *  AUTENTICAZIONE ( chiamata server)
      */
     private boolean authenticateUser(String username, String password, String pwd2) throws RemoteException {
         try{
             imp = frontDeskClient.DoAuthentication(username,password,pwd2);
-            if(imp==null){
-                return false;
-            }else return true;
+            return imp != null;
         } catch (IllegalAccess e) {
             exception=e.getMessage();
         }

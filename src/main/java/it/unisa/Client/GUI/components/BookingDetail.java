@@ -539,7 +539,7 @@ public class BookingDetail extends VBox {
     }
 
     private void recalculateTotals() {
-        // Calcola notti
+        /* Calcola notti
         long notti = ChronoUnit.DAYS.between(prenotazione.getDataInizio(), prenotazione.getDataFine());
         if (notti <= 0) notti = 1;
 
@@ -566,7 +566,7 @@ public class BookingDetail extends VBox {
         if (lblRoomCost != null) lblRoomCost.setText(String.format("%.2f €", roomCost));
         if (lblTreatmentCost != null) lblTreatmentCost.setText(String.format("%.2f €", treatmentCost));
         if (lblServicesTotal != null) lblServicesTotal.setText(String.format("%.2f €", servicesTotal));
-        if (lblGrandTotal != null) lblGrandTotal.setText(String.format("%,.2f €", grandTotal));
+        if (lblGrandTotal != null) lblGrandTotal.setText(String.format("%,.2f €", grandTotal));*/
     }
 
     private String getServiceDescription(String serviceName) {

@@ -5,6 +5,8 @@ import it.unisa.Common.Impiegato;
 import it.unisa.Server.persistent.util.Ruolo;
 import it.unisa.Storage.Interfacce.BackofficeStorage;
 import it.unisa.Storage.ConnectionStorage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.sql.Date;
@@ -15,6 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ImpiegatoDAO implements BackofficeStorage<Impiegato> {
+    private Logger logger = LogManager.getLogger(ImpiegatoDAO.class);
     private Connection connection;
     private static final String TABLE_NAME = "Impiegato";
     String[] whitelist = {
@@ -155,7 +158,7 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato> {
                         String userName = resultSet.getString("UserName");
                         String hashPassword = resultSet.getString("HashPasword");
                         Boolean isTemporary = resultSet.getBoolean("isTemporary");
-                        Instant dataScadenzaToken = resultSet.getTimestamp("DataScadenzaToken").toInstant();
+                        Instant dataScadenzaToken = resultSet.getTimestamp("DataScadenzaToken") != null ? resultSet.getTimestamp("DataScadenzaToken").toInstant() : null;
                         String sesso = resultSet.getString("Sesso");
                         String tipoDocumento = resultSet.getString("TipoDocumento");
                         String i = resultSet.getString("NumeroDocumento");
@@ -166,15 +169,16 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato> {
                         Integer numeroCivico = resultSet.getInt("Civico");
                         String telefono = resultSet.getString("Telefono");
                         String ruolo = resultSet.getString("Ruolo");
-                        Double stipedio = resultSet.getDouble("Stipendio");
+                        Double stipendio = resultSet.getDouble("Stipendio");
                         LocalDate dataAssunzione = resultSet.getDate("DataAssunzione").toLocalDate();
                         LocalDate dataScadenza = resultSet.getDate("DataScadenzaDocumento").toLocalDate();
                         LocalDate dataRilascio = resultSet.getDate("DataRilascioDocumento").toLocalDate();
                         String emailAziendale = resultSet.getString("EmailAziendale");
                         String cittadinanza = resultSet.getString("Cittadinanza");
 
-
-                        impiegato = new Impiegato(id,userName, hashPassword, isTemporary, dataScadenzaToken, nome, cognome, sesso, tipoDocumento, i, Cap, via, provincia, comune, numeroCivico, cf, telefono, Ruolo.valueOf(ruolo), stipedio, dataAssunzione, dataRilascio, emailAziendale, cittadinanza, dataScadenza);
+                        logger.debug("sql eseguita con successo");
+                        impiegato = new Impiegato(id,userName, hashPassword, isTemporary, dataScadenzaToken, nome, cognome, sesso, tipoDocumento, i, Cap, via, provincia, comune, numeroCivico, cf, telefono, Ruolo.valueOf(ruolo), stipendio, dataAssunzione, dataRilascio, emailAziendale, cittadinanza, dataScadenza);
+                        logger.debug("impiegato creato con successo");
                     } else {
                         throw new NoSuchElementException("impiegato non trovato");
                     }

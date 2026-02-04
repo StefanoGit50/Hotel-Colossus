@@ -25,7 +25,7 @@ public class Autentication {
 
         BackofficeStorage<Impiegato> bo=null;
 
-        Pattern p = Pattern.compile("^(Receptionist|Manager|Governante)(\\d+)$");
+        Pattern p = Pattern.compile("^(Receptionist|Manager|Governante)(\\d)+$");
         Matcher matcher = p.matcher(username);
 
         if (!matcher.matches())
@@ -47,11 +47,11 @@ public class Autentication {
                 throw new IllegalAccess("la password è scaduta contattare il manager di riferimento");
             } else {
                 //controllo se la password hashata corrisponde alla password passata
-                if(!CredenzialiUtils.checkPassword(password, impiegato.getPassword())){
+                if(!CredenzialiUtils.checkPassword(password, impiegato.getHashPassword())){
                     impiegato=null;
                     return false;
                 }
-                impiegato.setPassword(CredenzialiUtils.HashPassword(pwd2));
+                impiegato.setHashPassword((CredenzialiUtils.HashPassword(pwd2)));
                 try {
                     bo.doSave(impiegato);
                 } catch (SQLException e) {
@@ -73,7 +73,7 @@ public class Autentication {
                 e.printStackTrace();
                 return false;
             }
-            if(CredenzialiUtils.checkPassword(password, impiegato.getPassword())) {
+            if(CredenzialiUtils.checkPassword(password, impiegato.getHashPassword())) {
                 if (impiegato.getUsername().equals(username)) {
                     return true;
                 }
