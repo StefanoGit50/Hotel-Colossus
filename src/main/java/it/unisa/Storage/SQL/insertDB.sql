@@ -26,7 +26,7 @@ INSERT INTO Servizio (Nome, Prezzo) VALUES
 -- 3. INSERT CAMERA
 -- =============================================
 INSERT INTO Camera (NumeroCamera, NomeCamera, NumeroMaxOcc, NoteCamera, Stato, Prezzo) VALUES
-                                                                                           (101, 'Camera Standard', 2, 'Vista interna', 'Libera', 80.00),
+                                                                                           (101, 'Camera Standard', 2, 'Vista interna', 'Occupata', 80.00),
                                                                                            (102, 'Camera Standard', 2, 'Vista strada', 'Occupata', 80.00),
                                                                                            (201, 'Junior Suite', 3, 'Vista mare laterale', 'Prenotata', 180.00),
                                                                                            (202, 'Suite Presidenziale', 2, 'Jacuzzi privata', 'Occupata', 350.00),
@@ -36,7 +36,7 @@ INSERT INTO Camera (NumeroCamera, NomeCamera, NumeroMaxOcc, NoteCamera, Stato, P
 -- 4. INSERT CLIENTE
 -- =============================================
 INSERT INTO Cliente (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, Nazionalita, DataDiNascita, IsBackListed) VALUES
-                                                                                                                                                   ('RSSMRA80A01H501U', 'Mario', 'Rossi', '00100', 'Roma', 10, 'Roma', 'Via del Corso', 'mario.rossi@email.com', 'M', '3331234567', 'Italiana', '1980-01-01', false),
+                                                                                                                                                   ('RSSMRA80A01H501U', 'Mario', 'Rossi', '10000', 'Roma', 10, 'Roma', 'Via del Corso', 'mario.rossi@email.com', 'M', '3331234567', 'Italiana', '1980-01-01', false),
                                                                                                                                                    ('VRDLGI90B02F205K', 'Luigi', 'Verdi', '20100', 'Milano', 20, 'Milano', 'Corso Buenos Aires', 'luigi.verdi@email.com', 'M', '3339876543', 'Italiana', '1990-02-02', false),
                                                                                                                                                    ('BNCLCU85C03G273Z', 'Lucia', 'Bianchi', '90100', 'Palermo', 5, 'Palermo', 'Via Roma', 'lucia.bianchi@email.com', 'F', '3381122334', 'Italiana', '1985-03-03', true), -- Blacklisted
                                                                                                                                                    ('MULLER88E05Z112K', 'Hans', 'Muller', '10115', 'Berlino', 1, 'Berlin', 'Alexanderplatz', 'hans.muller@de-mail.de', 'M', '+4915123456', 'Tedesca', '1988-05-05', false);
@@ -47,12 +47,12 @@ INSERT INTO Cliente (CF, nome, cognome, Cap, comune, civico, provincia, via, Ema
 -- 5.1 Inseriamo il Manager (Capo) che non ha manager sopra di lui
 INSERT INTO Impiegato (CF, Stipendio, UserName, HashPasword, isTemporary, dataScadenzaToken, Nome, Cognome, Cap, DataAssunzione, Telefono, EmailAziendale, Sesso, Ruolo, Via, Provincia, Comune, Civico, NumeroDocumento, TipoDocumento, DataScadenzaDocumento, DataRilascioDocumento, Cittadinanza, IDManager, CFManager)
 VALUES
-    ('DIRGEN70A01H501X', 5000.00, 'admin', 'hash_super_sicura', false, '2030-12-31 23:59:59', 'Giacomo', 'Direttori', '00100', '2010-01-01', '3330000000', 'direzione@colossus.it', 'M', 'Manager', 'Via Veneto', 'Roma', 'Roma', 1, 'AX1234567', 'Carta Identita', '2028-01-01', '2018-01-01', 'Italiana', NULL, NULL);
+    ('DIRGEN70A01H501X', 5000.00, 'admin', 'hash_super_sicura', false, '2030-12-31 23:59:59', 'Giacomo', 'Direttori', '10000', '2010-01-01', '3330000000', 'direzione@colossus.it', 'M', 'Manager', 'Via Veneto', 'Roma', 'Roma', 1, 'AX1234567', 'Carta Identita', '2028-01-01', '2018-01-01', 'Italiana', NULL, NULL);
 
 -- 5.2 Inseriamo un Receptionist (assume che il Manager sopra abbia ID=1)
 INSERT INTO Impiegato (CF, Stipendio, UserName, HashPasword, isTemporary, dataScadenzaToken, Nome, Cognome, Cap, DataAssunzione, Telefono, EmailAziendale, Sesso, Ruolo, Via, Provincia, Comune, Civico, NumeroDocumento, TipoDocumento, DataScadenzaDocumento, DataRilascioDocumento, Cittadinanza, IDManager, CFManager)
 VALUES
-    ('RECPT0180A01H501', 1800.00, 'reception1', 'hash_rec_1', false, '2026-12-31 23:59:59', 'Elena', 'Neri', '00100', '2020-05-01', '3331111111', 'reception@colossus.it', 'F', 'FrontDesk', 'Via Nazionale', 'Roma', 'Roma', 20, 'BX9876543', 'Patente', '2029-05-01', '2019-05-01', 'Italiana', 1, 'DIRGEN70A01H501X');
+    ('RECPT0180A01H501', 1800.00, 'reception1', 'hash_rec_1', false, '2026-12-31 23:59:59', 'Elena', 'Neri', '10000', '2020-05-01', '3331111111', 'reception@colossus.it', 'F', 'FrontDesk', 'Via Nazionale', 'Roma', 'Roma', 20, 'BX9876543', 'Patente', '2029-05-01', '2019-05-01', 'Italiana', 1, 'DIRGEN70A01H501X');
 
 -- =============================================
 -- 6. INSERT PRENOTAZIONE

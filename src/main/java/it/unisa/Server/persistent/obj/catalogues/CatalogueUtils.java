@@ -18,17 +18,10 @@ public class CatalogueUtils {
     public static <T> void checkNull(T oggetto) throws InvalidInputException {
         Class<?> oggettoClass = oggetto.getClass();
         Field[] fields = oggettoClass.getDeclaredFields(); // Otteni tutti i campi della classe di appartenenza dell'oggetto
-        List<String> excludedFields = List.of(
-                "noteaggiuntive", "datascadenzaToken", "trattamento"
-        );
-        for (Field field : fields) {
+        /*for (Field field : fields) {
             try {
                 field.setAccessible(true); // Rendili accessilibi temporaneamente
                 Object fieldValue = field.get(oggetto);
-                if (excludedFields.contains(field.getName().toLowerCase())) {
-                    field.setAccessible(false);
-                    continue;
-                }
                 if (fieldValue == null) {
                     throw new InvalidInputException("Campo: " + field.getName() + " è nullo");
                 }
@@ -41,7 +34,23 @@ public class CatalogueUtils {
                 e.printStackTrace();
             }
 
-        }
+        }*/
 
     }
 }
+
+
+
+
+
+
+
+
+//        List<String> excludedFields = List.of(
+//                "noteaggiuntive", "datascadenzaToken", "trattamento"
+//        );
+
+//                if (excludedFields.contains(field.getName().toLowerCase())) {
+//                    field.setAccessible(false);
+//                    continue;
+//                }

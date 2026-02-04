@@ -46,7 +46,7 @@ public class DBPopulator{
             runner.setStopOnError(true); // Si ferma se c'è un errore SQL
 
            //lettura file
-            Reader reader = new BufferedReader(new FileReader("src/main/java/it/unisa/Storage/SQL/DB1.sql"));
+            Reader reader = new BufferedReader(new FileReader("src/main/java/it/unisa/Storage/SQL/re.sql"));
 
             runner.runScript(reader);
 

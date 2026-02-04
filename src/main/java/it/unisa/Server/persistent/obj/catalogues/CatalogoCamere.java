@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  */
 
 public class CatalogoCamere implements SubjectCamereInterface, Serializable {
-    private static FrontDeskStorage<Camera> fds = new CameraDAO();
+    private static FrontDeskStorage<Camera> fds;
     private static List<ObserverCamereInterface> observers = new ArrayList<>();
 
     /**
@@ -34,6 +34,7 @@ public class CatalogoCamere implements SubjectCamereInterface, Serializable {
     private static ArrayList<Camera> camereList;
 
     static {
+        fds = new CameraDAO();
         try {
             camereList = new ArrayList<>(fds.doRetriveAll("decrescente"));
         } catch (SQLException e) {
@@ -144,9 +145,10 @@ public class CatalogoCamere implements SubjectCamereInterface, Serializable {
      * @post result != camera originale (è un clone)
      */
     public static Camera getCamera(int numeroCamera) {
-        try {
-            for (Camera c : camereList) {
-                if (c.getNumeroCamera() == numeroCamera)
+        try{
+            System.out.println(camereList);
+            for(Camera c : camereList) {
+                if(c.getNumeroCamera() == numeroCamera)
                     return c.clone();
             }
         }catch (CloneNotSupportedException cloneNotSupportedException) {

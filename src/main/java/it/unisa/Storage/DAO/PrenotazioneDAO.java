@@ -105,7 +105,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
             if (p.getTrattamento() != null) {
                 preparedStatement.setString(8, p.getTrattamento().getNome());
                 preparedStatement.setDouble(11, p.getPrezzoAcquistoTrattamento());
-            } else {
+            }else{
                 preparedStatement.setString(8, null);
                 preparedStatement.setDouble(11, 0);
             }
@@ -124,7 +124,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
             }
 
             // Salva i servizi associati
-            String query = "Insert into ha (IDPrenotazione,IDServizio,NomeServizioAcquistato,PrezzoServizioAcquistato) values(?,?,?,?)";
+            String query = "Insert into ha (IDPrenotazione,IDServizio,NomeServizioAcquistato,PrezzoAcquistoServizio) values(?,?,?,?)";
             PreparedStatement preparedStatement1 = connection.prepareStatement(query);
 
             for (Servizio servizio : p.getListaServizi()) {
@@ -132,7 +132,6 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                 preparedStatement.setInt(2,servizio.getId());
                 preparedStatement1.setString(3, servizio.getNome());
                 preparedStatement1.setDouble(4, servizio.getPrezzo());
-
                 preparedStatement1.executeUpdate();
             }
 
@@ -220,10 +219,10 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
         Trattamento trattamento = new Trattamento();
 
         String[] sql = {
-                "SELECT NumeroCameraStorico, PrezzoAcquisto, FROM " + VIEW_TABLE_NAME + " WHERE IDPrenotazione = ?",
-                "SELECT NomeTrattamento, PrezzoAcquistoTrattamento FROM " + VIEW_TABLE_NAME + " WHERE IDPrenotazione = ?",
-                "SELECT NomeServizioAcquistato, PrezzoAcquistoServizio FROM " + VIEW_TABLE_NAME + " WHERE IDPrenotazione = ?",
-                "SELECT CF  FROM " + VIEW_TABLE_NAME + " WHERE IDPrenotazione = ?"
+                "SELECT NumeroCameraStorico, PrezzoAcquisto FROM " + VIEW_TABLE_NAME + " WHERE IDPrenotazione = ? ",
+                "SELECT NomeTrattamento, PrezzoAcquistoTrattamento FROM " + VIEW_TABLE_NAME + " WHERE IDPrenotazione = ? ",
+                "SELECT NomeServizioAcquistato, PrezzoAcquistoServizio FROM " + VIEW_TABLE_NAME + " WHERE IDPrenotazione = ? ",
+                "SELECT CF  FROM " + VIEW_TABLE_NAME + " WHERE IDPrenotazione = ? "
         };
 
         String selectSql = "SELECT * FROM Prenotazione "+" WHERE IDPrenotazione = ?";
@@ -270,7 +269,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                 try {
                     Servizio servizio = null;
                     do {
-                        servizio = dao3.doRetriveByKey(rs.getString("NomeServizio"));
+                        servizio = dao3.doRetriveByKey(rs.getString("NomeServizioAcquistato"));
                         servizio.setPrezzo(rs.getDouble("PrezzoAcquistoServizio"));
                     } while (rs.next());
                 } catch (SQLException ex) {
@@ -410,7 +409,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
         ServizioDAO serviziDAO = new ServizioDAO();
 
         String [] sql = new String [2];
-        sql[0] = "UPDATE prenotazione " +"SET IDPrenotazione = ? , NomeIntestatario = ? , DataCreazionePrenotazione = ? , DataArrivoCliente = ? , DataPartenzaCliente = ?, DataEmissioneRicevuta = ? , " +
+        sql[0] = " UPDATE prenotazione " + " SET IDPrenotazione = ? , NomeIntestatario = ? , DataCreazionePrenotazione = ? , DataArrivoCliente = ? , DataPartenzaCliente = ?, DataEmissioneRicevuta = ? , " +
                 "NumeroDocumento = ? , DataRilascioDocumento = ? , DataScadenzaDocumento = ? , NomeTrattamento = ? , NoteAggiuntive = ? ," +
                 "TipoDocumento = ? , Stato = ? , CheckIn = ? , PrezzoAcquistoTrattamento = ? , MetodoPagamento = ? , Cittadinanza = ?" +
                 " Where IDPrenotazione = ?" ;

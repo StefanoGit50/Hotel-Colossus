@@ -48,14 +48,18 @@ public class ClienteDAOTesting {
     @Tag("True")
     @DisplayName("doRetriveByKey() quando va tutto bene")
     public void doRetriveByKeyAllTrue() throws SQLException{
-        Cliente cliente1 = clienteDAO.doRetriveByKey("BRNLRA92F25L219P");
-        assertEquals(cliente,cliente1);
+        DBPopulator.cancel();
+        DBPopulator.populator();
+        Cliente cliente1 = clienteDAO.doRetriveByKey("RSSMRA80A01H501U");
+        assertEquals(new Cliente("Mario","Rossi","Roma","Roma","Via del Corso",10,100,"3331234567","M",LocalDate.of(1980,1,1),"RSSMRA80A01H501U","mario.rossi@email.com","Italiana",new Camera(101,Stato.Libera,2,80.0,"Vista interna","Camera Standard")),cliente1);
     }
 
     @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
     @DisplayName("doRetriveByKey() quando tira un eccezione")
     public void doRetriveByKeyException(){
+        DBPopulator.cancel();
+        DBPopulator.populator();
         assertThrows(SQLException.class,()->clienteDAO.doRetriveByKey(cliente));
     }
 
@@ -63,6 +67,8 @@ public class ClienteDAOTesting {
     @Tag("False")
     @DisplayName("doRetriveByKey() quando non trova niente")
     public void doRetriveByKey() throws SQLException {
+       DBPopulator.cancel();
+       DBPopulator.populator();
       Cliente cliente1 = new Cliente();
       final Cliente [] cliente2 = new Cliente[1];
       assertDoesNotThrow(()->{cliente2[0] = clienteDAO.doRetriveByKey("RSSMRA20T11H703F");});
@@ -80,6 +86,7 @@ public class ClienteDAOTesting {
     @Tags({@Tag("Exception"),@Tag("Error")})
     @DisplayName("doDelete() quando non cancella nulla")
     public void doDelete(){
+        DBPopulator.cancel();
         assertThrows(NoSuchElementException.class,()->clienteDAO.doDelete(cliente));
     }
 
@@ -87,20 +94,17 @@ public class ClienteDAOTesting {
     @Tag("True")
     @DisplayName("doRetriveAll() quando True e quindi è decrescente")
     public void doRetriveAllTrue() throws SQLException {
+        DBPopulator.cancel();
+        DBPopulator.populator();
         ArrayList<Cliente> clientes;
         ArrayList<Cliente> clientes1 = new ArrayList<>();
         clientes = (ArrayList<Cliente>) clienteDAO.doRetriveAll("decrescente");
-        Cliente cliente1 = new Cliente("Marco","Santi","Genova","Genova","Via Garibaldi",89,16100,"+393345678901","M",LocalDate.of(1987,7,30),"SNTMRC87G30G273N","marco.santi@email.it","Italiana",new Camera());
-        cliente1.setBlacklisted(true);
-        clientes1.add(cliente1);
-        clientes1.add(new Cliente("Pietro","Ricci","Roma","Roma","Via Veneto",78,00100,"+393387654321","M",LocalDate.of(1990,3,15),"RCCPTR90C15L736Y","pietro.ricci@email.it","Italiana",new Camera()));
-        clientes1.add(new Cliente("Anna","Moretti","Firenze","Firenze","Via Tornabuoni",23,35100,"+393349876543","F",LocalDate.of(1985,2,2),"MRTANA85B42F205W","anna.moretti@email.it","Italiana",new Camera()));
-        clientes1.add(new Cliente("Andrea","Marini","Padova","Padova","Via del Santo",56,35100,"+393312345678","M", LocalDate.of(1991,7,20),"MRNAND91L20D612R","andrea.marini@email.it","Italiana",new Camera()));
-        clientes1.add(new Cliente("Sara","Lombardi","Firenze","Firenze","Borgo Pinti",12,50122,"+393323456789","F",LocalDate.of(1993,6,12),"LMBSRA93H12F205Q","sara.lombardi@email.it","Italiana",new Camera()));
-        clientes1.add(new Cliente("Francesco","Greco","Napoli","Napoli","Via Chiaia",67,80100,"+393323456789","F",LocalDate.of(1995,5,10),"GRCFNC95E10F839K","francesco.greco@email.it","Italiana",new Camera()));
-        clientes1.add(new Cliente("Leonardo","Ferrari","Milano","Milano","Via Dante",15,20100,"+393331234567","M",LocalDate.of(1980,1,1),"FRRLRD80A01H501Z","leonardo.ferrari@email.it","Italiana",new Camera(202,Stato.Libera,2,110,"Panoramica","Camera Superior")));
-        clientes1.add(new Cliente("Claudia","Fontana","Milano","Milano","Viale Monza",91,20122,"+393390123456","F",LocalDate.of(1989,8,15),"FNTCLD89M15H501S","claudia.fontana@email.it","Italiana",new Camera()));
-        clientes1.add(new Cliente("Giulia","Costa","Milano","Milano","Corso Buenos Aires",45,20121,"+393356789012","F",LocalDate.of(1988,4,20),"CSTGLT88D20H501M","giulia.costa@email.it","Italiana",new Camera()));
+        clientes1.add(new Cliente("Lucia","Bianchi","Palermo","Palermo","Via Roma",5,90100,"3381122334","F", LocalDate.of(1985,3,3),"BNCLCU85C03G273Z","lucia.bianchi@email.com","Italiana",new Camera()));
+        clientes1.add(new Cliente("Hans","Muller","Berlin","Berlino","Alexanderplatz",1,10115,"+4915123456","M",LocalDate.of(1988,5,5),"MULLER88E05Z112K","hans.muller@de-mail.de","Tedesca",new Camera(201,Stato.Prenotata,3,180.00,"Vista mare laterale","Junior Suite")));
+        clientes1.add(new Cliente("Mario","Rossi","Roma","Roma","Via del Corso",10,100,"3331234567","M",LocalDate.of(1980,1,1),"RSSMRA80A01H501U","mario.rossi@email.com","Italiana",new Camera(101,Stato.Libera,2,80.0,"Vista interna","Camera Standard")));
+        clientes1.add(new Cliente("Luigi","Verdi","Milano","Milano","Corso Buenos Aires",20,20100,"3339876543","M",LocalDate.of(1990,2,2),"VRDLGI90B02F205K","luigi.verdi@email.com","Italiana",new Camera(202,Stato.Occupata,2,350.00,"Jacuzzi privata","Suite Presidenziale")));
+        clientes1.getFirst().setBlacklisted(true);
+
         assertEquals(clientes1,clientes);
     }
 
@@ -108,12 +112,16 @@ public class ClienteDAOTesting {
     @Tag("False")
     @DisplayName("doRetriveAll() quando viene inserito in senso crescente")
     public void doRetriveAllFalse() throws SQLException{
+        DBPopulator.cancel();
+        DBPopulator.populator();
         ArrayList<Cliente> clientes;
         ArrayList<Cliente> clientes1 = new ArrayList<>();
         clientes = (ArrayList<Cliente>) clienteDAO.doRetriveAll("crescente");
-
-       clientes1.add(new Cliente("Mario","Rossi","Napoli","Napoli","Via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana",new Camera()));
-       clientes1.add(new Cliente("Laura","Verdi","Roma","Roma","Via Milano",23,100,"3339876543","Femmina",LocalDate.of(1990,4,5),"VRDLRA90D45F839Y","laura.verdi@email.it","Italiana",new Camera()));
+        clientes1.add(new Cliente("Lucia","Bianchi","Palermo","Palermo","Via Roma",5,90100,"3381122334","F", LocalDate.of(1985,3,3),"BNCLCU85C03G273Z","lucia.bianchi@email.com","Italiana",new Camera()));
+        clientes1.add(new Cliente("Hans","Muller","Berlin","Berlino","Alexanderplatz",1,10115,"+4915123456","M",LocalDate.of(1988,5,5),"MULLER88E05Z112K","hans.muller@de-mail.de","Tedesca",new Camera(201,Stato.Prenotata,3,180.00,"Vista mare laterale","Junior Suite")));
+        clientes1.add(new Cliente("Mario","Rossi","Roma","Roma","Via del Corso",10,100,"3331234567","M",LocalDate.of(1980,1,1),"RSSMRA80A01H501U","mario.rossi@email.com","Italiana",new Camera(101,Stato.Libera,2,80.0,"Vista interna","Camera Standard")));
+        clientes1.add(new Cliente("Luigi","Verdi","Milano","Milano","Corso Buenos Aires",20,20100,"3339876543","M",LocalDate.of(1990,2,2),"VRDLGI90B02F205K","luigi.verdi@email.com","Italiana",new Camera(202,Stato.Occupata,2,350.00,"Jacuzzi privata","Suite Presidenziale")));
+        clientes1.getFirst().setBlacklisted(true);
 
         assertEquals(clientes1,clientes);
     }
@@ -122,6 +130,7 @@ public class ClienteDAOTesting {
     @Tag("False")
     @DisplayName("doRetriveAll() quando il resultSet.next() restituisce false")
     public void doRetriveResultSet() throws SQLException {
+        DBPopulator.cancel();
         ArrayList<Cliente> clientes1 = new ArrayList<>();
         ArrayList<Cliente> clientes;
 
@@ -133,13 +142,18 @@ public class ClienteDAOTesting {
     @Tag("True")
     @DisplayName("doUpdate() quando va tutto bene")
     public void doUpdateAllTrue(){
-        assertDoesNotThrow(()->clienteDAO.doUpdate(cliente));
+        DBPopulator.cancel();
+        DBPopulator.populator();
+      Cliente cliente1  = new Cliente("Luigi","Verdi","Milano","Milano","Corso Buenos Aires",27,20100,"3339876543","M",LocalDate.of(1990,2,2),"VRDLGI90B02F205K","luigi.verdi@email.com","Italiana",new Camera(202,Stato.Occupata,2,350.00,"Jacuzzi privata","Suite Presidenziale"));
+        assertDoesNotThrow(()->clienteDAO.doUpdate(cliente1));
     }
 
     @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
     @DisplayName("doUpdate() quando lancia una eccezione")
     public void doUpdateAllFalse(){
+        DBPopulator.cancel();
+        DBPopulator.populator();
         assertThrows(NoSuchElementException.class,()->clienteDAO.doUpdate(null));
     }
 
@@ -147,18 +161,24 @@ public class ClienteDAOTesting {
     @Tags({@Tag("Exception"),@Tag("Error")})
     @DisplayName("doRetrivaByAttribute() quando viene mandata una eccezione")
     public void doRetriveByAttributeException(){
-      assertThrows(RuntimeException.class,()->clienteDAO.doRetriveByAttribute(null,null));
+        DBPopulator.cancel();
+        DBPopulator.populator();
+        assertThrows(RuntimeException.class,()->clienteDAO.doRetriveByAttribute(null,null));
     }
 
     @Test
     @Tag("True")
     @DisplayName("doRetriveByAttribute() quando va tutto bene")
     public void doRetriveByAttributeAllTrue() throws SQLException {
+        DBPopulator.cancel();
+        DBPopulator.populator();
         ArrayList<Cliente> clientes = new ArrayList<>();
-        clientes.add(new Cliente("Mario","Rossi","Napoli","Napoli","Via Roma",15,80100,"3331234567","Maschio",LocalDate.of(1985,8,1),"RSSMRA85M01H501Z","mario.rossi@email.it","Italiana",new Camera(101,Stato.Occupata,2, 120.00,"Camera matrimoniale vista mare","")));
-        clientes.add(new Cliente("Laura","Verdi","Roma","Roma","Via Milano",23,100,"3339876543","Femmina",LocalDate.of(1990,4,5),"VRDLRA90D45F839Y","laura.verdi@email.it","Italiana",new Camera(102,Stato.Libera,3,130.0,"Camera per due persone","")));
-        Object s = "Italiana" ;
-        ArrayList<Cliente> clientes1 = (ArrayList<Cliente>) clienteDAO.doRetriveByAttribute("Cittadinanza",s);
+        clientes.add(new Cliente("Hans","Muller","Berlin","Berlino","Alexanderplatz",1,10115,"+4915123456","M",LocalDate.of(1988,5,5),"MULLER88E05Z112K","hans.muller@de-mail.de","Tedesca",new Camera(201,Stato.Prenotata,3,180.00,"Vista mare laterale","Junior Suite")));
+        clientes.add(new Cliente("Mario","Rossi","Roma","Roma","Via del Corso",10,100,"3331234567","M",LocalDate.of(1980,1,1),"RSSMRA80A01H501U","mario.rossi@email.com","Italiana",new Camera(101,Stato.Libera,2,80.0,"Vista interna","Camera Standard")));
+        clientes.add(new Cliente("Luigi","Verdi","Milano","Milano","Corso Buenos Aires",20,20100,"3339876543","M",LocalDate.of(1990,2,2),"VRDLGI90B02F205K","luigi.verdi@email.com","Italiana",new Camera(202,Stato.Occupata,2,350.00,"Jacuzzi privata","Suite Presidenziale")));
+
+        Object s = "M";
+        ArrayList<Cliente> clientes1 = (ArrayList<Cliente>) clienteDAO.doRetriveByAttribute("Sesso",s);
         assertEquals(clientes,clientes1);
     }
 
@@ -166,8 +186,10 @@ public class ClienteDAOTesting {
     @Tags({@Tag("Exception"),@Tag("Error")})
     @DisplayName("doRetriveByAttribute() quando va in eccezzione")
     public void doRetriveByAttribute() throws SQLException{
-        Object s = "Australia";
-        assertThrows(NoSuchElementException.class,()->clienteDAO.doRetriveByAttribute("Cittadinanza",s));
+        DBPopulator.cancel();
+        DBPopulator.populator();
+        Object s = "Maria";
+        assertThrows(NoSuchElementException.class,()->clienteDAO.doRetriveByAttribute("Nome",s));
     }
 
 }

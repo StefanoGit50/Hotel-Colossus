@@ -1,6 +1,6 @@
-drop database HotelColossus;
-create database HotelColossus;
-use HotelColossus;
+drop database hotelcolossus;
+create database hotelColossus;
+use hotelColossus;
 
 create table Cliente(
                         CF char(16) not null,
@@ -31,9 +31,10 @@ create table Camera(
 );
 
 create table Servizio(
-                         Nome varchar(50) not null,
+                         IDServizio int auto_increment,
+                         Nome varchar(50)UNIQUE,
                          Prezzo double not null,
-                         primary key(Nome)
+                         primary key(IDServizio)
 );
 
 
@@ -57,33 +58,42 @@ create table Prenotazione(
                              NomeTrattamento varchar(50),
                              NoteAggiuntive varchar(1000),
                              TipoDocumento varchar(50) not null,
-                             Stato boolean not null,
-                             CheckIn boolean not null,
+                             Stato boolean not null Default true,
+                             CheckIn boolean not null Default false,
                              PrezzoAcquistoTrattamento double,
                              MetodoPagamento varchar(50),
+                             Cittadinanza varchar(50),
                              primary key(IDPrenotazione),
                              foreign key(NomeTrattamento) references Trattamento(Nome) on update cascade
 );
 
 create table Associato_a(
-                            CF char(16) not null,
-                            NumeroCamera int not null,
+                            IDAssociazione int auto_increment ,
+                            CF char(16) ,
+                            NumeroCamera int,
+                            NominativoCliente varchar(50) not null,
+                            NumeroCameraStorico int not null,
                             IDPrenotazione int not null,
                             PrezzoAcquisto double not null,
-                            foreign key(CF) references Cliente(CF) on delete cascade on update cascade,
-                            foreign key(NumeroCamera) references Camera(NumeroCamera) on delete cascade on update cascade,
+                            foreign key(CF) references Cliente(CF)on delete set null on update cascade,
+                            foreign key(NumeroCamera) references Camera(NumeroCamera) on delete set null on update cascade,
                             foreign key(IDPrenotazione) references Prenotazione(IDPrenotazione) on delete cascade on update cascade,
-                            primary key(CF, NumeroCamera, IDPrenotazione)
+                            primary key(IDAssociazione)
 );
 
 create table Ha(
+                   IDDettaglio int AUTO_INCREMENT PRIMARY KEY,
                    IDPrenotazione int not null,
-                   NomeServizio varchar(50) not null,
+                   IDServizio int NULL,
+                   quantità int NULL,
+                   NomeServizioAcquistato varchar(50) not null,
                    PrezzoAcquistoServizio double not null,
-                   primary key(IDPrenotazione, NomeServizio),
-                   foreign key(IDPrenotazione) references Prenotazione(IDPrenotazione) on delete cascade on update cascade,
-                   foreign key(NomeServizio) references Servizio(Nome)
-);
+                   UNIQUE(IDServizio,IDPrenotazione),
+
+                   foreign key(IDPrenotazione) references Prenotazione(IDPrenotazione)
+                       on delete cascade on update cascade,
+                   foreign key(IDServizio) references Servizio(IDServizio)
+                       on delete set null on update cascade);
 
 create table Impiegato(
                           IDImpiegato int not null auto_increment,
