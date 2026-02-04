@@ -4,6 +4,8 @@ import it.unisa.Common.Cliente;
 import it.unisa.Server.persistent.util.Util;
 import it.unisa.Storage.DAO.ClienteDAO;
 import it.unisa.Storage.Interfacce.FrontDeskStorage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -20,6 +22,7 @@ import java.util.regex.Pattern;
  */
 public class CatalogoClienti implements Serializable {
 
+    private static final Logger log = LogManager.getLogger(CatalogoClienti.class);
     /**
      * Lista interna contenente tutti gli oggetti {@link Cliente}.
      */
@@ -81,27 +84,37 @@ public class CatalogoClienti implements Serializable {
      *
      */
     public static boolean updateCliente(Cliente cliente){
-         boolean flag=false;
-         if(listaClienti.contains(cliente)){
+        boolean flag = false; // flag ci serve per sapere se abbiamo trovato e rimosso il vecchio
+
+        if(listaClienti.contains(cliente)){
             Iterator<Cliente> it = listaClienti.iterator();
             while (it.hasNext()) {
                 Cliente c = it.next();
-                if (c.getCf().equals(cliente.getCf()) && !c.equals(cliente)) {
+                if (c.getCf().equals(cliente.getCf())) {
+                    CatalogoClienti.log.debug("DEBUG: Sto per chiamare doUpdate sul DB!");
                     try{
-                        frontDeskStorage.doUpdate(cliente);
+                        frontDeskStorage.doUpdate(cliente); // Update DB
                     }catch (SQLException e){
                         e.printStackTrace();
                         return false;
                     }
-                    it.remove();                  // rimuove in sicurezza
-                    listaClienti.add(cliente);  // aggiunge cliente modificato
-                    flag=true;
-                        if(cliente.isBlacklisted())
-                            listaClientiBannati.add(cliente);
+
+                    it.remove(); // Rimuove in sicurezza TRAMITE l'iteratore
+                    flag = true; // Segnaliamo che l'abbiamo trovato
+
+                    break;
                 }
             }
         }
-         return flag;
+
+        if (flag) {
+            listaClienti.add(cliente);
+            if(cliente.isBlacklisted()) {
+                listaClientiBannati.add(cliente);
+            }
+        }
+
+        return flag;
     }
 
 

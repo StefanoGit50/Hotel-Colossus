@@ -30,7 +30,7 @@ public class CamereDatabase {
     }
     @AfterEach
     public void tearDown()   {
-        catalogoCamere.getListaCamere().clear();
+        CatalogoCamere.aggiornalista();
         camera = new Camera();
     }
 
@@ -89,7 +89,8 @@ public class CamereDatabase {
     @DisplayName("Bottom up: ottenere le camere dal DB")
     @Tag("integration")
     public void getCamereFromDb(){
-        List<Camera> cameraList= CatalogoCamere.getListaCamere();
+        assertTrue(CatalogoCamere.aggiornalista());
+        List<Camera>cameraList=CatalogoCamere.getListaCamere();
         List<Camera> cameraList2 = List.of();
         try{
             cameraList2= (List<Camera>) fds.doRetriveAll("decrescente");

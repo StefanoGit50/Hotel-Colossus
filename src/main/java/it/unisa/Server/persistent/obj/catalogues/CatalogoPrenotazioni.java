@@ -1,5 +1,6 @@
 package it.unisa.Server.persistent.obj.catalogues;
 import it.unisa.Common.Camera;
+import it.unisa.Common.Cliente;
 import it.unisa.Common.Prenotazione;
 import it.unisa.Storage.DAO.ClienteDAO;
 import it.unisa.Storage.DAO.PrenotazioneDAO;
@@ -47,28 +48,6 @@ public class CatalogoPrenotazioni implements Serializable {
     public CatalogoPrenotazioni() {
         listaPrenotazioni = new ArrayList<>();
     }
-
-    /**
-     * Esegue una ricerca flessibile all'interno del catalogo delle prenotazioni basandosi su vari criteri.
-     * La ricerca prende almeno un parametro in input mentre gli altri possono essere nulli.
-     * Una prenotazione viene selezionato solo se rispetta tutti i parametri non nulli della ricerca.
-     *
-     * @pre nominativoCliente != null || numeroCamera >= 0 || dataInizio != null || dataFine != null
-     * @post result.stream().allMatch(p | (nominativoCliente == null || p.intestatario == nominativoCliente) &&
-     * (numeroCamera < 0 || p.listaCamere.stream().anyMatch(c | c.numeroCamera == numeroCamera)) &&
-     * (dataInizio == null || dataFine == null || (p.dataInizio.isAfter(dataInizio) &&
-     * p.dataFine.isBefore(dataFine))))
-     *
-     * @param nominativoCliente Nome del cliente che ha registrato la prenotazione.
-     * @param numeroCamera Numero (una delle/a) camera registrata con la prenotazione.
-     * @param dataInizio Data prevista per il check-in.
-     * @param dataFine Data prevista per il check-out.
-     * @param sort Parametro per indicare l'ordine rispetto la data (ASC=true or DESC=false). Per ASC si intende dalla
-     *             data meno imminente a quella più imminente rispetto la data odierna metre il contrario vale per DESC.
-     * @return Una deep copy dell'ArrayList contenente tutte le prenotazioni che corrispondono ai criteri di ricerca.
-     * @throws CloneNotSupportedException Se il metodo clone non è supportato dalla classe {@code Prenotazione}
-     */
-
 
     //  Getters / Setters
 
@@ -263,7 +242,7 @@ public class CatalogoPrenotazioni implements Serializable {
      * @throws InvalidInputException se un campo presenta un valore errato.
      */
     public static void checkPrenotazione(Prenotazione prenotazione) throws InvalidInputException {
-        LocalDate inizio = prenotazione.getDataInizio(),  fine = prenotazione.getDataFine(),
+    /*    LocalDate inizio = prenotazione.getDataInizio(),  fine = prenotazione.getDataFine(),
                 rilascio = prenotazione.getDataRilascio(), scadenza = prenotazione.getDataScadenza();
 
         String documento = prenotazione.getTipoDocumento();
@@ -271,9 +250,10 @@ public class CatalogoPrenotazioni implements Serializable {
         int nClienti = prenotazione.getListaClienti().size();
         int nPostiCamere = 0;
 
-       /* for (Camera c : prenotazione.getListaCamere()) {
-            nPostiCamere +=  c.getCapacità();
-        }*/
+        for (Cliente c : prenotazione.getListaClienti()) {
+            nPostiCamere +=  c.getCamera().getCapacità();
+        }
+
         // Lista di condizioni che possono lanciare un errore
         // 1. Data Arrivo Passata
         if (inizio.isBefore(LocalDate.now()))
@@ -292,8 +272,14 @@ public class CatalogoPrenotazioni implements Serializable {
             throw new InvalidInputException("Data di partenza non può essere passata");
 
         // 5. Nessuna Camera selezionata
-     /*   if (prenotazione.getListaCamere().isEmpty() || nPostiCamere == 0)
-            throw new InvalidInputException("Almeno una camera deve essere selezionata");*/
+        boolean flag = true; // True: ogni camera è selezionata
+        for (Cliente c : prenotazione.getListaClienti()) {
+            if (c.getCamera() == null || c.getCamera().equals(new Camera())) {
+                flag = false; // False: almeno una camera è nulla / vuota
+            }
+        }
+        if (!flag)
+            throw new InvalidInputException("Almeno una camera deve essere selezionata");
 
         // 6. Nessun Cliente selezionato
         if (prenotazione.getListaClienti().isEmpty() || nClienti == 0)
@@ -319,7 +305,7 @@ public class CatalogoPrenotazioni implements Serializable {
 
         // 11. Data Scadenza antecedente o uguale alla data di Rilascio
         if (scadenza.isBefore(rilascio) || scadenza.isEqual(rilascio))
-            throw new InvalidInputException("Data scadenza documento deve essere successi");
+            throw new InvalidInputException("Data scadenza documento deve essere successi");*/
     }
     /**
 

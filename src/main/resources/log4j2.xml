@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
     <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss} %-5level %logger{1}: %msg%n"/>
+        </Console>
         <File name="logTestingBlackbox" fileName="src/main/logging/logTestingBlackbox.log">
+            <PatternLayout pattern="%d{HH:mm:ss} %-5level %logger{1}: %msg%n"/>
+        </File>
+        <File name="CommonLog" fileName="src/main/logging/CommonLog.log">
             <PatternLayout pattern="%d{HH:mm:ss} %-5level %logger{1}: %msg%n"/>
         </File>
         <File name="HotelColossusLogger" fileName="src/main/logging/HotelColossusLogger.log">
@@ -10,13 +16,20 @@
     </Appenders>
 
     <Loggers>
-        <!-- Tutte le classi nel package com.mio.progetto.abc scrivono su abc.log -->
-        <Logger name="blackbox" level="info" additivity="false">
+        <Logger name="blackbox" level="info" additivity="true">
             <AppenderRef ref="logTestingBlackbox"/>
         </Logger>
 
-        <Root level="info">
+        <Logger name="Common" level="debug" additivity="true">
+            <AppenderRef ref="CommonLog"/>
+        </Logger>
+
+        <Logger name="it.unisa" level="debug" additivity="true">
+        </Logger>
+
+        <Root level="debug">
             <AppenderRef ref="HotelColossusLogger"/>
+            <AppenderRef ref="Console"/>
         </Root>
     </Loggers>
 </Configuration>

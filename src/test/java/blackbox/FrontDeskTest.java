@@ -194,22 +194,23 @@ public class FrontDeskTest{
                     "italiana",
                     new Camera(101,Stato.Libera, 1, 56, "","papaBenedetto")));
 
-            Prenotazione p = null; /*new Prenotazione(1234,
+                Prenotazione p= new Prenotazione(
                     LocalDate.now(),
-                    LocalDate.now(),
+                    LocalDate.now().plusDays(5),
+                    LocalDate.now().plusDays(10),
                     LocalDate.of(2026, 02, 01),
-                    null,
                     new Trattamento("MEZZA PENSIONE", 60),
+                    60.0,
                     "Passaporto",
                     LocalDate.of(2012, 03, 11),
                     LocalDate.of(2044, 12, 11),
                     "Mario Biondi",
                     "",
-                    listcamera,
                     servizio,
                     cliente,
                     "34532MC2",
-                    "Carta di Credito");*/
+                    "Carta di Credito",
+                    "Italiana");
             return p;
         }
 

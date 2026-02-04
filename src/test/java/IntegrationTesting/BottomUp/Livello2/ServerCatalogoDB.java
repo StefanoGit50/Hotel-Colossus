@@ -68,8 +68,8 @@ public class ServerCatalogoDB {
                 LocalDate.now(),                        // dataCreazionePrenotazione (Oggi)
                 LocalDate.of(2024, 8, 10),              // dataInizio
                 LocalDate.of(2024, 8, 20),              // dataFine
-                null,                                   // dataEmissioneRicevuta (null se non ha ancora pagato)
-                new Trattamento("Pensione Completa",45),
+                LocalDate.of(2024, 8,20),
+                new Trattamento("Pensione Completa",45),           // trattamento (Assumendo sia un Enum)
                 45.0,
                 "Carta d'Identità",                     // tipoDocumento
                 LocalDate.of(2020, 5, 20),              // dataRilascio (documento)
@@ -82,7 +82,6 @@ public class ServerCatalogoDB {
                 "Bonifico Bancario",
                 "Italiano"
         );
-
     }
 
     @AfterEach

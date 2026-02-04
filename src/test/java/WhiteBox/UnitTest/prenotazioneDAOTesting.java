@@ -2,25 +2,15 @@ package WhiteBox.UnitTest;
 
 import it.unisa.Common.*;
 import it.unisa.Server.persistent.util.Stato;
-import it.unisa.Storage.ConnectionStorage;
-import it.unisa.Storage.DAO.ClienteDAO;
 import it.unisa.Storage.DAO.PrenotazioneDAO;
 import it.unisa.Storage.DAO.ServizioDAO;
-import net.bytebuddy.asm.Advice;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.sql.DataSource;
-import java.io.Serializable;
-import java.lang.invoke.SwitchPoint;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,10 +30,10 @@ public class prenotazioneDAOTesting{
         ArrayList<Cliente> clientes = new ArrayList<>();
         ArrayList<Camera> cameras = new ArrayList<>();
         ArrayList<Servizio> servizios = new ArrayList<>();
-        ServizioDAO se = new ServizioDAO();
+        ServizioDAO dao = new ServizioDAO();
         Servizio servizio = null;
         try {
-            servizio = se.doRetriveByKey("Spa e Benessere");
+            servizio = dao.doRetriveByKey("Spa e Benessere");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

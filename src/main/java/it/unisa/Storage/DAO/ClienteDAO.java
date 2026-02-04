@@ -5,6 +5,8 @@ import it.unisa.Common.Cliente;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.Interfacce.FrontDeskStorage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.sql.Date;
@@ -14,6 +16,7 @@ import java.util.regex.Pattern;
 
 public class ClienteDAO implements FrontDeskStorage<Cliente> {
 
+    private static final Logger log = LogManager.getLogger(ClienteDAO.class);
     private Connection con;
     private Cliente cliente=null;
     private  ResultSet resultSet;
@@ -130,7 +133,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                             camera.setNomeCamera(resultSet1.getString("NomeCamera"));
                             camera.setNumeroCamera(resultSet1.getInt("NumeroCamera"));
                             camera.setCapacità(resultSet1.getInt("NumeroMaxOcc"));
-                            camera.setPrezzoCamera(resultSet1.getDouble("Prezzo"));
+                            camera.setPrezzoCamera(resultSet1.getDouble("PrezzoAcquisto"));
                             camera.setStatoCamera(Stato.valueOf(resultSet1.getString("Stato")));
                             camera.setNoteCamera(resultSet1.getString("NoteCamera"));
                         }
@@ -206,7 +209,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                 Date date1 = (Date) resultSet.getObject("DataDiNascita");
                 LocalDate date = date1.toLocalDate();
                 Boolean  isBackListed = (Boolean) resultSet.getObject("IsBackListed");
-                String nazionalità = resultSet.getString("Nazionalità");
+                String nazionalità = resultSet.getString("Nazionalita");
                 preparedStatement1.setString(1,resultSet.getString("CF"));
                 try(ResultSet resultSet1 = preparedStatement1.executeQuery()){
                         if(resultSet1.next()){
@@ -215,7 +218,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                             camera.setNoteCamera(resultSet1.getString("NoteCamera"));
                             camera.setStatoCamera(Stato.valueOf(resultSet1.getString("Stato")));
                             camera.setCapacità(resultSet1.getInt("NumeroMaxOcc"));
-                            camera.setPrezzoCamera(resultSet1.getDouble("Prezzo"));
+                            camera.setPrezzoCamera(resultSet1.getDouble("PrezzoAcquisto"));
                         }
                 }
                 cliente = new Cliente(nome,cognome,provincia,comune,via,civico,Integer.parseInt(cap),telefono,sesso,date,cf1,email,nazionalità,camera);
@@ -251,13 +254,17 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
     @Override
     public synchronized void doUpdate(Cliente o) throws SQLException
     {
+
+        String query = "UPDATE cliente LEFT JOIN associato_a USING (CF) SET " +
+            "nome = ?, cognome = ?, Cap = ?, comune = ?, " +
+            "civico = ?, provincia = ?, via = ?, Email = ?, Sesso = ?, " +
+            "telefono = ?, Nazionalita = ?, " +
+            "DataDiNascita = ?, IsBackListed = ?, " +
+            "NumeroCamera = ?, NumeroCameraStorico = ?, PrezzoAcquisto = ? " +
+            "WHERE cliente.CF = ?";
         if(o != null && o.getCf() != null){
             con = ConnectionStorage.getConnection();
-            try(PreparedStatement preparedStatement = con.prepareStatement(
-                    "UPDATE cliente JOIN associato_a USING (CF) SET nome = ?, cognome = ?, Cap = ?, comune = ?, " +
-                            "civico = ?, provincia = ?, via = ?, Email = ?, Sesso = ?, " +
-                            "telefono = ?, Nazionalita = ?, " +
-                            "DataDiNascita = ?, IsBackListed = ?, NumeroCamera= ?, NumeroCameraStorico = ?,PrezzoAcquisto = ? WHERE CF = ?")){
+            try(PreparedStatement preparedStatement = con.prepareStatement(query)){
 
                 preparedStatement.setString(1, o.getNome());
                 preparedStatement.setString(2, o.getCognome());
@@ -269,13 +276,15 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                 preparedStatement.setString(8, o.getEmail());
                 preparedStatement.setString(9, o.getSesso());
                 preparedStatement.setString(10, o.getNumeroTelefono());
+                preparedStatement.setString(11, o.getNazionalita());
                 preparedStatement.setDate(12, Date.valueOf(o.getDataNascita()));
                 preparedStatement.setBoolean(13, o.isBlacklisted());
-                preparedStatement.setString(14, o.getCf());
+                preparedStatement.setInt(14,o.getCamera().getNumeroCamera());
                 preparedStatement.setInt(15,o.getCamera().getNumeroCamera());
-                preparedStatement.setInt(16,o.getCamera().getNumeroCamera());
-                preparedStatement.setDouble(17,o.getCamera().getPrezzoCamera());
-                preparedStatement.executeUpdate();
+                preparedStatement.setDouble(16,o.getCamera().getPrezzoCamera());
+                preparedStatement.setString(17, o.getCf());
+                int rowsAffected = preparedStatement.executeUpdate();
+                log.debug(rowsAffected+" rows affected");
             }
             finally
             {
@@ -323,15 +332,16 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                     cliente.setNumeroTelefono(resultSet.getString("telefono"));
                     cliente.setBlacklisted(resultSet.getBoolean("IsBackListed"));
                     cliente.setDataNascita(resultSet.getDate("DataDiNascita").toLocalDate());
-                    cliente.setNazionalita(resultSet.getString("Nazionalità"));
+                    cliente.setNazionalita(resultSet.getString("Nazionalita"));
 
                     preparedStatement1.setString(1,resultSet.getString("CF"));
 
                     try(ResultSet resultSet1 = preparedStatement1.executeQuery()){
                         if(resultSet1.next()){
+                            camera.setNomeCamera(resultSet1.getString("NomeCamera"));
                             camera.setNumeroCamera(resultSet1.getInt("NumeroCamera"));
                             camera.setNoteCamera(resultSet1.getString("NoteCamera"));
-                            camera.setPrezzoCamera(resultSet1.getDouble("Prezzo"));
+                            camera.setPrezzoCamera(resultSet1.getDouble("PrezzoAcquisto"));
                             camera.setCapacità(resultSet1.getInt("NumeroMaxOcc"));
                             camera.setStatoCamera(Stato.valueOf(resultSet1.getString("Stato")));
                         }

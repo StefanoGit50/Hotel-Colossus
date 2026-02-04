@@ -1,6 +1,7 @@
-package it.unisa.Client.GUI;
+package it.unisa.Client.Governante;
 
 import it.unisa.Client.FrontDesk.FrontDeskClient;
+import it.unisa.Client.GUI.BookingFilter;
 import it.unisa.Client.GUI.components.*;
 import it.unisa.Common.*;
 import it.unisa.Server.IllegalAccess;
@@ -17,46 +18,40 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.net.MalformedURLException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Logger;
 
-public class MainApp3 extends Application {
-
-    private FrontDeskClient frontDeskClient =  new FrontDeskClient();
-    private Impiegato imp;
-    private String exception;
-    // ===== STAGE E SCENE =====
+public class GovernanteGUI extends Application {
+    //COMPONENTI
     private Stage primaryStage;
-    private Scene loginScene;
-    private Scene mainScene;
-
-    // ===== COMPONENTI =====
     private TopBar topBar;
     private SideBar sidebar;
     private VBox contentArea;
     private LoginView loginView;
-
-    // ===== VISTE =====
-    private Dashboard dashboardView;
-    private GuestManagement guestManagement;
-    private Planning planning;
+    private Scene loginScene;
+    private Scene mainScene;
     private RoomManagementView roomManagementView;
-    private ContoEconomico contoEconomicoView;
-
-    // ===== DATI =====
-    private ObservableList<BookingFilter> allBookings = FXCollections.observableArrayList();
+    private Dashboard dashboardView;
+    //DATI
+    private Impiegato imp;
     private String currentUsername;
     private String currentRole;
+    private FrontDeskClient frontDeskClient;
+    private String exception;
+    private ObservableList<BookingFilter> allBookings = FXCollections.observableArrayList();
 
     @Override
     public void start(Stage stage) {
         this.primaryStage = stage;
 
-        // CONFIGURAZIONE FINESTRA (una volta sola)
+        // CONFIGURAZIONE FINESTRA
         primaryStage.setTitle("Hotel Colossus");
         primaryStage.setResizable(true);
         primaryStage.setMinWidth(1200);
@@ -67,16 +62,16 @@ public class MainApp3 extends Application {
     }
 
     /**
-     *  Mostra schermata login
+     * Mostra schermata login
      */
     private void showLoginScreen() {
-        String pwd2= null;
-        // CREA LoginView SOLO UNA VOLTA
+        String pwd2 = null;
+        // CREA LoginView
         if (loginView == null) {
             loginView = new LoginView();
 
             loginView.setLoginCallback((username, password) -> {
-                if (authenticateUser(username, password,pwd2)) {
+                if (authenticateUser(username, password, pwd2)) {
                     System.out.println(" Login riuscito: " + username);
                     currentUsername = username;
                     currentRole = getRoleFromUsername(username);
@@ -85,11 +80,10 @@ public class MainApp3 extends Application {
                 } else {
                     System.out.println(" Login fallito");
                     loginView.clearFields();
+
                 }
             });
-            loginView.setTempCredentialsCallback((username, tempPassword, newPassword) -> {
-                handleTempCredentialsValidation(username, tempPassword, newPassword);
-            });
+
         } else {
             loginView.clearFields();
         }
@@ -107,7 +101,6 @@ public class MainApp3 extends Application {
                 }
             });
         }
-
         // CAMBIA SCENA
         primaryStage.setScene(loginScene);
         primaryStage.setTitle("Hotel Colossus - Login");
@@ -119,43 +112,26 @@ public class MainApp3 extends Application {
         }
     }
 
+
     /**
-     *  AUTENTICAZIONE ( chiamata server)
+     * AUTENTICAZIONE (con chiamata server)
      */
     private boolean authenticateUser(String username, String password, String pwd2) throws RemoteException {
-        try{
-            imp = frontDeskClient.DoAuthentication(username,password,pwd2);
-            return imp != null;
+     /*   try {
+            imp = frontDeskClient.DoAuthentication(username, password, pwd2);
+            if (imp == null || !imp.getRuolo().name().equals("Governante")) {
+                return false;
+            } else return true;
         } catch (IllegalAccess e) {
-            exception=e.getMessage();
-        }
+            exception = e.getMessage();
+        } catch (NotBoundException e) {
+            throw new RuntimeException(e);
+        }*/
         return false;
     }
 
-    private boolean handleTempCredentialsValidation(String username, String tempPassword, String newPassword) throws Exception {
-        try {
-            System.out.println(" Validazione credenziali temporanee...");
-            System.out.println("   Username: " + username);
-            System.out.println("   Temp Password: " + tempPassword);
-            System.out.println("   New Password: " + newPassword);
-
-           Impiegato imp= frontDeskClient.DoAuthentication(username,newPassword,tempPassword);
-           return imp!=null;
-
-        } catch (RemoteException e) {
-            System.err.println(" Errore RMI: " + e.getMessage());
-            throw new Exception("Errore di connessione al server: " + e.getMessage());
-        } catch (IllegalAccess e) {
-            System.err.println(" Accesso negato: " + e.getMessage());
-            throw new Exception("Accesso negato: " + e.getMessage());
-        } catch (Exception e) {
-            System.err.println(" Errore validazione: " + e.getMessage());
-            throw e;
-        }
-    }
-
     /**
-     *  Determina ruolo da username
+     * Determina ruolo da username
      */
     private String getRoleFromUsername(String username) {
         String lowerName = username.toLowerCase();
@@ -171,48 +147,18 @@ public class MainApp3 extends Application {
         }
     }
 
-    /**
-     * STEP 2: Mostra interfaccia principale
-     */
     private void showMainInterface() {
-        initializeData();
-        VBox root = createMainLayout();
 
-        if (mainScene == null) {
-            //  USA LE DIMENSIONI DELLA FINESTRA CORRENTE (già massimizzata dal login)
-            double width = primaryStage.getWidth() > 0 ? primaryStage.getWidth() : 1400;
-            double height = primaryStage.getHeight() > 0 ? primaryStage.getHeight() : 900;
 
-            mainScene = new Scene(root, width, height);
-            mainScene.getStylesheets().add(
-                    Objects.requireNonNull(getClass().getResource("/hotel.css")).toExternalForm()
-            );
 
-            mainScene.setOnKeyPressed(e -> {
-                if (e.getCode() == KeyCode.F11) {
-                    primaryStage.setFullScreen(!primaryStage.isFullScreen());
-                }
-                if (e.getCode() == KeyCode.ESCAPE && primaryStage.isFullScreen()) {
-                    primaryStage.setFullScreen(false);
-                }
-            });
-        } else {
-            mainScene.setRoot(root);
-        }
-
-        primaryStage.setScene(mainScene);
-        primaryStage.setTitle("Hotel Colossus - " + currentRole);
-
-        System.out.println("Interfaccia caricata per: " + currentUsername + " (" + currentRole + ")");
     }
-
     /**
      * Inizializza i dati
      */
-    private void initializeData() {
+   private void initializeData() {
         BookingFilter.initializeSampleBookings(allBookings);
         System.out.println("Caricate " + allBookings.size() + " prenotazioni");
-    }
+   }
 
     /**
      * Crea il layout principale
@@ -261,16 +207,12 @@ public class MainApp3 extends Application {
      *  LOGOUT - Torna al login
      */
     private void handleLogout() {
-        System.out.println("👋 Logout: " + currentUsername);
+        Logger.getLogger("👋 Logout: " + currentUsername);
 
         // Reset
         currentUsername = null;
         currentRole = null;
-        dashboardView = null;
-        guestManagement = null;
-        planning = null;
         roomManagementView = null;
-        contoEconomicoView = null;
 
         //SOLUZIONE: Temporaneamente disabilita maximized
         primaryStage.setMaximized(false);
@@ -289,32 +231,14 @@ public class MainApp3 extends Application {
     private void handleNavigation(String destination) {
         System.out.println("🧭 Navigazione verso: " + destination);
 
-        switch (destination) {
-            case SideBar.DASHBOARD:
-                showDashboard();
-                break;
-            case SideBar.GUEST_MANAGEMENT:
-                showGuestManagement();
-                break;
-            case SideBar.PLANNING:
-                showPlanning();
-                break;
-            case SideBar.ROOMS:
-                showRooms();
-                break;
-            case SideBar.CHECKOUT:
-                showCheckout();
-                break;
-            case SideBar.CONTO_ECONOMICO:
-                showContoEconomico();
-                break;
-            case SideBar.BOOKING_DETAILS:
-                showBookingDetail();
-                break;
+        if (destination.equals(SideBar.ROOMS)) {
+            showRooms();
+        }else if(destination.equals(SideBar.DASHBOARD)) {
+            showDashboard();
         }
     }
 
-    private void showDashboard() {
+   private void showDashboard() {
         contentArea.getChildren().clear();
 
         if (dashboardView == null) {
@@ -326,16 +250,8 @@ public class MainApp3 extends Application {
         VBox.setVgrow(dashboardView, Priority.ALWAYS);
     }
 
-    private void showGuestManagement() {
-        contentArea.getChildren().clear();
+    /*
 
-        if (guestManagement == null) {
-            guestManagement = new GuestManagement();
-        }
-
-        contentArea.getChildren().add(guestManagement);
-        VBox.setVgrow(guestManagement, Priority.ALWAYS);
-    }
 
     private void showPlanning() {
         contentArea.getChildren().clear();
@@ -346,7 +262,7 @@ public class MainApp3 extends Application {
 
         contentArea.getChildren().add(planning);
         VBox.setVgrow(planning, Priority.ALWAYS);
-    }
+    }*/
 
     private void showRooms() {
         contentArea.getChildren().clear();
@@ -359,12 +275,7 @@ public class MainApp3 extends Application {
         VBox.setVgrow(roomManagementView, Priority.ALWAYS);
     }
 
-    private void showCheckout() {
-        contentArea.getChildren().clear();
-        // TODO: Implementare
-        Label placeholder = new Label("💰 Check-out - In sviluppo");
-        contentArea.getChildren().add(placeholder);
-    }
+
 
     private BookingDetail bookingDetail;
 
@@ -380,16 +291,7 @@ public class MainApp3 extends Application {
         VBox.setVgrow(bookingDetail, Priority.ALWAYS);
     }
 
-    private void showContoEconomico() {
-        contentArea.getChildren().clear();
 
-        if (contoEconomicoView == null) {
-            contoEconomicoView = new ContoEconomico();
-        }
-
-        contentArea.getChildren().add(contoEconomicoView);
-        VBox.setVgrow(contoEconomicoView, Priority.ALWAYS);
-    }
 
 
     private List<Servizio> creaCatalogo() {
@@ -405,19 +307,19 @@ public class MainApp3 extends Application {
 
     private Prenotazione creaPrenotazioneDiProva() {
         // Camera
-        Camera camera101 = new Camera(101, Stato.Occupata, 2, 89.50, "Piano Terra","");
-        ArrayList<Camera> camere = new ArrayList<>(List.of(camera101));
+        //Camera camera101 = new Camera(101, Stato.Occupata, 2, 89.50, "Piano Terra");
+       // ArrayList<Camera> camere = new ArrayList<>(List.of(camera101));
 
-        // Clienti
+        /* Clienti
         Cliente alessio = new Cliente(
-                "Alessio", "Colardi", "napoli", "caserta",
+                "Alessio", "Colardi", "italiana", "napoli", "caserta",
                 "via fas", 234, 234, "3243543", "M",
                 LocalDate.of(2001, 1, 30), "23rtygfds2",
                 "luca@smdb", "italiana", camera101
         );
-        //alessio.setIntestatario(true); //  Intestatario della prenotazione
+        alessio.setIntestatario(true); //  Intestatario della prenotazione
 
-        ArrayList<Cliente> arrayCliente = new ArrayList<>(List.of(alessio));
+        ArrayList<Cliente> arrayCliente = new ArrayList<>(List.of(alessio));*/
 
         // Servizi prenotati (quello che il cliente ha già ordinato)
         ArrayList<Servizio> serviziPrenotati = new ArrayList<>(List.of(
@@ -426,9 +328,9 @@ public class MainApp3 extends Application {
 
         // Trattamento
         Trattamento trattamento = new Trattamento("MEZZA PENSIONE", 55.5);
-
+/*
         // Prenotazione
-        /*Prenotazione p = new Prenotazione(
+        Prenotazione p = new Prenotazione(
                 1234,                                   // ID
                 LocalDate.of(2026, 1, 31),             // Data creazione
                 LocalDate.of(2026, 2, 11),             // Data inizio
@@ -443,16 +345,20 @@ public class MainApp3 extends Application {
                 serviziPrenotati,
                 arrayCliente,
                 "safnsdj08"
-        );
+        );  */
+        //p.setCheckIn(false); // Check-in non ancora fatto
 
-        p.setCheckIn(false); // Check-in non ancora fatto
-
-        return p;*/
         return null;
     }
 
-    public static void main(String[] args) {
-        System.out.println(" Avvio Hotel Colossus...");
-        launch(args);
-    }
 }
+
+
+
+
+
+
+
+
+
+

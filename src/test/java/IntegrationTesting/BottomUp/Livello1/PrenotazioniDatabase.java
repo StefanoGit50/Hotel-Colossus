@@ -64,7 +64,7 @@ public class PrenotazioniDatabase {
         ArrayList<Cliente> cliente=new ArrayList<>();
         cliente.add(new Cliente("mario","Rossi","napoli","napoli","via manzo",12,45,"323425","M",LocalDate.of(1998,12,1),"CF234rdfcfg","luca@gmail.com","italiana",listcamera.getFirst()));
         Prenotazione prenotazione =new Prenotazione(
-                LocalDate.of(2025, 12, 1),
+                LocalDate.now(),
                 LocalDate.of(2026, 1, 10),
                 LocalDate.of(2026, 1, 20),
                 null,
@@ -78,7 +78,7 @@ public class PrenotazioniDatabase {
                 servizio, cliente,
                 "UK123456789",
                 "carta di credito",
-                "italiana"
+                "Albanese"
         );
         CatalogoPrenotazioni.addPrenotazioni(prenotazione);
         // prendo dal database la prenotazione appena inserita

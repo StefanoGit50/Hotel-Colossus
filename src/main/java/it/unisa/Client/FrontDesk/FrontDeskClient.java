@@ -11,7 +11,10 @@ import it.unisa.Server.command.CatalogoClientiCommands.UnBanCommand;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.DAO.CameraDAO;
+import it.unisa.Storage.DAO.ImpiegatoDAO;
 import it.unisa.interfacce.FrontDeskInterface;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 //import it.unisa.Server.gestioneClienti.Cliente;
 
 
@@ -23,32 +26,30 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Logger;
 
 public class FrontDeskClient
 {
-    static Logger logger = Logger.getLogger("global");
-    private static FrontDeskInterface frontDeskInterface;
+    private static Logger logger = LogManager.getLogger(FrontDeskClient.class);
+    private  FrontDeskInterface frontDeskInterface;
 
 
-    public static void startRMI() throws RemoteException, MalformedURLException, NotBoundException {
-        logger.info("Sto cercando gli oggetti remoti GestionePrenotazioni e Gestionecamere...");
-
-        FrontDeskInterface frontDeskInterface = (FrontDeskInterface) Naming.lookup("rmi://localhost/GestionePrenotazioni");
-        logger.info("T\n" +
-                "           // GovernanteInterface governanteInterface = (GovernanteInterface) Naming.lookup(\"rmi://localhost/GestoreCamere\");\n" +
-                "           // logger.info(\"Trovato GestioneCamere! ...\");\n" +
-                "\n" +
-                "            int x=0;\n" +
-                "            \n" +
-                "            while(x==0)\n" +
-                "            {trovato GestionePrenotazioni! RMI REGISTRY ...");
-
-        System.out.println("Benvenuto nel Menu front desk! \nScegli un opzione:");
-        System.out.println("1. Effettua prenotazione\n2. Rimuovi prenotazione\n3. Ottieni lista prenotazioni \n4. modifica stato camera \n5. Visualizza lista attuale delle camere \n0. Esci");
-
+    public FrontDeskClient(){
+            startRMI();
     }
 
+
+    private void startRMI()  {
+        logger.info("Sto cercando gli oggetti remoti GestionePrenotazioni e Gestionecamere...");
+        try {
+        frontDeskInterface = (FrontDeskInterface) Naming.lookup("rmi://localhost/GestionePrenotazioni");
+            logger.info("oggetto trovato.");
+        } catch (MalformedURLException | NotBoundException | RemoteException e) {
+            System.err.println("ATTENZIONE: Impossibile connettersi al Server RMI.");
+            e.printStackTrace();
+        }
+
+    }
+/*
     public static void main(String[] args){
         try 
         {
@@ -167,7 +168,8 @@ public class FrontDeskClient
         }catch(Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
+
     public void FrontDeskController(FrontDeskInterface server) {
        //this.server = server;
     }
@@ -204,6 +206,14 @@ public class FrontDeskClient
     }
 
     public Impiegato DoAuthentication(String username, String password, String pwd2) throws RemoteException, IllegalAccess {
-        return frontDeskInterface.authentication(username, password, pwd2);
+        if (frontDeskInterface == null) {
+           logger.warn("Errore: Non sei connesso al server.");
+            return null;
+        }
+
+        System.out.println("nel client username e password" + username+ password);
+        Impiegato imp =frontDeskInterface.authentication(username, password, pwd2);
+        System.out.println(imp);
+        return imp;
     }
 }
