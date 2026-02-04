@@ -14,6 +14,7 @@ import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -22,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class TestCasesRegistraPrenotazione {
 
     public static FrontDeskInterface frontDesk;
-    public static ArrayList<Camera> listaCamere = new ArrayList<>();
     public static ArrayList<Servizio> listaServizi = new ArrayList<>();
     public static ArrayList<Cliente> listaClienti = new ArrayList<>();
     public static Trattamento trattamento = new Trattamento("Mezza Pensione", 125.00);
@@ -105,12 +105,6 @@ public class TestCasesRegistraPrenotazione {
         listaClienti.add(cliente2);
         listaClienti.add(cliente3);
 
-        //
-
-        listaCamere.add(camera101);
-        listaCamere.add(camera102);
-        listaCamere.add(camera201);
-
         // Lista servizi
 
         Servizio servizioMinibar = new Servizio("Parcheggio", 10.00);
@@ -134,9 +128,8 @@ public class TestCasesRegistraPrenotazione {
      * @return {@code Prenotazione} base.
      */
     public Prenotazione createBasePrenotazione() {
-        ArrayList<Cliente> clienti = new ArrayList<>();
-        clienti.add(listaClienti.getFirst());
-        String nome = clienti.getFirst().getNome();
+        ArrayList<Cliente> cliente = new ArrayList<>();
+        cliente.add(listaClienti.getFirst());
 
         return new Prenotazione(
                 LocalDate.now(),                // 2. Data Creazione
@@ -148,10 +141,10 @@ public class TestCasesRegistraPrenotazione {
                 "Patente",
                 LocalDate.of(2020, 1, 10),      // 8. Data Rilascio
                 LocalDate.of(2030, 1, 10),      // 9. Data Scadenza
-                clienti.getFirst().getNome(),                          // 10. Intestatario
+                cliente.getFirst().getNome(),                          // 10. Intestatario
                 "-",                             // 11. Note Aggiuntive
                 listaServizi,                   // 13. Lista Servizi
-                clienti,                        // 14. Lista Clienti
+                cliente,                        // 14. Lista Clienti
                 "CA123AA",                     // 15. Numero Documento
                 "",
                 "Italiana"// 16. Metodo Pagamento (MANCAVA QUESTO)
@@ -173,8 +166,6 @@ public class TestCasesRegistraPrenotazione {
             p.setPrezzoAcquistoTrattamento(null);
             p.setListaServizi(null);
             Assertions.assertDoesNotThrow(() -> frontDesk.addPrenotazione(p));
-            System.out.println(p);
-            System.out.println(autoIncrement);
             try {
                 campione = frontDesk.getPrenotazioneById(autoIncrement);
                 Assertions.assertEquals(p, campione);
@@ -186,29 +177,36 @@ public class TestCasesRegistraPrenotazione {
         @Test
         @DisplayName("TC2: [Success] Registrazione con servizi: 1")
         void testCase2() {
-            Prenotazione p = createBasePrenotazione();
-            p.setListaServizi(new ArrayList<>(listaServizi.subList(0, 1)));
+            Prenotazione p = createBasePrenotazione(), campione;
+            ArrayList<Servizio> c = new ArrayList<>();
+            c.add(listaServizi.getFirst());
+            p.setListaServizi(c);
             Assertions.assertDoesNotThrow(() -> frontDesk.addPrenotazione(p));
-
-           /* try {
-                Assertions.assertEquals(p, frontDesk.getPrenotazioneById(p.getIDPrenotazione()));
+            try {
+                campione = frontDesk.getPrenotazioneById(autoIncrement);
+                Assertions.assertEquals(p, campione);
             } catch (RemoteException e) {
-                Assertions.fail(e.getMessage());
-            }*/
+                e.printStackTrace();
+            }
         }
 
         @Test
         @DisplayName("TC3: [Success] Registrazione con servizi: 3 e CID")
         void testCase3() {
-            Prenotazione p = createBasePrenotazione();
+            Prenotazione p = createBasePrenotazione(), campione;
             p.setTipoDocumento("CID");
             p.setTrattamento(new Trattamento("Pensione Completa", 500));
+            ArrayList<Cliente> c = new ArrayList<>();
+            c.add(listaClienti.getFirst());/**/
+            c.add(listaClienti.get(1));
+            p.setListaClienti(c);
             Assertions.assertDoesNotThrow(() -> frontDesk.addPrenotazione(p));
-          /*  try {
-                Assertions.assertEquals(p, frontDesk.getPrenotazioneById(p.getIDPrenotazione()));
+            try {
+                campione = frontDesk.getPrenotazioneById(autoIncrement);
+                Assertions.assertEquals(p, campione);
             } catch (RemoteException e) {
-                Assertions.fail(e.getMessage());
-            }*/
+                e.printStackTrace();
+            }
         }
 
         @Test
