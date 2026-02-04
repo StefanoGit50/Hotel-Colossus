@@ -129,7 +129,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
 
             for (Servizio servizio : p.getListaServizi()) {
                 preparedStatement1.setInt(1, p.getIDPrenotazione());
-                preparedStatement.setInt(2,servizio.getId());
+                preparedStatement1.setInt(2,servizio.getId());
                 preparedStatement1.setString(3, servizio.getNome());
                 preparedStatement1.setDouble(4, servizio.getPrezzo());
                 preparedStatement1.executeUpdate();
@@ -150,8 +150,6 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                         stmt.executeUpdate();
                         logger.debug("query effettuata con successo");
                     }
-
-
             }
         }catch (SQLException e){
             throw new RuntimeException(e);
@@ -233,7 +231,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
             rs = ps.executeQuery();
             CameraDAO dao = new CameraDAO();
 
-            if (rs.next()) {
+            if (rs.next()){
                 try {
                     Camera camera = null;
                     do {
@@ -244,7 +242,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
-            } else {
+            }else{
                 throw new SQLException("ERRORE: prenotazione ID="+key+"non contiene camere");
             }
 
@@ -601,6 +599,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                             preparedStatement1.setString(1,rs4.getString("CF"));
 
                             try(ResultSet resultSet = preparedStatement1.executeQuery()){
+                                resultSet.next();
                                 camera.setNumeroCamera(resultSet.getInt("NumeroCameraStorico"));
                                 camera.setNoteCamera(resultSet.getString("NoteCamera"));
                                 camera.setStatoCamera(Stato.valueOf(resultSet.getString("Stato")));

@@ -36,7 +36,7 @@ public class PrenotazioniDatabase {
     @Test
     @DisplayName("Bottom up TC8: Retrieve della lista nel catalogo prenotazioni")
     @Tag("Integration")
-    public void RetrievePrenotazioni()  {
+    public void RetrievePrenotazioni(){
 
         List<Prenotazione> prenotazioni= null;
           try{
@@ -76,7 +76,7 @@ public class PrenotazioniDatabase {
                 cliente.getFirst().getNome()+" "+cliente.getFirst().getCognome(),
                 "Privacy assoluta",
                 servizio, cliente,
-                "UK123456789",
+                "UK1234567",
                 "carta di credito",
                 "Albanese"
         );
