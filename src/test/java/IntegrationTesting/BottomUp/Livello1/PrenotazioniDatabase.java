@@ -1,5 +1,6 @@
 package IntegrationTesting.BottomUp.Livello1;
 
+import WhiteBox.UnitTest.DBPopulator;
 import it.unisa.Common.*;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;

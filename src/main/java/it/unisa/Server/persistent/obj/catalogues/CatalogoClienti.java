@@ -26,7 +26,7 @@ public class CatalogoClienti implements Serializable {
     /**
      * Lista interna contenente tutti gli oggetti {@link Cliente}.
      */
-    private static FrontDeskStorage<Cliente> frontDeskStorage = new ClienteDAO();
+    private static FrontDeskStorage<Cliente> frontDeskStorage;
     private static ArrayList<Cliente> listaClienti ;
 
     /**
@@ -36,6 +36,7 @@ public class CatalogoClienti implements Serializable {
 
     static {
         try {
+            frontDeskStorage = new ClienteDAO();
             listaClienti= (ArrayList<Cliente>)frontDeskStorage.doRetriveAll("decrescente");
         }catch (SQLException e){
             throw  new RuntimeException(e);
