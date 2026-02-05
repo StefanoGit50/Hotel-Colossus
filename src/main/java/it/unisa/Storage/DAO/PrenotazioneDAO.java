@@ -1,5 +1,6 @@
 package it.unisa.Storage.DAO;
 
+import com.mysql.cj.protocol.x.XServerSession;
 import it.unisa.Common.*;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
@@ -94,6 +95,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
     @Override
     public synchronized void doSave(Prenotazione p)  {
         PreparedStatement preparedStatement = null;
+        ServizioDAO servizioDAO = new ServizioDAO();
 
         try {
             connection = ConnectionStorage.getConnection();
@@ -131,17 +133,37 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
             }
 
             // Salva i servizi associati
-            String query = "Insert into ha (IDPrenotazione,IDServizio,NomeServizioAcquistato,PrezzoAcquistoServizio) values(?,?,?,?)";
+            String query = "Insert into ha (IDPrenotazione,IDServizio,NomeServizioAcquistato,Quantità,PrezzoAcquistoServizio) values(?,?,?,?,?)";
             PreparedStatement preparedStatement1 = connection.prepareStatement(query);
 
-            for (Servizio servizio : p.getListaServizi()) {
-                preparedStatement1.setInt(1, p.getIDPrenotazione());
-                preparedStatement1.setInt(2,servizio.getId());
-                preparedStatement1.setString(3, servizio.getNome());
-                preparedStatement1.setDouble(4, servizio.getPrezzo());
-                preparedStatement1.executeUpdate();
-            }
+            HashMap<Integer, Integer> conteggioMapServizio = new HashMap<>(); // mappe per gestire il rapporto quantità - id
+            HashMap<Integer, Servizio> infoMapServizio = new HashMap<>();
+            int id;
+            try {
+                for (Servizio servizio : p.getListaServizi()) {
+                    id = servizio.getId();
+                    conteggioMapServizio.put(id, conteggioMapServizio.getOrDefault(id, 0) + 1);
+                    logger.debug("conteggio servizio "+id);
+                    if (!infoMapServizio.containsKey(id)) {
+                        infoMapServizio.put(id, servizio);
+                    }
+                }
 
+                for(Integer idServizio : conteggioMapServizio.keySet()) {
+                    Servizio servizio = infoMapServizio.get(idServizio);
+                    int quantità = conteggioMapServizio.get(idServizio);
+                    logger.debug("Salvataggio servizio: " + servizio.getNome() + " con quantità: " + quantità);
+                    preparedStatement1.setInt(1, p.getIDPrenotazione());
+                    preparedStatement1.setInt(2, servizio.getId());
+                    preparedStatement.setString(3, servizio.getNome());
+                    preparedStatement1.setInt(4, quantità);
+                    preparedStatement1.setDouble(5, servizio.getPrezzo());
+                    preparedStatement1.executeUpdate();
+                }
+            }catch(SQLException e){
+                    e.printStackTrace();
+                    return;
+            }
 
                 for (Cliente cliente : p.getListaClienti()) {
                     logger.debug("Entra nel for per matchare camere e clienti della prenotazione");
@@ -151,7 +173,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                         stmt.setString(1, cliente.getCf());
                         stmt.setInt(2, cliente.getCamera().getNumeroCamera());
                         stmt.setInt(3, p.getIDPrenotazione());
-                        stmt.setDouble(4, cliente.getCamera().getNumeroCamera());
+                        stmt.setDouble(4, cliente.getCamera().getPrezzoCamera());
                         stmt.setString(5,cliente.getNome()+" "+cliente.getCognome());
                         stmt.setInt(6,cliente.getCamera().getNumeroCamera());
                         stmt.executeUpdate();
