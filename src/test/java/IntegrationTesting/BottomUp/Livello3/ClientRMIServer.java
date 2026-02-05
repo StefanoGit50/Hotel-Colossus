@@ -16,7 +16,7 @@ public class ClientRMIServer {
     }
 
     @Test
-    @DisplayName("Bottom Up: LV3 FrontDeskClientRMI +FrontDeskServer+DB ")
+    @DisplayName("Bottom Up TC24: LV3 FrontDeskClientRMI +FrontDeskServer+DB ")
     @Tag("integration-LV3")
     public void FrontDeskCompleteTest(){
        // frontDeskClient.

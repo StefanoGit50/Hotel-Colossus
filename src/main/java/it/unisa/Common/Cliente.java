@@ -1,7 +1,6 @@
 package it.unisa.Common;
 
 import java.awt.font.TextHitInfo;
-import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -126,81 +125,19 @@ public class Cliente implements Cloneable, Serializable {
      */
     public Cliente(String nome, String cognome, String provincia, String comune, String via, Integer numeroCivico, Integer CAP, String numeroTelefono, String sesso, LocalDate dataNascita ,String cf , String email,String nazionalità,Camera camera) {
             this.nome = nome;
-
-
-        if(cognome != null){
             this.cognome = cognome;
-        }else{
-            this.cognome = "";
-        }
-
-        if(provincia != null){
             this.provincia = provincia;
-        }else{
-            this.provincia = "";
-        }
-        if(comune != null){
             this.comune = comune;
-        }else{
-            this.comune = "";
-        }
-        if(via != null){
             this.via = via;
-        }else{
-            this.via = "";
-        }
-        if(numeroCivico != null){
             this.numeroCivico = numeroCivico;
-        } else{
-            this.numeroCivico = 0;
-        }
-
-        if(CAP != null){
-           this.CAP = CAP;
-        }else{
-            this.CAP = 0;
-        }
-
-        if(numeroCivico != null){
+            this.CAP = CAP;
             this.numeroTelefono = numeroTelefono;
-        }else{
-            this.numeroTelefono = "";
-        }
-
-        if(sesso != null){
             this.sesso = sesso;
-        }else{
-            this.sesso = "";
-        }
-
-        if(dataNascita != null){
             this.dataNascita = dataNascita;
-        }else{
-            this.dataNascita = LocalDate.now();
-        }
-
-        if(cf != null){
             this.cf = cf;
-        }else{
-            this.cf = "";
-        }
-
-        if(email != null){
             this.email = email;
-        }else{
-            this.email = "";
-        }
-
-        if(nazionalità != null){
             this.nazionalità = nazionalità;
-        }else{
-            this.nazionalità = "";
-        }
-        if(camera != null){
             this.camera = camera;
-        }else{
-            this.camera = new Camera();
-        }
     }
 
     /**
@@ -530,10 +467,13 @@ public class Cliente implements Cloneable, Serializable {
         this.email = email;
     }
 
-
-
-
-
+    /**
+     * Mostra l'email di un cliente
+     *
+     * @post result == email
+     *
+     * @return email l'email del cliente
+     */
     public String getEmail() {
         return email;
     }
@@ -573,17 +513,11 @@ public class Cliente implements Cloneable, Serializable {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Cliente cliente = (Cliente) obj;
-        if(!Objects.equals(nome,cliente.nome)){
-            return false;
-        }
-        if(!Objects.equals(cognome,cliente.cognome)){
-            return false;
-        }
-        if(!Objects.equals(cf,cliente.cf)){
-
-        }
-
-        return true;
+        return numeroCivico.equals(cliente.getNumeroCivico()) && nome.equalsIgnoreCase(cliente.getNome()) && cognome.equalsIgnoreCase(cliente.getCognome()) &&
+                cf.equalsIgnoreCase(cliente.getCf()) && email.equalsIgnoreCase(cliente.getEmail()) && provincia.equalsIgnoreCase(cliente.getProvincia())
+                && comune.equalsIgnoreCase(cliente.getComune()) && via.equalsIgnoreCase(cliente.getVia()) && CAP.equals(cliente.getCAP()) && numeroTelefono.equalsIgnoreCase(cliente.getNumeroTelefono())
+                && isBlacklisted == cliente.isBlacklisted() && sesso.equalsIgnoreCase(cliente.getSesso()) && camera.equals(cliente.getCamera()) && dataNascita.equals(cliente.getDataNascita())
+                && nazionalità.equalsIgnoreCase(cliente.getNazionalita());
     }
     /**
      * Crea e restituisce una copia dell'oggetto (clone).
