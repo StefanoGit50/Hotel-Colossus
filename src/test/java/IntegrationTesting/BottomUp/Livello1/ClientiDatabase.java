@@ -33,7 +33,7 @@ public class ClientiDatabase {
 
 
     @Test
-    @DisplayName("Bottom up: simulazione della chiamata update tramite catalogo")
+    @DisplayName("Bottom up 2.0 TC4: simulazione della chiamata update tramite catalogo")
     @Tag("integration")
     public void updateCatalogoClienti() throws CloneNotSupportedException {
         CatalogoClienti.aggiungiCliente(cliente);
@@ -52,7 +52,7 @@ public class ClientiDatabase {
     }
 
     @Test
-    @DisplayName("Bottom up: simulazione della chiamata save tramite catalogo")
+    @DisplayName("Bottom up TC5: simulazione della chiamata save tramite catalogo")
     @Tag("integration")
     public void aggiungiCliente() {
         CatalogoClienti.aggiungiCliente(cliente);
@@ -66,7 +66,7 @@ public class ClientiDatabase {
     }
 
     @Test
-    @DisplayName("Bottom up: simulazione della chiamata di retrieve dal DB")
+    @DisplayName("Bottom up TC6: simulazione della chiamata di retrieve dal DB")
     @Tag("integration")
     public void retrievelistaCliente() {
         ArrayList<Cliente> testarray = new ArrayList<>();
@@ -81,7 +81,7 @@ public class ClientiDatabase {
     }
 
     @Test
-    @DisplayName("Bottom up: simulazione della chiamata di eliminazione dal DB")
+    @DisplayName("Bottom up TC7: simulazione della chiamata di eliminazione dal DB")
     @Tag("integration")
     public void eliminazioneCliente() {
         CatalogoClienti.aggiungiCliente(cliente);

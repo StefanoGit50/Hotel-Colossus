@@ -1,5 +1,4 @@
-
-USE hotelColossus;
+USE hotelcolossus;
 
 -- =============================================
 -- 1. INSERT TRATTAMENTO
@@ -35,11 +34,11 @@ INSERT INTO Camera (NumeroCamera, NomeCamera, NumeroMaxOcc, NoteCamera, Stato, P
 -- =============================================
 -- 4. INSERT CLIENTE
 -- =============================================
-INSERT INTO Cliente (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, Nazionalita, DataDiNascita, IsBackListed) VALUES
-                                                                                                                                                   ('RSSMRA80A01H501U', 'Mario', 'Rossi', '10000', 'Roma', 10, 'Roma', 'Via del Corso', 'mario.rossi@email.com', 'M', '3331234567', 'Italiana', '1980-01-01', false),
-                                                                                                                                                   ('VRDLGI90B02F205K', 'Luigi', 'Verdi', '20100', 'Milano', 20, 'Milano', 'Corso Buenos Aires', 'luigi.verdi@email.com', 'M', '3339876543', 'Italiana', '1990-02-02', false),
-                                                                                                                                                   ('BNCLCU85C03G273Z', 'Lucia', 'Bianchi', '90100', 'Palermo', 5, 'Palermo', 'Via Roma', 'lucia.bianchi@email.com', 'F', '3381122334', 'Italiana', '1985-03-03', true), -- Blacklisted
-                                                                                                                                                   ('MULLER88E05Z112K', 'Hans', 'Muller', '10115', 'Berlino', 1, 'Berlin', 'Alexanderplatz', 'hans.muller@de-mail.de', 'M', '+4915123456', 'Tedesca', '1988-05-05', false);
+INSERT INTO Cliente (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, Nazionalita, DataDiNascita, IsBlackListed) VALUES
+                                                                                                                                                    ('RSSMRA80A01H501U', 'Mario', 'Rossi', '10000', 'Roma', 10, 'Roma', 'Via del Corso', 'mario.rossi@email.com', 'M', '3331234567', 'Italiana', '1980-01-01', false),
+                                                                                                                                                    ('VRDLGI90B02F205K', 'Luigi', 'Verdi', '20100', 'Milano', 20, 'Milano', 'Corso Buenos Aires', 'luigi.verdi@email.com', 'M', '3339876543', 'Italiana', '1990-02-02', false),
+                                                                                                                                                    ('BNCLCU85C03G273Z', 'Lucia', 'Bianchi', '90100', 'Palermo', 5, 'Palermo', 'Via Roma', 'lucia.bianchi@email.com', 'F', '3381122334', 'Italiana', '1985-03-03', true), -- Blacklisted
+                                                                                                                                                    ('MULLER88E05Z112K', 'Hans', 'Muller', '10115', 'Berlino', 1, 'Berlin', 'Alexanderplatz', 'hans.muller@de-mail.de', 'M', '+4915123456', 'Tedesca', '1988-05-05', false);
 
 -- =============================================
 -- 5. INSERT IMPIEGATO
@@ -74,7 +73,7 @@ VALUES
 -- =============================================
 INSERT INTO Associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto, NominativoCliente, NumeroCameraStorico ) VALUES
 -- Mario Rossi -> Camera 101 -> Prenotazione 1
-('RSSMRA80A01H501U', 101, 1, 80.00, 'Mario Rossi',101),
+('RSSMRA80A01H501U', 101, 1, 350.00, 'Mario',101),
 
 -- Luigi Verdi -> Suite 202 -> Prenotazione 2
 ('VRDLGI90B02F205K', 202, 2, 350.00, 'Luigi Verdi',202),
@@ -86,7 +85,7 @@ INSERT INTO Associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto, Nomin
 -- 8. INSERT HA (Dettaglio Servizi)
 -- Importante: Inseriamo manualmente NomeServizioAcquistato
 -- =============================================
-INSERT INTO Ha (IDPrenotazione, IDServizio, quantità, NomeServizioAcquistato, PrezzoAcquistoServizio) VALUES
+INSERT INTO Ha (IDPrenotazione, IDServizio, quantità , NomeServizioAcquistato, PrezzoAcquistoServizio) VALUES
 -- Prenotazione 1 (Mario) prende Parcheggio(1)
 (1, 1, 2,'Parcheggio', 10.00),
 

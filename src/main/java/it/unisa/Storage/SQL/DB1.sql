@@ -1,4 +1,4 @@
-
+drop database IF EXISTS hotelcolossus;
 create database hotelColossus;
 use hotelColossus;
 
@@ -16,7 +16,7 @@ create table Cliente(
                         telefono char(15) not null,
                         Nazionalita varchar(50) not null,
                         DataDiNascita date not null,
-                        IsBackListed boolean not null,
+                        IsBlackListed boolean not null,
                         primary key(CF)
 );
 
@@ -82,27 +82,27 @@ create table Associato_a(
 );
 
 create table Ha(
-                           IDDettaglio int AUTO_INCREMENT PRIMARY KEY,
-                           IDPrenotazione int not null,
-                           IDServizio int NULL,
-                           quantità int NULL,
-                           NomeServizioAcquistato varchar(50) not null,
-                           PrezzoAcquistoServizio double not null,
-                           UNIQUE(IDServizio,IDPrenotazione),
+                   IDDettaglio int AUTO_INCREMENT PRIMARY KEY,
+                   IDPrenotazione int not null,
+                   IDServizio int NULL,
+                   quantità int NULL,
+                   NomeServizioAcquistato varchar(50) not null,
+                   PrezzoAcquistoServizio double not null,
+                   UNIQUE(IDServizio,IDPrenotazione),
 
-                           foreign key(IDPrenotazione) references Prenotazione(IDPrenotazione)
-                               on delete cascade on update cascade,
-                           foreign key(IDServizio) references Servizio(IDServizio)
-                               on delete set null on update cascade);
+                   foreign key(IDPrenotazione) references Prenotazione(IDPrenotazione)
+                       on delete cascade on update cascade,
+                   foreign key(IDServizio) references Servizio(IDServizio)
+                       on delete set null on update cascade);
 
 create table Impiegato(
                           IDImpiegato int not null auto_increment,
                           CF char(16) not null UNIQUE,
                           Stipendio double not null,
                           UserName varchar(50) not null,
-                          HashPasword varchar(50) not null,
-                          isTemporary boolean not null Default false,
-                          dataScadenzaToken TIMESTAMP not null,
+                          HashPasword varchar(100) not null,
+                          isTemporary boolean Default false,
+                          dataScadenzaToken TIMESTAMP default null,
                           Nome varchar(50) not null,
                           Cognome varchar(50) not null,
                           Cap char(5) not null,
@@ -123,6 +123,7 @@ create table Impiegato(
                           IDManager int null DEFAULT 0,
                           CFManager char(16) null DEFAULT null,
                           UNIQUE(CF),
+                          UNIQUE(IDImpiegato),
                           primary key(IDImpiegato,CF),
                           foreign key(IDManager,CFManager) references Impiegato(IDImpiegato,CF) on delete cascade on update cascade
 );

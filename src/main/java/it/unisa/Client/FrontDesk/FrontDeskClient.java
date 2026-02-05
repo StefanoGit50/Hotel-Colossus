@@ -30,7 +30,7 @@ import java.util.Scanner;
 public class FrontDeskClient
 {
     private static Logger logger = LogManager.getLogger(FrontDeskClient.class);
-    private  FrontDeskInterface frontDeskInterface;
+    private static FrontDeskInterface frontDeskInterface;
 
 
     public FrontDeskClient(){
@@ -38,7 +38,7 @@ public class FrontDeskClient
     }
 
 
-    private void startRMI()  {
+    private static void startRMI()  {
         logger.info("Sto cercando gli oggetti remoti GestionePrenotazioni e Gestionecamere...");
         try {
         frontDeskInterface = (FrontDeskInterface) Naming.lookup("rmi://localhost/GestionePrenotazioni");
@@ -49,7 +49,7 @@ public class FrontDeskClient
         }
 
     }
-/*
+
     public static void main(String[] args){
         try 
         {
@@ -168,8 +168,7 @@ public class FrontDeskClient
         }catch(Exception e) {
             e.printStackTrace();
         }
-    }*/
-
+    }
     public void FrontDeskController(FrontDeskInterface server) {
        //this.server = server;
     }

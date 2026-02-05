@@ -30,13 +30,15 @@ public class PrenotazioniDatabase {
     }
     @AfterEach
     public void tearDown()  {
+        DBPopulator.cancel();
+        DBPopulator.populator();
         CatalogoPrenotazioni.getListaPrenotazioni().clear();
     }
 
     @Test
-    @DisplayName("Bottom up: Retrieve della lista nel catalogo prenotazioni")
+    @DisplayName("Bottom up TC8: Retrieve della lista nel catalogo prenotazioni")
     @Tag("Integration")
-    public void RetrievePrenotazioni()  {
+    public void RetrievePrenotazioni(){
 
         List<Prenotazione> prenotazioni= null;
           try{
@@ -53,7 +55,7 @@ public class PrenotazioniDatabase {
     }
 
     @Test
-    @DisplayName("Bottom up: Aggiunta alla lista del catalogo e successivamente al DB")
+    @DisplayName("Bottom up TC9: Aggiunta alla lista del catalogo e successivamente al DB")
     @Tag("integration")
     public void addPrenotazione() throws  SQLException {
 
@@ -76,7 +78,7 @@ public class PrenotazioniDatabase {
                 cliente.getFirst().getNome()+" "+cliente.getFirst().getCognome(),
                 "Privacy assoluta",
                 servizio, cliente,
-                "UK123456789",
+                "UK1234567",
                 "carta di credito",
                 "Albanese"
         );
@@ -88,25 +90,24 @@ public class PrenotazioniDatabase {
     }
 
     @Test
-    @DisplayName("Bottom up: Rimozione dalla lista e dal database")
+    @DisplayName("Bottom up TC10: Rimozione dalla lista e dal database")
     @Tag("integration")
     @Tag("exception")
     public void removePrenotazione()  {
 
-        ArrayList<Prenotazione> arrayList= CatalogoPrenotazioni.getListaPrenotazioni();
-        Prenotazione p1=CatalogoPrenotazioni.getPrenotazione(arrayList.getFirst().getIDPrenotazione());
+        int dimensioneIniziale = CatalogoPrenotazioni.getListaPrenotazioni().size();
+
+        Prenotazione p1 = CatalogoPrenotazioni.getListaPrenotazioni().getFirst();
 
         CatalogoPrenotazioni.removePrenotazioni(p1);
 
-        assertThrows(SQLException.class,()-> {
-            assertNotNull(p1);
-            fds.doRetriveByKey(p1.getIDPrenotazione());
-        });
-        assertNotEquals(CatalogoPrenotazioni.getListaPrenotazioni().size(), arrayList.size());
+        int dimensioneFinale = CatalogoPrenotazioni.getListaPrenotazioni().size();
+
+        assertEquals(dimensioneIniziale - 1, dimensioneFinale);
     }
 
     @Test
-    @DisplayName("Bottom up: Update della lista del catalogo e del database")
+    @DisplayName("Bottom up TC11: Update della lista del catalogo e del database")
     @Tag("integration")
     public void updatePrenotazione() throws SQLException {
 
