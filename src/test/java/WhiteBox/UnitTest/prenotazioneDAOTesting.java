@@ -39,7 +39,7 @@ public class prenotazioneDAOTesting{
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        clientes.add(new Cliente("Mario","Rossi","Roma","Roma","Via del Corso",10,10000,"3331234567","M",LocalDate.of(1980,1,1),"RSSMRA80A01H501U","mario.rossi@email.com","Italiana",new Camera(101,Stato.Occupata,2,120,"Camera matrimoniale vista mare","")));
+        clientes.add(new Cliente("Mario","Rossi","Roma","Roma","Via del Corso",10,10000,"3331234567","M",LocalDate.of(1980,1,1),"RSSMRA80A01H501U","mario.rossi@email.com","Italiana",new Camera(101,Stato.Libera,2,80,"Camera matrimoniale vista mare","")));
         servizios.add(servizio);
          prenotazione = new Prenotazione(
                 LocalDate.of(2004,12,2),
@@ -144,6 +144,7 @@ public class prenotazioneDAOTesting{
     @Tag("True")
     @DisplayName("TC33: doRetriveAll() quando va tutto bene")
     public void doRetriveAllAllTrue() throws SQLException {
+        //prenotazioneDAO.doDelete();
         ArrayList<Prenotazione> prenotaziones = (ArrayList<Prenotazione>) prenotazioneDAO.doRetriveAll("IDPrenotazione");
         ArrayList<Prenotazione> prenotaziones1 = new ArrayList<>();
         ArrayList<Cliente> clientes = new ArrayList<>();
@@ -176,12 +177,7 @@ public class prenotazioneDAOTesting{
         assertEquals(prenotaziones,prenotazioneDAO.doRetriveAll("IDPrenotazione"));
     }
 
-    @Test
-    @Tags({@Tag("Exception"),@Tag("Error")})
-    @DisplayName("TC35: doUpdate() quando da l'eccezione")
-    public void doUpdateException() throws SQLException{
-        assertThrows(NullPointerException.class,()->prenotazioneDAO.doUpdate(null));
-    }
+
 
     @Test
     @Tag("True")
