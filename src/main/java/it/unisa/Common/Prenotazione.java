@@ -119,7 +119,7 @@ public class Prenotazione implements Cloneable, Serializable {
      * @param listaClienti Lista dei clienti.
      * @param numeroDocumento il numero del documento.
      */
-    public Prenotazione( LocalDate dataCreazionePrenotazione, LocalDate dataInizioPrenotazione, LocalDate dataFinePrenotazione,LocalDate dataEmissioneRicevuta,
+    public Prenotazione(LocalDate dataCreazionePrenotazione, LocalDate dataInizioPrenotazione, LocalDate dataFinePrenotazione,LocalDate dataEmissioneRicevuta,
                          Trattamento trattamento,Double prezzoAcquistoTrattamento, String tipoDocumento, LocalDate dataRilascio, LocalDate dataScadenza,
                          String intestatario, String noteAggiuntive, ArrayList<Servizio> listaServizi,
                          ArrayList<Cliente> listaClienti ,String numeroDocumento, String metodoPagamento, String cittadinanza) {

@@ -58,7 +58,6 @@ public class PrenotazioniDatabase {
     @DisplayName("Bottom up TC9: Aggiunta alla lista del catalogo e successivamente al DB")
     @Tag("integration")
     public void addPrenotazione() throws  SQLException {
-
         ArrayList<Camera> listcamera=new ArrayList<>();
         listcamera.add(new Camera(112, Stato.Occupata,2,45.50,"","Pino"));
         ArrayList<Servizio> servizio=new ArrayList<>();
