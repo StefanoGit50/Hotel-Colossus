@@ -39,14 +39,14 @@ public class ClienteDAOTesting {
 
     @Test
     @Tag("True")
-    @DisplayName("doSave() quando va tutto bene")
+    @DisplayName("TC11: doSave() quando va tutto bene")
     public void doSaveAllTrue() throws SQLException {
         assertDoesNotThrow(() -> clienteDAO.doSave(cliente));
     }
 
     @Test
     @Tag("True")
-    @DisplayName("doRetriveByKey() quando va tutto bene")
+    @DisplayName("TC12: doRetriveByKey() quando va tutto bene")
     public void doRetriveByKeyAllTrue() throws SQLException{
         DBPopulator.cancel();
         DBPopulator.populator();
@@ -56,7 +56,7 @@ public class ClienteDAOTesting {
 
     @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
-    @DisplayName("doRetriveByKey() quando tira un eccezione")
+    @DisplayName("TC13: doRetriveByKey() quando tira un eccezione")
     public void doRetriveByKeyException(){
         DBPopulator.cancel();
         DBPopulator.populator();
@@ -65,7 +65,7 @@ public class ClienteDAOTesting {
 
     @Test
     @Tag("False")
-    @DisplayName("doRetriveByKey() quando non trova niente")
+    @DisplayName("TC14: doRetriveByKey() quando non trova niente")
     public void doRetriveByKey() throws SQLException {
        DBPopulator.cancel();
        DBPopulator.populator();
@@ -77,14 +77,14 @@ public class ClienteDAOTesting {
 
     @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
-    @DisplayName("doDelete() quando cliente è uguale null")
+    @DisplayName("TC15: doDelete() quando cliente è uguale null")
     public void doDeleteException() throws SQLException{
        assertThrows(NoSuchElementException.class,()->clienteDAO.doDelete(null));
     }
 
     @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
-    @DisplayName("doDelete() quando non cancella nulla")
+    @DisplayName("TC16: doDelete() quando non cancella nulla")
     public void doDelete(){
         DBPopulator.cancel();
         assertThrows(NoSuchElementException.class,()->clienteDAO.doDelete(cliente));
@@ -92,7 +92,7 @@ public class ClienteDAOTesting {
 
     @Test
     @Tag("True")
-    @DisplayName("doRetriveAll() quando True e quindi è decrescente")
+    @DisplayName("TC17: doRetriveAll() quando True e quindi è decrescente")
     public void doRetriveAllTrue() throws SQLException {
         DBPopulator.cancel();
         DBPopulator.populator();
@@ -110,7 +110,7 @@ public class ClienteDAOTesting {
 
     @Test
     @Tag("False")
-    @DisplayName("doRetriveAll() quando viene inserito in senso crescente")
+    @DisplayName("TC18: doRetriveAll() quando viene inserito in senso crescente")
     public void doRetriveAllFalse() throws SQLException{
         DBPopulator.cancel();
         DBPopulator.populator();
@@ -128,7 +128,7 @@ public class ClienteDAOTesting {
 
     @Test
     @Tag("False")
-    @DisplayName("doRetriveAll() quando il resultSet.next() restituisce false")
+    @DisplayName("TC19: doRetriveAll() quando il resultSet.next() restituisce false")
     public void doRetriveResultSet() throws SQLException {
         DBPopulator.cancel();
         ArrayList<Cliente> clientes1 = new ArrayList<>();
@@ -140,7 +140,7 @@ public class ClienteDAOTesting {
 
     @Test
     @Tag("True")
-    @DisplayName("doUpdate() quando va tutto bene")
+    @DisplayName("TC20: doUpdate() quando va tutto bene")
     public void doUpdateAllTrue(){
         DBPopulator.cancel();
         DBPopulator.populator();
@@ -150,7 +150,7 @@ public class ClienteDAOTesting {
 
     @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
-    @DisplayName("doUpdate() quando lancia una eccezione")
+    @DisplayName("TC21: doUpdate() quando lancia una eccezione")
     public void doUpdateAllFalse(){
         DBPopulator.cancel();
         DBPopulator.populator();
@@ -159,7 +159,7 @@ public class ClienteDAOTesting {
 
     @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
-    @DisplayName("doRetrivaByAttribute() quando viene mandata una eccezione")
+    @DisplayName("TC22: doRetrivaByAttribute() quando viene mandata una eccezione")
     public void doRetriveByAttributeException(){
         DBPopulator.cancel();
         DBPopulator.populator();
@@ -168,7 +168,7 @@ public class ClienteDAOTesting {
 
     @Test
     @Tag("True")
-    @DisplayName("doRetriveByAttribute() quando va tutto bene")
+    @DisplayName("TC23: doRetriveByAttribute() quando va tutto bene")
     public void doRetriveByAttributeAllTrue() throws SQLException {
         DBPopulator.cancel();
         DBPopulator.populator();
@@ -184,7 +184,7 @@ public class ClienteDAOTesting {
 
     @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
-    @DisplayName("doRetriveByAttribute() quando va in eccezzione")
+    @DisplayName("TC24: doRetriveByAttribute() quando va in eccezzione")
     public void doRetriveByAttribute() throws SQLException{
         DBPopulator.cancel();
         DBPopulator.populator();

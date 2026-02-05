@@ -58,19 +58,4 @@ public class DBPopulator{
         }
     }
 
-    public static void AggiungiAssociazione(){
-        ScriptRunner scriptRunner = new ScriptRunner(connection);
-
-        scriptRunner.setLogWriter(null);
-        scriptRunner.setStopOnError(true);
-        try{
-            Reader reader = new BufferedReader(new FileReader("C:/Users/renat/Desktop/universita/Progetti/Hotel-Colossus/src/main/java/it/unisa/Storage/SQL/insertServizioDB.sql"));
-             scriptRunner.runScript(reader);
-        }catch(FileNotFoundException fileNotFoundException){
-            throw new RuntimeException(fileNotFoundException);
-        }
-
-
-    }
-
 }
