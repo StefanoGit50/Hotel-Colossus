@@ -64,7 +64,7 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato> {
                 "DataScadenzaDocumento, DataRilascioDocumento) " +
                 "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(insertSQL)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS )) {
             preparedStatement.setString(1, impiegato.getCodiceFiscale());
             preparedStatement.setDouble(2, impiegato.getStipendio());
             preparedStatement.setString(3, impiegato.getUsername());
@@ -91,8 +91,11 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato> {
 
             preparedStatement.executeUpdate();
 
+            try(ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
+                impiegato.setId(resultSet.getInt(1));
+            }
             impiegato= doRetriveByKey(impiegato.getCodiceFiscale());
-            impiegato.setUsername("Manager"+impiegato.getId());
+            impiegato.setUsername(impiegato.getRuolo().toString()+impiegato.getId());
             System.out.println(impiegato);
             doUpdate(impiegato);
         }
@@ -145,7 +148,7 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato> {
                 Connection connection = ConnectionStorage.getConnection();
                 Impiegato impiegato;
                 try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT CF, IDImpiegato,Nome,Cognome,UserName,HashPasword,isTemporary,dataScadenzaToken,Sesso , TipoDocumento " +
-                                    "                                                                   , NumeroDocumento , Cap,Via ,Provincia , Comune ,Civico," +
+                                                                                            ", NumeroDocumento , Cap,Via ,Provincia , Comune ,Civico," +
                                                                                             "Telefono,Ruolo,Stipendio,DataAssunzione,DataScadenzaDocumento,DataRilascioDocumento," +
                                                                                             "EmailAziendale,Cittadinanza FROM impiegato WHERE CF = ?")) {
                     preparedStatement.setString(1 , f);
@@ -210,7 +213,7 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato> {
                         String userName = resultSet.getString("UserName");
                         String hashPassword = resultSet.getString("HashPasword");
                         Boolean isTemporary = resultSet.getBoolean("isTemporary");
-                        Instant dataScadenzaToken = resultSet.getTimestamp("dataScadenzaToken").toInstant();
+                        Instant dataScadenzaToken = resultSet.getTimestamp("dataScadenzaToken") != null  ? resultSet.getTimestamp("dataScadenzaToken").toInstant() : null;
                         String sesso = resultSet.getString("Sesso");
                         String tipoDocumento = resultSet.getString("TipoDocumento");
                         String i = resultSet.getString("NumeroDocumento");
@@ -228,7 +231,6 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato> {
                         String emailAziendale = resultSet.getString("EmailAziendale");
                         String cittadinanza = resultSet.getString("Cittadinanza");
 
-                        userName = userName+id;
                         impiegato = new Impiegato(id,userName,hashPassword,isTemporary,dataScadenzaToken,nome,cognome,sesso,tipoDocumento,i,Cap,via,provincia,comune,numeroCivico,cf,telefono,Ruolo.valueOf(ruolo),stipedio,dataAssunzione,dataRilascio,emailAziendale,cittadinanza,dataScadenza);
                     }else{
                         throw new NoSuchElementException("impiegato non trovato");

@@ -21,6 +21,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -69,35 +70,44 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         try
         {
             // IMPORTANTE: Avvia l'RMI registry programmaticamente
-            logger.info("Avvio RMI Registry sulla porta " + RMI_PORT + "...");
+            log.info("Avvio RMI Registry sulla porta " + RMI_PORT + "...");
 
-            try {
-                // Prova a creare un nuovo registry
-                LocateRegistry.createRegistry(RMI_PORT);
-                logger.info("✓ RMI Registry creato con successo!");
-            } catch (RemoteException e) {
-                // Se esiste già, ottieni il riferimento
-                LocateRegistry.getRegistry(RMI_PORT);
-                logger.info("✓ Connesso a RMI Registry esistente");
-            }
+            // RIMOSSO IL TRY-CATCH: Se la porta è occupata, VOGLIO che esploda l'errore!
+            LocateRegistry.createRegistry(RMI_PORT);
+            log.info("✓ RMI Registry creato con successo!");
 
-            logger.info("Genero il gestore prenotazioni...");
+            log.info("Genero il gestore prenotazioni...");
             FrontDesk gp = new FrontDesk();
-            logger.info("✓ Gestore prenotazioni creato");
+            log.info("✓ Gestore prenotazioni creato");
 
-            logger.info("Effettuo il rebind di gestione prenotazioni...");
+            log.info("Effettuo il rebind di gestione prenotazioni...");
             Naming.rebind("rmi://localhost:" + RMI_PORT + "/GestionePrenotazioni", gp);
-            logger.info("✓ Gestore prenotazioni registrato con successo!");
-            logger.info("✓ Servizio 'GestionePrenotazioni' pronto");
-            logger.info("Server in attesa di connessioni...");
+            log.info("✓ Gestore prenotazioni registrato con successo!");
+            log.info("✓ Servizio 'GestionePrenotazioni' pronto");
+            log.info("Server in attesa di connessioni...");
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                System.out.println("\n--- SHUTDOWN IN CORSO ---");
+                try {
+                    // 1. Rimuove il nome dal registro
+                    Naming.unbind("rmi://localhost:" + RMI_PORT + "/GestionePrenotazioni");
+                    // 2. Smette di ascoltare (Forza la disconnessione)
+                    // Questo è ciò che uccide veramente lo zombie lato RMI
+                    java.rmi.server.UnicastRemoteObject.unexportObject(gp, true);
+                    System.out.println("✓ Server disconnesso correttamente.");
+                } catch (Exception e) {
+                    // Ignora errori in chiusura
+                }
+            }));
 
-            // Mantieni il server in esecuzione
+
             Thread.currentThread().join();
         }
         catch(Exception e)
         {
-            logger.severe("Errore durante l'avvio del server: " + e.getMessage());
-            e.printStackTrace();
+            log.error("ERRORE FATALE: Probabilmente c'è un vecchio server attivo sulla porta " + RMI_PORT);
+            log.error("Soluzione: Ferma tutti i processi Java (pulsante Stop o Task Manager).");
+            // e.printStackTrace();
+            System.exit(1);
         }
     }
 
@@ -170,9 +180,14 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
 
     @Override
     public Impiegato authentication(String username, String password,String pwd2) throws RemoteException, IllegalAccess {
-        if( Autentication.checkaccount(username, password, pwd2))
+        log.info("SERVER: Username ricevuto: [" + username + "]");
+        log.info("SERVER: Password ricevuta: [" + password + "]");
+
+        if(Autentication.checkaccount(username, password, pwd2)){
             return Autentication.getImpiegato();
-        else  return null;
+        }
+
+        return null;
     }
 
     // COMANDO UNDO

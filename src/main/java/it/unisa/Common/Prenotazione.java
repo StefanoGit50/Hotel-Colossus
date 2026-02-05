@@ -120,9 +120,9 @@ public class Prenotazione implements Cloneable, Serializable {
      * @param numeroDocumento il numero del documento.
      */
     public Prenotazione( LocalDate dataCreazionePrenotazione, LocalDate dataInizioPrenotazione, LocalDate dataFinePrenotazione,LocalDate dataEmissioneRicevuta,
-                        Trattamento trattamento,Double prezzoAcquistoTrattamento, String tipoDocumento, LocalDate dataRilascio, LocalDate dataScadenza,
-                        String intestatario, String noteAggiuntive, ArrayList<Servizio> listaServizi,
-                        ArrayList<Cliente> listaClienti ,String numeroDocumento, String metodoPagamento, String cittadinanza) {
+                         Trattamento trattamento,Double prezzoAcquistoTrattamento, String tipoDocumento, LocalDate dataRilascio, LocalDate dataScadenza,
+                         String intestatario, String noteAggiuntive, ArrayList<Servizio> listaServizi,
+                         ArrayList<Cliente> listaClienti ,String numeroDocumento, String metodoPagamento, String cittadinanza) {
         this.IDPrenotazione = 0; //ID è AUTOINCREMENT
         this.dataCreazionePrenotazione = dataCreazionePrenotazione;
         this.dataInizio = dataInizioPrenotazione;
@@ -141,7 +141,7 @@ public class Prenotazione implements Cloneable, Serializable {
         this.checkIn = false;
         this.dataEmissioneRicevuta = dataEmissioneRicevuta;
         this.metodoDiPagamento= metodoPagamento;
-        this.prezzoAcquistoTrattamento= prezzoAcquistoTrattamento;
+        this.prezzoAcquistoTrattamento = prezzoAcquistoTrattamento;
         this.cittadinanza= cittadinanza;
     }
 
@@ -161,7 +161,7 @@ public class Prenotazione implements Cloneable, Serializable {
         this.statoPrenotazione = false;
     }
 
-     /**
+    /**
      * Aggiunge un cliente alla lista dei clienti.
      *
      * @param cliente Il {@code Cliente} da aggiungere.
@@ -219,9 +219,9 @@ public class Prenotazione implements Cloneable, Serializable {
      * @return L'oggetto {@code RicevutaFiscale2} generato.
      */
     //public RicevutaFiscale checkout() {
-        // Implementazione logica del check-out
+    // Implementazione logica del check-out
     //    return new RicevutaFiscale(); // Assumendo esista una classe RicevutaFiscale2
-  //  }
+    //  }
 
 
     // --- Getter e Setter ---
@@ -424,6 +424,8 @@ public class Prenotazione implements Cloneable, Serializable {
     public String toString() {
         return "Prenotazione{" +
                 "IDPrenotazione=" + IDPrenotazione +
+                ", cittadinanza='" + cittadinanza + '\'' +
+                ", metodoDiPagamento='" + metodoDiPagamento + '\'' +
                 ", dataCreazionePrenotazione=" + dataCreazionePrenotazione +
                 ", dataInizio=" + dataInizio +
                 ", dataFine=" + dataFine +
@@ -434,15 +436,15 @@ public class Prenotazione implements Cloneable, Serializable {
                 ", intestatario='" + intestatario + '\'' +
                 ", noteAggiuntive='" + noteAggiuntive + '\'' +
                 ", numeroDocumento='" + numeroDocumento + '\'' +
-                ", listaCamere=" + listaClienti.toString()+
+                ", dataEmissioneRicevuta=" + dataEmissioneRicevuta +
                 ", listaServizi=" + listaServizi +
                 ", listaClienti=" + listaClienti +
                 ", statoPrenotazione=" + statoPrenotazione +
                 ", checkIn=" + checkIn +
-                ", metodoPagamento=" + metodoDiPagamento + '\'' +
-                ", dataemissione=" + dataEmissioneRicevuta +
+                ", prezzoAcquistoTrattamento=" + prezzoAcquistoTrattamento +
                 '}';
     }
+
 
     /**
      * Indica se un altro oggetto è "uguale a" questa prenotazione.
@@ -451,223 +453,60 @@ public class Prenotazione implements Cloneable, Serializable {
      * @param o L'oggetto da confrontare.
      * @return {@code true} se le due prenotazioni sono uguali, {@code false} altrimenti.
      */
-
     @Override
-    public boolean equals(Object o){
-        if(o == null){
-            return false;
-        }
-        if(this == o){
-            return true;
-        }
-        if(getClass() != o.getClass()){
-            return false;
-        }
-        Prenotazione prenotazione = (Prenotazione) o;
-        if(!isNullAll(prenotazione) && !isNullAll(this)){
-                ArrayList<Cliente> clientes = prenotazione.getListaClienti();
-                ArrayList<Servizio> servizios = prenotazione.getListaServizi();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-                if(isNull(clientes)){
-                     if(!isNull(listaClienti)){
-                        return false;
-                     }
-                }else {
-                    if(isNull(listaClienti)){
-                        return false;
-                    }
-                }
+        Prenotazione that = (Prenotazione) o;
 
-
-                if(isNull(servizios)){
-                    if(!isNull(listaServizi)){
-                        return false;
-                    }
-                }else{
-                    if(isNull(listaServizi)){
-                        return false;
-                    }
-                }
-
-                Boolean clien = null;
-                Boolean came = null;
-                Boolean servi = null;
-                int i = 0;
-                if(clientes.size() == listaClienti.size()){
-                    for(Cliente cliente : clientes){
-                        if(!listaClienti.get(i).equals(cliente)){
-                            clien = false;
-                            break;
-                        }
-                        i++;
-                    }
-
-                    if(clien == null){
-                        clien = true;
-                    }
-                }else{
-                    clien = false;
-                }
-                i = 0;
-                if(servizios.size() == listaServizi.size()){
-                    for(Servizio servizio : servizios){
-                        if(!listaServizi.get(i).equals(servizio)){
-                            servi = false;
-                            break;
-                        }
-                        i++;
-                    }
-
-                    if(servi == null){
-                        servi =true;
-                    }
-                }else{
-                    servi = false;
-                }
-
-
-                if(isNull(trattamento)){
-                    if(!isNull(prenotazione.trattamento)){
-                        return false;
-                    }
-
-                }else{
-                    if(isNull(prenotazione.trattamento)){
-                        return false;
-                    }
-                }
-
-                if(isNull(IDPrenotazione)){
-                    if(!isNull(prenotazione.IDPrenotazione)){
-                        return false;
-                    }
-                }else{
-                    if(isNull(prenotazione.IDPrenotazione)){
-                        return false;
-                    }
-                }
-
-                if(isNull(dataCreazionePrenotazione)){
-                    if(!isNull(prenotazione.dataCreazionePrenotazione)){
-                        return false;
-                    }
-                }else{
-                    if(isNull(prenotazione.dataCreazionePrenotazione)){
-                        return false;
-                    }
-                }
-
-                if(isNull(dataFine)){
-                    if(!isNull(prenotazione.dataFine)){
-                        return false;
-                    }
-                }else{
-                    if(isNull(prenotazione.dataFine)){
-                        return false;
-                    }
-                }
-
-                if(isNull(dataInizio)){
-                    if(!isNull(prenotazione.dataInizio)){
-                        return false;
-                    }
-                }else{
-                    if(isNull(prenotazione.dataInizio)){
-                        return false;
-                    }
-                }
-
-                if(isNull(dataRilascio)){
-                    if(!isNull(prenotazione.dataRilascio)){
-                        return false;
-                    }
-                }else{
-                    if(isNull(prenotazione.dataRilascio)){
-                        return false;
-                    }
-                }
-
-                if(isNull(dataScadenza)){
-                    if(!isNull(prenotazione.dataScadenza)){
-                        return false;
-                    }
-                }else{
-                    if(isNull(prenotazione.dataScadenza)){
-                        return false;
-                    }
-                }
-
-                if(isNull(tipoDocumento)){
-                    if(!isNull(prenotazione.tipoDocumento)){
-                        return false;
-                    }
-                }else{
-                    if(isNull(prenotazione.tipoDocumento)){
-                        return false;
-                    }
-                }
-
-                if(isNull(numeroDocumento)){
-                    if(!isNull(prenotazione.numeroDocumento)){
-                        return false;
-                    }
-                }else{
-                    if(isNull(prenotazione.numeroDocumento)){
-                        return false;
-                    }
-                }
-
-                if(isNull(intestatario)){
-                    if(!isNull(prenotazione.intestatario)){
-                       return false;
-                    }
-                }else{
-                    if(isNull(prenotazione.intestatario)){
-                        return false;
-                    }
-                }
-
-                if(isNull(noteAggiuntive)){
-                    if(!isNull(prenotazione.noteAggiuntive)){
-                        return false;
-                    }
-                }else{
-                    if(isNull(noteAggiuntive)){
-                        return false;
-                    }
-                }
-                return came && servi && clien && trattamento.equals(prenotazione.getTrattamento()) && IDPrenotazione.equals(prenotazione.getIDPrenotazione())
-                        && dataCreazionePrenotazione.equals(prenotazione.getDataCreazionePrenotazione()) && dataInizio.equals(prenotazione.getDataInizio()) &&
-                        dataFine.equals(prenotazione.getDataFine()) && dataRilascio.equals(prenotazione.getDataRilascio()) && dataScadenza.equals(prenotazione.getDataScadenza())
-                        && tipoDocumento.equalsIgnoreCase(prenotazione.getTipoDocumento()) && numeroDocumento.equalsIgnoreCase(prenotazione.getNumeroDocumento())
-                        && intestatario.equalsIgnoreCase(prenotazione.getIntestatario()) && noteAggiuntive.equalsIgnoreCase(prenotazione.getNoteAggiuntive()) && checkIn == prenotazione.isCheckIn()
-                        && statoPrenotazione == prenotazione.getStatoPrenotazione() && metodoDiPagamento == prenotazione.getMetodoPagamento() && dataEmissioneRicevuta.equals(prenotazione.getDataEmissioneRicevuta());
-
-        }else{
-           if(isNullAll(prenotazione) && isNullAll(this)){
-               return true;
-           }else{
-               return false;
-           }
-        }
-
-    }
-    private boolean isNullAll(Prenotazione prenotazione) {
-        //renato fatti ricoverare
-        return prenotazione.trattamento == null && prenotazione.noteAggiuntive == null && prenotazione.intestatario == null &&
-                prenotazione.numeroDocumento == null && prenotazione.tipoDocumento == null && prenotazione.IDPrenotazione == null &&
-                prenotazione.dataRilascio == null && prenotazione.dataScadenza == null && prenotazione.dataInizio == null &&
-                prenotazione.dataFine == null && prenotazione.listaClienti == null &&
-                prenotazione.listaServizi == null && prenotazione.dataCreazionePrenotazione == null && metodoDiPagamento==null;
-    }
-
-
-    private boolean isNull(Object o ){
-        if(o == null){
-            return true;
+        // Compare primitive types
+        if (statoPrenotazione != that.statoPrenotazione) return false;
+        if (checkIn != that.checkIn) return false;
+        System.out.println(prezzoAcquistoTrattamento);
+        System.out.println(that.prezzoAcquistoTrattamento);
+        if(prezzoAcquistoTrattamento != null && that.prezzoAcquistoTrattamento != null){
+            if (Double.compare(that.prezzoAcquistoTrattamento, prezzoAcquistoTrattamento) != 0) return false;
         }else{
             return false;
         }
+        // Compare objects using Objects.equals (handles null safely)
+        if (!Objects.equals(IDPrenotazione, that.IDPrenotazione)) return false;
+        if (!Objects.equals(cittadinanza, that.cittadinanza)) return false;
+        if (!Objects.equals(metodoDiPagamento, that.metodoDiPagamento)) return false;
+        if (!Objects.equals(dataCreazionePrenotazione, that.dataCreazionePrenotazione)) return false;
+        if (!Objects.equals(dataInizio, that.dataInizio)) return false;
+        if (!Objects.equals(dataFine, that.dataFine)) return false;
+        if (!Objects.equals(trattamento, that.trattamento)) return false;
+        if (!Objects.equals(tipoDocumento, that.tipoDocumento)) return false;
+        if (!Objects.equals(dataRilascio, that.dataRilascio)) return false;
+        if (!Objects.equals(dataScadenza, that.dataScadenza)) return false;
+        if (!Objects.equals(intestatario, that.intestatario)) return false;
+        if (!Objects.equals(noteAggiuntive, that.noteAggiuntive)) return false;
+        if (!Objects.equals(numeroDocumento, that.numeroDocumento)) return false;
+        if (!Objects.equals(dataEmissioneRicevuta, that.dataEmissioneRicevuta)) return false;
+
+        // Compare lists
+        if (!compareListsEqual(listaServizi, that.listaServizi)) return false;
+        if (!compareListsEqual(listaClienti, that.listaClienti)) return false;
+
+        return true;
+    }
+
+    /**
+     * Helper method to compare two lists for equality, handling null cases
+     */
+    private <T> boolean compareListsEqual(ArrayList<T> list1, ArrayList<T> list2) {
+        if (list1 == null && list2 == null) return true;
+        if (list1 == null || list2 == null) return false;
+        if (list1.size() != list2.size()) return false;
+
+        for (int i = 0; i < list1.size(); i++) {
+            if (!Objects.equals(list1.get(i), list2.get(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

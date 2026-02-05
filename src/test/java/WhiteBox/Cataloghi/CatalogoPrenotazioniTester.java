@@ -25,17 +25,10 @@ public class CatalogoPrenotazioniTester
     @Mock
     Prenotazione mockPrenotazione1;
 
-    @Mock
-    Prenotazione mockPrenotazione2;
-
-    @Mock
-    Prenotazione mockPrenotazione3;
 
     @Mock
     Camera mockCamera1;
 
-    @Mock
-    Camera mockCamera2;
 
     @Mock
     Cliente mockCliente1;

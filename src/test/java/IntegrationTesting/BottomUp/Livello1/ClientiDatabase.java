@@ -1,5 +1,6 @@
 package IntegrationTesting.BottomUp.Livello1;
 
+import WhiteBox.UnitTest.DBPopulator;
 import it.unisa.Common.Camera;
 import it.unisa.Common.Cliente;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
@@ -15,8 +16,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ClientiDatabase {
 
 
-    private FrontDeskStorage <Cliente>  fds;
-    Cliente cliente = new Cliente("nome","cognome","milano","milano","via milano",23,12453,"32345672","m", LocalDate.of(2001,12,13),"CSDFHWSDO2","luca@email","italiana",new Camera());
+    private FrontDeskStorage <Cliente> fds;
+    Cliente cliente = new Cliente("nome","cognome","milano","milano","via milano",23,12453,"32345672","m", LocalDate.of(2001,12,13),"CSDFHWSDO209u8y6","luca@email","italiana",new Camera());
 
     @BeforeEach
     public void setUp() {
@@ -25,7 +26,9 @@ public class ClientiDatabase {
     }
     @AfterEach
     public void tearDown() {
-        CatalogoClienti.getListaClienti().clear();
+        DBPopulator.cancel();
+        DBPopulator.populator();
+        CatalogoClienti.aggiornalista();
     }
 
 
@@ -40,6 +43,8 @@ public class ClientiDatabase {
 
         //verifica se i cambiamenti sono effettivi nel db
         try{
+            System.out.println(cliente);
+            System.out.println(copia);
             assertNotEquals(copia,fds.doRetriveByKey(cliente.getCf()));
         }catch (Exception e){
              e.printStackTrace();

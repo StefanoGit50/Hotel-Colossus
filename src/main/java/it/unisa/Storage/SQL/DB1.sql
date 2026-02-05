@@ -82,18 +82,18 @@ create table Associato_a(
 );
 
 create table Ha(
-                   IDDettaglio int AUTO_INCREMENT PRIMARY KEY,
-                   IDPrenotazione int not null,
-                   IDServizio int NULL,
-                   quantità int NULL,
-                   NomeServizioAcquistato varchar(50) not null,
-                   PrezzoAcquistoServizio double not null,
-                   UNIQUE(IDServizio,IDPrenotazione),
+                           IDDettaglio int AUTO_INCREMENT PRIMARY KEY,
+                           IDPrenotazione int not null,
+                           IDServizio int NULL,
+                           quantità int NULL,
+                           NomeServizioAcquistato varchar(50) not null,
+                           PrezzoAcquistoServizio double not null,
+                           UNIQUE(IDServizio,IDPrenotazione),
 
-                   foreign key(IDPrenotazione) references Prenotazione(IDPrenotazione)
-                       on delete cascade on update cascade,
-                   foreign key(IDServizio) references Servizio(IDServizio)
-                       on delete set null on update cascade);
+                           foreign key(IDPrenotazione) references Prenotazione(IDPrenotazione)
+                               on delete cascade on update cascade,
+                           foreign key(IDServizio) references Servizio(IDServizio)
+                               on delete set null on update cascade);
 
 create table Impiegato(
                           IDImpiegato int not null auto_increment,

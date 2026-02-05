@@ -1,5 +1,6 @@
 package IntegrationTesting.BottomUp.Livello1;
 
+import WhiteBox.UnitTest.DBPopulator;
 import it.unisa.Common.*;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
@@ -35,7 +36,7 @@ public class PrenotazioniDatabase {
     @Test
     @DisplayName("Bottom up: Retrieve della lista nel catalogo prenotazioni")
     @Tag("Integration")
-    public void RetrievePrenotazioni()  {
+    public void RetrievePrenotazioni(){
 
         List<Prenotazione> prenotazioni= null;
           try{
@@ -75,7 +76,7 @@ public class PrenotazioniDatabase {
                 cliente.getFirst().getNome()+" "+cliente.getFirst().getCognome(),
                 "Privacy assoluta",
                 servizio, cliente,
-                "UK123456789",
+                "UK1234567",
                 "carta di credito",
                 "Albanese"
         );

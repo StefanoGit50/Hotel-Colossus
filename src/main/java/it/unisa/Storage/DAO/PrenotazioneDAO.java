@@ -53,8 +53,8 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                 "CREATE or REPLACE VIEW "+VIEW_TABLE_NAME+" AS ( "
                 + " SELECT * "
                 + " FROM Prenotazione p "
-                + "  JOIN Associato_a a using(IDPrenotazione) "
-                + "  JOIN Ha s Using(IDPrenotazione) ); ";
+                + "JOIN Associato_a a using(IDPrenotazione) "
+                + "JOIN Ha s Using(IDPrenotazione) ); ";
 
         Connection connection = null;
         PreparedStatement ps = null;
@@ -129,7 +129,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
 
             for (Servizio servizio : p.getListaServizi()) {
                 preparedStatement1.setInt(1, p.getIDPrenotazione());
-                preparedStatement.setInt(2,servizio.getId());
+                preparedStatement1.setInt(2,servizio.getId());
                 preparedStatement1.setString(3, servizio.getNome());
                 preparedStatement1.setDouble(4, servizio.getPrezzo());
                 preparedStatement1.executeUpdate();
@@ -150,8 +150,6 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                         stmt.executeUpdate();
                         logger.debug("query effettuata con successo");
                     }
-
-
             }
         }catch (SQLException e){
             throw new RuntimeException(e);
@@ -209,7 +207,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
 
         createView();
 
-         connection = ConnectionStorage.getConnection();
+        connection = ConnectionStorage.getConnection();
         PreparedStatement ps = null;
         Prenotazione p = null;
         int key = (int) codicePrenotazione;
@@ -227,24 +225,23 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
 
         String selectSql = "SELECT * FROM Prenotazione "+" WHERE IDPrenotazione = ?";
         ResultSet rs = null;
-        try {
+        try{
             ps = connection.prepareStatement(sql[0]);
-            ps.setInt(1, key);
+            ps.setInt(1,key);
             rs = ps.executeQuery();
             CameraDAO dao = new CameraDAO();
-
-            if (rs.next()) {
+            if(rs.next()){
                 try {
                     Camera camera = null;
-                    do {
+                    do{
                         camera = dao.doRetriveByKey(rs.getInt("NumeroCameraStorico"));
                         camera.setPrezzoCamera(rs.getDouble("PrezzoAcquisto"));
                         camere.add(camera);
-                    } while (rs.next());
-                } catch (SQLException ex) {
+                    }while(rs.next());
+                }catch(SQLException ex){
                     ex.printStackTrace();
                 }
-            } else {
+            }else{
                 throw new SQLException("ERRORE: prenotazione ID="+key+"non contiene camere");
             }
 
@@ -253,7 +250,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
             rs = ps.executeQuery();
             TrattamentoDAO dao2 = new TrattamentoDAO();
 
-            if (rs.next()) {
+            if(rs.next()){
                 trattamento = dao2.doRetriveByKey(rs.getString("NomeTrattamento"));
                 trattamento.setPrezzo(rs.getDouble("PrezzoAcquistoTrattamento"));
             } else {
@@ -264,30 +261,30 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
             ps.setInt(1, key);
             rs = ps.executeQuery();
             ServizioDAO dao3 = new ServizioDAO();
-
-            if (rs.next()) {
+            if (rs.next()){
                 try {
                     Servizio servizio = null;
                     do {
                         servizio = dao3.doRetriveByKey(rs.getString("NomeServizioAcquistato"));
                         servizio.setPrezzo(rs.getDouble("PrezzoAcquistoServizio"));
-                    } while (rs.next());
-                } catch (SQLException ex) {
+                        servizi.add(servizio);
+                    }while (rs.next());
+                }catch (SQLException ex) {
                     ex.printStackTrace();
                 }
             }
-
-            ps = connection.prepareStatement(sql[3]);
-            ps.setInt(1, key);
-            rs = ps.executeQuery();
-            ClienteDAO dao4 = new ClienteDAO();
-
-            if (rs.next()) {
-                try {
-                    do {
-                        clienti.add(dao4.doRetriveByKey(rs.getString("CF")));
-                    } while (rs.next());
-                } catch (SQLException ex) {
+            ClienteDAO clienteDAO1 = new ClienteDAO();
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM (associato_a JOIN cliente on associato_a.CF = cliente.CF) where IDPrenotazione = ?");
+            preparedStatement.setInt(1,key);
+            ResultSet resultSet1 = preparedStatement.executeQuery();
+            if (resultSet1.next()){
+                try{
+                    Cliente cliente1;
+                    do{
+                        cliente1 = clienteDAO1.doRetriveByKey(resultSet1.getString("CF"));
+                        clienti.add(cliente1);
+                    }while(resultSet1.next());
+                }catch (SQLException ex) {
                     ex.printStackTrace();
                 }
 
@@ -299,11 +296,12 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
             ps.setInt(1, key);
             rs = ps.executeQuery();
 
-            try {
+            try{
                 if (rs.next()) {
                     p = new Prenotazione();
                     p.setIDPrenotazione(key);
                     p.setTrattamento(trattamento);
+                    p.setPrezzoAcquistoTrattamento(trattamento.getPrezzo());
                     p.setListaServizi(servizi);
                     p.setListaClienti(clienti);
                     p.setIntestatario(rs.getString("NomeIntestatario"));
@@ -403,32 +401,29 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
      */
     @Override
     public synchronized void doUpdate(Prenotazione p) throws SQLException {
-        String [] attributi = new String [16];
+        String[] attributi = new String[16];
 
         CameraDAO cameraDAO = new CameraDAO();
         ServizioDAO serviziDAO = new ServizioDAO();
 
-        String [] sql = new String [2];
+        String[] sql = new String[2];
         sql[0] = " UPDATE prenotazione " + " SET IDPrenotazione = ? , NomeIntestatario = ? , DataCreazionePrenotazione = ? , DataArrivoCliente = ? , DataPartenzaCliente = ?, DataEmissioneRicevuta = ? , " +
                 "NumeroDocumento = ? , DataRilascioDocumento = ? , DataScadenzaDocumento = ? , NomeTrattamento = ? , NoteAggiuntive = ? ," +
                 "TipoDocumento = ? , Stato = ? , CheckIn = ? , PrezzoAcquistoTrattamento = ? , MetodoPagamento = ? , Cittadinanza = ?" +
-                " Where IDPrenotazione = ?" ;
+                " Where IDPrenotazione = ?";
 
         sql[1] = "UPDATE HA SET NomeServizioAcquistato = ? , PrezzoAcquistoServizio = ? ,quantità =?" + " WHERE IDServizio = ? AND IDPrenotazione = ? ";
-
-        if (p != null) {
-            connection = ConnectionStorage.getConnection();
+        connection = ConnectionStorage.getConnection();
+        if (p != null && p.getTrattamento() != null) {
             PreparedStatement preparedStatement = connection.prepareStatement(sql[0]);
-            try  {
-
-
-                preparedStatement.setInt(1,p.getIDPrenotazione());
+            try {
+                preparedStatement.setInt(1, p.getIDPrenotazione());
                 attributi[0] = String.valueOf(p.getIDPrenotazione());
-                preparedStatement.setString(2,p.getIntestatario());
+                preparedStatement.setString(2, p.getIntestatario());
                 attributi[1] = p.getIntestatario();
                 preparedStatement.setDate(3, Date.valueOf(p.getDataCreazionePrenotazione()));
                 attributi[2] = p.getDataCreazionePrenotazione().toString();
-                preparedStatement.setDate(4,Date.valueOf(p.getDataInizio()));
+                preparedStatement.setDate(4, Date.valueOf(p.getDataInizio()));
                 attributi[3] = p.getDataInizio().toString();
                 preparedStatement.setDate(5, Date.valueOf(p.getDataFine()));
                 attributi[4] = p.getDataFine().toString();
@@ -446,23 +441,23 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                 attributi[10] = p.getNoteAggiuntive().trim();
                 preparedStatement.setString(12, p.getTipoDocumento().trim());
                 attributi[11] = p.getTipoDocumento().trim();
-                preparedStatement.setBoolean(13,p.getStatoPrenotazione());
-                attributi[12]= String.valueOf(p.getStatoPrenotazione());
-                preparedStatement.setBoolean(14,p.isCheckIn());
-                attributi[13]= String.valueOf(p.isCheckIn());
-                preparedStatement.setDouble(15,p.getTrattamento().getPrezzo());
+                preparedStatement.setBoolean(13, p.getStatoPrenotazione());
+                attributi[12] = String.valueOf(p.getStatoPrenotazione());
+                preparedStatement.setBoolean(14, p.isCheckIn());
+                attributi[13] = String.valueOf(p.isCheckIn());
+                preparedStatement.setDouble(15, p.getTrattamento().getPrezzo());
                 attributi[14] = String.valueOf(p.getTrattamento().getPrezzo());
-                preparedStatement.setString(16,p.getMetodoPagamento());
+                preparedStatement.setString(16, p.getMetodoPagamento());
                 attributi[15] = String.valueOf(p.getMetodoPagamento());
-                preparedStatement.setString(17,p.getCittadinanza());
+                preparedStatement.setString(17, p.getCittadinanza());
                 attributi[16] = String.valueOf(p.getCittadinanza());
 
                 preparedStatement.executeUpdate();
 
-                if(p.getListaClienti()!=null|| !p.getListaClienti().isEmpty() ) {
+                if (p.getListaClienti() != null || !p.getListaClienti().isEmpty()) {
                     for (Cliente c : p.getListaClienti()) {
-                        for(Cliente c2 : CatalogoClienti.getListaClienti()){
-                            if(!c2.getCf().equals(c.getCf())){
+                        for (Cliente c2 : CatalogoClienti.getListaClienti()) {
+                            if (!c2.getCf().equals(c.getCf())) {
                                 throw new NoSuchElementException("registrare prima il cliente");
                             }
                         }
@@ -473,25 +468,25 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                 preparedStatement = connection.prepareStatement(sql[1]);
 
                 ArrayList<Servizio> duplicate = new ArrayList<>();
-                if (p.getListaServizi()!=null|| !p.getListaServizi().isEmpty()) {
+                if (p.getListaServizi() != null || !p.getListaServizi().isEmpty()) {
                     for (Servizio s : p.getListaServizi()) {
-                        if(!duplicate.contains(s)){
+                        if (!duplicate.contains(s)) {
                             duplicate.add(s);
-                            preparedStatement.setString(1,s.getNome());
-                            preparedStatement.setDouble(2,s.getPrezzo());
-                            int quantity= Collections.frequency(p.getListaServizi(),s);
-                            preparedStatement.setInt(3,quantity);
+                            preparedStatement.setString(1, s.getNome());
+                            preparedStatement.setDouble(2, s.getPrezzo());
+                            int quantity = Collections.frequency(p.getListaServizi(), s);
+                            preparedStatement.setInt(3, quantity);
                             preparedStatement.executeUpdate();
                         }
                     }
                 }
 
                 //controllo per sql injection
-                int i=1;
-                for(String s : attributi){
+                int i = 1;
+                for (String s : attributi) {
                     i++;
-                    if(injection.matcher(s).matches()){
-                        throw new  ErrorInputException("valore non ammesso trovato nella stringa "+i);
+                    if (injection.matcher(s).matches()) {
+                        throw new ErrorInputException("valore non ammesso trovato nella stringa " + i);
                     }
                 }
 
@@ -502,7 +497,89 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                 }
             }
         } else {
-            throw new NullPointerException();
+            if (p != null) {
+                PreparedStatement preparedStatement = connection.prepareStatement(sql[0]);
+                try {
+                    preparedStatement.setInt(1, p.getIDPrenotazione());
+                    attributi[0] = String.valueOf(p.getIDPrenotazione());
+                    preparedStatement.setString(2, p.getIntestatario());
+                    attributi[1] = p.getIntestatario();
+                    preparedStatement.setDate(3, Date.valueOf(p.getDataCreazionePrenotazione()));
+                    attributi[2] = p.getDataCreazionePrenotazione().toString();
+                    preparedStatement.setDate(4, Date.valueOf(p.getDataInizio()));
+                    attributi[3] = p.getDataInizio().toString();
+                    preparedStatement.setDate(5, Date.valueOf(p.getDataFine()));
+                    attributi[4] = p.getDataFine().toString();
+                    preparedStatement.setDate(6, Date.valueOf(p.getDataEmissioneRicevuta()));
+                    attributi[5] = p.getDataEmissioneRicevuta().toString();
+                    preparedStatement.setString(7, p.getNumeroDocumento());
+                    attributi[6] = p.getNumeroDocumento();
+                    preparedStatement.setDate(8, Date.valueOf(p.getDataRilascio()));
+                    attributi[7] = p.getDataRilascio().toString();
+                    preparedStatement.setDate(9, Date.valueOf(p.getDataScadenza()));
+                    attributi[8] = p.getDataScadenza().toString();
+                    preparedStatement.setString(10, null);
+                    attributi[9] = p.getTrattamento().getNome().trim();
+                    preparedStatement.setString(11, p.getNoteAggiuntive().trim());
+                    attributi[10] = p.getNoteAggiuntive().trim();
+                    preparedStatement.setString(12, p.getTipoDocumento().trim());
+                    attributi[11] = p.getTipoDocumento().trim();
+                    preparedStatement.setBoolean(13, p.getStatoPrenotazione());
+                    attributi[12] = String.valueOf(p.getStatoPrenotazione());
+                    preparedStatement.setBoolean(14, p.isCheckIn());
+                    attributi[13] = String.valueOf(p.isCheckIn());
+                    preparedStatement.setDouble(15, p.getTrattamento().getPrezzo());
+                    attributi[14] = String.valueOf(p.getTrattamento().getPrezzo());
+                    preparedStatement.setString(16, p.getMetodoPagamento());
+                    attributi[15] = String.valueOf(p.getMetodoPagamento());
+                    preparedStatement.setString(17, p.getCittadinanza());
+                    attributi[16] = String.valueOf(p.getCittadinanza());
+
+                    preparedStatement.executeUpdate();
+
+                    if (p.getListaClienti() != null || !p.getListaClienti().isEmpty()) {
+                        for (Cliente c : p.getListaClienti()) {
+                            for (Cliente c2 : CatalogoClienti.getListaClienti()) {
+                                if (!c2.getCf().equals(c.getCf())) {
+                                    throw new NoSuchElementException("registrare prima il cliente");
+                                }
+                            }
+                            clienteDAO.doUpdate(c);
+                        }
+                    }
+
+                    preparedStatement = connection.prepareStatement(sql[1]);
+
+                    ArrayList<Servizio> duplicate = new ArrayList<>();
+                    if (p.getListaServizi() != null || !p.getListaServizi().isEmpty()) {
+                        for (Servizio s : p.getListaServizi()) {
+                            if (!duplicate.contains(s)) {
+                                duplicate.add(s);
+                                preparedStatement.setString(1, s.getNome());
+                                preparedStatement.setDouble(2, s.getPrezzo());
+                                int quantity = Collections.frequency(p.getListaServizi(), s);
+                                preparedStatement.setInt(3, quantity);
+                                preparedStatement.executeUpdate();
+                            }
+                        }
+                    }
+
+                    //controllo per sql injection
+                    int i = 1;
+                    for (String s : attributi) {
+                        i++;
+                        if (injection.matcher(s).matches()) {
+                            throw new ErrorInputException("valore non ammesso trovato nella stringa " + i);
+                        }
+                    }
+                }finally {
+                    if (connection != null) {
+                        ConnectionStorage.releaseConnection(connection);
+                    }
+                }
+            }else{
+                throw new SQLException("la prenotazione è null");
+            }
         }
     }
 
@@ -531,7 +608,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                         stmt.setInt(1, idPrenotazione);
 
                         try (ResultSet rs1 = stmt.executeQuery()) {
-                            if (rs1.next()) {
+                            if (rs1.next()){
                                 trattamento = new Trattamento(
                                         rs1.getString("NomeTrattamento"),
                                         rs1.getDouble("PrezzoAcquistoTrattamento")
@@ -601,6 +678,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                             preparedStatement1.setString(1,rs4.getString("CF"));
 
                             try(ResultSet resultSet = preparedStatement1.executeQuery()){
+                                resultSet.next();
                                 camera.setNumeroCamera(resultSet.getInt("NumeroCameraStorico"));
                                 camera.setNoteCamera(resultSet.getString("NoteCamera"));
                                 camera.setStatoCamera(Stato.valueOf(resultSet.getString("Stato")));

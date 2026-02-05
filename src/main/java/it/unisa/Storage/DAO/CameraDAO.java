@@ -121,7 +121,7 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
      * @pre listCamera != null && listCamera.size() > 0
      */
     @Override
-    public synchronized void doSaveAll(List<Camera> listCamera) throws SQLException {
+    public synchronized void doSaveAll(List<Camera> listCamera) throws SQLException{
         if(!listCamera.isEmpty()){
             StringBuilder insertSQL = new StringBuilder();
             String values = " (?,?,?,?,?,?) ";
@@ -144,11 +144,11 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
             for(int i = 0; i < numCamere; i++){
                 Camera c = listCamera.get(i);
                 preparedStatement.setInt(1 + 6*i, c.getNumeroCamera());
-                preparedStatement.setString(1 + 6*i, c.getNomeCamera());
-                preparedStatement.setInt(2 + 6*i, c.getCapacità());
-                preparedStatement.setString(3 + 6*i, c.getNoteCamera());
-                preparedStatement.setObject(4 + 6*i, c.getStatoCamera().name());
-                preparedStatement.setDouble(5 + 6*i, c.getPrezzoCamera());
+                preparedStatement.setString(2 + 6*i, c.getNomeCamera());
+                preparedStatement.setInt(3 + 6*i, c.getCapacità());
+                preparedStatement.setString(4 + 6*i, c.getNoteCamera());
+                preparedStatement.setObject(5 + 6*i, c.getStatoCamera().name());
+                preparedStatement.setDouble(6 + 6*i, c.getPrezzoCamera());
             }
 
             try{
