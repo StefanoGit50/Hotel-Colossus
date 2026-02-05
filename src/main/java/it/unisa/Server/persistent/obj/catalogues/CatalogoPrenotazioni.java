@@ -292,7 +292,7 @@ public class CatalogoPrenotazioni implements Serializable {
             throw new InvalidInputException("Tipo documento non valido");
 
         // 8. Mismatch capacità (Clienti vs Posti Camera)
-        if (nClienti != nPostiCamere)
+        if (nClienti > nPostiCamere)
             throw new InvalidInputException("Numero clienti non corrisponde alla capacità totale delle camere");
 
         // 9. Data Rilascio Documento futura

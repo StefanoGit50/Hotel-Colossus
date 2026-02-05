@@ -242,7 +242,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                     ex.printStackTrace();
                 }
             }else{
-                throw new SQLException("ERRORE: prenotazione ID="+key+"non contiene camere");
+                throw new SQLException("ERRORE: prenotazione ID="+key+" non contiene camere");
             }
 
             ps = connection.prepareStatement(sql[1]);
@@ -253,8 +253,6 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
             if(rs.next()){
                 trattamento = dao2.doRetriveByKey(rs.getString("NomeTrattamento"));
                 trattamento.setPrezzo(rs.getDouble("PrezzoAcquistoTrattamento"));
-            } else {
-                throw new SQLException("ERRORE: prenotazione ID="+key+"non contiene nessun trattamento");
             }
 
             ps = connection.prepareStatement(sql[2]);
@@ -289,7 +287,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                 }
 
             } else {
-                throw new SQLException("ERRORE: prenotazione ID="+key+"non contiene clienti");
+                throw new SQLException("ERRORE: prenotazione ID="+key+" non contiene clienti");
             }
 
             ps = connection.prepareStatement(selectSql);

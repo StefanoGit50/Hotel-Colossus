@@ -170,12 +170,14 @@ public class TestCasesRegistraPrenotazione {
         @DisplayName("TC1: [Success] Registrazione con servizi: nessuno")
         void testCase1() throws RemoteException{
             Prenotazione p = createBasePrenotazione(), campione;
+            p.setIDPrenotazione(4);
             p.setTrattamento(null);
             p.setPrezzoAcquistoTrattamento(null);
             p.setListaServizi(null);
+            System.out.println(autoIncrement);
             Assertions.assertDoesNotThrow(() -> frontDesk.addPrenotazione(p));
             try {
-                campione = frontDesk.getPrenotazioneById(autoIncrement);
+                campione = frontDesk.getPrenotazioneById(4);
                 Assertions.assertEquals(p, campione);
             } catch (RemoteException e) {
                 e.printStackTrace();

@@ -15,20 +15,23 @@ import it.unisa.Server.persistent.obj.catalogues.CatalogueUtils;
 import it.unisa.Storage.DAO.ClienteDAO;
 import it.unisa.Storage.DAO.PrenotazioneDAO;
 import it.unisa.interfacce.FrontDeskInterface;
+import it.unisa.interfacce.ManagerInterface;
+import org.apache.logging.log4j.LogManager;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Logger;
 
 public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface {
-    static Logger logger = Logger.getLogger("global");
     private CatalogoCamere camList = new CatalogoCamere();
     private static final int RMI_PORT = 1099;
+
+    private static final org.apache.logging.log4j.Logger log = LogManager.getLogger(FrontDesk.class);
+    public static ManagerInterface manager;
 
     public FrontDesk() throws RemoteException {
         super();
@@ -127,7 +130,6 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         CatalogoPrenotazioni.checkPrenotazione(p);   // Lancia InvalidInputException
         AddPrenotazioneCommand command = new AddPrenotazioneCommand(p);
         invoker.executeCommand(command);
-
     }
 
     @Override
