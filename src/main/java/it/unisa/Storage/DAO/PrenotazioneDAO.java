@@ -50,10 +50,10 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
 
     private synchronized void createView() throws SQLException {
         String createView =
-                "CREATE or REPLACE VIEW "+VIEW_TABLE_NAME+" AS ( "
+                "CREATE or REPLACE VIEW "+VIEW_TABLE_NAME+" AS "
                 + "SELECT \n" +
                         "    p.*,\n" +
-                        "    a.CF, a.NumeroCamera, a.PrezzoAcquisto AS PrezzoAcquistoCamera,\n" +
+                        "    a.CF, a.NumeroCamera, a.PrezzoAcquisto, a.NumeroCameraStorico, \n" +
                         "    c.NomeCamera, c.NumeroMaxOcc, c.NoteCamera, c.Stato AS StatoCamera,\n" +
                         "    cl.nome, cl.cognome, cl.Email, cl.telefono, cl.DataDiNascita,\n" +
                         "    cl.Cap, cl.comune, cl.civico, cl.provincia, cl.via,\n" +
@@ -234,7 +234,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
             if(rs.next()){
                 try {
                     int i=0;
-                    while(rs.next()){
+                    do{
                         camera = new Camera(rs.getInt("NumeroCameraStorico"),Stato.valueOf(rs.getString("StatoCamera")),
                                 rs.getInt("NumeroMaxOcc"),rs.getDouble("PrezzoAcquisto"),rs.getString("NoteCamera"),rs.getString("NomeCamera"));
                         camere.add(camera);
@@ -284,7 +284,10 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                         p.setCittadinanza(rs.getString("Cittadinanza"));
                         p.setTipoDocumento(rs.getString("TipoDocumento"));
 
+
                     }
+                    while(rs.next());
+
                 }catch(SQLException ex){
                     ex.printStackTrace();
                 }
@@ -296,13 +299,18 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
             ps.setInt(1, key);
             rs = ps.executeQuery();
             ServizioDAO dao3 = new ServizioDAO();
+
             if (rs.next()){
                 try {
-                    Servizio servizio = null;
                     do {
+                        int num_servizi =  rs.getInt("quantità");
+                        Servizio servizio = null;
                         servizio = dao3.doRetriveByKey(rs.getString("NomeServizioAcquistato"));
                         servizio.setPrezzo(rs.getDouble("PrezzoAcquistoServizio"));
-                        servizi.add(servizio);
+                        for(int i=0; i<num_servizi;i++){
+                            servizi.add(servizio);
+                        }
+
                     }while (rs.next());
                 }catch (SQLException ex) {
                     ex.printStackTrace();

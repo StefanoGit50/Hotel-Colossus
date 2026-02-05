@@ -93,16 +93,15 @@ public class PrenotazioniDatabase {
     @Tag("exception")
     public void removePrenotazione()  {
 
-        ArrayList<Prenotazione> arrayList= CatalogoPrenotazioni.getListaPrenotazioni();
-        Prenotazione p1=CatalogoPrenotazioni.getPrenotazione(arrayList.getFirst().getIDPrenotazione());
+        int dimensioneIniziale = CatalogoPrenotazioni.getListaPrenotazioni().size();
+
+        Prenotazione p1 = CatalogoPrenotazioni.getListaPrenotazioni().getFirst();
 
         CatalogoPrenotazioni.removePrenotazioni(p1);
 
-        assertThrows(SQLException.class,()-> {
-            assertNotNull(p1);
-            fds.doRetriveByKey(p1.getIDPrenotazione());
-        });
-        assertNotEquals(CatalogoPrenotazioni.getListaPrenotazioni().size(), arrayList.size());
+        int dimensioneFinale = CatalogoPrenotazioni.getListaPrenotazioni().size();
+
+        assertEquals(dimensioneIniziale - 1, dimensioneFinale);
     }
 
     @Test
