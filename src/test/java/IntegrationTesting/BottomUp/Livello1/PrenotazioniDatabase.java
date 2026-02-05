@@ -130,13 +130,12 @@ public class PrenotazioniDatabase {
     @DisplayName("Bottom up TC11: Update della lista del catalogo e del database")
     @Tag("integration")
     public void updatePrenotazione() throws SQLException {
-
-        Cliente c1 = new Cliente("luca","pizzuto","cagliari","cagliari","via minerva",123,123,"12334","m",LocalDate.of(2001,12,30),"asdafahfasf","luca@email","italiana",
-                CatalogoCamere.getCamera(101));
-        Cliente c2 = new Cliente("pagliaro","minosto","milano","milano","via andrea ", 1234,1234,"234567","m",LocalDate.of(2001,12,30),"ajhfdbhdafba","asdadsf","nigeria",
-                CatalogoCamere.getCamera(102));
-        ArrayList<Cliente> clienteArray=new ArrayList<>();
+        ClienteDAO clienteDAO=new ClienteDAO();
+        Cliente c1= clienteDAO.doRetriveByKey("BNCLCU85C03G273Z");
+        Cliente c2 = clienteDAO.doRetriveByKey("MULLER88E05Z112K");
+        ArrayList<Cliente> clienteArray = new ArrayList<>();
         clienteArray.add(c1); clienteArray.add(c2);
+
         ArrayList<Prenotazione> catalogop= CatalogoPrenotazioni.getListaPrenotazioni();
         Prenotazione prenotazione = catalogop.getFirst();
         prenotazione.setListaClienti(clienteArray);

@@ -10,10 +10,7 @@ import it.unisa.Storage.Interfacce.FrontDeskStorage;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -23,12 +20,12 @@ import java.util.regex.Pattern;
 public class CatalogoPrenotazioni implements Serializable {
 
     private static FrontDeskStorage<Prenotazione>fds;
-    private static Collection<Prenotazione> listaPrenotazioni;
+    private static List<Prenotazione> listaPrenotazioni;
 
     static {
         try {
             fds = new PrenotazioneDAO();
-            listaPrenotazioni = fds.doRetriveAll("IDPrenotazione");
+            listaPrenotazioni = (List<Prenotazione>) fds.doRetriveAll("IDPrenotazione");
         }catch(SQLException e){
             throw new RuntimeException(e);
         }
@@ -161,21 +158,24 @@ public class CatalogoPrenotazioni implements Serializable {
         if(prenotazione == null|| !listaPrenotazioni.contains(prenotazione)) {
             return false;
         }
-        Iterator<Prenotazione> it = listaPrenotazioni.iterator(); // Evita di modificare l'array metre lo si itera
-        while(it.hasNext()) {
-            Prenotazione p = it.next();
-                if(p.getIDPrenotazione().equals(prenotazione.getIDPrenotazione())){
-                    it.remove();
-                    listaPrenotazioni.add(prenotazione);
-                    try {
-                        fds.doUpdate(prenotazione);
-                    }catch (SQLException e) {
-                        e.printStackTrace();
-                        return false;
-                    }
+
+        for (int i = 0; i < listaPrenotazioni.size(); i++) {
+            Prenotazione p = listaPrenotazioni.get(i);
+
+            if (p.getIDPrenotazione().equals(prenotazione.getIDPrenotazione())) {
+                try {
+                    FrontDeskStorage<Prenotazione> fds = new PrenotazioneDAO(); // O come lo istanzi tu
+                    fds.doUpdate(prenotazione);
+                    listaPrenotazioni.set(i, prenotazione);
+
+                    return true;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    return false;
                 }
             }
-        return true;
+        }
+        return false; // Non trovato
     }
 
 
@@ -199,7 +199,7 @@ public class CatalogoPrenotazioni implements Serializable {
     public static synchronized boolean aggiornalista(){
         fds = new PrenotazioneDAO();
         try{
-            listaPrenotazioni=fds.doRetriveAll("decrescente");
+            listaPrenotazioni= (List<Prenotazione>) fds.doRetriveAll("decrescente");
         }catch (SQLException e) {
             e.printStackTrace();
             return false;
