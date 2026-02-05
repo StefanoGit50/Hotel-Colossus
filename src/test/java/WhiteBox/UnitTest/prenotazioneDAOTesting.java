@@ -3,6 +3,7 @@ package WhiteBox.UnitTest;
 import it.unisa.Common.*;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.DAO.*;
+import net.bytebuddy.asm.Advice;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -67,14 +68,14 @@ public class prenotazioneDAOTesting{
 
     @Test
     @Tag("True")
-    @DisplayName("doSave() quando va tutto bene")
+    @DisplayName("TC25: doSave() quando va tutto bene")
     public void doSaveAllTrue() throws SQLException{
         assertDoesNotThrow(()->prenotazioneDAO.doSave(prenotazione));
     }
 
     @Test
     @Tag("False")
-    @DisplayName("doSave() quando è tutto False")
+    @DisplayName("TC26: doSave() quando è tutto False")
     public void doSaveAllFalse() throws SQLException{
         prenotazione.setListaServizi(new ArrayList<>());
         prenotazione.setListaClienti(new ArrayList<>());
@@ -83,7 +84,7 @@ public class prenotazioneDAOTesting{
 
     @Test
     @Tag("False")
-    @DisplayName("doSave() quando la condizione del for del cliente è falsa")
+    @DisplayName("TC27: doSave() quando la condizione del for del cliente è falsa")
     public void doSaveSecondoForCliente() throws SQLException {
         prenotazione.setListaClienti(new ArrayList<>());
         assertDoesNotThrow(()->prenotazioneDAO.doSave(prenotazione));
@@ -91,42 +92,51 @@ public class prenotazioneDAOTesting{
 
     @Test
     @Tag("True")
-    @DisplayName("doRetriveByKey() quando è tutto true")
-    public void doRetriveByKeyAllTrue() throws SQLException {
-
-        Prenotazione prenotazione1 = prenotazioneDAO.doRetriveByKey(1);
-        assertEquals(prenotazione,prenotazione1);
+    @DisplayName("TC28: doRetriveByKey() quando è tutto true")
+    public void doRetriveByKeyAllTrue() throws SQLException{
+        Prenotazione prenotazione1 = prenotazioneDAO.doRetriveByKey(2);
+        ArrayList<Cliente> clientes = new ArrayList<>();
+        ArrayList<Servizio> servizios = new ArrayList<>();
+        clientes.add(new Cliente("Luigi","Verdi","Milano","Milano","Corso Buenos Aires",20,20100,"3339876543","M",LocalDate.of(1990,2,2),"VRDLGI90B02F205K","luigi.verdi@email.com","Italiana",new Camera(202,Stato.Occupata,2,350.0,"Jacuzzi privata","Suite Presidenziale")));
+        servizios.add(new Servizio("Spa e Benessere",45.0));
+        servizios.add(new Servizio("Colazione in camera",12.0));
+        Prenotazione prenotazione2 = new Prenotazione(LocalDate.of(2024,2,1),LocalDate.of(2024,2,20),LocalDate.of(2024,2,25),null,new Trattamento("Pensione Completa",55.0),55.0,"Patente",LocalDate.of(2019,5,5),LocalDate.of(2029,5,5),"Luigi Verdi","Intolleranza Lattosio",servizios,clientes,"PT123456","Contanti","italiana");
+        prenotazione2.setIDPrenotazione(2);
+        prenotazione2.setCheckIn(true);
+        System.out.println(prenotazione2);
+        System.out.println(prenotazione1);
+        assertEquals(prenotazione2,prenotazione1);
     }
 
     @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
-    @DisplayName("doRetriveByKey() quando va in errore")
-    public void doRetriveByKeyReturnNull() throws SQLException {
+    @DisplayName("TC29: doRetriveByKey() quando va in errore")
+    public void doRetriveByKeyException() throws SQLException {
         assertThrows(SQLException.class,()->prenotazioneDAO.doRetriveByKey(" "));
     }
 
     @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
-    @DisplayName("doRetriveByKey() quando resultSet.next() restituisce false")
-    public void doRetriveByKeyResultSetIsFalse(){
-        assertThrows(NoSuchElementException.class,()->prenotazioneDAO.doRetriveByKey(7));
+    @DisplayName("TC30: doRetriveByKey() quando resultSet.next() restituisce false")
+    public void doRetriveByKeyResultSetIsFalse() throws SQLException {
+        DBPopulator.cancel();
+        assertThrows(SQLException.class,()->prenotazioneDAO.doRetriveByKey(1));
     }
 
     @Test
     @Tag("False")
-    @DisplayName("doRetriveByKey() quando resultSet.next() è true ma gli altri false")
+    @DisplayName("TC31: doRetriveByKey() quando resultSet.next() è true ma gli altri false")
     public void doRetriveByKeyAllFalseTranneIlPrimoResultSet() throws SQLException {
        Prenotazione prenotazione1 = prenotazioneDAO.doRetriveByKey(1);
        System.out.println(prenotazione1);
        prenotazione.setListaClienti(new ArrayList<>());
-       //prenotazione.setListaCamere(new ArrayList<>());
        prenotazione.setListaServizi(new ArrayList<>());
        prenotazione.setTrattamento(null);
        assertEquals(prenotazione,prenotazione1);
     }
     @Test
     @Tag("True")
-    @DisplayName("doRetriveAll() quando va tutto bene")
+    @DisplayName("TC32: doRetriveAll() quando va tutto bene")
     public void doRetriveAllAllTrue() throws SQLException {
         ArrayList<Prenotazione> prenotaziones;
         prenotaziones = (ArrayList<Prenotazione>) prenotazioneDAO.doRetriveAll("IDPrenotazione");
@@ -216,7 +226,7 @@ public class prenotazioneDAOTesting{
 
     @Test
     @Tag("False")
-    @DisplayName("doRetriveAll() quando va tutto male")
+    @DisplayName("TC33: doRetriveAll() quando va tutto male")
     public void doRetriveAll() throws SQLException{
         ArrayList<Prenotazione> prenotaziones = new ArrayList<>();
         assertEquals(prenotaziones,prenotazioneDAO.doRetriveAll("IDPrenotazione"));
@@ -224,7 +234,7 @@ public class prenotazioneDAOTesting{
 
     @Test
     @Tag("False")
-    @DisplayName("doRetriveAll() quando")
+    @DisplayName("TC34: doRetriveAll() quando")
     public void doRetriveAllAllFalseTranneilPrimoResultSet() throws SQLException {
         ArrayList<Prenotazione> prenotaziones = new ArrayList<>();
         Prenotazione prenotazione1 = new Prenotazione();
@@ -271,27 +281,28 @@ public class prenotazioneDAOTesting{
 
     @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
-    @DisplayName("doUpdate() quando da l'eccezzione")
+    @DisplayName("TC35: doUpdate() quando da l'eccezione")
     public void doUpdateException() throws SQLException {
+        assertThrows(NullPointerException.class,()->prenotazioneDAO.doUpdate(null));
     }
 
     @Test
     @Tag("True")
-    @DisplayName("doUpdate() quando va tutto bene")
+    @DisplayName("TC36: doUpdate() quando va tutto bene")
     public void doUpdateAllTrue() throws SQLException {
 
     }
 
     @Test
     @Tag("False")
-    @DisplayName("doUpdate() quando non va bene")
+    @DisplayName("TC37: doUpdate() quando non va bene")
     public void doUpdateAllFalse() throws SQLException {
 
     }
 
     @Test
     @Tag("True")
-    @DisplayName("doRetriveByAttribute() quando va bene")
+    @DisplayName("TC38: doRetriveByAttribute() quando va bene")
     public void doRetriveByAttribute() throws SQLException {
 
 
@@ -299,18 +310,24 @@ public class prenotazioneDAOTesting{
 
     @Test
     @Tag("False")
-    @DisplayName("doRetriveByAttribute() quando va male")
+    @DisplayName("TC39: doRetriveByAttribute() quando va male")
     public void doRetriveByAttributeAllFalse() throws SQLException {
-       Prenotazione or = new Prenotazione();
-       Object c = "Nessuna nota";
-       ArrayList<Prenotazione> prenotazione1 = (ArrayList<Prenotazione>) prenotazioneDAO.doRetriveByAttribute("NoteAggiuntive",c);
        ArrayList<Prenotazione> prenotaziones = new ArrayList<>();
-       prenotaziones.add(new Prenotazione());
-       //assertEquals();
+       ArrayList<Prenotazione> prenotaziones1 = new ArrayList<>();
+       ArrayList<Cliente> clientes = new ArrayList<>();
+       ArrayList<Cliente> clientes1 = new ArrayList<>();
+       ArrayList<Servizio> servizios = new ArrayList<>();
+       ArrayList<Servizio> servizios1 = new ArrayList<>();
+
+       clientes.add(new Cliente("Hans","Muller","Berlin","Berlino","Alexanderplatz",1,10115,"+4915123456","M",LocalDate.of(1988,5,5),"MULLER88E05Z112K","hans.muller@de-mail.de","Tedesca",new Camera(201,Stato.Prenotata,3,180.0,"Vista mare laterale","Junior Suite")));
+       //servizios.add(new Servizio(,));
+      /*
+       prenotaziones.add(new Prenotazione(
+                    LocalDate.of(2024,2,15),
+                    LocalDate.of(2024,3,1),
+                    LocalDate.of(2024,3,7),
+                        null,
+                        new Trattamento("All Inclusive",),
+               ));*/
     }
-
-
-
-
-
 }

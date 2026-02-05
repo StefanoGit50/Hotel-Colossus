@@ -39,7 +39,7 @@ public class CameraDaoTesting{
 
     @Test
     @Tag("True")
-    @DisplayName("doSaveAll() quando è tutto vero")
+    @DisplayName("TC1: doSaveAll() quando è tutto vero")
     public void doSaveAllTrue(){
         DBPopulator.cancel();
         DBPopulator.populator();
@@ -49,7 +49,7 @@ public class CameraDaoTesting{
     }
     @Test
     @Tags({@Tag("Error"),@Tag("Exception")})
-    @DisplayName("doSave() quando è tutto falso")
+    @DisplayName("TC2: doSave() quando è tutto falso")
    public void doSaveAllFalse() throws SQLException {
         DBPopulator.cancel();
         DBPopulator.populator();
@@ -58,7 +58,7 @@ public class CameraDaoTesting{
    }
    @Test
    @Tag("True")
-   @DisplayName("doRetriveAll() quando è tutto vero")
+   @DisplayName("TC3: doRetriveAll() quando è tutto vero")
 
    public void doRetriveAllTrue() throws SQLException {
         DBPopulator.cancel();
@@ -75,7 +75,7 @@ public class CameraDaoTesting{
 
     @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
-    @DisplayName("doRetriveAll() quando order è null")
+    @DisplayName("TC4: doRetriveAll() quando order è null")
     public void doRetriveAllOrderNull() throws SQLException{
         DBPopulator.cancel();
         DBPopulator.populator();
@@ -84,7 +84,7 @@ public class CameraDaoTesting{
 
     @Test
     @Tag("False")
-    @DisplayName("doRetriveAll() quando è tutto false")
+    @DisplayName("TC5: doRetriveAll() quando è tutto false")
     public void doRetriveAllFalseTranneOrder() throws SQLException {
         DBPopulator.cancel();
         ArrayList<Camera> cameras;
@@ -95,7 +95,7 @@ public class CameraDaoTesting{
 
     @Test
     @Tag("False")
-    @DisplayName("doUpdate() quando è False che camere è uguale a null")
+    @DisplayName("TC6: doUpdate() quando è False che camere è uguale a null")
     public void doUpdateCameraUgualeANull(){
         DBPopulator.cancel();
         DBPopulator.populator();
@@ -104,7 +104,7 @@ public class CameraDaoTesting{
 
     @Test
     @Tag("True")
-    @DisplayName("doUpdate() quando è tutto vero")
+    @DisplayName("TC7: doUpdate() quando è tutto vero")
     public void doUpdateAllTrue() throws SQLException{
         DBPopulator.cancel();
         DBPopulator.populator();
@@ -114,7 +114,7 @@ public class CameraDaoTesting{
 
     @Test
     @Tags({@Tag("Error"),@Tag("Exception")})
-    @DisplayName("doRetriveAttribute() quando manda l'eccezione")
+    @DisplayName("TC8: doRetriveAttribute() quando manda l'eccezione")
     public void doRetriveAttribute(){
         DBPopulator.cancel();
         DBPopulator.populator();
@@ -123,7 +123,7 @@ public class CameraDaoTesting{
 
     @Test
     @Tag("True")
-    @DisplayName("doRetriveAttribute() quando va tutto bene")
+    @DisplayName("TC9: doRetriveAttribute() quando va tutto bene")
     public void doRetriveAttributeAllTrue() throws SQLException {
         DBPopulator.cancel();
         DBPopulator.populator();
@@ -140,7 +140,7 @@ public class CameraDaoTesting{
 
     @Test
     @Tag("False")
-    @DisplayName("doRetriveAttribute() quando va male")
+    @DisplayName("TC10: doRetriveAttribute() quando va male")
     public void doRetriveAttributeException() throws SQLException {
         DBPopulator.cancel();
         DBPopulator.populator();

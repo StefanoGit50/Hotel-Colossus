@@ -1,1 +1,0 @@
-insert into associato_a values(1,'RSSMRA80A01H501U',101,'Mario Rossi',101,'4',120.0);
