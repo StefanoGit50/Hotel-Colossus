@@ -141,11 +141,8 @@ public class CatalogoCamere implements SubjectCamereInterface, Serializable {
             return false;
         if(!camereList.contains(c))
             return false;
-        for(Camera cc : camereList){
-            if(cc.equals(c))
-                return true;
-        }
-        return false;
+        else return true;
+
     }
 
 

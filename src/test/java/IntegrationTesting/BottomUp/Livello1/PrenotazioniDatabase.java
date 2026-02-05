@@ -3,9 +3,13 @@ package IntegrationTesting.BottomUp.Livello1;
 import WhiteBox.UnitTest.DBPopulator;
 import it.unisa.Common.*;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
+import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
 import it.unisa.Server.persistent.util.Stato;
+import it.unisa.Storage.DAO.CameraDAO;
+import it.unisa.Storage.DAO.ClienteDAO;
 import it.unisa.Storage.DAO.PrenotazioneDAO;
+import it.unisa.Storage.DAO.ServizioDAO;
 import it.unisa.Storage.Interfacce.FrontDeskStorage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -59,12 +63,28 @@ public class PrenotazioniDatabase {
     @Tag("integration")
     public void addPrenotazione() throws  SQLException {
 
+        CatalogoClienti.aggiornalista();
+        ClienteDAO clienteDAO=new ClienteDAO();
+        Cliente cliente1 = clienteDAO.doRetriveByKey("BNCLCU85C03G273Z");
+        assertTrue(CatalogoClienti.clienteIsEquals(cliente1)); // se ce un cliente contenuto nel catalogo
+
         ArrayList<Camera> listcamera=new ArrayList<>();
-        listcamera.add(new Camera(112, Stato.Occupata,2,45.50,"","Pino"));
+        CameraDAO cameraDAO = new CameraDAO();
+        Camera camera =cameraDAO.doRetriveByKey(101);
+        listcamera.add(camera);
+        cliente1.setCamera(listcamera.getFirst());
+
         ArrayList<Servizio> servizio=new ArrayList<>();
-        servizio.add(new Servizio("Parcheggio",10));
+        ServizioDAO servizioDAO=new ServizioDAO();
+        ArrayList<Servizio> servizioDalDB = (ArrayList<Servizio>) servizioDAO.doRetriveByAttribute("Nome","Parcheggio");
+        servizio.add(servizioDalDB.getFirst());
+
         ArrayList<Cliente> cliente=new ArrayList<>();
-        cliente.add(new Cliente("mario","Rossi","napoli","napoli","via manzo",12,45,"323425","M",LocalDate.of(1998,12,1),"CF234rdfcfg","luca@gmail.com","italiana",listcamera.getFirst()));
+
+
+        cliente1.setCamera(listcamera.getFirst());
+        cliente.add(cliente1);
+
         Prenotazione prenotazione =new Prenotazione(
                 LocalDate.now(),
                 LocalDate.of(2026, 1, 10),
@@ -79,7 +99,7 @@ public class PrenotazioniDatabase {
                 "Privacy assoluta",
                 servizio, cliente,
                 "UK1234567",
-                "carta di credito",
+                null,
                 "Albanese"
         );
         CatalogoPrenotazioni.addPrenotazioni(prenotazione);

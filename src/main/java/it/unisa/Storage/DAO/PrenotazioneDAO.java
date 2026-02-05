@@ -2,6 +2,7 @@ package it.unisa.Storage.DAO;
 
 import com.mysql.cj.protocol.x.XServerSession;
 import it.unisa.Common.*;
+import it.unisa.Server.IllegalAccess;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
@@ -20,7 +21,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
+public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
     private Connection connection;
     private static final Logger logger = LogManager.getLogger(PrenotazioneDAO.class);
     private static final String [] whitelist = {
@@ -152,10 +153,10 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                 for(Integer idServizio : conteggioMapServizio.keySet()) {
                     Servizio servizio = infoMapServizio.get(idServizio);
                     int quantità = conteggioMapServizio.get(idServizio);
-                    logger.debug("Salvataggio servizio: " + servizio.getNome() + " con quantità: " + quantità);
+                    logger.debug("Salvataggio servizio: " + servizio + " con quantità: " + quantità );
                     preparedStatement1.setInt(1, p.getIDPrenotazione());
                     preparedStatement1.setInt(2, servizio.getId());
-                    preparedStatement.setString(3, servizio.getNome());
+                    preparedStatement1.setString(3, servizio.getNome());
                     preparedStatement1.setInt(4, quantità);
                     preparedStatement1.setDouble(5, servizio.getPrezzo());
                     preparedStatement1.executeUpdate();
@@ -165,19 +166,21 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                     return;
             }
 
+
+            Camera camera = new Camera();
                 for (Cliente cliente : p.getListaClienti()) {
-                    logger.debug("Entra nel for per matchare camere e clienti della prenotazione");
-                    String query1 = "INSERT INTO associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto,NominativoCliente,NumeroCameraStorico ) " +
-                            "VALUES (?, ?, ?, ?,?,?)";
-                    try (PreparedStatement stmt = connection.prepareStatement(query1)) {
-                        stmt.setString(1, cliente.getCf());
-                        stmt.setInt(2, cliente.getCamera().getNumeroCamera());
-                        stmt.setInt(3, p.getIDPrenotazione());
-                        stmt.setDouble(4, cliente.getCamera().getPrezzoCamera());
-                        stmt.setString(5,cliente.getNome()+" "+cliente.getCognome());
-                        stmt.setInt(6,cliente.getCamera().getNumeroCamera());
-                        stmt.executeUpdate();
-                        logger.debug("query effettuata con successo");
+                        logger.debug("Entra nel for per matchare camere e clienti della prenotazione");
+                        String query1 = "INSERT INTO associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto,NominativoCliente,NumeroCameraStorico ) " +
+                                "VALUES (?, ?, ?, ?,?,?)";
+                        try (PreparedStatement stmt = connection.prepareStatement(query1)) {
+                            stmt.setString(1, cliente.getCf());
+                            stmt.setInt(2, cliente.getCamera().getNumeroCamera());
+                            stmt.setInt(3, p.getIDPrenotazione());
+                            stmt.setDouble(4, cliente.getCamera().getPrezzoCamera());
+                            stmt.setString(5,cliente.getNome()+" "+cliente.getCognome());
+                            stmt.setInt(6,cliente.getCamera().getNumeroCamera());
+                            stmt.executeUpdate();
+                            logger.debug("query effettuata con successo");
                     }
             }
         }catch (SQLException e){
@@ -250,10 +253,12 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
         ResultSet rs = null; Camera camera = null   ; Cliente cliente = null;
         try{
             ps = connection.prepareStatement(selectSql);
+
             ps.setInt(1,key);
             rs = ps.executeQuery();
 
             if(rs.next()){
+                p = new Prenotazione();
                 try {
                     int i=0;
                     do{
@@ -288,7 +293,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                         double prezzoTratt = rs.getDouble("PrezzoAcquistoTrattamento");
                         Trattamento t = (nomeTratt == null) ? null : new Trattamento(nomeTratt, prezzoTratt);
 
-                        p = new Prenotazione();
+
                         p.setIDPrenotazione(key);
                         p.setTrattamento(t);
                         p.setPrezzoAcquistoTrattamento(prezzoTratt);
@@ -307,7 +312,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                         p.setCittadinanza(rs.getString("Cittadinanza"));
                         p.setTipoDocumento(rs.getString("TipoDocumento"));
 
-
+                        System.out.println(ps);
                     }
                     while(rs.next());
 
