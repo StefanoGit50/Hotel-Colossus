@@ -14,7 +14,6 @@ import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -24,6 +23,7 @@ public class TestCasesRegistraPrenotazione {
 
     public static FrontDeskInterface frontDesk;
     public static ArrayList<Servizio> listaServizi = new ArrayList<>();
+    public static ArrayList<Camera> listaCamere = new ArrayList<>();
     public static ArrayList<Cliente> listaClienti = new ArrayList<>();
     public static Trattamento trattamento = new Trattamento("Mezza Pensione", 125.00);
     public static int autoIncrement; // simula l'autoincrement del DB
@@ -98,9 +98,17 @@ public class TestCasesRegistraPrenotazione {
                 "Junior Suite"
         );
 
+        // lista camere
+
+        listaCamere.add(camera101);
+        listaCamere.add(camera102);
+        listaCamere.add(camera201);
         cliente1.setCamera(camera101);
         cliente2.setCamera(camera102);
         cliente3.setCamera(camera201);
+
+        // Lista clienti
+
         listaClienti.add(cliente1);
         listaClienti.add(cliente2);
         listaClienti.add(cliente3);
@@ -197,7 +205,7 @@ public class TestCasesRegistraPrenotazione {
             p.setTipoDocumento("CID");
             p.setTrattamento(new Trattamento("Pensione Completa", 500));
             ArrayList<Cliente> c = new ArrayList<>();
-            c.add(listaClienti.getFirst());/**/
+            c.add(listaClienti.getFirst());
             c.add(listaClienti.get(1));
             p.setListaClienti(c);
             Assertions.assertDoesNotThrow(() -> frontDesk.addPrenotazione(p));
@@ -216,11 +224,16 @@ public class TestCasesRegistraPrenotazione {
             p.setTipoDocumento("Passaporto");
             p.setTrattamento(new Trattamento("Solo pernottamento", 80));
             Assertions.assertDoesNotThrow(() -> frontDesk.addPrenotazione(p));
-            /*try {
+            ArrayList<Cliente> c = new ArrayList<>();
+            c.add(listaClienti.getFirst());  // 3 clienti -> 3 camere diverse
+            c.add(listaClienti.get(1));
+            p.setListaClienti(c);
+
+            try {
                 Assertions.assertEquals(p, frontDesk.getPrenotazioneById(p.getIDPrenotazione()));
             } catch (RemoteException e) {
                 Assertions.fail(e.getMessage());
-            }*/
+            }
         }
     }
 
@@ -231,163 +244,169 @@ public class TestCasesRegistraPrenotazione {
     @Tag("error")
     class TestFailRegistraPrenotazione {
         @Test
-        @DisplayName("TC5: [error] Formato data arrivo non valido")
+        @DisplayName("TC5: [error] Data arrivo nel passato")
         public void testCase5() {
-            Prenotazione p = createBasePrenotazione();
-            p.setDataInizio(null);
-            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
-        }
-
-        @Test
-        @DisplayName("TC6: [error] Data arrivo nel passato")
-        public void testCase6() {
             Prenotazione p = createBasePrenotazione();
             p.setDataInizio(LocalDate.of(2020, 1, 10));
             assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
-        @DisplayName("TC7: [error] Data di arrivo è obbligatoria")
-        public void testCase7() {
+        @DisplayName("TC6: [error] Data di arrivo è obbligatoria")
+        public void testCase6() {
             Prenotazione p = createBasePrenotazione();
             p.setDataInizio(null);
             assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
-        @DisplayName("TC8: [error] Formato data di partenza non valido")
-        public void testCase8() {
-            Prenotazione p = createBasePrenotazione();
-            p.setDataFine(null);
-            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
-        }
-
-        @Test
-        @DisplayName("TC9: [error] Data di partenza uguale (o precedente) alla data di arrivo")
-        public void testCase9() {
+        @DisplayName("TC7: [error] Data di partenza uguale (o precedente) alla data di arrivo")
+        public void testCase7() {
             Prenotazione p = createBasePrenotazione();
             p.setDataFine(p.getDataInizio());
             assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
-        @DisplayName("TC10: [error] Data di partenza passata")
-        public void testCase10() {
+        @DisplayName("TC8: [error] Data di partenza passata")
+        public void testCas8e() {
             Prenotazione p = createBasePrenotazione();
             p.setDataFine(LocalDate.of(2024, 1, 10));
             assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
-        @DisplayName("TC11: [error] Data di partenza obbligatoria")
-        public void testCase11() {
+        @DisplayName("TC9: [error] Data di partenza obbligatoria")
+        public void testCase9() {
             Prenotazione p = createBasePrenotazione();
             p.setDataFine(null);
             assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
-        @DisplayName("TC13: [error] Trattamento obbligatorio")
-        public void testCase13() {
+        @DisplayName("TC10: [error] Almeno un cliente obbligatorio")
+        public void testCase10() {
             Prenotazione p = createBasePrenotazione();
-            p.setTrattamento(null);
+            p.setListaClienti(new ArrayList<>(0));
             assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
-        @DisplayName("TC14: [error] Numero clienti = 0")
-        public void testCase14() {
+        @DisplayName("TC11: [error] Almeno una camera obbligatoria")
+        public void testCase11() {
             Prenotazione p = createBasePrenotazione();
-            p.setListaClienti(new ArrayList<>());
+            p.setListaClienti(new ArrayList<>(0));
             assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
-        @DisplayName("TC15: [error] Numero camere = 0")
-        public void testCase15() {
-            Prenotazione p = createBasePrenotazione();
-            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
-        }
-
-        @Test
-        @DisplayName("TC16: [error] Tipo di documento è obbligatorio")
-        public void testCase16() {
+        @DisplayName("TC12: [error] Tipo di documento è obbligatorio")
+        public void testCase12() {
             Prenotazione p = createBasePrenotazione();
             p.setTipoDocumento("");
             assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
-        @DisplayName("TC17: [error] Tipo di documento non valido")
-        public void testCase17() {
+        @DisplayName("TC13: [error] Tipo di documento non valido")
+        public void testCase13() {
             Prenotazione p = createBasePrenotazione();
             p.setTipoDocumento("Tessera sanitaria");
             assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
-        @DisplayName("TC18: [error] No Match capacità (2 clienti in 1 camera singola)")
-        public void testCase18() {
+        @DisplayName("TC14: [error] Numero clienti eccede la capacità totale delle camere")
+        public void testCase14() throws CloneNotSupportedException{
             Prenotazione p = createBasePrenotazione();
-            p.setListaClienti(new ArrayList<>(listaClienti.subList(0, 2))); // 2 Clienti
-            // Assumendo che la camera in subList(0,1) abbia capacità 1
+            ArrayList<Cliente> clientes = new ArrayList<>(3);
+            for (Cliente c : listaClienti) {
+                clientes.add(c.clone());
+            }
+            for(Cliente c : clientes) {
+                c.setCamera(listaCamere.getFirst().clone());
+            }
+            p.setListaClienti(clientes); // 4 Clienti - 2 posti camera
             assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
-        @DisplayName("TC19: [error] Formato data rilascio")
-        public void testCase19() {
+        @DisplayName("TC15: [error] Data di rilascio futura")
+        public void testCase15() {
+            Prenotazione p = createBasePrenotazione();
+            p.setDataRilascio(LocalDate.of(2026, 2, 20));
+            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
+        }
+
+        @Test
+        @DisplayName("TC16: [error] Data di rilascio documento obbligatoria")
+        public void testCase16() {
             Prenotazione p = createBasePrenotazione();
             p.setDataRilascio(null);
             assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
-        @DisplayName("TC20: [error] Data di rilascio futura")
-        public void testCase20() {
+        @DisplayName("TC17: [error] Data di scadenza del documento precedente alla data di rilascio")
+        public void testCase17() {
             Prenotazione p = createBasePrenotazione();
-            p.setDataRilascio(LocalDate.now().plusYears(1));
-            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
-        }
-
-        @Test
-        @DisplayName("TC21: [error] Data di rilascio documento obbligatoria")
-        public void testCase21() {
-            Prenotazione p = createBasePrenotazione();
-            p.setDataRilascio(null);
-            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
-        }
-
-        @Test
-        @DisplayName("TC22: [error] Data di scadenza del documento successiva alla data di rilascio")
-        public void testCase22() {
-            Prenotazione p = createBasePrenotazione();
-            p.setDataRilascio(p.getDataScadenza());
-            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
-        }
-
-        @Test
-        @DisplayName("TC23: [error] Data di scadenza del documento precedente alla data di rilascio")
-        public void testCase23() {
-            Prenotazione p = createBasePrenotazione();
-            p.setDataRilascio(LocalDate.of(2020, 1, 10));
             p.setDataScadenza(LocalDate.of(2019, 1, 10));
             assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
-        @DisplayName("TC24: [error] Data di scadenza del documento passata")
-        public void testCase24() {
+        @DisplayName("TC18: [error] Data di scadenza del documento passata")
+        public void testCase18() {
             Prenotazione p = createBasePrenotazione();
             p.setDataScadenza(LocalDate.of(2024, 1, 10));
             assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
 
         @Test
-        @DisplayName("TC25: [error] Data di scadenza del documento è obbligatoria")
-        public void testCase25() {
+        @DisplayName("TC19: [error] Data di scadenza del documento è obbligatoria")
+        public void testCase19() {
             Prenotazione p = createBasePrenotazione();
             p.setDataScadenza(null);
+            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
+        }
+
+        @Test
+        @DisplayName("TC20: [error] Formato numero documento errato")
+        public void testCase20() {
+            Prenotazione p = createBasePrenotazione();
+            p.setNumeroDocumento("CA123!");
+            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
+        }
+
+        @Test
+        @DisplayName("TC21: [error] Numero documento è obbligatorio")
+        public void testCase21() {
+            Prenotazione p = createBasePrenotazione();
+            p.setNumeroDocumento("CA123!");
+            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
+        }
+
+        @Test
+        @DisplayName("TC22: [error] Lunghezza numero documento eccede lughezza massima")
+        public void testCase22() {
+            Prenotazione p = createBasePrenotazione();
+            p.setNumeroDocumento("CA123456789AA");
+            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
+        }
+
+        @Test
+        @DisplayName("TC23: [error] Formato del numero documento deve contenere solo caratteri alfanumerici")
+        public void testCase23() {
+            Prenotazione p = createBasePrenotazione();
+            p.setNumeroDocumento("CA123!!");
+            assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
+        }
+
+        @Test
+        @DisplayName("TC24: [error] Campo numero documento obbligatorio")
+        public void testCase24() {
+            Prenotazione p = createBasePrenotazione();
+            p.setNumeroDocumento("");
             assertThrows(InvalidInputException.class, () -> frontDesk.addPrenotazione(p));
         }
     }

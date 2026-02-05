@@ -18,7 +18,7 @@ public class CatalogueUtils {
     public static <T> void checkNull(T oggetto) throws InvalidInputException {
         Class<?> oggettoClass = oggetto.getClass();
         Field[] fields = oggettoClass.getDeclaredFields(); // Otteni tutti i campi della classe di appartenenza dell'oggetto
-        /*for (Field field : fields) {
+        for (Field field : fields) {
             try {
                 field.setAccessible(true); // Rendili accessilibi temporaneamente
                 Object fieldValue = field.get(oggetto);
@@ -34,7 +34,7 @@ public class CatalogueUtils {
                 e.printStackTrace();
             }
 
-        }*/
+        }
 
     }
 }

@@ -242,7 +242,7 @@ public class CatalogoPrenotazioni implements Serializable {
      * @throws InvalidInputException se un campo presenta un valore errato.
      */
     public static void checkPrenotazione(Prenotazione prenotazione) throws InvalidInputException {
-    /*    LocalDate inizio = prenotazione.getDataInizio(),  fine = prenotazione.getDataFine(),
+        LocalDate inizio = prenotazione.getDataInizio(),  fine = prenotazione.getDataFine(),
                 rilascio = prenotazione.getDataRilascio(), scadenza = prenotazione.getDataScadenza();
 
         String documento = prenotazione.getTipoDocumento();
@@ -305,7 +305,7 @@ public class CatalogoPrenotazioni implements Serializable {
 
         // 11. Data Scadenza antecedente o uguale alla data di Rilascio
         if (scadenza.isBefore(rilascio) || scadenza.isEqual(rilascio))
-            throw new InvalidInputException("Data scadenza documento deve essere successi");*/
+            throw new InvalidInputException("Data scadenza documento deve essere successi");
     }
     /**
 
