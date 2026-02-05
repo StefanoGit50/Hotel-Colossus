@@ -57,7 +57,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                         "    c.NomeCamera, c.NumeroMaxOcc, c.NoteCamera, c.Stato AS StatoCamera,\n" +
                         "    cl.nome, cl.cognome, cl.Email, cl.telefono, cl.DataDiNascita,\n" +
                         "    cl.Cap, cl.comune, cl.civico, cl.provincia, cl.via,\n" +
-                        "    cl.Sesso, cl.Nazionalita, cl.IsBackListed\n" +
+                        "    cl.Sesso, cl.Nazionalita, cl.IsBlackListed\n" +
                         "FROM Prenotazione p\n" +
                         "INNER JOIN Associato_a a ON p.IDPrenotazione = a.IDPrenotazione\n" +
                         "LEFT JOIN Camera c ON a.NumeroCamera = c.NumeroCamera\n" +
@@ -256,6 +256,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                         cliente = new Cliente(nome,cognome,rs.getString("provincia"),rs.getString("comune"),rs.getString("via"),rs.getInt("civico"),rs.getInt("cap"),
                                 rs.getString("telefono"),rs.getString("sesso"),rs.getDate("DataDiNascita").toLocalDate(),rs.getString("CF"),
                                 rs.getString("email"),rs.getString("nazionalita"),camere.get(i));
+                        cliente.setBlacklisted(rs.getBoolean("isBlacklisted"));
                         clienti.add(cliente);
 
                         i++;
