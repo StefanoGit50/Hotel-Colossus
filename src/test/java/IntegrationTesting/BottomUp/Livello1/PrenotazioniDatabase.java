@@ -34,7 +34,7 @@ public class PrenotazioniDatabase {
     }
 
     @Test
-    @DisplayName("Bottom up: Retrieve della lista nel catalogo prenotazioni")
+    @DisplayName("Bottom up TC8: Retrieve della lista nel catalogo prenotazioni")
     @Tag("Integration")
     public void RetrievePrenotazioni(){
 
@@ -53,7 +53,7 @@ public class PrenotazioniDatabase {
     }
 
     @Test
-    @DisplayName("Bottom up: Aggiunta alla lista del catalogo e successivamente al DB")
+    @DisplayName("Bottom up TC9: Aggiunta alla lista del catalogo e successivamente al DB")
     @Tag("integration")
     public void addPrenotazione() throws  SQLException {
 
@@ -88,7 +88,7 @@ public class PrenotazioniDatabase {
     }
 
     @Test
-    @DisplayName("Bottom up: Rimozione dalla lista e dal database")
+    @DisplayName("Bottom up TC10: Rimozione dalla lista e dal database")
     @Tag("integration")
     @Tag("exception")
     public void removePrenotazione()  {
@@ -106,7 +106,7 @@ public class PrenotazioniDatabase {
     }
 
     @Test
-    @DisplayName("Bottom up: Update della lista del catalogo e del database")
+    @DisplayName("Bottom up TC11: Update della lista del catalogo e del database")
     @Tag("integration")
     public void updatePrenotazione() throws SQLException {
 

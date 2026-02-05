@@ -92,7 +92,7 @@ public class ServerCatalogoDB {
     }
 
     @Test
-    @DisplayName("Bottom up 3.1: LV2 aggiornamento dello stato camera dalla classe server con pattern Observer")
+    @DisplayName("Bottom up 3.1 TC13: LV2 aggiornamento dello stato camera dalla classe server con pattern Observer")
     @Tag("integration-LV2")
     public void AggiornaStatoCamereCatalogoDB(){
         assertDoesNotThrow(()->frontDesk.aggiornaStatoCamera(arraycamera.getFirst()));
@@ -109,7 +109,7 @@ public class ServerCatalogoDB {
     }
 
     @Test
-    @DisplayName("Bottom up 3.2: LV2 Test se le camere nel front desk sono le stesse nel DB ")
+    @DisplayName("Bottom up 3.2 TC14: LV2 Test se le camere nel front desk sono le stesse nel DB ")
     @Tag("integration-LV2")
     public void getCamereTest(){
        List<Camera> c=frontDesk.getCamere();
@@ -125,7 +125,7 @@ public class ServerCatalogoDB {
     }
 
     @Test
-    @DisplayName("Bottom up 3.3: LV2 Test se le prenotazioni nel front desk sono le stesse nel DB")
+    @DisplayName("Bottom up 3.3 TC15: LV2 Test se le prenotazioni nel front desk sono le stesse nel DB")
     @Tag("integration-LV2")
     public void getPrenotazioniTest() throws RemoteException {
         List<Prenotazione> p = frontDesk.getPrenotazioni();
@@ -141,7 +141,7 @@ public class ServerCatalogoDB {
     }
 
     @Test
-    @DisplayName("Bottom up 3.4: LV2 Test controllo dell'interazione sull aggiunta fra frontdeskServer command pattern e DB")
+    @DisplayName("Bottom up 3.4 TC16: LV2 Test controllo dell'interazione sull aggiunta fra frontdeskServer command pattern e DB")
     @Tag("integration-LV2")
     public void addPrenotazioneTest() throws RemoteException, CloneNotSupportedException {
         ArrayList<Camera> arrcam= new ArrayList<>();
@@ -182,7 +182,7 @@ public class ServerCatalogoDB {
     }
 
     @Test
-    @DisplayName("Bottom up 3.5: LV2 Test controllo dell'interazione sulla rimozione fra frontdeskServer command pattern e DB")
+    @DisplayName("Bottom up 3.5 TC17 : LV2 Test controllo dell'interazione sulla rimozione fra frontdeskServer command pattern e DB")
     @Tag("integration-LV2")
     public void removePrenotazioneTest() throws RemoteException {
         frontDesk.addPrenotazione(prenotazione);
@@ -200,7 +200,7 @@ public class ServerCatalogoDB {
     }
 
     @Test
-    @DisplayName("Bottom up 3.6: LV2 Test controllo dell interazione sull update fra frontdeskServer command pattern e DB")
+    @DisplayName("Bottom up 3.6 TC18: LV2 Test controllo dell interazione sull update fra frontdeskServer command pattern e DB")
     @Tag("integration-LV2")
     public void updatePrenotazioneTest() throws RemoteException{
         Prenotazione p2 = catPrenotazioni.getPrenotazione(prenotazione.getIDPrenotazione());
@@ -218,7 +218,7 @@ public class ServerCatalogoDB {
     }
 
     @Test
-    @DisplayName("Bottom up 3.7: LV2 Test controllo dell interazione sull'aggiunta del cliente fra frontdeskServer command pattern e DB")
+    @DisplayName("Bottom up 3.7 TC19: LV2 Test controllo dell interazione sull'aggiunta del cliente fra frontdeskServer command pattern e DB")
     @Tag("integration-LV2")
     public void addClienteTest() throws RemoteException {
         Cliente c = new Cliente("Roberto","Rossi","napoli","napoli","via manzo",12,45,"323425","M",LocalDate.of(1998,12,1),"CF234rdfcfg","luca@gmail.com","italiana",new Camera());
@@ -235,7 +235,7 @@ public class ServerCatalogoDB {
     }
 
     @Test
-    @DisplayName("Bottom up 3.8: LV2 Test controllo dell interazione sulla rimozione del cliente fra frontdeskServer command pattern e DB")
+    @DisplayName("Bottom up 3.8 TC20: LV2 Test controllo dell interazione sulla rimozione del cliente fra frontdeskServer command pattern e DB")
     @Tag("integration-LV2")
     public void removeClienteTest() throws RemoteException {
         frontDesk.removeCliente(cliente.getFirst());
@@ -251,7 +251,7 @@ public class ServerCatalogoDB {
     }
 
     @Test
-    @DisplayName("Bottom up 3.9: LV2 Test controllo dell interazione sull update fra frontdeskServer command pattern e DB")
+    @DisplayName("Bottom up 3.9 TC21: LV2 Test controllo dell interazione sull update fra frontdeskServer command pattern e DB")
     @Tag("integration-LV2")
     public void updateClienteTest() throws RemoteException {
         Cliente c= cliente.getFirst();
@@ -268,7 +268,7 @@ public class ServerCatalogoDB {
     }
 
     @Test
-    @DisplayName("Bottom up 4.0: LV2 Test controllo dell interazione sul Ban dell utente fra frontdeskServer command pattern e DB")
+    @DisplayName("Bottom up 4.0 TC22: LV2 Test controllo dell interazione sul Ban dell utente fra frontdeskServer command pattern e DB")
     @Tag("integration-LV2")
     public void BanClienteTest() throws RemoteException {
         Cliente c= cliente.getFirst();
@@ -277,7 +277,7 @@ public class ServerCatalogoDB {
     }
 
     @Test
-    @DisplayName("Bottom up 4.1: LV2 Test controllo dell interazione sul UNBan dell utente fra frontdeskServer command pattern e DB")
+    @DisplayName("Bottom up 4.1 TC 23: LV2 Test controllo dell interazione sul UNBan dell utente fra frontdeskServer command pattern e DB")
     @Tag("integration-LV2")
     public void UnBanClienteTest() throws RemoteException {
       //TODO  ArrayList<Cliente> c1= frontDesk.getListClienti();

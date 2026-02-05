@@ -74,6 +74,8 @@ VALUES
 -- =============================================
 INSERT INTO Associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto, NominativoCliente, NumeroCameraStorico ) VALUES
 -- Mario Rossi -> Camera 101 -> Prenotazione 1
+('RSSMRA80A01H501U', 101, 1, 350.00, 'Mario',101),
+
 -- Luigi Verdi -> Suite 202 -> Prenotazione 2
 ('VRDLGI90B02F205K', 202, 2, 350.00, 'Luigi Verdi',202),
 

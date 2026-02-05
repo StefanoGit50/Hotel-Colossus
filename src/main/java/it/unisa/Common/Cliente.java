@@ -124,85 +124,20 @@ public class Cliente implements Cloneable, Serializable {
      * @param email l'email del cliente
      */
     public Cliente(String nome, String cognome, String provincia, String comune, String via, Integer numeroCivico, Integer CAP, String numeroTelefono, String sesso, LocalDate dataNascita ,String cf , String email,String nazionalità,Camera camera) {
-        if(nome != null){
             this.nome = nome;
-        }else{
-            this.nome = "";
-        }
-
-        if(cognome != null){
             this.cognome = cognome;
-        }else{
-            this.cognome = "";
-        }
-
-        if(provincia != null){
             this.provincia = provincia;
-        }else{
-            this.provincia = "";
-        }
-        if(comune != null){
             this.comune = comune;
-        }else{
-            this.comune = "";
-        }
-        if(via != null){
             this.via = via;
-        }else{
-            this.via = "";
-        }
-        if(numeroCivico != null){
             this.numeroCivico = numeroCivico;
-        } else{
-            this.numeroCivico = 0;
-        }
-
-        if(CAP != null){
-           this.CAP = CAP;
-        }else{
-            this.CAP = 0;
-        }
-
-        if(numeroCivico != null){
+            this.CAP = CAP;
             this.numeroTelefono = numeroTelefono;
-        }else{
-            this.numeroTelefono = "";
-        }
-
-        if(sesso != null){
             this.sesso = sesso;
-        }else{
-            this.sesso = "";
-        }
-
-        if(dataNascita != null){
             this.dataNascita = dataNascita;
-        }else{
-            this.dataNascita = LocalDate.now();
-        }
-
-        if(cf != null){
             this.cf = cf;
-        }else{
-            this.cf = "";
-        }
-
-        if(email != null){
             this.email = email;
-        }else{
-            this.email = "";
-        }
-
-        if(nazionalità != null){
             this.nazionalità = nazionalità;
-        }else{
-            this.nazionalità = "";
-        }
-        if(camera != null){
             this.camera = camera;
-        }else{
-            this.camera = new Camera();
-        }
     }
 
     /**

@@ -21,9 +21,9 @@ public class Test {
 
 //        Prenotazione p = frontDesk.getPrenotazioneById(1);
         PrenotazioneDAO dao = new PrenotazioneDAO();
-        Prenotazione p = dao.doRetriveByKey(3);
+        Prenotazione p = dao.doRetriveByKey(2);
         System.out.println(p);
 //        frontDesk.addPrenotazione(p);
-        System.out.println(p);
+//        System.out.println(p);
     }
 }
