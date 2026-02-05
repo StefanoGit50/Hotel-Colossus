@@ -141,7 +141,7 @@ public class Prenotazione implements Cloneable, Serializable {
         this.checkIn = false;
         this.dataEmissioneRicevuta = dataEmissioneRicevuta;
         this.metodoDiPagamento= metodoPagamento;
-        this.prezzoAcquistoTrattamento= prezzoAcquistoTrattamento;
+        this.prezzoAcquistoTrattamento = prezzoAcquistoTrattamento;
         this.cittadinanza= cittadinanza;
     }
 
@@ -424,6 +424,8 @@ public class Prenotazione implements Cloneable, Serializable {
     public String toString() {
         return "Prenotazione{" +
                 "IDPrenotazione=" + IDPrenotazione +
+                ", cittadinanza='" + cittadinanza + '\'' +
+                ", metodoDiPagamento='" + metodoDiPagamento + '\'' +
                 ", dataCreazionePrenotazione=" + dataCreazionePrenotazione +
                 ", dataInizio=" + dataInizio +
                 ", dataFine=" + dataFine +
@@ -434,15 +436,15 @@ public class Prenotazione implements Cloneable, Serializable {
                 ", intestatario='" + intestatario + '\'' +
                 ", noteAggiuntive='" + noteAggiuntive + '\'' +
                 ", numeroDocumento='" + numeroDocumento + '\'' +
-                ", listaCamere=" + listaClienti.toString()+
+                ", dataEmissioneRicevuta=" + dataEmissioneRicevuta +
                 ", listaServizi=" + listaServizi +
                 ", listaClienti=" + listaClienti +
                 ", statoPrenotazione=" + statoPrenotazione +
                 ", checkIn=" + checkIn +
-                ", metodoPagamento=" + metodoDiPagamento + '\'' +
-                ", dataemissione=" + dataEmissioneRicevuta +
+                ", prezzoAcquistoTrattamento=" + prezzoAcquistoTrattamento +
                 '}';
     }
+
 
     /**
      * Indica se un altro oggetto è "uguale a" questa prenotazione.
@@ -461,8 +463,13 @@ public class Prenotazione implements Cloneable, Serializable {
         // Compare primitive types
         if (statoPrenotazione != that.statoPrenotazione) return false;
         if (checkIn != that.checkIn) return false;
-        if (Double.compare(that.prezzoAcquistoTrattamento, prezzoAcquistoTrattamento) != 0) return false;
-
+        System.out.println(prezzoAcquistoTrattamento);
+        System.out.println(that.prezzoAcquistoTrattamento);
+        if(prezzoAcquistoTrattamento != null && that.prezzoAcquistoTrattamento != null){
+            if (Double.compare(that.prezzoAcquistoTrattamento, prezzoAcquistoTrattamento) != 0) return false;
+        }else{
+            return false;
+        }
         // Compare objects using Objects.equals (handles null safely)
         if (!Objects.equals(IDPrenotazione, that.IDPrenotazione)) return false;
         if (!Objects.equals(cittadinanza, that.cittadinanza)) return false;

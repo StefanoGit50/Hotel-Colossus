@@ -99,41 +99,45 @@ public class prenotazioneDAOTesting{
         ArrayList<Servizio> servizios = new ArrayList<>();
         clientes.add(new Cliente("Luigi","Verdi","Milano","Milano","Corso Buenos Aires",20,20100,"3339876543","M",LocalDate.of(1990,2,2),"VRDLGI90B02F205K","luigi.verdi@email.com","Italiana",new Camera(202,Stato.Occupata,2,350.0,"Jacuzzi privata","Suite Presidenziale")));
         servizios.add(new Servizio("Spa e Benessere",45.0));
-        servizios.add(new Servizio("Colazione in camera",12.0));
+        servizios.add(new Servizio("Colazione in Camera",12.0));
         Prenotazione prenotazione2 = new Prenotazione(LocalDate.of(2024,2,1),LocalDate.of(2024,2,20),LocalDate.of(2024,2,25),null,new Trattamento("Pensione Completa",55.0),55.0,"Patente",LocalDate.of(2019,5,5),LocalDate.of(2029,5,5),"Luigi Verdi","Intolleranza Lattosio",servizios,clientes,"PT123456","Contanti","italiana");
         prenotazione2.setIDPrenotazione(2);
         prenotazione2.setCheckIn(true);
-        System.out.println(prenotazione2);
-        System.out.println(prenotazione1);
         assertEquals(prenotazione2,prenotazione1);
     }
 
     @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
-    @DisplayName("TC29: doRetriveByKey() quando va in errore")
-    public void doRetriveByKeyException() throws SQLException {
+    @DisplayName("TC29: doRetriveByKey() quando va in errore e il DB ")
+    public void doRetriveByKeyException() throws SQLException{
         assertThrows(SQLException.class,()->prenotazioneDAO.doRetriveByKey(" "));
     }
 
     @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
-    @DisplayName("TC30: doRetriveByKey() quando resultSet.next() restituisce false")
-    public void doRetriveByKeyResultSetIsFalse() throws SQLException {
+    @DisplayName("TC30: quando viene lancia l'eccezione SQLException ")
+    public void doRetriveByKeyResultSetIsFalse() throws SQLException{
         DBPopulator.cancel();
         assertThrows(SQLException.class,()->prenotazioneDAO.doRetriveByKey(1));
     }
 
     @Test
-    @Tag("False")
-    @DisplayName("TC31: doRetriveByKey() quando resultSet.next() è true ma gli altri false")
-    public void doRetriveByKeyAllFalseTranneIlPrimoResultSet() throws SQLException {
-       Prenotazione prenotazione1 = prenotazioneDAO.doRetriveByKey(1);
-       System.out.println(prenotazione1);
-       prenotazione.setListaClienti(new ArrayList<>());
-       prenotazione.setListaServizi(new ArrayList<>());
-       prenotazione.setTrattamento(null);
-       assertEquals(prenotazione,prenotazione1);
+    @Tags({@Tag("Exception"),@Tag("Error")})
+    @DisplayName("TC31: doRetriveByKey() quando non trova la camera")
+    public void doRetriveByKeyIlPrimoResultSetDaExcpetion() throws SQLException{
+        DBPopulator.cancel();
+       assertThrows(SQLException.class,()->prenotazioneDAO.doRetriveByKey(1));
     }
+
+    @Test
+    @Tags({@Tag("Exception"),@Tag("Error")})
+    @DisplayName("TC32: doRetriveByKey() quando non trova il cliente")
+    public void doRetriveByKeyIlSecondoResultSetDaException() throws SQLException {
+        prenotazione.setTrattamento(null);
+        assertDoesNotThrow(()->prenotazioneDAO.doUpdate(prenotazione));
+        assertThrows(SQLException.class,()->prenotazioneDAO.doRetriveByKey(prenotazione.getIDPrenotazione()));
+    }
+
     @Test
     @Tag("True")
     @DisplayName("TC32: doRetriveAll() quando va tutto bene")
