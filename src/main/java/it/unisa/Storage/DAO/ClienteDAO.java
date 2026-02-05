@@ -232,7 +232,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
             "nome = ?, cognome = ?, Cap = ?, comune = ?, " +
             "civico = ?, provincia = ?, via = ?, Email = ?, Sesso = ?, " +
             "telefono = ?, Nazionalita = ?, " +
-            "DataDiNascita = ?, IsBackListed = ?";
+            "DataDiNascita = ?, IsBlackListed = ?";
         if(o != null && o.getCf() != null){
             con = ConnectionStorage.getConnection();
             try(PreparedStatement preparedStatement = con.prepareStatement(query)){
