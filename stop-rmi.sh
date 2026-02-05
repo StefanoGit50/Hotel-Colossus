@@ -144,7 +144,7 @@ kill_all_rmi_processes()
 # Ferma servizi in ordine inverso rispetto all'avvio
 
 # 1. Ferma Manager
-stop_service "Manager"
+stop_service "ManagerImpl"
 
 
 # 2. Ferma Governante

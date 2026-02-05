@@ -116,7 +116,7 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato> {
     @Override
     public synchronized void doDelete(Impiegato impiegato) throws SQLException {
         Connection connection = ConnectionStorage.getConnection();
-        try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM impiegato WHERE CF = ?")) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Impiegato WHERE CF = ?")) {
             preparedStatement.setString(1, impiegato.getCodiceFiscale());
             preparedStatement.executeUpdate();
         } finally {
@@ -150,7 +150,7 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato> {
                 try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT CF, IDImpiegato,Nome,Cognome,UserName,HashPasword,isTemporary,dataScadenzaToken,Sesso , TipoDocumento " +
                                                                                             ", NumeroDocumento , Cap,Via ,Provincia , Comune ,Civico," +
                                                                                             "Telefono,Ruolo,Stipendio,DataAssunzione,DataScadenzaDocumento,DataRilascioDocumento," +
-                                                                                            "EmailAziendale,Cittadinanza FROM impiegato WHERE CF = ?")) {
+                                                                                            "EmailAziendale,Cittadinanza FROM Impiegato WHERE CF = ?")) {
                     preparedStatement.setString(1 , f);
                     ResultSet resultSet = preparedStatement.executeQuery();
                     if (resultSet.next()) {
@@ -202,7 +202,7 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato> {
                 try(PreparedStatement pr = connection.prepareStatement("SELECT IDImpiegato, CF , Nome , Cognome , UserName , HashPasword , isTemporary , dataScadenzaToken , Sesso ," +
                                                                             "TipoDocumento , NumeroDocumento , Cap,Via ,Provincia " +
                                                                             ", Comune ,Civico,Telefono,Ruolo,Stipendio,DataAssunzione,DataScadenzaDocumento" +
-                                                                        ",DataRilascioDocumento,EmailAziendale,Cittadinanza FROM impiegato WHERE IDImpiegato = ?"))  {
+                                                                        ",DataRilascioDocumento,EmailAziendale,Cittadinanza FROM Impiegato WHERE IDImpiegato = ?"))  {
                     pr.setString(1,f);
                     ResultSet resultSet = pr.executeQuery();
                     if (resultSet.next()){
@@ -263,7 +263,7 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato> {
             try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT CF , Nome , Cognome , UserName , HashPasword , isTemporary, dataScadenzaToken ," +
                                                                                       "Sesso , TipoDocumento , NumeroDocumento , Cap,Via ,Provincia , Comune ,Civico,Telefono," +
                                                                                       "Ruolo,Stipendio,DataAssunzione,DataScadenzaDocumento,DataRilascioDocumento,EmailAziendale" +
-                                                                                      ",Cittadinanza FROM impiegato"); ResultSet resultSet = preparedStatement.executeQuery()){
+                                                                                      ",Cittadinanza FROM Impiegato"); ResultSet resultSet = preparedStatement.executeQuery()){
                 while(resultSet.next()){
                     Impiegato impiegato;
                     String cF = resultSet.getString("CF");

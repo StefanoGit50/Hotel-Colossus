@@ -137,9 +137,8 @@ start_service()
     fi
 
     # Avvia il servizio in background
-    nohup java $JAVA_OPTS \
-        -cp "$CLASSPATH" \
-        "$main_class" \
+    nohup mvn exec:java $JAVA_OPTS \
+        -Dexec.mainClass="$main_class" \
         >> "$log_file" 2>&1 &
 
     local pid=$!
@@ -214,7 +213,7 @@ sleep 3
 
 
 # 5. Avvia Manager Server
-start_service "Manager" "it.unisa.Server.gestioneImpiegati.Manager"
+start_service "Manager" "it.unisa.Server.BackOffice.ManagerImpl"
 
 
 # Summary

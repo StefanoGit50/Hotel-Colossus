@@ -37,13 +37,13 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
             logger.info("Avvio RMI Registry sulla porta " + RMI_PORT + "...");
 
             // Recupera gli impiegati e aggiungili al catalogo
-            try {
+            /*try {
                 ImpiegatoDAO dao = new ImpiegatoDAO();
                 CatalogoImpiegati.setListaImpiegati((ArrayList<Impiegato>) dao.doRetriveAll(""));
             } catch (SQLException ex) {
                 logger.info("Recupero impiegati dal DB fallito!");
                 throw new RemoteException("Try creating 'Manager' object again!");
-            }
+            }*/
 
             try {
                 // Prova a creare un nuovo registry

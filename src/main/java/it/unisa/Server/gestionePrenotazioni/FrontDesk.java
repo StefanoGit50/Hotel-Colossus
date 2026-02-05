@@ -73,9 +73,15 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
             // IMPORTANTE: Avvia l'RMI registry programmaticamente
             log.info("Avvio RMI Registry sulla porta " + RMI_PORT + "...");
 
-            // RIMOSSO IL TRY-CATCH: Se la porta è occupata, VOGLIO che esploda l'errore!
-            LocateRegistry.createRegistry(RMI_PORT);
-            log.info("✓ RMI Registry creato con successo!");
+            try {
+                // Prova a creare un nuovo registry
+                LocateRegistry.createRegistry(RMI_PORT);
+                log.info("✓ RMI Registry creato con successo!");
+            } catch (RemoteException e) {
+                // Se esiste già, ottieni il riferimento
+                LocateRegistry.getRegistry(RMI_PORT);
+                log.info("✓ Connesso a RMI Registry esistente");
+            }
 
             log.info("Genero il gestore prenotazioni...");
             FrontDesk gp = new FrontDesk();
@@ -105,9 +111,10 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         }
         catch(Exception e)
         {
+            System.out.println(e);
             log.error("ERRORE FATALE: Probabilmente c'è un vecchio server attivo sulla porta " + RMI_PORT);
             log.error("Soluzione: Ferma tutti i processi Java (pulsante Stop o Task Manager).");
-            // e.printStackTrace();
+            e.printStackTrace();
             System.exit(1);
         }
     }

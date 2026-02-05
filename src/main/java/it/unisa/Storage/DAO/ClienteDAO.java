@@ -103,12 +103,12 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
         if (oggetto instanceof String){
             String cf = (String) oggetto;
             con = ConnectionStorage.getConnection();
-            String sql = "Select * From (associato_a join camera on associato_a.NumeroCamera = camera.NumeroCamera)" +
+            String sql = "Select * From (Associato_a join Camera on Associato_a.NumeroCamera = Camera.NumeroCamera)" +
                     "where CF = ?";
             PreparedStatement preparedStatement1 = con.prepareStatement(sql);
             Camera camera = new Camera();
             Cliente cliente = new Cliente();
-            try(PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM cliente WHERE CF = ?")){
+            try(PreparedStatement preparedStatement = con.prepareStatement("SELECT * FROM Cliente WHERE CF = ?")){
                 preparedStatement.setString(1,cf);
                 resultSet = preparedStatement.executeQuery();
                 preparedStatement1.setString(1,cf);
@@ -178,8 +178,8 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
         con = ConnectionStorage.getConnection();
         ArrayList<Cliente> clientes = new ArrayList<>();
 
-        String sql =  "SELECT * FROM cliente ORDER BY ? ";
-        String sql1 = "Select * From (associato_a join camera on associato_a.NumeroCamera = camera.NumeroCamera)" +
+        String sql =  "SELECT * FROM Cliente ORDER BY ? ";
+        String sql1 = "Select * From (Associato_a join Camera on Associato_a.NumeroCamera = Camera.NumeroCamera)" +
                 "where CF = ?";
         if(order != null){
             if(order.equalsIgnoreCase("decrescente")){

@@ -61,7 +61,7 @@ public class PrenotazioniDatabase {
         ArrayList<Camera> listcamera=new ArrayList<>();
         listcamera.add(new Camera(112, Stato.Occupata,2,45.50,"","Pino"));
         ArrayList<Servizio> servizio=new ArrayList<>();
-        servizio.add(new Servizio("Piscina",20));
+        servizio.add(new Servizio("Parcheggio",10));
         ArrayList<Cliente> cliente=new ArrayList<>();
         cliente.add(new Cliente("mario","Rossi","napoli","napoli","via manzo",12,45,"323425","M",LocalDate.of(1998,12,1),"CF234rdfcfg","luca@gmail.com","italiana",listcamera.getFirst()));
         Prenotazione prenotazione =new Prenotazione(

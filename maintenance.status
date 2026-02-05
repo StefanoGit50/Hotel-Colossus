@@ -14,21 +14,21 @@ maintenance.protocol=GRACEFUL_SHUTDOWN
 # === TIMING ===
 maintenance.scheduled.minutes=1
 maintenance.scheduled.seconds=60
-maintenance.started.timestamp=1770029294
-maintenance.started.datetime=2026-02-02 11:48:14
-maintenance.shutdown.timestamp=1770029354
-maintenance.shutdown.datetime=2026-02-02 11:49:14
+maintenance.started.timestamp=1770315953
+maintenance.started.datetime=2026-02-05 19:25:53
+maintenance.shutdown.timestamp=1770316013
+maintenance.shutdown.datetime=2026-02-05 19:26:53
 maintenance.timezone=CET
 maintenance.timezone.offset=+0100
 
 # === STATO CORRENTE ===
-maintenance.current.status=IN_PROGRESS
-maintenance.current.phase=COUNTDOWN
-maintenance.remaining.seconds=57
+maintenance.current.status=COMPLETED
+maintenance.current.phase=CLEANUP
+maintenance.remaining.seconds=1
 maintenance.remaining.minutes=0
-maintenance.elapsed.seconds=3
+maintenance.elapsed.seconds=59
 maintenance.elapsed.minutes=0
-maintenance.progress.percentage=5
+maintenance.progress.percentage=98
 
 # === MOTIVO E DESCRIZIONE ===
 maintenance.reason=Manutenzione programmata del sistema
@@ -47,7 +47,7 @@ maintenance.actions.log_rotation=ENABLED
 # === BACKUP ===
 maintenance.backup.enabled=true
 maintenance.backup.location=backups/
-maintenance.backup.timestamp=20260202_114814
+maintenance.backup.timestamp=20260205_192654
 maintenance.backup.includes=logs,config,data
 maintenance.backup.format=tar.gz
 maintenance.backup.compression=gzip
@@ -58,8 +58,8 @@ maintenance.system.user=samuele
 maintenance.system.os=Linux
 maintenance.system.kernel=6.18.1-arch1-2
 maintenance.system.arch=x86_64
-maintenance.system.pid=35697
-maintenance.system.ppid=33319
+maintenance.system.pid=10189
+maintenance.system.ppid=8496
 maintenance.system.shell=/usr/bin/bash
 
 # === MESSAGGI PER UTENTI ===
@@ -68,10 +68,10 @@ maintenance.message.en=System under scheduled maintenance. Shutdown in 1 minutes
 maintenance.message.display=ATTENZIONE: Manutenzione in corso - Salva il tuo lavoro
 
 # === CHECKPOINT ===
-maintenance.checkpoint.backup=PENDING
-maintenance.checkpoint.shutdown=PENDING
-maintenance.checkpoint.cleanup=PENDING
+maintenance.checkpoint.backup=COMPLETED
+maintenance.checkpoint.shutdown=COMPLETED
+maintenance.checkpoint.cleanup=COMPLETED
 
 # ==============================================================================
-# Fine del file di stato - Ultimo aggiornamento: Mon Feb  2 11:48:14 CET 2026
+# Fine del file di stato - Ultimo aggiornamento: Thu Feb  5 19:25:53 CET 2026
 # ==============================================================================
