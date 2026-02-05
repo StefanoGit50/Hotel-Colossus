@@ -30,6 +30,8 @@ public class PrenotazioniDatabase {
     }
     @AfterEach
     public void tearDown()  {
+        DBPopulator.cancel();
+        DBPopulator.populator();
         CatalogoPrenotazioni.getListaPrenotazioni().clear();
     }
 
