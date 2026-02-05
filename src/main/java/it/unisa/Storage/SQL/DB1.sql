@@ -1,4 +1,4 @@
-drop database hotelcolossus;
+
 create database hotelColossus;
 use hotelColossus;
 
