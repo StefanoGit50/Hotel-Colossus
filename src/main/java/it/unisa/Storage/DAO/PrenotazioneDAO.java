@@ -609,14 +609,12 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione> {
                     String query5 = "SELECT cl.* FROM cliente cl JOIN associato_a a ON cl.CF = a.CF WHERE a.IDPrenotazione = ?";
                     PreparedStatement preparedStatement1;
                     Camera camera = new Camera();
+                    preparedStatement1 = connection.prepareStatement(query5);
                     try (PreparedStatement stmt = connection.prepareStatement(query4)) {
                         stmt.setInt(1, idPrenotazione);
-
-                        preparedStatement1 = connection.prepareStatement(query5);
-
-                        try (ResultSet rs4 = stmt.executeQuery()){
+                        try(ResultSet rs4 = stmt.executeQuery()){
+                            rs4.next();
                             preparedStatement1.setString(1,rs4.getString("CF"));
-
                             try(ResultSet resultSet = preparedStatement1.executeQuery()){
                                 resultSet.next();
                                 camera.setNumeroCamera(resultSet.getInt("NumeroCameraStorico"));

@@ -65,7 +65,7 @@ VALUES
 ('Luigi Verdi', '2024-02-01', '2024-02-20', '2024-02-25', NULL, 'PT123456', '2019-05-05', '2029-05-05', 'Pensione Completa', 'Intolleranza Lattosio', 'Patente', true, true, 55.00, 'Contanti', 'italiana'),
 
 -- Prenotazione 3: Hans Muller
-('Hans Muller', '2024-02-15', '2024-03-01', '2024-03-07', NULL, 'PASSDE99', '2021-01-01', '2031-01-01', 'All Inclusive', 'Late arrival expected', 'Passaporto', true, false, 80.00, 'Bonifico', 'italiana');
+('Hans Muller', '2024-02-15', '2024-03-01', '2024-03-07', NULL, 'PASSDE99', '2021-01-01', '2031-01-01', 'All Inclusive', 'Late arrival expected', 'Patente', true, false, 80.00, 'Bonifico', 'italiana');
 
 -- =============================================
 -- 7. INSERT ASSOCIATO_A
