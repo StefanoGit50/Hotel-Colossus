@@ -35,7 +35,7 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato> {
             "MetodoDiPagamento",
             "Cittadinanza",
             "DataDiNascita",
-            "IsBackListed"
+            "IsBlackListed"
     };
 
 
