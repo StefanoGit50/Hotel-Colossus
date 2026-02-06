@@ -157,7 +157,7 @@ public class TestCasesRegistraPrenotazione {
                 listaServizi,                   // 13. Lista Servizi
                 cliente,                        // 14. Lista Clienti
                 "CA123AA",                     // 15. Numero Documento
-                null,
+                "",
                 "Italiana"// 16. Metodo Pagamento (MANCAVA QUESTO)
         );
     }
@@ -237,15 +237,15 @@ public class TestCasesRegistraPrenotazione {
             Prenotazione p = createBasePrenotazione(), campione;
             p.setTipoDocumento("Passaporto");
             p.setTrattamento(new Trattamento("Solo pernottamento", 0));
-            p.setTrattamento(new Trattamento("Pensione Completa", 0.0));
-            Assertions.assertDoesNotThrow(() -> frontDesk.addPrenotazione(p));
+            p.setPrezzoAcquistoTrattamento(0.0);
             ArrayList<Cliente> c = new ArrayList<>();
             c.add(listaClienti.get(1));
-            c.add(listaClienti.getFirst());  // 3 clienti -> 3 camere diverse
+            c.add(listaClienti.getFirst());  // 2 clienti -> 2 camere diverse
             p.setIntestatario(c.getFirst().getNome() + " " + c.getFirst().getCognome());
             p.setListaClienti(c);
             p.setIDPrenotazione(autoIncrement);
 
+            Assertions.assertDoesNotThrow(() -> frontDesk.addPrenotazione(p));
             try {
                 campione =  frontDesk.getPrenotazioneById(autoIncrement);
                 Assertions.assertEquals(p, frontDesk.getPrenotazioneById(p.getIDPrenotazione()));

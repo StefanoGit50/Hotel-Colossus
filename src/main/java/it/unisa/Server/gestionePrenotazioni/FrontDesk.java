@@ -2,6 +2,7 @@ package it.unisa.Server.gestionePrenotazioni;
 
 import it.unisa.Server.Autentication.Autentication;
 import it.unisa.Server.IllegalAccess;
+import it.unisa.interfacce.*;
 import it.unisa.Server.command.*;
 import it.unisa.Common.*;
 import it.unisa.Common.Prenotazione;
@@ -14,9 +15,7 @@ import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
 import it.unisa.Server.persistent.obj.catalogues.CatalogueUtils;
 import it.unisa.Storage.DAO.ClienteDAO;
 import it.unisa.Storage.DAO.PrenotazioneDAO;
-import it.unisa.interfacce.ManagerInterface;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
@@ -28,12 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface {
-    private static Logger log = LogManager.getLogger(FrontDesk.class);
     private CatalogoCamere camList = new CatalogoCamere();
     private static final int RMI_PORT = 1099;
 
     private static final org.apache.logging.log4j.Logger log = LogManager.getLogger(FrontDesk.class);
-    public static ManagerInterface manager;
 
     public FrontDesk() throws RemoteException {
         super();
@@ -68,7 +65,6 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         System.out.println("DENTRO LA CHIAMATA"+list);
         return list;
     }
-
 
     public static void main(String[] args)
     {
@@ -191,12 +187,16 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
 
 
     @Override
-    public Impiegato authentication(String username, String password,String pwd2) throws RemoteException, IllegalAccess {
+    public Impiegato authentication(String username, String password,String pwd2) throws RemoteException {
         log.info("SERVER: Username ricevuto: [" + username + "]");
         log.info("SERVER: Password ricevuta: [" + password + "]");
 
-        if(Autentication.checkaccount(username, password, pwd2)){
-            return Autentication.getImpiegato();
+        try {
+            if(Autentication.checkaccount(username, password, pwd2)){
+                return Autentication.getImpiegato();
+            }
+        } catch (IllegalAccess e) {
+            throw new RuntimeException(e);
         }
 
         return null;
