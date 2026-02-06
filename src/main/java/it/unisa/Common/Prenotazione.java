@@ -519,8 +519,9 @@ public class Prenotazione implements Cloneable, Serializable {
      * @throws CloneNotSupportedException Se un attributo non clonabile è presente o la clonazione fallisce.
      */
     @Override
-    public Prenotazione clone() throws CloneNotSupportedException {
-        Prenotazione cloned = (Prenotazione) super.clone();
+    public Prenotazione clone(){
+        try{
+            Prenotazione cloned = (Prenotazione) super.clone();
 
         // Clonazione degli oggetti interni mutabili (Trattamento e Liste)
         if (this.trattamento != null) {
