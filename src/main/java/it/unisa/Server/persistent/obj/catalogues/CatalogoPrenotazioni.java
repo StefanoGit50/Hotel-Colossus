@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -249,17 +250,29 @@ public class CatalogoPrenotazioni implements Serializable {
      * @throws InvalidInputException se un campo presenta un valore errato.
      */
     public static void checkPrenotazione(Prenotazione prenotazione) throws InvalidInputException {
-    /*    LocalDate inizio = prenotazione.getDataInizio(),  fine = prenotazione.getDataFine(),
+        LocalDate inizio = prenotazione.getDataInizio(),  fine = prenotazione.getDataFine(),
                 rilascio = prenotazione.getDataRilascio(), scadenza = prenotazione.getDataScadenza();
 
+        Pattern numeroDocumento = Pattern.compile("^[0-9A-Z]{0,9}$");
         String documento = prenotazione.getTipoDocumento();
 
         int nClienti = prenotazione.getListaClienti().size();
         int nPostiCamere = 0;
 
+        List<Camera> duplicati = new ArrayList<>();
+        Camera camera;
         for (Cliente c : prenotazione.getListaClienti()) {
-            nPostiCamere +=  c.getCamera().getCapacità();
+            camera = c.getCamera();
+            if (!duplicati.contains(camera)) {
+                duplicati.add(camera);
+                nPostiCamere +=  c.getCamera().getCapacità();
+            }
         }
+
+        // Lista documenti accettabili
+        List<String> documentiValidi = List.of(
+                "carta d'identità", "passaporto", "patente", "cid"
+        );
 
         // Lista di condizioni che possono lanciare un errore
         // 1. Data Arrivo Passata
@@ -293,13 +306,12 @@ public class CatalogoPrenotazioni implements Serializable {
             throw new InvalidInputException("Almeno un cliente deve essere selezionato");
 
         // 7. Tipo Documento non valido
-        if (!documento.equalsIgnoreCase("carta d'identità") &&
-                !documento.equalsIgnoreCase("passaporto") &&
-                !documento.equalsIgnoreCase("patente"))
+        if (!documentiValidi.contains(prenotazione.getTipoDocumento().toLowerCase())) {
             throw new InvalidInputException("Tipo documento non valido");
+        }
 
         // 8. Mismatch capacità (Clienti vs Posti Camera)
-        if (nClienti != nPostiCamere)
+        if (nClienti > nPostiCamere)
             throw new InvalidInputException("Numero clienti non corrisponde alla capacità totale delle camere");
 
         // 9. Data Rilascio Documento futura
@@ -312,7 +324,18 @@ public class CatalogoPrenotazioni implements Serializable {
 
         // 11. Data Scadenza antecedente o uguale alla data di Rilascio
         if (scadenza.isBefore(rilascio) || scadenza.isEqual(rilascio))
-            throw new InvalidInputException("Data scadenza documento deve essere successi");*/
+            throw new InvalidInputException("Data scadenza documento deve essere successi");
+
+        // 12. Numero documento formato solo da numeri e lettere
+        if ( !numeroDocumento.matcher(prenotazione.getNumeroDocumento()).matches() ) {
+            throw new InvalidInputException("Il numero documento deve contenere solo lettere (maiuscole) e numeri");
+        }
+
+        // 13. Lunghezza numero documento maggiore di 9
+        if (prenotazione.getNumeroDocumento().length() > 9) {
+            throw new InvalidInputException("Il documento deve avere una lunghezza <= 9");
+        }
+
     }
     /**
 
@@ -350,6 +373,8 @@ public class CatalogoPrenotazioni implements Serializable {
         if (dataFineSoggiorno != null && dataFineSoggiorno.isBefore(dataInizioSoggiorno)) {
             throw new InvalidInputException("[dataFineSoggiorno] precedente a dataInizioSoggiorno");
         }
+
+
     }
 
 }

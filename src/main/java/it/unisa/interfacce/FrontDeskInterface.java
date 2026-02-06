@@ -7,7 +7,6 @@ import it.unisa.Server.ObserverCamereInterface;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.time.LocalDate;
 import java.util.List;
 
 public interface FrontDeskInterface extends Remote, ObserverCamereInterface
@@ -82,6 +81,7 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
      */
     void removeCliente(Cliente c) throws RemoteException;
 
+    //TODO: Aggiungere comando per retrieve del cliente (singolo / lista)
 
     /**
      * Aggiorna i dati di cliente.
@@ -91,6 +91,7 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
      */
     void updateCliente(Cliente c) throws RemoteException;
 
+    //TODO: Aggiungere comando per retrieve delle prenotazione (singolo / lista)
 
     /**
      * Aggiunge il cliente alla blacklist.

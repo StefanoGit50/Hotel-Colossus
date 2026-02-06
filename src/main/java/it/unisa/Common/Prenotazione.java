@@ -159,6 +159,7 @@ public class Prenotazione implements Cloneable, Serializable {
         this.trattamento = new Trattamento();
         this.intestatario = "";
         this.statoPrenotazione = false;
+        this.metodoDiPagamento= "";
     }
 
     /**
@@ -245,10 +246,6 @@ public class Prenotazione implements Cloneable, Serializable {
 
     public String getCittadinanza() {
         return cittadinanza;
-    }
-
-    public String getMetodoDiPagamento() {
-        return metodoDiPagamento;
     }
 
     public boolean isStatoPrenotazione() {
@@ -487,8 +484,8 @@ public class Prenotazione implements Cloneable, Serializable {
         if (!Objects.equals(dataEmissioneRicevuta, that.dataEmissioneRicevuta)) return false;
 
         // Compare lists
-        if (!compareListsEqual(listaServizi, that.listaServizi)) return false;
-        if (!compareListsEqual(listaClienti, that.listaClienti)) return false;
+        if (! (listaServizi.containsAll(that.listaServizi) && listaServizi.size() == that.listaServizi.size())) return false;
+        if (! (listaClienti.containsAll(that.listaClienti) && listaClienti.size() == that.listaClienti.size())) return false;
 
         return true;
     }
