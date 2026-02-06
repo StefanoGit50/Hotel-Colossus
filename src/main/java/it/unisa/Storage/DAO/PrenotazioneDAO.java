@@ -342,6 +342,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
                         p.setDataInizio(rs.getDate("DataArrivoCliente").toLocalDate());
                         p.setDataRilascio(rs.getDate("DataRilascioDocumento").toLocalDate());
                         p.setDataScadenza(rs.getDate("DataScadenzaDocumento").toLocalDate());
+                        p.setDataEmissioneRicevuta(rs.getDate("DataEmissioneRicevuta") != null? rs.getDate("DataEmissioneRicevuta").toLocalDate() :null);
                         p.setStatoPrenotazione(rs.getBoolean("Stato"));
                         p.setCheckIn(rs.getBoolean("CheckIn"));
                         p.setNoteAggiuntive(rs.getString("NoteAggiuntive"));
@@ -428,7 +429,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
             ps = connection.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
+            if (rs.next()){
                 try {
                     do {
                         prenotazioni.add(doRetriveByKey(rs.getInt("IDPrenotazione")));
@@ -503,10 +504,14 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
                 if(p.getTrattamento()!=null){
                     preparedStatement.setString(10, p.getTrattamento().getNome().trim());
                     attributi[9] = p.getTrattamento().getNome().trim();
+                    preparedStatement.setDouble(15, p.getTrattamento().getPrezzo());
+                    attributi[14] = String.valueOf(p.getTrattamento().getPrezzo());
                 }else{
                     preparedStatement.setNull(10, Types.VARCHAR);
 
                     attributi[9] = "";
+                    preparedStatement.setNull(15,Types.VARCHAR);
+                    attributi[14] = "0";
                 }
 
                 preparedStatement.setString(11, p.getNoteAggiuntive().trim());
@@ -517,15 +522,12 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
                 attributi[12] = String.valueOf(p.getStatoPrenotazione());
                 preparedStatement.setBoolean(14, p.isCheckIn());
                 attributi[13] = String.valueOf(p.isCheckIn());
-                preparedStatement.setDouble(15, p.getTrattamento().getPrezzo());
-                attributi[14] = String.valueOf(p.getTrattamento().getPrezzo());
                 preparedStatement.setString(16, p.getMetodoPagamento());
                 attributi[15] = String.valueOf(p.getMetodoPagamento());
                 preparedStatement.setString(17, p.getCittadinanza());
                 attributi[16] = String.valueOf(p.getCittadinanza());
                 preparedStatement.setInt(18,p.getIDPrenotazione());
 
-                System.out.println(preparedStatement);
                 preparedStatement.executeUpdate();
 
                 if (p.getListaClienti() == null || p.getListaClienti().isEmpty()) {
@@ -536,14 +538,10 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
                     }
                 }
 
-
-
-
-
                 preparedStatement = connection.prepareStatement(sql[1]);
 
                 ArrayList<Servizio> duplicate = new ArrayList<>();
-                if (p.getListaServizi() != null || !p.getListaServizi().isEmpty()) {
+                if (p.getListaServizi() != null || !p.getListaServizi().isEmpty()){
                     for (Servizio s : p.getListaServizi()) {
                         if (!duplicate.contains(s)) {
                             duplicate.add(s);
@@ -713,9 +711,9 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
                                 trattamento,
                                 rs.getDouble("PrezzoAcquistoTrattamento"),
                                 rs.getString("TipoDocumento"),
-                                rs.getDate("DataRilascio").toLocalDate(),
-                                rs.getDate("DataScadenza").toLocalDate(),
-                                rs.getString("Intestatario"),
+                                rs.getDate("DataRilascioDocumento").toLocalDate(),
+                                rs.getDate("DataScadenzaDocumento").toLocalDate(),
+                                rs.getString("NomeIntestatario"),
                                 rs.getString("NoteAggiuntive"),
                                 servizi,
                                 clienti,
@@ -724,7 +722,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
                                 rs.getString("Cittadinanza"));
                                 p.setIDPrenotazione(idPrenotazione);
                                 p.setCheckIn(rs.getBoolean("CheckIn"));
-                                p.setStatoPrenotazione(rs.getBoolean("StatoPrenotazione"));
+                                p.setStatoPrenotazione(rs.getBoolean("Stato"));
 
                                 prenotaziones.add(p);
 
