@@ -7,6 +7,7 @@
 #==============================================================================
 
 
+
 # Carica environment
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -22,6 +23,7 @@ else
 fi
 
 
+
 # Colori
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -31,6 +33,7 @@ GRAY='\033[0;90m'
 NC='\033[0m'
 
 
+
 print_header()
 {
     echo -e "${BLUE}═══════════════════════════════════════════════════${NC}"
@@ -38,6 +41,7 @@ print_header()
     echo -e "${BLUE}═══════════════════════════════════════════════════${NC}"
     echo ""
 }
+
 
 
 # Funzione per verificare status di un servizio
@@ -83,6 +87,7 @@ check_service_status()
 }
 
 
+
 # Funzione per verificare porta RMI
 check_rmi_port()
 {
@@ -96,6 +101,7 @@ check_rmi_port()
         echo -e "${RED}●${NC} Not listening"
     fi
 }
+
 
 
 # Funzione per testare connessione RMI
@@ -115,6 +121,7 @@ test_rmi_connection()
         echo -e "${RED}●${NC} Unreachable"
     fi
 }
+
 
 
 # Funzione per mostrare servizi registrati
@@ -151,6 +158,7 @@ public class ListRMIServices {
 }
 EOF
 
+
     # Compila ed esegui
     javac -d "$PID_DIR" "$list_tool" 2>/dev/null
     java -cp "$PID_DIR" ListRMIServices 2>/dev/null || echo "  ✗ Registry non disponibile"
@@ -165,7 +173,9 @@ EOF
 # ============================================================================
 
 
+
 print_header
+
 
 
 echo -e "${BLUE}System Information:${NC}"
@@ -175,10 +185,12 @@ echo -e "  Project:    $PROJECT_ROOT"
 echo ""
 
 
+
 echo -e "${BLUE}Network Status:${NC}"
 check_rmi_port
 test_rmi_connection
 echo ""
+
 
 
 echo -e "${BLUE}Service Status:${NC}"
@@ -188,7 +200,9 @@ check_service_status "Governante"
 check_service_status "Manager"
 
 
+
 list_rmi_services
+
 
 
 # Conta servizi attivi
@@ -204,410 +218,8 @@ for service in rmiregistry FrontDesk Governante Manager; do
 done
 
 
+
 echo -e "${BLUE}Summary:${NC} $active_count/4 servizi attivi"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
