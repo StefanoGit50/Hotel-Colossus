@@ -23,8 +23,10 @@ public interface FrontDeskStorage<T>
     /**
      * Salva un insieme di oggetti nel db
      *
+     * @param list
      * @pre list != null
      * @post inserisce gli oggetti nel database
+     * @throws SQLException
      */
     void doSaveAll(List<T> list) throws SQLException;
 

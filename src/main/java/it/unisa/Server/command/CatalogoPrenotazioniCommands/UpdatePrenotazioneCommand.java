@@ -14,14 +14,15 @@ import java.util.Objects;
  */
 public class UpdatePrenotazioneCommand implements Command {
 
-    private CatalogoPrenotazioni catalogue = new CatalogoPrenotazioni();
+    private ArrayList<Prenotazione> listaPrenotazioni;
     private Prenotazione prenotazione;
     private Prenotazione prenotazioneNonModificata;
     /**
      * Costruttore del comando.
      * @param prenotazione  Prenotazione da modificare.
      */
-    public UpdatePrenotazioneCommand(Prenotazione prenotazione) {
+    public UpdatePrenotazioneCommand(ArrayList<Prenotazione> list,Prenotazione prenotazione) {
+        this.listaPrenotazioni = list;
         this.prenotazione = prenotazione;
     }
 
@@ -38,8 +39,8 @@ public class UpdatePrenotazioneCommand implements Command {
      * @post result == catalogue
      * @return catalogue
      */
-    public CatalogoPrenotazioni getCatalogue() {
-        return catalogue;
+    public ArrayList<Prenotazione> getCatalogue() {
+        return listaPrenotazioni;
     }
 
 
@@ -50,8 +51,8 @@ public class UpdatePrenotazioneCommand implements Command {
      * @pre catalogue != null
      * @post this.catalogue == catalogue
      */
-    public void setCatalogue(CatalogoPrenotazioni catalogue) {
-        this.catalogue = catalogue;
+    public void setCatalogue(ArrayList<Prenotazione> catalogue) {
+        this.listaPrenotazioni = catalogue;
     }
 
 
@@ -85,20 +86,12 @@ public class UpdatePrenotazioneCommand implements Command {
      */
     @Override
     public void execute() {
-       prenotazioneNonModificata = null;
-
-        ArrayList<Prenotazione> lp = catalogue.getListaPrenotazioni();
-
-        for (int i = 0; i < lp.size(); i++) {
-            Prenotazione corrente = lp.get(i);
-
-            if (Objects.equals(corrente.getIDPrenotazione(), prenotazione.getIDPrenotazione())) {
-                prenotazioneNonModificata = corrente.clone();
-                catalogue.UpdatePrenotazioni(prenotazione);
-            }
+       prenotazioneNonModificata= prenotazione;
+       boolean bool =CatalogoPrenotazioni.UpdatePrenotazioni(prenotazione);
+        if(!bool){
+            throw new NoSuchElementException("Prenotazione non trovata");
         }
 
-        throw new NoSuchElementException("Prenotazione non trovata");
     }
 
 
@@ -111,13 +104,9 @@ public class UpdatePrenotazioneCommand implements Command {
     public void undo() {
 
         if(prenotazioneNonModificata != null) {
-            ArrayList<Prenotazione> lp = catalogue.getListaPrenotazioni();
-
-            for (int i = 0; i < lp.size(); i++) {
-                if (Objects.equals(lp.get(i).getIDPrenotazione(), prenotazioneNonModificata.getIDPrenotazione())) {
-                    catalogue.UpdatePrenotazioni(prenotazioneNonModificata); // UNDO
-                    return;
-                }
+            for(Prenotazione p : CatalogoPrenotazioni.getListaPrenotazioni()){
+                CatalogoPrenotazioni.removePrenotazioni(p);
+                CatalogoPrenotazioni.addPrenotazioni(prenotazioneNonModificata);
             }
         }
 

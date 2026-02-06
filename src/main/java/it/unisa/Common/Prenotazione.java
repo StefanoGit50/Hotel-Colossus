@@ -159,6 +159,7 @@ public class Prenotazione implements Cloneable, Serializable {
         this.trattamento = new Trattamento();
         this.intestatario = "";
         this.statoPrenotazione = false;
+        this.metodoDiPagamento= "";
     }
 
     /**
@@ -245,10 +246,6 @@ public class Prenotazione implements Cloneable, Serializable {
 
     public String getCittadinanza() {
         return cittadinanza;
-    }
-
-    public String getMetodoDiPagamento() {
-        return metodoDiPagamento;
     }
 
     public boolean isStatoPrenotazione() {
@@ -487,8 +484,8 @@ public class Prenotazione implements Cloneable, Serializable {
         if (!Objects.equals(dataEmissioneRicevuta, that.dataEmissioneRicevuta)) return false;
 
         // Compare lists
-        if (!compareListsEqual(listaServizi, that.listaServizi)) return false;
-        if (!compareListsEqual(listaClienti, that.listaClienti)) return false;
+        if (! (listaServizi.containsAll(that.listaServizi) && listaServizi.size() == that.listaServizi.size())) return false;
+        if (! (listaClienti.containsAll(that.listaClienti) && listaClienti.size() == that.listaClienti.size())) return false;
 
         return true;
     }
@@ -522,19 +519,18 @@ public class Prenotazione implements Cloneable, Serializable {
      * @throws CloneNotSupportedException Se un attributo non clonabile è presente o la clonazione fallisce.
      */
     @Override
-    public Prenotazione clone(){
-        try{
-            Prenotazione cloned = (Prenotazione) super.clone();
-            // Clonazione degli oggetti interni mutabili (Trattamento e Liste)
-            if (this.trattamento != null){
-                cloned.trattamento = trattamento.clone();
-            }
-            cloned.listaServizi = Util.deepCopyArrayList(this.listaServizi);
-            cloned.listaClienti = Util.deepCopyArrayList(this.listaClienti);
-            return cloned;
-        }catch (CloneNotSupportedException cloneNotSupportedException){
-            throw new RuntimeException(cloneNotSupportedException);
+    public Prenotazione clone() throws CloneNotSupportedException {
+        Prenotazione cloned = (Prenotazione) super.clone();
+
+        // Clonazione degli oggetti interni mutabili (Trattamento e Liste)
+        if (this.trattamento != null) {
+            // Assumiamo che Trattamento sia clonabile
+            cloned.trattamento = this.trattamento.clone();
         }
 
+        cloned.listaServizi = Util.deepCopyArrayList(this.listaServizi);
+        cloned.listaClienti = Util.deepCopyArrayList(this.listaClienti);
+
+        return cloned;
     }
 }

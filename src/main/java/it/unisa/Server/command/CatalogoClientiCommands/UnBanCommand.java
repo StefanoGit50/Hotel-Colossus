@@ -7,7 +7,6 @@ import it.unisa.Storage.DAO.ClienteDAO;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Comando per poter rimuovere il ban da un cliente.

@@ -46,6 +46,19 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
 
     private ClienteDAO clienteDAO;
 
+
+
+
+    /**
+     * Crea o sostituisce una VIEW nel database che aggrega i dati
+     *
+     * @throws SQLException
+     *
+     * @pre true
+     * @post VIEW prenotazioneClientiCamereView creata o aggiornata nel database
+     * @post VIEW contiene tutti i campi di Prenotazione più i dati correlati di
+     *       Associato_a, Camera e Cliente
+     */
     private synchronized void createView() throws SQLException {
         String createView =
                 "CREATE or REPLACE VIEW "+VIEW_TABLE_NAME+" AS "
@@ -89,6 +102,16 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
     public PrenotazioneDAO(ClienteDAO clienteDAO){this.clienteDAO = clienteDAO;
     }
 
+
+
+    /**
+     * Salva una prenotazione nel db
+     *
+     * @param p
+     * @pre p != null
+     * @post inserisce la prenotazione nel database
+     * @throws SQLException
+     */
     @Override
     public synchronized void doSave(Prenotazione p)  {
         PreparedStatement preparedStatement = null;
@@ -203,15 +226,28 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
     }
 
 
-    /**
-     * @param list
-     * @throws UnsupportedOperationException
-     */
 
+    /**
+     * Salva un insieme di prenotazioni nel db
+     *
+     * @param list
+     * @pre list != null
+     * @post inserisce le prenotazioni nel database
+     * @throws SQLException
+     */
     public void doSaveAll(List<Prenotazione> list)  {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+
+    /**
+     * Cancella una prenotazione dal db.
+     *
+     * @param p
+     * @pre p != null
+     * @post la prenotazione non c'è piu nel db
+     * @throws SQLException
+     */
     @Override
     public synchronized void doDelete(Prenotazione p) throws SQLException {
         connection = ConnectionStorage.getConnection();
@@ -223,11 +259,15 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
         ConnectionStorage.releaseConnection(connection);
     }
 
+
     /**
-     * @param codicePrenotazione {@code Integer} codice della prenotazione.
-     * @return oggetto {@code Prenotazione} con codicePrenotazione corrispondente al parametro esplicito,
-     * {@code null} altrimenti.
-     * @throws SQLException .
+     * Ottiene prenotazione da chiave(codicePrenotazione).
+     *
+     * @param codicePrenotazione
+     * @pre codicePrenotazione != null
+     * @post result == null || result != null
+     * @return {@link Prenotazione}
+     * @throws SQLException
      */
     @Override
     public synchronized Prenotazione doRetriveByKey(Object codicePrenotazione) throws SQLException {
@@ -359,7 +399,13 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
         return p;
     }
 
+
     /**
+     * Ottiene tutte le prenotazioni dal DB.
+     *
+     * @pre order != null && order != ""
+     * @post result != null
+     *
      * @param order unici valori ammissibili {"IDPrenotazione ASC", "IDPrenotazione DESC"} case INsenitive.
      * @return {@code List<Prenotazione>} tutte le prenotazioni presenti nel sistema, {@code null} in caso di errore.
      * @throws SQLException .
@@ -531,9 +577,16 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
 
 
     /**
+     *
+     * Ottiene prenotazione tramite attributo.
+     *
+     * @pre attribute != null && attribute != "" && value != null && value != ""
+     * @post result != null
+     *
+     *
      * @param attribute;
      * @param value;
-     * @return Collection<Prenotazione>;
+     * @return Collection<>;
      * @throws SQLException;
      */
     @Override
