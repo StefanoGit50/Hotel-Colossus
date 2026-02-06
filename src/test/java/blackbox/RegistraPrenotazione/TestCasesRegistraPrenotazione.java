@@ -11,7 +11,6 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -28,15 +27,6 @@ public class TestCasesRegistraPrenotazione {
     public static Trattamento trattamento = new Trattamento("Mezza Pensione", 35);
     public static int autoIncrement; // simula l'autoincrement del DB
 
-    @BeforeAll
-    public static void istantiateNumberOfInstances(){
-        // Numero di prenotazioni presenti nel sistema + 1 = prenotazione successiva ad essere memorizzata
-        try {
-            autoIncrement = new PrenotazioneDAO().doRetriveAll("").size() + 1;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     @BeforeAll
     public static void istantiateFrontDesk() throws RemoteException, NotBoundException, MalformedURLException {
@@ -129,6 +119,9 @@ public class TestCasesRegistraPrenotazione {
         // Trattamento
 
         trattamento = new Trattamento("Mezza Pensione", 35);
+
+        // Numero di prenotazioni presenti nel sistema + 1 = prenotazione successiva ad essere memorizzata
+        autoIncrement = frontDesk.getListaPrenotazioni().size() + 1;
     }
 
     /* ************************************************************************************************************** */

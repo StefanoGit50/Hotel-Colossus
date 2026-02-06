@@ -178,7 +178,7 @@ public class CatalogoClienti implements Serializable {
      *
      * @return Uno nuovo ArrayList contenente copie (cloni) dei clienti bannati.
      */
-    public synchronized  ArrayList<Cliente> getListaClientiBannati() {
+    public synchronized static ArrayList<Cliente> getListaClientiBannati() {
         return listaClientiBannati;
     }
 

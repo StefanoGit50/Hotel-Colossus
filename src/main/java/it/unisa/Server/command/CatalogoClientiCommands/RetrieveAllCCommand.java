@@ -4,26 +4,26 @@ import it.unisa.Common.Cliente;
 import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
 
-/**
- * Comando per registrare un cliente (ovvero aggiungerlo alla lista dei clienti).
- */
-public class AddClienteCommand implements Command {
+import java.util.ArrayList;
 
-    private CatalogoClienti catalogue = new CatalogoClienti();
-    private Cliente cliente;
+public class RetrieveAllCCommand implements Command {
 
     /**
-     * Costruttore del comando.
-     * @param cliente   Cliente da registrare.
+     * Catalogo dei clienti.
      */
-    public AddClienteCommand(Cliente cliente) {
-        this.cliente = cliente;
-    }
+    private CatalogoClienti catalogue;
 
     /**
-     * Costruttore vuoto.
+     * Lista di clienti di ritorno.
      */
-    public AddClienteCommand() {
+    private ArrayList<Cliente> clienti;
+
+    /**
+     * Costruttore vuoto del comando.
+     */
+    public RetrieveAllCCommand() {
+        clienti = new ArrayList<>(0);
+        catalogue = new CatalogoClienti();
     }
 
     /**
@@ -46,22 +46,14 @@ public class AddClienteCommand implements Command {
     }
 
     /**
-     * Restituisce il valore di cliente.
+     * Restituisce la lista di clienti (indipendentemente dall'esecuzione del comando o meno).
      *
-     * @post result == cliente
+     * @post    this.clienti.size() == 0, se non è stato ancora eseguito il metodo execute()
+     *          this.clienti.size() >= 0 && this.clienti.size() <= # clienti presenti nel sistema nel sistema.
+     * @return
      */
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    /**
-     * Imposta il valore di cliente.
-     *
-     * @pre cliente != null
-     * @post this.cliente == cliente
-     */
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    public ArrayList<Cliente> getClienti() {
+        return clienti;
     }
 
     /**
@@ -71,7 +63,8 @@ public class AddClienteCommand implements Command {
      */
     @Override
     public void execute() {
-       catalogue.aggiungiCliente(cliente);
+        clienti = CatalogoClienti.getListaClientiBannati();
+        clienti.addAll(CatalogoClienti.getListaClienti());
     }
 
     /**
@@ -81,8 +74,7 @@ public class AddClienteCommand implements Command {
      */
     @Override
     public void undo() {
-            if(catalogue.getListaClienti().contains(cliente)) {
-                catalogue.removeCliente(cliente);
-            }
+        clienti = new ArrayList<>(0);
     }
+
 }

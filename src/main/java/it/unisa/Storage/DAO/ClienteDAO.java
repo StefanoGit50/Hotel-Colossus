@@ -124,6 +124,8 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                     cliente.setDataNascita(resultSet.getDate("DatadiNascita").toLocalDate());
                     cliente.setBlacklisted(resultSet.getBoolean("IsBlackListed"));
                     cliente.setCamera(new Camera());
+                } else {
+                    throw new NoSuchElementException("ERROR: Cliente non presente nel database");
                 }
 
                 resultSet.close();

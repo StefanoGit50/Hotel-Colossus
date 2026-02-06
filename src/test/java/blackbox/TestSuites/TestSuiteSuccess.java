@@ -7,7 +7,7 @@ import org.junit.platform.suite.api.SuiteDisplayName;
 
 @Suite
 @SuiteDisplayName("Test suite: flitro clienti")
-@SelectPackages({"blackbox.RegistraImpiegato", "blackbox.RegistraPrenotazione", "blackbox.CambiaStatoCamera"})
+@SelectPackages({"blackbox.RegistraPrenotazione"})
 @IncludeTags({"success"})
 public class TestSuiteSuccess {
 

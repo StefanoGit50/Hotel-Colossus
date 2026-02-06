@@ -9,6 +9,7 @@ import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.DAO.CameraDAO;
+import it.unisa.Storage.DAO.ClienteDAO;
 import it.unisa.Storage.DAO.PrenotazioneDAO;
 import it.unisa.Storage.DAO.ServizioDAO;
 import it.unisa.Storage.Interfacce.FrontDeskStorage;
@@ -238,7 +239,7 @@ public class ServerCatalogoDB {
     public void addClienteTest() throws RemoteException {
         Cliente c = new Cliente("Roberto","Rossi","napoli","napoli","via manzo",12,45,"323425","M",LocalDate.of(1998,12,1),"CF234rdfcfg","luca@gmail.com","italiana",new Camera());
         frontDesk.addCliente(c);
-
+        frontDeskStorage = new ClienteDAO();
         Collection <?> clienti= new ArrayList<>();
         try{
             assertDoesNotThrow(()->frontDeskStorage.doRetriveByKey(c.getCf()));
@@ -246,7 +247,7 @@ public class ServerCatalogoDB {
         }catch (SQLException e ){
             e.printStackTrace();
         }
-        assertEquals(catClienti,clienti );
+        assertEquals(CatalogoClienti.getListaClienti(), clienti);
     }
 
     @Test

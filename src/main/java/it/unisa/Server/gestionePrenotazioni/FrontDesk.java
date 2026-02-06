@@ -7,21 +7,17 @@ import it.unisa.Server.command.*;
 import it.unisa.Common.*;
 import it.unisa.Common.Prenotazione;
 import it.unisa.Server.command.CatalogoClientiCommands.*;
-import it.unisa.Server.command.CatalogoImpiegatiCommands.*;
 import it.unisa.Server.command.CatalogoPrenotazioniCommands.*;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
 import it.unisa.Server.persistent.obj.catalogues.CatalogueUtils;
-import it.unisa.Storage.DAO.ClienteDAO;
-import it.unisa.Storage.DAO.PrenotazioneDAO;
 import org.apache.logging.log4j.LogManager;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
-import java.sql.SQLException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,14 +137,21 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     @Override
     public void removePrenotazione(Prenotazione p) throws RemoteException {
 
-//        RemovePrenotazioneCommand command = new RemovePrenotazioneCommand(catalogoPrenotazioni, p);
-//        invoker.executeCommand(command);
+        RemovePrenotazioneCommand command = new RemovePrenotazioneCommand(p);
+        invoker.executeCommand(command);
     }
 
     @Override
     public void updatePrenotazione(Prenotazione p) throws RemoteException {
-//        UpdatePrenotazioneCommand command = new UpdatePrenotazioneCommand(catalogoPrenotazioni, p);
-//        invoker.executeCommand(command);
+        UpdatePrenotazioneCommand command = new UpdatePrenotazioneCommand(p);
+        invoker.executeCommand(command);
+    }
+
+    @Override
+    public ArrayList<Prenotazione> getListaPrenotazioni() throws RemoteException {
+        RetrieveAllPCommand command = new RetrieveAllPCommand();
+        invoker.executeCommand(command);
+        return command.getPrenotazioni();
     }
 
 
@@ -177,12 +180,24 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         invoker.executeCommand(command);
     }
 
+    /**
+     * Recupera la lista {@code list} di tutti i clienti presenti nel sistema.
+     *
+     * @throws RemoteException .
+     * @post {@code list} ha dimensioni tra 0 (all'avvio non è presente alcun cliente) e # clienti.
+     */
+    @Override
+    public ArrayList<Cliente> getListaClienti() throws RemoteException {
+        RetrieveAllCCommand command = new RetrieveAllCCommand();
+        invoker.executeCommand(command);
+        return command.getClienti();
+    }
+
     @Override
     public void unBanCliente(Cliente c) throws RemoteException {
         UnBanCommand command = new UnBanCommand(c.getCf());
         invoker.executeCommand(command);
     }
-    //TODO: COMMAND PER RICEVERE LA LISTA UTENTI
 
 
 
@@ -221,32 +236,6 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
      */
     @Override
     public Prenotazione getPrenotazioneById(int id) throws RemoteException {
-        PrenotazioneDAO dao = new PrenotazioneDAO();
-        Prenotazione prenotazione = null;
-        try {
-            prenotazione = dao.doRetriveByKey(id);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return prenotazione;
-    }
-
-    /**
-     * @param cf del cliente.
-     * @return l'oggetto {@code Cliente} tale per cui il cf corrisponde, {@code null} altrimenti.
-     * @throws RemoteException
-     */
-    @Override
-    public Cliente getClienteByCf(String cf) throws RemoteException {
-        if (cf == null || cf.isBlank())
-            return null;
-        ClienteDAO dao = new ClienteDAO();
-        Cliente cliente = null;
-        try {
-            cliente = dao.doRetriveByKey(cf);
-        } catch (SQLException e) {
-            throw new RemoteException(e.getMessage());
-        }
-        return cliente;
+        return CatalogoPrenotazioni.getPrenotazione(id);
     }
 }

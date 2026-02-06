@@ -160,18 +160,21 @@ public class Test {
 
         Test.istantiateNumberOfInstances();
         Test.istantiateFrontDesk();
-        PrenotazioneDAO dao = new PrenotazioneDAO();
-        Prenotazione p = Test.createBasePrenotazione(), campione;
-        p.setIDPrenotazione(autoIncrement);
-        dao.doSave(p);
-        campione = dao.doRetriveByKey(autoIncrement);
+//        PrenotazioneDAO dao = new PrenotazioneDAO();
+//        Prenotazione p = Test.createBasePrenotazione(), campione;
+//        p.setIDPrenotazione(autoIncrement);
+//        dao.doSave(p);
+//        campione = dao.doRetriveByKey(autoIncrement);
+//
+//        listaServizi = new ArrayList<>(1);
+//  listaServizi.add(new Servizio("Colazione in Camera", 12.00));
+//        campione.setListaServizi(listaServizi);
+//        System.out.println(autoIncrement);
+//        System.out.println(p);
+//        System.out.println(campione);
+//        System.out.println(p.equals(campione));
 
-        listaServizi = new ArrayList<>(1);
-  listaServizi.add(new Servizio("Colazione in Camera", 12.00));
-        campione.setListaServizi(listaServizi);
-        System.out.println(autoIncrement);
-        System.out.println(p);
-        System.out.println(campione);
-        System.out.println(p.equals(campione));
+        ArrayList<Cliente> cliente = frontDesk.getListaClienti();
+        cliente.forEach(System.out::println);
     }
 }
