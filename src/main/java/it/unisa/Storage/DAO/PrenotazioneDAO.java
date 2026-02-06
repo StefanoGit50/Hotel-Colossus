@@ -673,17 +673,17 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
                                 preparedStatement1.setInt(1,idPrenotazione);
                                 try(ResultSet resultSet = preparedStatement1.executeQuery()){
                                     resultSet.next();
-
                                     camera.setNumeroCamera(resultSet.getInt("NumeroCamera"));
                                     camera.setNoteCamera(resultSet.getString("NoteCamera"));
                                     camera.setStatoCamera(Stato.valueOf(resultSet.getString("Stato")));
                                     camera.setPrezzoCamera(resultSet.getDouble("Prezzo"));
                                     camera.setCapacità(resultSet.getInt("NumeroMaxOcc"));
                                     camera.setNomeCamera(resultSet.getString("NomeCamera"));
+
                                 }
 
 
-                                do {
+                                do{
                                     clienti.add(new Cliente(
                                             rs4.getString("nome"),
                                             rs4.getString("cognome"),

@@ -35,7 +35,7 @@ public class Autentication {
             return false;
 
 
-        if (pwd2!=null && pwd2.contains("PWD-TMP-")) {
+        if (pwd2!=null && pwd2.contains("PWD-TMP-")){
             bo = new ImpiegatoDAO();
             try {
                 String soloNumeri = matcher.group(2);
@@ -64,24 +64,20 @@ public class Autentication {
                 }
                 return true;
             }
-        }else if(password.contains("PWD-TMP-") || pwd2!=null){
-            impiegato=null;
-            return false;
-        }
-        else {
+        }else
+            if(password.contains("PWD-TMP-") || pwd2!=null){
+               impiegato=null;
+               return false;
+            } else {
             // Log per capire cosa succede
             System.out.println("Tentativo Login Standard...");
 
             bo = new ImpiegatoDAO();
             try {
-
                 String soloNumeri = matcher.group(2);
                 int numeroId = Integer.parseInt(soloNumeri);
-
-
                 impiegato = bo.doRetriveByKey(numeroId);
                 System.out.println("Trovato impiegato ID " + numeroId + ": " + impiegato.getUsername());
-
             } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
