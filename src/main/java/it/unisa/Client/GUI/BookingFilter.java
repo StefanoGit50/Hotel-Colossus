@@ -1,5 +1,6 @@
 package it.unisa.Client.GUI;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.time.LocalDate;
@@ -10,7 +11,7 @@ public class BookingFilter {
     LocalDate checkOut;
     String room;
     String mealPlan;
-
+    private static ObservableList<BookingFilter> allBookings = FXCollections.observableArrayList();
 
     public BookingFilter(String guestName, LocalDate checkIn, LocalDate checkOut, String room, String mealPlan) {
         this.guestName = guestName;
@@ -20,7 +21,7 @@ public class BookingFilter {
         this.mealPlan = mealPlan;
     }
 
-    public static void initializeSampleBookings(ObservableList<BookingFilter> allBookings){
+    public static int initializeSampleBookings(){
         allBookings.add(new BookingFilter("Anna Bianchi",
                 LocalDate.of(2025, 9, 15),
                 LocalDate.of(2025, 9, 22),
@@ -45,6 +46,12 @@ public class BookingFilter {
                 LocalDate.of(2025, 12, 20),
                 LocalDate.of(2025, 12, 27),
                 "412", "Pensione Completa"));
+
+        return allBookings.size();
+    }
+
+    public static ObservableList<BookingFilter> getAllBookings() {
+        return allBookings;
     }
 
     public String getGuestName() {

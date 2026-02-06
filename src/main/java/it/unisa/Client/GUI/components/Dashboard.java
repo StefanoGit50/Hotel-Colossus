@@ -142,6 +142,7 @@ public class Dashboard extends VBox {
     private HBox createSectionTitle() {
         HBox sectionTitleBox = new HBox(16);
         sectionTitleBox.setAlignment(Pos.CENTER);
+        sectionTitleBox.setPadding(new Insets(0,250,0,0));
 
         Label leftDecor = new Label("◈───           ");
         leftDecor.getStyleClass().add("section-decoration");
