@@ -73,11 +73,7 @@ public class CatalogoPrenotazioni implements Serializable {
     public static synchronized Prenotazione getPrenotazione(Integer ID){
         for(Prenotazione p : listaPrenotazioni){
             if(p.getIDPrenotazione().equals(ID))
-                try {
                     return p.clone();
-                }catch (CloneNotSupportedException e){
-                    e.printStackTrace();
-                }
         }
         return null;
     }

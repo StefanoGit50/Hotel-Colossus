@@ -93,12 +93,7 @@ public class UpdatePrenotazioneCommand implements Command {
             Prenotazione corrente = lp.get(i);
 
             if (Objects.equals(corrente.getIDPrenotazione(), prenotazione.getIDPrenotazione())) {
-                try {
-                    prenotazioneNonModificata = corrente.clone();
-                }catch (CloneNotSupportedException c) {
-                    c.printStackTrace();
-                    return;
-                }
+                prenotazioneNonModificata = corrente.clone();
                 catalogue.UpdatePrenotazioni(prenotazione);
             }
         }

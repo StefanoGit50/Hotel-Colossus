@@ -302,6 +302,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
                         p.setDataInizio(rs.getDate("DataArrivoCliente").toLocalDate());
                         p.setDataRilascio(rs.getDate("DataRilascioDocumento").toLocalDate());
                         p.setDataScadenza(rs.getDate("DataScadenzaDocumento").toLocalDate());
+                        p.setDataEmissioneRicevuta(rs.getDate("DataEmissioneRicevuta") != null? rs.getDate("DataEmissioneRicevuta").toLocalDate() :null);
                         p.setStatoPrenotazione(rs.getBoolean("Stato"));
                         p.setCheckIn(rs.getBoolean("CheckIn"));
                         p.setNoteAggiuntive(rs.getString("NoteAggiuntive"));
@@ -309,8 +310,6 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
                         p.setMetodoPagamento(rs.getString("MetodoPagamento"));
                         p.setCittadinanza(rs.getString("Cittadinanza"));
                         p.setTipoDocumento(rs.getString("TipoDocumento"));
-
-                        System.out.println(ps);
                     }
                     while(rs.next());
 
@@ -382,7 +381,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
             ps = connection.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
+            if (rs.next()){
                 try {
                     do {
                         prenotazioni.add(doRetriveByKey(rs.getInt("IDPrenotazione")));
@@ -460,10 +459,13 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
                 if(p.getTrattamento()!=null){
                     preparedStatement.setString(10, p.getTrattamento().getNome().trim());
                     attributi[9] = p.getTrattamento().getNome().trim();
+                    preparedStatement.setDouble(15, p.getTrattamento().getPrezzo());
+                    attributi[14] = String.valueOf(p.getTrattamento().getPrezzo());
                 }else{
                     preparedStatement.setNull(10, Types.VARCHAR);
-
                     attributi[9] = "";
+                    preparedStatement.setNull(15,Types.VARCHAR);
+                    attributi[14] = "0";
                 }
 
                 preparedStatement.setString(11, p.getNoteAggiuntive().trim());
@@ -474,8 +476,6 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
                 attributi[12] = String.valueOf(p.getStatoPrenotazione());
                 preparedStatement.setBoolean(14, p.isCheckIn());
                 attributi[13] = String.valueOf(p.isCheckIn());
-                preparedStatement.setDouble(15, p.getTrattamento().getPrezzo());
-                attributi[14] = String.valueOf(p.getTrattamento().getPrezzo());
                 preparedStatement.setString(16, p.getMetodoPagamento());
                 attributi[15] = String.valueOf(p.getMetodoPagamento());
                 preparedStatement.setString(17, p.getCittadinanza());
@@ -484,20 +484,21 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
 
                 preparedStatement.executeUpdate();
 
-                if (p.getListaClienti() != null || !p.getListaClienti().isEmpty()) {
-                    for (Cliente c : p.getListaClienti()) {
-                       if(!CatalogoClienti.getListaClienti().contains(c)){
-                                throw new NoSuchElementException("registrare prima il cliente");
-                       }
-
+                if (p.getListaClienti() == null || p.getListaClienti().isEmpty()){
+                    throw new NoSuchElementException("Non ci stanno clienti nella ");
+                }else{
+                    for(Cliente c : p.getListaClienti()) {
+                        System.out.println(c);
+                        System.out.println(CatalogoClienti.getListaClienti());
                         clienteDAO.doUpdate(c);
+                        cameraDAO.doUpdate(c.getCamera());
                     }
                 }
 
                 preparedStatement = connection.prepareStatement(sql[1]);
 
                 ArrayList<Servizio> duplicate = new ArrayList<>();
-                if (p.getListaServizi() != null || !p.getListaServizi().isEmpty()) {
+                if (p.getListaServizi() != null || !p.getListaServizi().isEmpty()){
                     for (Servizio s : p.getListaServizi()) {
                         if (!duplicate.contains(s)) {
                             duplicate.add(s);
