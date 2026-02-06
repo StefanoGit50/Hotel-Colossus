@@ -162,7 +162,7 @@ public class prenotazioneDAOTesting{
         Prenotazione prenotazione2 = new Prenotazione(LocalDate.of(2024,2,1),LocalDate.of(2024,2,20),LocalDate.of(2024,2,25),null,new Trattamento("Pensione Completa",55.0),55.0,"Patente",LocalDate.of(2019,5,5),LocalDate.of(2029,5,5),"Luigi Verdi","Intolleranza Lattosio",servizios,clientes,"PT123456","Contanti","italiana");
         prenotazione2.setIDPrenotazione(2);
         prenotazione2.setCheckIn(true);
-        prenotaziones1.add(new Prenotazione(LocalDate.of(,,),,));
+        prenotaziones1.add(new Prenotazione(LocalDate.of(2023,12,1),LocalDate.of(2024,1,10),LocalDate.of(,,)));
         prenotaziones1.add(prenotazione2);
         prenotaziones1.add(prenotazione1);
         assertEquals(prenotaziones1,prenotaziones);
