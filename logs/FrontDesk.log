@@ -173,3 +173,6 @@ java.sql.SQLException: Table 'Hotelcolossus.HA' doesn't exist
 12:52:08 INFO  FrontDesk: ✓ Gestore prenotazioni registrato con successo!
 12:52:08 INFO  FrontDesk: ✓ Servizio 'GestionePrenotazioni' pronto
 12:52:08 INFO  FrontDesk: Server in attesa di connessioni...
+
+--- SHUTDOWN IN CORSO ---
+✓ Server disconnesso correttamente.

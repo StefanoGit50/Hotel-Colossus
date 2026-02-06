@@ -14,10 +14,10 @@ maintenance.protocol=GRACEFUL_SHUTDOWN
 # === TIMING ===
 maintenance.scheduled.minutes=1
 maintenance.scheduled.seconds=60
-maintenance.started.timestamp=1770315953
-maintenance.started.datetime=2026-02-05 19:25:53
-maintenance.shutdown.timestamp=1770316013
-maintenance.shutdown.datetime=2026-02-05 19:26:53
+maintenance.started.timestamp=1770379429
+maintenance.started.datetime=2026-02-06 13:03:49
+maintenance.shutdown.timestamp=1770379489
+maintenance.shutdown.datetime=2026-02-06 13:04:49
 maintenance.timezone=CET
 maintenance.timezone.offset=+0100
 
@@ -47,7 +47,7 @@ maintenance.actions.log_rotation=ENABLED
 # === BACKUP ===
 maintenance.backup.enabled=true
 maintenance.backup.location=backups/
-maintenance.backup.timestamp=20260205_192654
+maintenance.backup.timestamp=20260206_130450
 maintenance.backup.includes=logs,config,data
 maintenance.backup.format=tar.gz
 maintenance.backup.compression=gzip
@@ -58,8 +58,8 @@ maintenance.system.user=samuele
 maintenance.system.os=Linux
 maintenance.system.kernel=6.18.1-arch1-2
 maintenance.system.arch=x86_64
-maintenance.system.pid=10189
-maintenance.system.ppid=8496
+maintenance.system.pid=11826
+maintenance.system.ppid=11647
 maintenance.system.shell=/usr/bin/bash
 
 # === MESSAGGI PER UTENTI ===
@@ -73,5 +73,5 @@ maintenance.checkpoint.shutdown=COMPLETED
 maintenance.checkpoint.cleanup=COMPLETED
 
 # ==============================================================================
-# Fine del file di stato - Ultimo aggiornamento: Thu Feb  5 19:25:53 CET 2026
+# Fine del file di stato - Ultimo aggiornamento: Fri Feb  6 13:03:49 CET 2026
 # ==============================================================================
