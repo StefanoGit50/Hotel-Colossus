@@ -239,10 +239,38 @@ if is_running "$PID_DIR/Governante.pid"; then
     echo -e "  ${GREEN}●${NC} Governante      (PID: $(cat $PID_DIR/Governante.pid))"
 fi
 
+if is_running "$PID_DIR/Manager.pid"; then
+    echo -e "  ${GREEN}●${NC} Manager         (PID: $(cat $PID_DIR/Manager.pid))"
+fi
+
 
 echo ""
 print_info "Comandi utili:"
-echo -e "  ${YELLOW}./status-rmi.sh${NC}   - Verifica stato servizi"
-echo -e "  ${YELLOW}./logs-rmi.sh${NC}     - Visualizza log in tempo reale"
-echo -e "  ${YELLOW}./stop-rmi.sh${NC}     - Ferma tutti i servizi"
+echo -e "  ${YELLOW}./status-rmi.sh${NC}            - Verifica stato servizi"
+echo -e "  ${YELLOW}./logs-rmi.sh${NC}              - Visualizza log in tempo reale"
+echo -e "  ${YELLOW}./configuration-rmi.sh${NC}     - Permette di modificare la configurazione"
+echo -e "  ${YELLOW}./load-config.sh${NC}           - Carica la configurazione"
+echo -e "  ${YELLOW}./maintenance-rmi.sh${NC}       - Programma la manutenzione"
+echo -e "  ${YELLOW}./stop-rmi.sh${NC}              - Ferma tutti i servizi"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 echo ""

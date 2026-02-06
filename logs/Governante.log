@@ -1,2 +1,202 @@
 Feb 05, 2026 7:26:54 PM it.unisa.Storage.ConnectionStorage shutdown
 INFO: Chiusura connessioni...
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for it.unisa:HotelColossus:jar:1.0-SNAPSHOT
+[WARNING] 'build.plugins.plugin.(groupId:artifactId)' must be unique but found duplicate declaration of plugin org.jacoco:jacoco-maven-plugin @ line 164, column 21
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Detecting the operating system and CPU architecture
+[INFO] ------------------------------------------------------------------------
+[INFO] os.detected.name: linux
+[INFO] os.detected.arch: x86_64
+[INFO] os.detected.bitness: 64
+[INFO] os.detected.version: 6.18
+[INFO] os.detected.version.major: 6
+[INFO] os.detected.version.minor: 18
+[INFO] os.detected.release: arch
+[INFO] os.detected.release.like.arch: true
+[INFO] os.detected.classifier: linux-x86_64
+[INFO] 
+[INFO] -----------------------< it.unisa:HotelColossus >-----------------------
+[INFO] Building HotelColossus 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- exec:3.6.3:java (default-cli) @ HotelColossus ---
+5
+Feb 06, 2026 12:40:08 PM it.unisa.Server.gestioneCamere.Governante main
+INFO: Ottengo le camere...
+java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '101' for key 'PRIMARY'
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:109)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:988)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1166)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1101)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1448)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:1084)
+	at it.unisa.Storage.DAO.CameraDAO.doSaveAll(CameraDAO.java:156)
+	at it.unisa.Server.persistent.obj.catalogues.CatalogoCamere.addCamere(CatalogoCamere.java:105)
+	at it.unisa.Server.gestioneCamere.Governante.main(Governante.java:55)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.executeMainMethod(AbstractExecJavaBase.java:402)
+	at org.codehaus.mojo.exec.ExecJavaMojo.executeMainMethod(ExecJavaMojo.java:142)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.doExecClassLoader(AbstractExecJavaBase.java:377)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.lambda$execute$0(AbstractExecJavaBase.java:287)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+5
+Feb 06, 2026 12:40:08 PM it.unisa.Server.gestioneCamere.Governante main
+INFO: Camere ottenute!
+Feb 06, 2026 12:40:08 PM it.unisa.Server.gestioneCamere.Governante main
+INFO: Avvio RMI Registry sulla porta 1099...
+Feb 06, 2026 12:40:08 PM it.unisa.Server.gestioneCamere.Governante main
+INFO: Connesso a RMI Registry esistente
+Feb 06, 2026 12:40:08 PM it.unisa.Server.gestioneCamere.Governante main
+INFO: Sto creando il gestore camere...
+Feb 06, 2026 12:40:08 PM it.unisa.Server.gestioneCamere.Governante main
+INFO: Gestore camere creato... 
+Feb 06, 2026 12:40:08 PM it.unisa.Server.gestioneCamere.Governante main
+INFO: Effettuo il rebind del gestore camere...
+Feb 06, 2026 12:40:08 PM it.unisa.Server.gestioneCamere.Governante main
+INFO: Il gestore camere è pronto e registrato!
+Feb 06, 2026 12:40:08 PM it.unisa.Server.gestioneCamere.Governante main
+INFO: Server in attesa di connessioni...
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for it.unisa:HotelColossus:jar:1.0-SNAPSHOT
+[WARNING] 'build.plugins.plugin.(groupId:artifactId)' must be unique but found duplicate declaration of plugin org.jacoco:jacoco-maven-plugin @ line 164, column 21
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Detecting the operating system and CPU architecture
+[INFO] ------------------------------------------------------------------------
+[INFO] os.detected.name: linux
+[INFO] os.detected.arch: x86_64
+[INFO] os.detected.bitness: 64
+[INFO] os.detected.version: 6.18
+[INFO] os.detected.version.major: 6
+[INFO] os.detected.version.minor: 18
+[INFO] os.detected.release: arch
+[INFO] os.detected.release.like.arch: true
+[INFO] os.detected.classifier: linux-x86_64
+[INFO] 
+[INFO] -----------------------< it.unisa:HotelColossus >-----------------------
+[INFO] Building HotelColossus 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- exec:3.6.3:java (default-cli) @ HotelColossus ---
+5
+Feb 06, 2026 12:47:44 PM it.unisa.Server.gestioneCamere.Governante main
+INFO: Ottengo le camere...
+java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '101' for key 'PRIMARY'
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:109)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:988)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1166)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1101)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1448)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:1084)
+	at it.unisa.Storage.DAO.CameraDAO.doSaveAll(CameraDAO.java:156)
+	at it.unisa.Server.persistent.obj.catalogues.CatalogoCamere.addCamere(CatalogoCamere.java:105)
+	at it.unisa.Server.gestioneCamere.Governante.main(Governante.java:55)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.executeMainMethod(AbstractExecJavaBase.java:402)
+	at org.codehaus.mojo.exec.ExecJavaMojo.executeMainMethod(ExecJavaMojo.java:142)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.doExecClassLoader(AbstractExecJavaBase.java:377)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.lambda$execute$0(AbstractExecJavaBase.java:287)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+5
+Feb 06, 2026 12:47:44 PM it.unisa.Server.gestioneCamere.Governante main
+INFO: Camere ottenute!
+Feb 06, 2026 12:47:44 PM it.unisa.Server.gestioneCamere.Governante main
+INFO: Avvio RMI Registry sulla porta 1099...
+Feb 06, 2026 12:47:44 PM it.unisa.Server.gestioneCamere.Governante main
+INFO: Connesso a RMI Registry esistente
+Feb 06, 2026 12:47:44 PM it.unisa.Server.gestioneCamere.Governante main
+INFO: Sto creando il gestore camere...
+Feb 06, 2026 12:47:44 PM it.unisa.Server.gestioneCamere.Governante main
+INFO: Gestore camere creato... 
+Feb 06, 2026 12:47:44 PM it.unisa.Server.gestioneCamere.Governante main
+INFO: Effettuo il rebind del gestore camere...
+Feb 06, 2026 12:47:44 PM it.unisa.Server.gestioneCamere.Governante main
+INFO: Il gestore camere è pronto e registrato!
+Feb 06, 2026 12:47:44 PM it.unisa.Server.gestioneCamere.Governante main
+INFO: Server in attesa di connessioni...
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for it.unisa:HotelColossus:jar:1.0-SNAPSHOT
+[WARNING] 'build.plugins.plugin.(groupId:artifactId)' must be unique but found duplicate declaration of plugin org.jacoco:jacoco-maven-plugin @ line 164, column 21
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Detecting the operating system and CPU architecture
+[INFO] ------------------------------------------------------------------------
+[INFO] os.detected.name: linux
+[INFO] os.detected.arch: x86_64
+[INFO] os.detected.bitness: 64
+[INFO] os.detected.version: 6.18
+[INFO] os.detected.version.major: 6
+[INFO] os.detected.version.minor: 18
+[INFO] os.detected.release: arch
+[INFO] os.detected.release.like.arch: true
+[INFO] os.detected.classifier: linux-x86_64
+[INFO] 
+[INFO] -----------------------< it.unisa:HotelColossus >-----------------------
+[INFO] Building HotelColossus 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- exec:3.6.3:java (default-cli) @ HotelColossus ---
+5
+Feb 06, 2026 12:52:12 PM it.unisa.Server.gestioneCamere.Governante main
+INFO: Ottengo le camere...
+java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '101' for key 'PRIMARY'
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:109)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:988)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1166)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1101)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1448)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:1084)
+	at it.unisa.Storage.DAO.CameraDAO.doSaveAll(CameraDAO.java:156)
+	at it.unisa.Server.persistent.obj.catalogues.CatalogoCamere.addCamere(CatalogoCamere.java:105)
+	at it.unisa.Server.gestioneCamere.Governante.main(Governante.java:55)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.executeMainMethod(AbstractExecJavaBase.java:402)
+	at org.codehaus.mojo.exec.ExecJavaMojo.executeMainMethod(ExecJavaMojo.java:142)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.doExecClassLoader(AbstractExecJavaBase.java:377)
+	at org.codehaus.mojo.exec.AbstractExecJavaBase.lambda$execute$0(AbstractExecJavaBase.java:287)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+5
+Feb 06, 2026 12:52:12 PM it.unisa.Server.gestioneCamere.Governante main
+INFO: Camere ottenute!
+Feb 06, 2026 12:52:12 PM it.unisa.Server.gestioneCamere.Governante main
+INFO: Avvio RMI Registry sulla porta 1099...
+Feb 06, 2026 12:52:12 PM it.unisa.Server.gestioneCamere.Governante main
+INFO: Connesso a RMI Registry esistente
+Feb 06, 2026 12:52:12 PM it.unisa.Server.gestioneCamere.Governante main
+INFO: Sto creando il gestore camere...
+Feb 06, 2026 12:52:12 PM it.unisa.Server.gestioneCamere.Governante main
+INFO: Gestore camere creato... 
+Feb 06, 2026 12:52:12 PM it.unisa.Server.gestioneCamere.Governante main
+INFO: Effettuo il rebind del gestore camere...
+Feb 06, 2026 12:52:12 PM it.unisa.Server.gestioneCamere.Governante main
+INFO: Il gestore camere è pronto e registrato!
+Feb 06, 2026 12:52:12 PM it.unisa.Server.gestioneCamere.Governante main
+INFO: Server in attesa di connessioni...
+Feb 06, 2026 1:04:51 PM it.unisa.Storage.ConnectionStorage shutdown
+INFO: Chiusura connessioni...

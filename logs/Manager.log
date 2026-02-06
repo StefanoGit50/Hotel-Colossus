@@ -1,0 +1,138 @@
+Feb 06, 2026 11:43:07 AM it.unisa.Storage.ConnectionStorage shutdown
+INFO: Chiusura connessioni...
+Feb 06, 2026 11:43:07 AM it.unisa.Storage.ConnectionStorage shutdown
+INFO: Chiusura connessioni...
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for it.unisa:HotelColossus:jar:1.0-SNAPSHOT
+[WARNING] 'build.plugins.plugin.(groupId:artifactId)' must be unique but found duplicate declaration of plugin org.jacoco:jacoco-maven-plugin @ line 164, column 21
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Detecting the operating system and CPU architecture
+[INFO] ------------------------------------------------------------------------
+[INFO] os.detected.name: linux
+[INFO] os.detected.arch: x86_64
+[INFO] os.detected.bitness: 64
+[INFO] os.detected.version: 6.18
+[INFO] os.detected.version.major: 6
+[INFO] os.detected.version.minor: 18
+[INFO] os.detected.release: arch
+[INFO] os.detected.release.like.arch: true
+[INFO] os.detected.classifier: linux-x86_64
+[INFO] 
+[INFO] -----------------------< it.unisa:HotelColossus >-----------------------
+[INFO] Building HotelColossus 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- exec:3.6.3:java (default-cli) @ HotelColossus ---
+Feb 06, 2026 12:40:14 PM it.unisa.Server.BackOffice.ManagerImpl main
+INFO: Avvio RMI Registry sulla porta 1099...
+Feb 06, 2026 12:40:14 PM it.unisa.Server.BackOffice.ManagerImpl main
+INFO: ✓ Connesso a RMI Registry esistente
+Feb 06, 2026 12:40:14 PM it.unisa.Server.BackOffice.ManagerImpl main
+INFO: Genero il gestore degli impiegati...
+Feb 06, 2026 12:40:14 PM it.unisa.Server.BackOffice.ManagerImpl main
+INFO: ✓ Gestore impiegati creato
+Feb 06, 2026 12:40:14 PM it.unisa.Server.BackOffice.ManagerImpl main
+INFO: Effettuo il rebind di gestione impiegati...
+Feb 06, 2026 12:40:14 PM it.unisa.Server.BackOffice.ManagerImpl main
+INFO: ✓ Gestore impiegati registrato con successo!
+Feb 06, 2026 12:40:14 PM it.unisa.Server.BackOffice.ManagerImpl main
+INFO: ✓ Servizio 'GestioneImpiegati' pronto
+Feb 06, 2026 12:40:14 PM it.unisa.Server.BackOffice.ManagerImpl main
+INFO: Server in attesa di connessioni...
+Feb 06, 2026 12:47:19 PM it.unisa.Storage.ConnectionStorage shutdown
+INFO: Chiusura connessioni...
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for it.unisa:HotelColossus:jar:1.0-SNAPSHOT
+[WARNING] 'build.plugins.plugin.(groupId:artifactId)' must be unique but found duplicate declaration of plugin org.jacoco:jacoco-maven-plugin @ line 164, column 21
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Detecting the operating system and CPU architecture
+[INFO] ------------------------------------------------------------------------
+[INFO] os.detected.name: linux
+[INFO] os.detected.arch: x86_64
+[INFO] os.detected.bitness: 64
+[INFO] os.detected.version: 6.18
+[INFO] os.detected.version.major: 6
+[INFO] os.detected.version.minor: 18
+[INFO] os.detected.release: arch
+[INFO] os.detected.release.like.arch: true
+[INFO] os.detected.classifier: linux-x86_64
+[INFO] 
+[INFO] -----------------------< it.unisa:HotelColossus >-----------------------
+[INFO] Building HotelColossus 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- exec:3.6.3:java (default-cli) @ HotelColossus ---
+Feb 06, 2026 12:47:49 PM it.unisa.Server.BackOffice.ManagerImpl main
+INFO: Avvio RMI Registry sulla porta 1099...
+Feb 06, 2026 12:47:49 PM it.unisa.Server.BackOffice.ManagerImpl main
+INFO: ✓ Connesso a RMI Registry esistente
+Feb 06, 2026 12:47:49 PM it.unisa.Server.BackOffice.ManagerImpl main
+INFO: Genero il gestore degli impiegati...
+Feb 06, 2026 12:47:49 PM it.unisa.Server.BackOffice.ManagerImpl main
+INFO: ✓ Gestore impiegati creato
+Feb 06, 2026 12:47:49 PM it.unisa.Server.BackOffice.ManagerImpl main
+INFO: Effettuo il rebind di gestione impiegati...
+Feb 06, 2026 12:47:49 PM it.unisa.Server.BackOffice.ManagerImpl main
+INFO: ✓ Gestore impiegati registrato con successo!
+Feb 06, 2026 12:47:49 PM it.unisa.Server.BackOffice.ManagerImpl main
+INFO: ✓ Servizio 'GestioneImpiegati' pronto
+Feb 06, 2026 12:47:49 PM it.unisa.Server.BackOffice.ManagerImpl main
+INFO: Server in attesa di connessioni...
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for it.unisa:HotelColossus:jar:1.0-SNAPSHOT
+[WARNING] 'build.plugins.plugin.(groupId:artifactId)' must be unique but found duplicate declaration of plugin org.jacoco:jacoco-maven-plugin @ line 164, column 21
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Detecting the operating system and CPU architecture
+[INFO] ------------------------------------------------------------------------
+[INFO] os.detected.name: linux
+[INFO] os.detected.arch: x86_64
+[INFO] os.detected.bitness: 64
+[INFO] os.detected.version: 6.18
+[INFO] os.detected.version.major: 6
+[INFO] os.detected.version.minor: 18
+[INFO] os.detected.release: arch
+[INFO] os.detected.release.like.arch: true
+[INFO] os.detected.classifier: linux-x86_64
+[INFO] 
+[INFO] -----------------------< it.unisa:HotelColossus >-----------------------
+[INFO] Building HotelColossus 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- exec:3.6.3:java (default-cli) @ HotelColossus ---
+Feb 06, 2026 12:52:17 PM it.unisa.Server.BackOffice.ManagerImpl main
+INFO: Avvio RMI Registry sulla porta 1099...
+Feb 06, 2026 12:52:17 PM it.unisa.Server.BackOffice.ManagerImpl main
+INFO: ✓ Connesso a RMI Registry esistente
+Feb 06, 2026 12:52:17 PM it.unisa.Server.BackOffice.ManagerImpl main
+INFO: Genero il gestore degli impiegati...
+Feb 06, 2026 12:52:17 PM it.unisa.Server.BackOffice.ManagerImpl main
+INFO: ✓ Gestore impiegati creato
+Feb 06, 2026 12:52:17 PM it.unisa.Server.BackOffice.ManagerImpl main
+INFO: Effettuo il rebind di gestione impiegati...
+Feb 06, 2026 12:52:17 PM it.unisa.Server.BackOffice.ManagerImpl main
+INFO: ✓ Gestore impiegati registrato con successo!
+Feb 06, 2026 12:52:17 PM it.unisa.Server.BackOffice.ManagerImpl main
+INFO: ✓ Servizio 'GestioneImpiegati' pronto
+Feb 06, 2026 12:52:17 PM it.unisa.Server.BackOffice.ManagerImpl main
+INFO: Server in attesa di connessioni...
