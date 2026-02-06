@@ -64,12 +64,8 @@ public class FrontDeskClient
                     {
                         System.out.println("Inserisci numero camera: ");
                         Scanner sc2 = new Scanner(System.in);
-
-                        //Camera s = new Camera(sc2.nextInt());
-                        
                         System.out.println("Inserisci nome cliente: ");
                         Scanner sc3 = new Scanner(System.in);
-                      //  Cliente c = new Cliente(sc3.nextLine());
 
                         //String id = c.getNome() + "" + s.getNumero();
                         
@@ -170,38 +166,50 @@ public class FrontDeskClient
         }
     }
     public void FrontDeskController(FrontDeskInterface server) {
-       //this.server = server;
+       if(server != null){
+           frontDeskInterface = server;
+       }else{
+           throw new RuntimeException("Non è possibile connettersi con il server");
+       }
     }
 
     public List<Camera> getCamere() throws RemoteException {
-        //return server.getCamere();
-        return null;
+        return frontDeskInterface.getCamere();
     }
 
     public boolean aggiornaStatoCamera(int numeroCamera, String nuovoStato) throws RemoteException {
-        //List<Camera> camere = server.getCamere();
+        List<Camera> cameras = frontDeskInterface.getCamere();
+        Camera camera1 = null;
 
-        //for (Camera c : camere) {
-          //  if (c.getNumeroCamera() == numeroCamera) {
-            //    c.setStatoCamera(nuovoStato);
-              //  return server.aggiornaStatoCamera(c);
-            //}
-        //}
-        return false;  // Camera non trovata
+        for(Camera camera : cameras){
+                if(camera.getNumeroCamera() == numeroCamera){
+                    try {
+                        camera1 = camera.clone();
+                    }catch(CloneNotSupportedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+        }
+
+        if(camera1 != null){
+            return frontDeskInterface.aggiornaStatoCamera(camera1);
+        }else{
+            // Camera non trovata
+            return false;
+        }
     }
 
+    /*
     public Camera getUltimoAggiornamento() throws RemoteException {
-        //return server.update();
-        return null;
-    }
+
+    }*/
 
     public List<Prenotazione> getPrenotazioni() throws RemoteException {
-      //  return server.getPrenotazioni();
-        return null;
+        return frontDeskInterface.getPrenotazioni();
     }
 
     public void addPrenotazione(Prenotazione p) throws RemoteException {
-       // server.addPrenotazione(p);
+        frontDeskInterface.addPrenotazione(p);
     }
 
     public Impiegato DoAuthentication(String username, String password, String pwd2) throws RemoteException, IllegalAccess {
@@ -215,4 +223,7 @@ public class FrontDeskClient
         System.out.println(imp);
         return imp;
     }
+
+
+
 }

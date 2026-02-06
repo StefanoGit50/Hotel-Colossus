@@ -27,6 +27,8 @@ public class prenotazioneDAOTesting{
     private PrenotazioneDAO prenotazioneDAO;
     private Prenotazione prenotazione;
 
+
+
     @BeforeEach
     public void setUp(){
         DBPopulator.populator();
@@ -62,10 +64,14 @@ public class prenotazioneDAOTesting{
         prenotazioneDAO = new PrenotazioneDAO();
     }
 
+
+
     @AfterEach
     public void after(){
        DBPopulator.cancel();
     }
+
+
 
     @Test
     @Tag("True")
@@ -73,6 +79,8 @@ public class prenotazioneDAOTesting{
     public void doSaveAllTrue() throws SQLException{
         assertDoesNotThrow(()->prenotazioneDAO.doSave(prenotazione));
     }
+
+
 
     @Test
     @Tag("False")
@@ -83,6 +91,8 @@ public class prenotazioneDAOTesting{
         assertDoesNotThrow(()->prenotazioneDAO.doSave(prenotazione));
     }
 
+
+
     @Test
     @Tag("False")
     @DisplayName("TC27: doSave() quando la condizione del for del cliente è falsa")
@@ -90,6 +100,8 @@ public class prenotazioneDAOTesting{
         prenotazione.setListaClienti(new ArrayList<>());
         assertDoesNotThrow(()->prenotazioneDAO.doSave(prenotazione));
     }
+
+
 
     @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
@@ -99,6 +111,8 @@ public class prenotazioneDAOTesting{
         prenotazione.setListaClienti(null);
         assertThrows(RuntimeException.class,()->prenotazioneDAO.doSave(prenotazione));
     }
+
+
 
     @Test
     @Tag("True")
@@ -119,12 +133,16 @@ public class prenotazioneDAOTesting{
         assertEquals(prenotazione2,prenotazione1);
     }
 
+
+
     @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
     @DisplayName("TC30: doRetriveByKey() quando va in errore e il DB ")
     public void doRetriveByKeyException() throws SQLException{
         assertThrows(SQLException.class,()->prenotazioneDAO.doRetriveByKey(" "));
     }
+
+
 
     @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
@@ -179,6 +197,8 @@ public class prenotazioneDAOTesting{
         assertEquals(prenotaziones1,prenotaziones);
     }
 
+
+
     @Test
     @Tag("False")
     @DisplayName("TC33: doRetriveAll() quando va tutto male")
@@ -207,6 +227,8 @@ public class prenotazioneDAOTesting{
         assertDoesNotThrow(()->prenotazioneDAO.doUpdate(prenotazione3));
     }
 
+
+
     @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
     @DisplayName("TC35: doUpdate() quando la lista di clienti è vuota")
@@ -223,6 +245,8 @@ public class prenotazioneDAOTesting{
         assertThrows(NoSuchElementException.class,()->prenotazioneDAO.doUpdate(prenotazione3));
     }
 
+
+
     @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
     @DisplayName("TC36: doUpdate() quando la lista di servizi è vuota e Trattamento è null")
@@ -237,6 +261,7 @@ public class prenotazioneDAOTesting{
         prenotazione3.setMetodoPagamento("Contanti");
         assertDoesNotThrow(()->prenotazioneDAO.doUpdate(prenotazione3));
     }
+
 
 
     @Test
@@ -274,26 +299,14 @@ public class prenotazioneDAOTesting{
         assertEquals(prenotaziones1,prenotaziones);
     }
 
+
+
     @Test
     @Tag("False")
-    @DisplayName("TC37: doRetriveByAttribute() quando va male")
-    public void doRetriveByAttributeAllFalse() throws SQLException {
+    @DisplayName("TC37: doRetriveByAttribute() quando va male il primo resultset")
+    public void doRetriveByAttributeFalseIlPrimoResultSet() throws SQLException {
+       DBPopulator.cancel();
        ArrayList<Prenotazione> prenotaziones = new ArrayList<>();
-       ArrayList<Prenotazione> prenotaziones1 = new ArrayList<>();
-       ArrayList<Cliente> clientes = new ArrayList<>();
-       ArrayList<Cliente> clientes1 = new ArrayList<>();
-       ArrayList<Servizio> servizios = new ArrayList<>();
-       ArrayList<Servizio> servizios1 = new ArrayList<>();
-
-       clientes.add(new Cliente("Hans","Muller","Berlin","Berlino","Alexanderplatz",1,10115,"+4915123456","M",LocalDate.of(1988,5,5),"MULLER88E05Z112K","hans.muller@de-mail.de","Tedesca",new Camera(201,Stato.Prenotata,3,180.0,"Vista mare laterale","Junior Suite")));
-       //servizios.add(new Servizio(,));
-      /*
-       prenotaziones.add(new Prenotazione(
-                    LocalDate.of(2024,2,15),
-                    LocalDate.of(2024,3,1),
-                    LocalDate.of(2024,3,7),
-                        null,
-                        new Trattamento("All Inclusive",),
-               ));*/
+       assertEquals(prenotaziones,prenotazioneDAO.doRetriveByAttribute("IDPrenotazione",1));
     }
 }
