@@ -528,7 +528,7 @@ public class Prenotazione implements Cloneable, Serializable {
         // Clonazione degli oggetti interni mutabili (Trattamento e Liste)
         if (this.trattamento != null) {
             // Assumiamo che Trattamento sia clonabile
-            // cloned.trattamento = this.trattamento.clone();
+            cloned.trattamento = this.trattamento.clone();
         }
 
         cloned.listaServizi = Util.deepCopyArrayList(this.listaServizi);

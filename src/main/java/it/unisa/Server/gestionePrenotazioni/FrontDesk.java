@@ -148,8 +148,8 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
 
     @Override
     public void updatePrenotazione(Prenotazione p) throws RemoteException {
-//        UpdatePrenotazioneCommand command = new UpdatePrenotazioneCommand(catalogoPrenotazioni, p);
-//        invoker.executeCommand(command);
+         UpdatePrenotazioneCommand command = new UpdatePrenotazioneCommand(CatalogoPrenotazioni.getListaPrenotazioni(), p);
+        invoker.executeCommand(command);
     }
 
 

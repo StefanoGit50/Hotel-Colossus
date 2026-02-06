@@ -78,7 +78,7 @@ public class AddClienteCommand implements Command {
      */
     @Override
     public void execute() {
-       catalogue.aggiungiCliente(cliente);
+       CatalogoClienti.aggiungiCliente(cliente);
     }
 
     /**
@@ -88,8 +88,8 @@ public class AddClienteCommand implements Command {
      */
     @Override
     public void undo() {
-            if(catalogue.getListaClienti().contains(cliente)) {
-                catalogue.removeCliente(cliente);
+            if(CatalogoClienti.getListaClienti().contains(cliente)) {
+                CatalogoClienti.removeCliente(cliente);
             }
     }
 }
