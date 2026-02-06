@@ -1,22 +1,18 @@
 package it.unisa.Storage.DAO;
 
-import com.mysql.cj.protocol.x.XServerSession;
+
 import it.unisa.Common.*;
-import it.unisa.Server.IllegalAccess;
-import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
-import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.ErrorInputException;
 import it.unisa.Storage.Interfacce.FrontDeskStorage;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.sql.Date;
-import java.time.LocalDate;
+
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -102,8 +98,8 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
             connection = ConnectionStorage.getConnection();
             preparedStatement = connection.prepareStatement("" +
                     "INSERT INTO prenotazione(NomeIntestatario,DataCreazionePrenotazione, DataArrivoCliente, DataPartenzaCliente,numeroDocumento" +
-                    ",DataRilascioDocumento, DataScadenzaDocumento,NomeTrattamento,NoteAggiuntive, TipoDocumento,PrezzoAcquistoTrattamento,Cittadinanza) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ? , ?, ? , ? , ? ,?)", Statement.RETURN_GENERATED_KEYS);
+                    ",DataRilascioDocumento, DataScadenzaDocumento,NomeTrattamento,NoteAggiuntive, TipoDocumento,PrezzoAcquistoTrattamento,Cittadinanza,MetodoPagamento) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ? , ?, ? , ? , ? ,?,?)", Statement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setString(1, p.getIntestatario());
             preparedStatement.setDate(2, Date.valueOf(p.getDataCreazionePrenotazione()));
@@ -122,6 +118,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
             preparedStatement.setString(9, p.getNoteAggiuntive());
             preparedStatement.setString(10, p.getTipoDocumento());
             preparedStatement.setString(12, p.getCittadinanza());
+            preparedStatement.setString(13, "");
 
             preparedStatement.executeUpdate();
 
@@ -179,6 +176,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
                             stmt.setDouble(4, cliente.getCamera().getPrezzoCamera());
                             stmt.setString(5,cliente.getNome()+" "+cliente.getCognome());
                             stmt.setInt(6,cliente.getCamera().getNumeroCamera());
+                            System.out.println("\n STATEMENT \n"+stmt);
                             stmt.executeUpdate();
                             logger.debug("query effettuata con successo");
                     }

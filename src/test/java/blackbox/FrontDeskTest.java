@@ -43,14 +43,14 @@ public class FrontDeskTest{
         private FrontDesk frontDesk;
 
         @BeforeEach
-        void setUp() throws RemoteException {
+      /*  void setUp() throws RemoteException {
             frontDesk = new FrontDesk(
                     mockInvoker,
                     mockCatalogoPrenotazioni,
                     mockCatalogoClienti,
                     mockCatalogoCamere
             );
-        }
+        }*/
 
 
         @Test

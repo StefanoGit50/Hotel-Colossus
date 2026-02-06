@@ -55,7 +55,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
      * @throws SQLException;
      */
     public synchronized void doSave(Cliente o) throws SQLException{
-        String insertSQL= "INSERT INTO " +  TABLE_NAME +" (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, Nazionalita,DataDiNascita, IsBackListed)"
+        String insertSQL= "INSERT INTO " +  TABLE_NAME +" (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, Nazionalita,DataDiNascita, IsBlackListed)"
                 + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         try{

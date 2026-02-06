@@ -24,6 +24,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface {
@@ -36,11 +37,9 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     }
 
     //costruttore di Testing
-    public FrontDesk(Invoker invoker, CatalogoPrenotazioni catalogoPrenotazioni, CatalogoClienti catalogoClienti, CatalogoCamere catalogoCamere) throws RemoteException {
+    public FrontDesk(Invoker invoker,  CatalogoCamere catalogoCamere) throws RemoteException {
         super();
         this.invoker = invoker;
-        this.catalogoPrenotazioni = catalogoPrenotazioni;
-        this.catalogoClienti = catalogoClienti;
         this.camList = catalogoCamere;
     }
 
@@ -61,8 +60,10 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     }
 
     @Override
-    public List<Prenotazione> getPrenotazioni() throws RemoteException{
-        return catalogoPrenotazioni.getListaPrenotazioni();
+    public ArrayList<Prenotazione> getPrenotazioni() throws RemoteException{
+         ArrayList<Prenotazione> list =CatalogoPrenotazioni.getListaPrenotazioni();
+        System.out.println("DENTRO LA CHIAMATA"+list);
+        return list;
     }
 
 

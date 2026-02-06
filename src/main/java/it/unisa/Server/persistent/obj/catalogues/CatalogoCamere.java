@@ -9,6 +9,7 @@ import it.unisa.Server.persistent.util.Util;
 import it.unisa.Storage.DAO.CameraDAO;
 import it.unisa.Storage.DAO.ClienteDAO;
 import it.unisa.Storage.Interfacce.FrontDeskStorage;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -25,6 +26,7 @@ import java.util.logging.Logger;
  */
 
 public class CatalogoCamere implements SubjectCamereInterface, Serializable {
+    private static final org.apache.logging.log4j.Logger log = LogManager.getLogger(CatalogoCamere.class);
     private static FrontDeskStorage<Camera> fds;
     private static List<ObserverCamereInterface> observers = new ArrayList<>();
 
@@ -82,7 +84,7 @@ public class CatalogoCamere implements SubjectCamereInterface, Serializable {
      * @post result è sincronizzato (thread-safe)
      */
     public synchronized static ArrayList<Camera> getListaCamere() {
-        return camereList;
+        return Util.deepCopyArrayList(camereList);
     }
 
 
@@ -188,23 +190,26 @@ public class CatalogoCamere implements SubjectCamereInterface, Serializable {
      */
     public boolean aggiornaStatoCamera(Camera c) throws RemoteException {
 
+
             for(Camera cam : camereList){
                 if(cam.getNumeroCamera()==c.getNumeroCamera() && !cam.getStatoCamera().equals(c.getStatoCamera())){
+                    log.info("Camera passata per l'aggiornamento:{}", cam.getStatoCamera());
                     cam.setStatoCamera(c.getStatoCamera());
                     FrontDeskStorage<Camera> fds = new CameraDAO();
                     try {
                         fds.doUpdate(cam);
                     }catch (SQLException e) {
                         e.printStackTrace();
-                        Logger.getLogger(FrontDeskStorage.class.getName()).log(Level.SEVERE, null, e);
+                        log.error("Si è verificato un errore durante l'aggiornamento della camera", e);;
                     }
+                    log.info("lo stato precedente è stato modificato in : {}", cam.getStatoCamera());
                     lastModified = cam;
                     notifyObservers();
                     return true;
                 }
             }
         //lo stato della camera non è modificabile se è equivalente a quello attuale oppure se la camera non è presente nella lista globale
-        Logger.getLogger("global").log(Level.INFO, "Stato camera"+c.getStatoCamera()+ "non modificabile");
+        log.info( "Stato camera"+c.getStatoCamera()+ "non modificabile");
         return false;
     }
 
