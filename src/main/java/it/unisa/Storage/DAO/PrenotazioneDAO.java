@@ -350,7 +350,8 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
                         p.setMetodoPagamento(rs.getString("MetodoPagamento"));
                         p.setCittadinanza(rs.getString("Cittadinanza"));
                         p.setTipoDocumento(rs.getString("TipoDocumento"));
-                    }while(rs.next());
+                    }
+                    while(rs.next());
 
                 }catch(SQLException ex){
                     ex.printStackTrace();
@@ -435,7 +436,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
                     e.printStackTrace();
                 }
             }
-        }catch(SQLException e) {
+        } catch (SQLException e) {
             throw new SQLException(e.getMessage());
         }
         return prenotazioni;
@@ -532,9 +533,8 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
                 if (p.getListaClienti() == null || p.getListaClienti().isEmpty()){
                     throw new NoSuchElementException("Non ci stanno clienti nella ");
                 }else{
-                    for(Cliente c : p.getListaClienti()){
+                    for(Cliente c : p.getListaClienti()) {
                         clienteDAO.doUpdate(c);
-                        cameraDAO.doUpdate(c.getCamera());
                     }
                 }
 
@@ -587,7 +587,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
      * @throws SQLException;
      */
     @Override
-    public Collection<Prenotazione> doRetriveByAttribute(String attribute, Object value) throws SQLException{
+    public Collection<Prenotazione> doRetriveByAttribute(String attribute, Object value) throws SQLException {
         connection = ConnectionStorage.getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM prenotazione WHERE " + attribute + " = ?")) {
             preparedStatement.setObject(1, value);
