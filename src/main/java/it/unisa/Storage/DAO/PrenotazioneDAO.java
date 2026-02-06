@@ -1,22 +1,16 @@
 package it.unisa.Storage.DAO;
 
-import com.mysql.cj.protocol.x.XServerSession;
 import it.unisa.Common.*;
-import it.unisa.Server.IllegalAccess;
-import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
-import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.ErrorInputException;
 import it.unisa.Storage.Interfacce.FrontDeskStorage;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -100,9 +94,9 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
 
         try {
             connection = ConnectionStorage.getConnection();
-            preparedStatement = connection.prepareStatement("" +
-                    "INSERT INTO prenotazione(NomeIntestatario,DataCreazionePrenotazione, DataArrivoCliente, DataPartenzaCliente,numeroDocumento" +
-                    ",DataRilascioDocumento, DataScadenzaDocumento,NomeTrattamento,NoteAggiuntive, TipoDocumento,PrezzoAcquistoTrattamento,Cittadinanza) " +
+            preparedStatement = connection.prepareStatement(
+                    "INSERT INTO prenotazione(NomeIntestatario, DataCreazionePrenotazione, DataArrivoCliente, DataPartenzaCliente, numeroDocumento" +
+                    ",DataRilascioDocumento, DataScadenzaDocumento, NomeTrattamento, NoteAggiuntive, TipoDocumento, PrezzoAcquistoTrattamento, Cittadinanza) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ? , ?, ? , ? , ? ,?)", Statement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setString(1, p.getIntestatario());
@@ -266,8 +260,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
                                 rs.getInt("NumeroMaxOcc"),rs.getDouble("PrezzoAcquisto"),rs.getString("NoteCamera"),rs.getString("NomeCamera"));
                         camere.add(camera);
                         String intestatarioCompleto = rs.getString("NomeIntestatario");
-                        String nome = "";
-                        String cognome = "";
+                        String nome = "", cognome = "";
                         if (intestatarioCompleto != null && !intestatarioCompleto.trim().isEmpty()) {
                             String[] parti = intestatarioCompleto.trim().split("\\s+", 2);
 

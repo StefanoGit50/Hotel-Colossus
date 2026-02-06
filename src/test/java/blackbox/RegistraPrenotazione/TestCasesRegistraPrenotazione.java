@@ -25,7 +25,7 @@ public class TestCasesRegistraPrenotazione {
     public static ArrayList<Servizio> listaServizi = new ArrayList<>();
     public static ArrayList<Camera> listaCamere = new ArrayList<>();
     public static ArrayList<Cliente> listaClienti = new ArrayList<>();
-    public static Trattamento trattamento = new Trattamento("Mezza Pensione", 125.00);
+    public static Trattamento trattamento = new Trattamento("Mezza Pensione", 35);
     public static int autoIncrement; // simula l'autoincrement del DB
 
     @BeforeAll
@@ -56,7 +56,7 @@ public class TestCasesRegistraPrenotazione {
         Cliente cliente2 = new Cliente(
                 "Mario", "Rossi", "Roma", "Roma",
                 "Via del Corso", 10, 10000, "3331234567", "M",
-                LocalDate.of(1920, 1, 1), "RSSMRA80A01H501U",
+                LocalDate.of(1980, 1, 1), "RSSMRA80A01H501U",
                 "mario.rossi@email.com","Italiana",
                 new Camera()
         );
@@ -116,8 +116,11 @@ public class TestCasesRegistraPrenotazione {
         // Lista servizi
 
         Servizio servizioMinibar = new Servizio("Parcheggio", 10.00);
+        servizioMinibar.setId(1);
         Servizio servizioParcheggio = new Servizio("WiFi Premium", 5.00);
+        servizioParcheggio.setId(2);
         Servizio servizioColazione = new Servizio("Colazione in Camera", 12.00);
+        servizioColazione.setId(3);
 
         listaServizi.add(servizioMinibar);
         listaServizi.add(servizioParcheggio);
@@ -149,12 +152,12 @@ public class TestCasesRegistraPrenotazione {
                 "Patente",
                 LocalDate.of(2020, 1, 10),      // 8. Data Rilascio
                 LocalDate.of(2030, 1, 10),      // 9. Data Scadenza
-                cliente.getFirst().getNome(),                          // 10. Intestatario
-                "-",                             // 11. Note Aggiuntive
+                cliente.getFirst().getNome() + " " + cliente.getFirst().getCognome(),  // 10. Intestatario
+                null,                             // 11. Note Aggiuntive
                 listaServizi,                   // 13. Lista Servizi
                 cliente,                        // 14. Lista Clienti
                 "CA123AA",                     // 15. Numero Documento
-                "",
+                null,
                 "Italiana"// 16. Metodo Pagamento (MANCAVA QUESTO)
         );
     }
@@ -170,14 +173,15 @@ public class TestCasesRegistraPrenotazione {
         @DisplayName("TC1: [Success] Registrazione con servizi: nessuno")
         void testCase1() throws RemoteException{
             Prenotazione p = createBasePrenotazione(), campione;
-            p.setIDPrenotazione(4);
+            p.setIDPrenotazione(autoIncrement);
             p.setTrattamento(null);
-            p.setPrezzoAcquistoTrattamento(null);
+            p.setPrezzoAcquistoTrattamento(0.0);
             p.setListaServizi(null);
-            System.out.println(autoIncrement);
+
             Assertions.assertDoesNotThrow(() -> frontDesk.addPrenotazione(p));
             try {
-                campione = frontDesk.getPrenotazioneById(4);
+                campione = frontDesk.getPrenotazioneById(autoIncrement);
+                autoIncrement++;
                 Assertions.assertEquals(p, campione);
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -191,9 +195,12 @@ public class TestCasesRegistraPrenotazione {
             ArrayList<Servizio> c = new ArrayList<>();
             c.add(listaServizi.getFirst());
             p.setListaServizi(c);
+            p.setIDPrenotazione(autoIncrement);
             Assertions.assertDoesNotThrow(() -> frontDesk.addPrenotazione(p));
+
             try {
                 campione = frontDesk.getPrenotazioneById(autoIncrement);
+                autoIncrement++;
                 Assertions.assertEquals(p, campione);
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -201,18 +208,23 @@ public class TestCasesRegistraPrenotazione {
         }
 
         @Test
-        @DisplayName("TC3: [Success] Registrazione con servizi: 3 e CID")
+        @DisplayName("TC3: [Success] Registrazione con servizi: 3 e tipo documento: CID")
         void testCase3() {
             Prenotazione p = createBasePrenotazione(), campione;
             p.setTipoDocumento("CID");
-            p.setTrattamento(new Trattamento("Pensione Completa", 500));
+            p.setTrattamento(new Trattamento("Pensione Completa", 55.0));
+            p.setPrezzoAcquistoTrattamento(55.0);
             ArrayList<Cliente> c = new ArrayList<>();
-            c.add(listaClienti.getFirst());
             c.add(listaClienti.get(1));
             p.setListaClienti(c);
+            c.add(listaClienti.getFirst());
+            p.setIntestatario(c.getFirst().getNome() + " " + c.getFirst().getCognome());
+            p.setIDPrenotazione(autoIncrement);
+
             Assertions.assertDoesNotThrow(() -> frontDesk.addPrenotazione(p));
             try {
                 campione = frontDesk.getPrenotazioneById(autoIncrement);
+                autoIncrement++;
                 Assertions.assertEquals(p, campione);
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -220,19 +232,24 @@ public class TestCasesRegistraPrenotazione {
         }
 
         @Test
-        @DisplayName("TC4: [Success] Clienti multipli e camere multiple")
+        @DisplayName("TC4: [Success] Clienti multipli (2) e camere multiple (2) con tipo documento: Passaporto")
         void testCase4() {
-            Prenotazione p = createBasePrenotazione();
+            Prenotazione p = createBasePrenotazione(), campione;
             p.setTipoDocumento("Passaporto");
-            p.setTrattamento(new Trattamento("Solo pernottamento", 80));
+            p.setTrattamento(new Trattamento("Solo pernottamento", 0));
+            p.setTrattamento(new Trattamento("Pensione Completa", 0.0));
             Assertions.assertDoesNotThrow(() -> frontDesk.addPrenotazione(p));
             ArrayList<Cliente> c = new ArrayList<>();
-            c.add(listaClienti.getFirst());  // 3 clienti -> 3 camere diverse
             c.add(listaClienti.get(1));
+            c.add(listaClienti.getFirst());  // 3 clienti -> 3 camere diverse
+            p.setIntestatario(c.getFirst().getNome() + " " + c.getFirst().getCognome());
             p.setListaClienti(c);
+            p.setIDPrenotazione(autoIncrement);
 
             try {
+                campione =  frontDesk.getPrenotazioneById(autoIncrement);
                 Assertions.assertEquals(p, frontDesk.getPrenotazioneById(p.getIDPrenotazione()));
+                autoIncrement++;
             } catch (RemoteException e) {
                 Assertions.fail(e.getMessage());
             }

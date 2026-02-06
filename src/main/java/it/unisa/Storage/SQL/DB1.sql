@@ -61,7 +61,7 @@ create table Prenotazione(
                              Stato boolean not null Default true,
                              CheckIn boolean not null Default false,
                              PrezzoAcquistoTrattamento double,
-                             MetodoPagamento varchar(50),
+                             MetodoPagamento varchar(50) ,
                              Cittadinanza varchar(50),
                              primary key(IDPrenotazione),
                              foreign key(NomeTrattamento) references Trattamento(Nome) on update cascade
