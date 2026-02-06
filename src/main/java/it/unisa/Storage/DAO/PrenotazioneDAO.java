@@ -613,44 +613,45 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
                             "WHERE a.IDPrenotazione = ?";
 
                     ArrayList<Cliente> clienti = new ArrayList<>();
-                    String query5 = "SELECT cm.* FROM Camera cm JOIN associato_a a ON cm.NumeroCamera = a.NumeroCamera WHERE a.IDPrenotazione = ? and CF = ?";
+                    String query5 = "SELECT cm.* FROM Camera cm JOIN associato_a a ON cm.NumeroCamera = a.NumeroCamera WHERE a.IDPrenotazione = ?";
                     PreparedStatement preparedStatement1;
                     Camera camera = new Camera();
                     preparedStatement1 = connection.prepareStatement(query5);
                     try (PreparedStatement stmt = connection.prepareStatement(query4)) {
                         stmt.setInt(1, idPrenotazione);
                         try(ResultSet rs4 = stmt.executeQuery()){
-                            rs4.next();
-                            preparedStatement1.setInt(1,idPrenotazione);
-                            preparedStatement1.setString(2,rs4.getString("CF"));
-                            try(ResultSet resultSet = preparedStatement1.executeQuery()){
-                                resultSet.next();
+                            if(rs4.next()){
+                                preparedStatement1.setInt(1,idPrenotazione);
+                                try(ResultSet resultSet = preparedStatement1.executeQuery()){
+                                    resultSet.next();
 
-                                camera.setNumeroCamera(resultSet.getInt("NumeroCameraStorico"));
-                                camera.setNoteCamera(resultSet.getString("NoteCamera"));
-                                camera.setStatoCamera(Stato.valueOf(resultSet.getString("Stato")));
-                                camera.setPrezzoCamera(resultSet.getDouble("PrezzoAcquisto"));
-                                camera.setCapacità(resultSet.getInt("NumeroMaxOcc"));
-                            }
+                                    camera.setNumeroCamera(resultSet.getInt("NumeroCamera"));
+                                    camera.setNoteCamera(resultSet.getString("NoteCamera"));
+                                    camera.setStatoCamera(Stato.valueOf(resultSet.getString("Stato")));
+                                    camera.setPrezzoCamera(resultSet.getDouble("Prezzo"));
+                                    camera.setCapacità(resultSet.getInt("NumeroMaxOcc"));
+                                    camera.setNomeCamera(resultSet.getString("NomeCamera"));
+                                }
 
 
-                            while (rs4.next()) {
-                                clienti.add(new Cliente(
-                                        rs4.getString("nome"),
-                                        rs4.getString("cognome"),
-                                        rs4.getString("provincia"),
-                                        rs4.getString("comune"),
-                                        rs4.getString("via"),
-                                        rs4.getInt("civico"),
-                                        rs4.getInt("Cap"),
-                                        rs4.getString("telefono"),
-                                        rs4.getString("Sesso"),
-                                        rs4.getDate("DataDiNascita") != null ? rs4.getDate("DataDiNascita").toLocalDate() : null,
-                                        rs4.getString("CF"),
-                                        rs4.getString("Email"),
-                                        rs4.getString("Nazionalità"),
-                                        camera
-                                ));
+                                do {
+                                    clienti.add(new Cliente(
+                                            rs4.getString("nome"),
+                                            rs4.getString("cognome"),
+                                            rs4.getString("provincia"),
+                                            rs4.getString("comune"),
+                                            rs4.getString("via"),
+                                            rs4.getInt("civico"),
+                                            rs4.getInt("Cap"),
+                                            rs4.getString("telefono"),
+                                            rs4.getString("Sesso"),
+                                            rs4.getDate("DataDiNascita") != null ? rs4.getDate("DataDiNascita").toLocalDate() : null,
+                                            rs4.getString("CF"),
+                                            rs4.getString("Email"),
+                                            rs4.getString("Nazionalita"),
+                                            camera
+                                    ));
+                                }while(rs4.next());
                             }
                         }
                     }
@@ -662,9 +663,9 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
                                 trattamento,
                                 rs.getDouble("PrezzoAcquistoTrattamento"),
                                 rs.getString("TipoDocumento"),
-                                rs.getDate("DataRilascio").toLocalDate(),
-                                rs.getDate("DataScadenza").toLocalDate(),
-                                rs.getString("Intestatario"),
+                                rs.getDate("DataRilascioDocumento").toLocalDate(),
+                                rs.getDate("DataScadenzaDocumento").toLocalDate(),
+                                rs.getString("NomeIntestatario"),
                                 rs.getString("NoteAggiuntive"),
                                 servizi,
                                 clienti,
@@ -673,7 +674,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
                                 rs.getString("Cittadinanza"));
                                 p.setIDPrenotazione(idPrenotazione);
                                 p.setCheckIn(rs.getBoolean("CheckIn"));
-                                p.setStatoPrenotazione(rs.getBoolean("StatoPrenotazione"));
+                                p.setStatoPrenotazione(rs.getBoolean("Stato"));
 
                                 prenotaziones.add(p);
 

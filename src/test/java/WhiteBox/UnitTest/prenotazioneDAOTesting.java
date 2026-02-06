@@ -162,7 +162,7 @@ public class prenotazioneDAOTesting{
         Prenotazione prenotazione2 = new Prenotazione(LocalDate.of(2024,2,1),LocalDate.of(2024,2,20),LocalDate.of(2024,2,25),null,new Trattamento("Pensione Completa",55.0),55.0,"Patente",LocalDate.of(2019,5,5),LocalDate.of(2029,5,5),"Luigi Verdi","Intolleranza Lattosio",servizios,clientes,"PT123456","Contanti","italiana");
         prenotazione2.setIDPrenotazione(2);
         prenotazione2.setCheckIn(true);
-
+        prenotaziones1.add(new Prenotazione(LocalDate.of(,,),,));
         prenotaziones1.add(prenotazione2);
         prenotaziones1.add(prenotazione1);
         assertEquals(prenotaziones1,prenotaziones);
@@ -204,19 +204,20 @@ public class prenotazioneDAOTesting{
         ArrayList<Servizio> servizios = new ArrayList<>();
         clientes.add(new Cliente("Hans","Muller","Berlin","Berlino","Alexanderplatz",1,10115,"+4915123456","M",LocalDate.of(1988,5,5),"MULLER88E05Z112K","hans.muller@de-mail.de","Tedesca",new Camera(201,Stato.Prenotata,3,180.0,"Vista mare laterale","Junior Suite")));
         servizios.add(new Servizio("Transfer Aeroporto",35.0));
-        Prenotazione prenotazione1 = new Prenotazione(LocalDate.of(2024,2,15),LocalDate.of(2024,3,1), LocalDate.of(2024,3,7),null,new Trattamento("All Inclusive",80.0),80.0,"Passaporto",LocalDate.of(2021,1,1),LocalDate.of(2031,1,1),"Hans Muller","Late arrival expected",servizios,clientes,"PASSDE99","Bonifico","italiana");
+        Prenotazione prenotazione1 = new Prenotazione(LocalDate.of(2024,2,15),LocalDate.of(2024,3,1), LocalDate.of(2024,3,7),null,new Trattamento("All Inclusive",80.0),80.0,"Patente",LocalDate.of(2021,1,1),LocalDate.of(2031,1,1),"Hans Muller","Late arrival expected",servizios,clientes,"PASSDE99","Bonifico","italiana");
         prenotazione1.setIDPrenotazione(3);
-        servizios = new ArrayList<>();
-        clientes = new ArrayList<>();
+
         clientes.add(new Cliente("Luigi","Verdi","Milano","Milano","Corso Buenos Aires",20,20100,"3339876543","M",LocalDate.of(1990,2,2),"VRDLGI90B02F205K","luigi.verdi@email.com","Italiana",new Camera(202,Stato.Occupata,2,350.0,"Jacuzzi privata","Suite Presidenziale")));
         servizios.add(new Servizio("Spa e Benessere",45.0));
         servizios.add(new Servizio("Colazione in Camera",12.0));
         Prenotazione prenotazione2 = new Prenotazione(LocalDate.of(2024,2,1),LocalDate.of(2024,2,20),LocalDate.of(2024,2,25),null,new Trattamento("Pensione Completa",55.0),55.0,"Patente",LocalDate.of(2019,5,5),LocalDate.of(2029,5,5),"Luigi Verdi","Intolleranza Lattosio",servizios,clientes,"PT123456","Contanti","italiana");
         prenotazione2.setIDPrenotazione(2);
         prenotazione2.setCheckIn(true);
-        prenotaziones1.add(prenotazione);
+
         prenotaziones1.add(prenotazione2);
         prenotaziones1.add(prenotazione1);
+        System.out.println(prenotazione1);
+        System.out.println(prenotaziones);
         assertEquals(prenotaziones1,prenotaziones);
     }
 
