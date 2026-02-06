@@ -7,8 +7,10 @@
 #==============================================================================
 
 
+
 # Carica environment
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 
 # Carica configurazione
 if [ -f "$SCRIPT_DIR/load-config.sh" ]; then
@@ -21,6 +23,7 @@ else
 fi
 
 
+
 # Colori
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -29,21 +32,25 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 
+
 # Funzione per stampare messaggi
 print_info()
 {
     echo -e "${BLUE}[INFO]${NC} $1"
 }
 
+
 print_success()
 {
     echo -e "${GREEN}[✓]${NC} $1"
 }
 
+
 print_warning()
 {
     echo -e "${YELLOW}[⚠]${NC} $1"
 }
+
 
 print_error()
 {
@@ -51,10 +58,12 @@ print_error()
 }
 
 
+
 echo -e "${RED}═══════════════════════════════════════════════════${NC}"
 echo -e "${RED}     Hotel Colossus - Stop Servizi RMI             ${NC}"
 echo -e "${RED}═══════════════════════════════════════════════════${NC}"
 echo ""
+
 
 
 # Funzione per fermare un processo via PID file
@@ -108,6 +117,7 @@ stop_service()
 }
 
 
+
 # Funzione per fermare tutti i processi Java RMI
 kill_all_rmi_processes()
 {
@@ -144,19 +154,23 @@ kill_all_rmi_processes()
 # Ferma servizi in ordine inverso rispetto all'avvio
 
 # 1. Ferma Manager
-stop_service "ManagerImpl"
+stop_service "Manager"
+
 
 
 # 2. Ferma Governante
 stop_service "Governante"
 
 
+
 # 3. Ferma FrontDesk
 stop_service "FrontDesk"
 
 
+
 # 4. Ferma RMI Registry
 stop_service "rmiregistry"
+
 
 
 # Verifica che la porta sia liberata
@@ -171,10 +185,12 @@ else
 fi
 
 
+
 # Cleanup PID files
 print_info "Cleanup file PID..."
 rm -f "$PID_DIR"/*.pid
 print_success "Cleanup completato"
+
 
 
 echo ""
@@ -184,6 +200,12 @@ echo -e "${GREEN}═════════════════════
 echo ""
 
 
+
 print_info "Per riavviare i servizi:"
 echo -e "  ${YELLOW}./start-rmi.sh${NC}"
+
+
+
+
+
 echo ""

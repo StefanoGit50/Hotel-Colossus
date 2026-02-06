@@ -296,7 +296,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                     cliente.setEmail(resultSet.getString("Email"));
                     cliente.setSesso(resultSet.getString("Sesso"));
                     cliente.setNumeroTelefono(resultSet.getString("telefono"));
-                    cliente.setBlacklisted(resultSet.getBoolean("IsBackListed"));
+                    cliente.setBlacklisted(resultSet.getBoolean("IsBlackListed"));
                     cliente.setDataNascita(resultSet.getDate("DataDiNascita").toLocalDate());
                     cliente.setNazionalita(resultSet.getString("Nazionalita"));
 
