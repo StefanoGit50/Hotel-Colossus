@@ -1,5 +1,6 @@
 package IntegrationTesting.BottomUp.Livello2;
 
+import WhiteBox.UnitTest.DBPopulator;
 import it.unisa.Common.*;
 import it.unisa.Server.command.Invoker;
 import it.unisa.Server.gestionePrenotazioni.FrontDesk;
@@ -7,6 +8,9 @@ import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
 import it.unisa.Server.persistent.util.Stato;
+import it.unisa.Storage.DAO.CameraDAO;
+import it.unisa.Storage.DAO.PrenotazioneDAO;
+import it.unisa.Storage.DAO.ServizioDAO;
 import it.unisa.Storage.Interfacce.FrontDeskStorage;
 import org.junit.jupiter.api.*;
 
@@ -29,39 +33,42 @@ public class ServerCatalogoDB {
     private static ArrayList<Camera> arraycamera = new ArrayList<>();
     private static Prenotazione prenotazione;
     private static ArrayList<Servizio>  servizio= new ArrayList<>();
-    private static ArrayList<Cliente> cliente = new ArrayList<>();
+    private static ArrayList<Cliente>cliente = new ArrayList<>();
     private static FrontDeskStorage frontDeskStorage;
 
+
     @BeforeAll
-    static void setAllup() throws RemoteException {
+    static void setAllup() throws RemoteException, SQLException {
+
 
         //inizializzazione variabili di default
         //si suppone che il DB contenga queste variabili per il corretto funzionamento del test
 
-        Invoker invoker = new Invoker();
-        CatalogoPrenotazioni catPrenotazioni = new CatalogoPrenotazioni();
-        CatalogoClienti catClienti = new CatalogoClienti();
-        CatalogoCamere catCamere = new CatalogoCamere();
-        frontDesk = new FrontDesk(invoker,catPrenotazioni,catClienti,catCamere);
+        frontDeskStorage = new CameraDAO();
+        arraycamera.add(CatalogoCamere.getListaCamere().getFirst());
+        arraycamera.add(CatalogoCamere.getListaCamere().getLast());
+        arraycamera.add(CatalogoCamere.getListaCamere().get(2));
 
-        servizio.add( new Servizio("Piscina",20));
-        arraycamera.add(new Camera(112, Stato.Occupata,2,45.50,"",""));
-        new Cliente(
-                "mario",               // nome
-                "Rossi",               // cognome
-                "Burundi",             // provincia (o Nazione se intendevi quello, ma va nello slot provincia)
-                "napoli",              // comune
-                "via manzo",           // via (Ho spostato 'via manzo' qui al posto del secondo 'napoli')
-                12,                    // numeroCivico (Intero)
-                45,                    // CAP (Intero - Attenzione: 45 è un po' basso per un CAP!)
-                "323425",              // numeroTelefono (Stringa)
-                "M",                   // sesso
-                LocalDate.of(1998,12,1), // dataNascita
-                "CF234rdfcfg",         // cf
-                "luca@gmail.com",      // email
-                "italiana",            // nazionalità
-                arraycamera.get(0)     // camera
-        );
+        Invoker invoker = new Invoker();
+        CatalogoCamere catCamere = new CatalogoCamere();
+        frontDesk = new FrontDesk(invoker,catCamere);
+
+
+        ServizioDAO servizioDAO = new ServizioDAO();
+        ArrayList<Servizio>  servizioDB;
+
+        servizioDB= (ArrayList<Servizio>) servizioDAO.doRetriveByAttribute("Nome","Spa e Benessere");
+        servizio.add(servizioDB.getFirst());
+        servizio.getFirst().setPrezzo(30);
+        servizioDB=(ArrayList<Servizio>) servizioDAO.doRetriveByAttribute("Nome", "Parcheggio");
+        servizio.add(servizioDB.getFirst());
+        servizio.get(1).setPrezzo(20);
+
+        cliente = new ArrayList<>(CatalogoClienti.getListaClienti().subList(0,3));
+        cliente.getFirst().setCamera(arraycamera.getFirst());
+        cliente.get(1).setCamera(arraycamera.get(1));
+        cliente.get(2).setCamera(arraycamera.get(2));
+        System.out.println(cliente);
 
 
         prenotazione =new Prenotazione(
@@ -74,19 +81,25 @@ public class ServerCatalogoDB {
                 "Carta d'Identità",                     // tipoDocumento
                 LocalDate.of(2020, 5, 20),              // dataRilascio (documento)
                 LocalDate.of(2030, 5, 19),              // dataScadenza (documento)
-                "Mario Rossi",                          // intestatario
+                cliente.getFirst().getNome()+" "+cliente.getFirst().getCognome(),                          // intestatario
                 "Richiesta culla in camera",            // noteAggiuntive
                 servizio,                          // listaServizi
-                cliente,                                 // listaClienti
-                "CA12345XYZ",                           // numeroDocumento
-                "Bonifico Bancario",
+                 cliente,                                 // listaClienti
+                "CA123YZ",                           // numeroDocumento
+                "",
                 "Italiano"
         );
+    }
+    @BeforeEach
+    void setUp() throws RemoteException {
+
     }
 
     @AfterEach
     void tearDown(){
-        catPrenotazioni.getListaPrenotazioni().clear();
+        DBPopulator.cancel();
+        DBPopulator.populator();
+        CatalogoPrenotazioni.aggiornalista();
         catClienti.getListaClienti().clear();
         catCamere.getListaCamere().clear();
     }
@@ -95,16 +108,15 @@ public class ServerCatalogoDB {
     @DisplayName("Bottom up 3.1 TC13: LV2 aggiornamento dello stato camera dalla classe server con pattern Observer")
     @Tag("integration-LV2")
     public void AggiornaStatoCamereCatalogoDB(){
+         frontDeskStorage = new CameraDAO();
+        System.out.println("Array camere: "+arraycamera);
+        arraycamera.getFirst().setStatoCamera(Stato.Prenotata);
         assertDoesNotThrow(()->frontDesk.aggiornaStatoCamera(arraycamera.getFirst()));
 
         Camera c = null;
         //controllo nel DB se è stata cambiata lo stato della camera
-        try {
-             c= (Camera) frontDeskStorage.doRetriveByKey(arraycamera.getFirst());
+        c= (Camera) assertDoesNotThrow(()->frontDeskStorage.doRetriveByKey(arraycamera.getFirst().getNumeroCamera()));
 
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
         assertEquals(arraycamera.getFirst(),c);
     }
 
@@ -116,11 +128,8 @@ public class ServerCatalogoDB {
        Collection<?> listDB= null;
 
         //controllo nel DB se le liste sono le stesse
-        try {
-            listDB= frontDeskStorage.doRetriveAll("decrescente");
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
+        listDB = assertDoesNotThrow(() -> frontDeskStorage.doRetriveAll("decrescente"));
+
         assertEquals(listDB, c);
     }
 
@@ -128,44 +137,49 @@ public class ServerCatalogoDB {
     @DisplayName("Bottom up 3.3 TC15: LV2 Test se le prenotazioni nel front desk sono le stesse nel DB")
     @Tag("integration-LV2")
     public void getPrenotazioniTest() throws RemoteException {
+        frontDeskStorage = new PrenotazioneDAO();
+
         List<Prenotazione> p = frontDesk.getPrenotazioni();
         Collection<?> listDB= null;
 
         // controllo nel DB se le liste sono le stesse
-        try{
-            listDB= frontDeskStorage.doRetriveAll("decrescente");
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
+        listDB=  assertDoesNotThrow(()-> frontDeskStorage.doRetriveAll("decrescente"));
+
         assertEquals(listDB, p);
     }
 
     @Test
     @DisplayName("Bottom up 3.4 TC16: LV2 Test controllo dell'interazione sull aggiunta fra frontdeskServer command pattern e DB")
     @Tag("integration-LV2")
-    public void addPrenotazioneTest() throws RemoteException, CloneNotSupportedException {
+    public void addPrenotazioneTest() throws RemoteException{
+        frontDeskStorage = new PrenotazioneDAO();
+
         ArrayList<Camera> arrcam= new ArrayList<>();
         arrcam.add(CatalogoCamere.getCamera(102));
         ArrayList<Cliente> clienti= new ArrayList<>();
-        clienti.add(CatalogoClienti.getListaClienti().get(0));
+        Cliente c =CatalogoClienti.getListaClienti().getFirst();
+        c.setCamera(arrcam.getFirst());
+        clienti.add(c);
         ArrayList<Servizio> servizio= new ArrayList<>();
-        servizio.add(new Servizio("SPA",40));
+        ServizioDAO servizioDAO = new ServizioDAO();
+        ArrayList<Servizio> servizios=((ArrayList<Servizio>) assertDoesNotThrow(()->servizioDAO.doRetriveByAttribute("Nome","Spa e Benessere")));
+        servizio.add(servizios.getFirst());
 
         Prenotazione p = new Prenotazione(        // IDPrenotazione
                 LocalDate.now(),                        // dataCreazionePrenotazione
                 LocalDate.now(),                        // dataInizio
                 LocalDate.of(2026, 02, 01),             // dataFine
-                null,                                   // <--- MANCAVA QUESTO! (dataEmissioneRicevuta)
+                null,
                 new Trattamento("MEZZA PENSIONE", 60),
                 60.0,
                 "Passaporto",                           // tipoDocumento
                 LocalDate.of(2012, 03, 11),             // dataRilascio
                 LocalDate.of(2044, 12, 11),             // dataScadenza
-                "Mario Biondi",                         // intestatario
+                clienti.getFirst().getNome()+" "+ clienti.getFirst().getCognome(),                         // intestatario
                 "",                                     // noteAggiuntive
                 servizio,                               // listaServizi (Assicurati che sia un ArrayList!)
                 clienti,                                // listaClienti
-                "34532MC2",                             // numeroDocumento
+                "3453m",                             // numeroDocumento
                 "",
                 "italiana"
         );
@@ -174,11 +188,11 @@ public class ServerCatalogoDB {
         Prenotazione p1= null;
         // controllo nel DB se la prenotazione è presente
         try{
-            p1= (Prenotazione) frontDeskStorage.doRetriveByKey(prenotazione);
+            p1= (Prenotazione) frontDeskStorage.doRetriveByKey(p.getIDPrenotazione());
         }catch (SQLException e){
             e.printStackTrace();
          }
-        assertEquals(p1, p);
+        assertEquals(p, p1);
     }
 
     @Test
@@ -203,18 +217,19 @@ public class ServerCatalogoDB {
     @DisplayName("Bottom up 3.6 TC18: LV2 Test controllo dell interazione sull update fra frontdeskServer command pattern e DB")
     @Tag("integration-LV2")
     public void updatePrenotazioneTest() throws RemoteException{
-        Prenotazione p2 = catPrenotazioni.getPrenotazione(prenotazione.getIDPrenotazione());
+        frontDeskStorage = new PrenotazioneDAO();
+        Prenotazione p2 = CatalogoPrenotazioni.getPrenotazione(prenotazione.getIDPrenotazione());
         prenotazione.setCheckIn(true);
         frontDesk.updatePrenotazione(prenotazione);
 
         try{
-            prenotazione= (Prenotazione) frontDeskStorage.doRetriveByKey(prenotazione);
+            prenotazione= (Prenotazione) frontDeskStorage.doRetriveByKey(prenotazione.getIDPrenotazione());
         }catch (SQLException e){
             e.printStackTrace();
         }
 
         assertNotEquals(prenotazione, p2);
-        assertNotEquals(catPrenotazioni.getPrenotazione(prenotazione.getIDPrenotazione()), p2);
+        assertNotEquals(CatalogoPrenotazioni.getPrenotazione(prenotazione.getIDPrenotazione()), p2);
     }
 
     @Test

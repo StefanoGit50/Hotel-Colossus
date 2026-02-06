@@ -48,7 +48,6 @@ public class MainApp3 extends Application {
     private ContoEconomico contoEconomicoView;
 
     // ===== DATI =====
-    private ObservableList<BookingFilter> allBookings = FXCollections.observableArrayList();
     private String currentUsername;
     private String currentRole;
 
@@ -210,8 +209,8 @@ public class MainApp3 extends Application {
      * Inizializza i dati
      */
     private void initializeData() {
-        BookingFilter.initializeSampleBookings(allBookings);
-        System.out.println("Caricate " + allBookings.size() + " prenotazioni");
+        int size = BookingFilter.initializeSampleBookings();
+        System.out.println("Caricate " + size + " prenotazioni");
     }
 
     /**
@@ -319,7 +318,7 @@ public class MainApp3 extends Application {
 
         if (dashboardView == null) {
             dashboardView = new Dashboard();
-            dashboardView.setBookings(allBookings);
+            dashboardView.setBookings(BookingFilter.getAllBookings());
         }
 
         contentArea.getChildren().add(dashboardView);

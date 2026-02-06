@@ -55,7 +55,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
      * @throws SQLException;
      */
     public synchronized void doSave(Cliente o) throws SQLException{
-        String insertSQL= "INSERT INTO " +  TABLE_NAME +" (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, Nazionalita,DataDiNascita, IsBackListed)"
+        String insertSQL= "INSERT INTO " +  TABLE_NAME +" (CF, nome, cognome, Cap, comune, civico, provincia, via, Email, Sesso, telefono, Nazionalita,DataDiNascita, IsBlackListed)"
                 + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         try{
@@ -296,7 +296,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                     cliente.setEmail(resultSet.getString("Email"));
                     cliente.setSesso(resultSet.getString("Sesso"));
                     cliente.setNumeroTelefono(resultSet.getString("telefono"));
-                    cliente.setBlacklisted(resultSet.getBoolean("IsBackListed"));
+                    cliente.setBlacklisted(resultSet.getBoolean("IsBlackListed"));
                     cliente.setDataNascita(resultSet.getDate("DataDiNascita").toLocalDate());
                     cliente.setNazionalita(resultSet.getString("Nazionalita"));
 

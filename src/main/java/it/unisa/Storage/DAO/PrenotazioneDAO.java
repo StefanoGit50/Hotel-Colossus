@@ -1,5 +1,6 @@
 package it.unisa.Storage.DAO;
 
+
 import it.unisa.Common.*;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
 import it.unisa.Server.persistent.util.Stato;
@@ -11,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.sql.Date;
+
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -94,10 +96,10 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
 
         try {
             connection = ConnectionStorage.getConnection();
-            preparedStatement = connection.prepareStatement(
-                    "INSERT INTO prenotazione(NomeIntestatario, DataCreazionePrenotazione, DataArrivoCliente, DataPartenzaCliente, numeroDocumento" +
-                    ",DataRilascioDocumento, DataScadenzaDocumento, NomeTrattamento, NoteAggiuntive, TipoDocumento, PrezzoAcquistoTrattamento, Cittadinanza) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ? , ?, ? , ? , ? ,?)", Statement.RETURN_GENERATED_KEYS);
+            preparedStatement = connection.prepareStatement("" +
+                    "INSERT INTO prenotazione(NomeIntestatario,DataCreazionePrenotazione, DataArrivoCliente, DataPartenzaCliente,numeroDocumento" +
+                    ",DataRilascioDocumento, DataScadenzaDocumento,NomeTrattamento,NoteAggiuntive, TipoDocumento,PrezzoAcquistoTrattamento,Cittadinanza,MetodoPagamento) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ? , ?, ? , ? , ? ,?,?)", Statement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setString(1, p.getIntestatario());
             preparedStatement.setDate(2, Date.valueOf(p.getDataCreazionePrenotazione()));
@@ -116,6 +118,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
             preparedStatement.setString(9, p.getNoteAggiuntive());
             preparedStatement.setString(10, p.getTipoDocumento());
             preparedStatement.setString(12, p.getCittadinanza());
+            preparedStatement.setString(13, "");
 
             preparedStatement.executeUpdate();
 
@@ -173,6 +176,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
                             stmt.setDouble(4, cliente.getCamera().getPrezzoCamera());
                             stmt.setString(5,cliente.getNome()+" "+cliente.getCognome());
                             stmt.setInt(6,cliente.getCamera().getNumeroCamera());
+                            System.out.println("\n STATEMENT \n"+stmt);
                             stmt.executeUpdate();
                             logger.debug("query effettuata con successo");
                     }
@@ -260,7 +264,8 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
                                 rs.getInt("NumeroMaxOcc"),rs.getDouble("PrezzoAcquisto"),rs.getString("NoteCamera"),rs.getString("NomeCamera"));
                         camere.add(camera);
                         String intestatarioCompleto = rs.getString("NomeIntestatario");
-                        String nome = "", cognome = "";
+                        String nome = "";
+                        String cognome = "";
                         if (intestatarioCompleto != null && !intestatarioCompleto.trim().isEmpty()) {
                             String[] parti = intestatarioCompleto.trim().split("\\s+", 2);
 

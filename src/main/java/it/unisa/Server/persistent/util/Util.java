@@ -1,9 +1,6 @@
 package it.unisa.Server.persistent.util;
 
-import it.unisa.Common.Camera;
-import it.unisa.Common.Cliente;
-import it.unisa.Common.Impiegato;
-import it.unisa.Common.Servizio;
+import it.unisa.Common.*;
 
 import java.util.ArrayList;
 
@@ -32,6 +29,8 @@ public class Util {
                     copia.add((T) ((Cliente) elemento).clone());
                 } else if (elemento instanceof Impiegato) {
                     copia.add((T) ((Impiegato) elemento).clone());
+                }else if(elemento instanceof Prenotazione){
+                    copia.add((T) ((Prenotazione) elemento).clone());
                 }
             }
         } catch (CloneNotSupportedException e) {

@@ -14,19 +14,21 @@ import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
 import it.unisa.Server.persistent.obj.catalogues.CatalogueUtils;
 import it.unisa.Storage.DAO.ClienteDAO;
 import it.unisa.Storage.DAO.PrenotazioneDAO;
-import it.unisa.interfacce.FrontDeskInterface;
 import it.unisa.interfacce.ManagerInterface;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface {
+    private static Logger log = LogManager.getLogger(FrontDesk.class);
     private CatalogoCamere camList = new CatalogoCamere();
     private static final int RMI_PORT = 1099;
 
@@ -38,11 +40,9 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     }
 
     //costruttore di Testing
-    public FrontDesk(Invoker invoker, CatalogoPrenotazioni catalogoPrenotazioni, CatalogoClienti catalogoClienti, CatalogoCamere catalogoCamere) throws RemoteException {
+    public FrontDesk(Invoker invoker,  CatalogoCamere catalogoCamere) throws RemoteException {
         super();
         this.invoker = invoker;
-        this.catalogoPrenotazioni = catalogoPrenotazioni;
-        this.catalogoClienti = catalogoClienti;
         this.camList = catalogoCamere;
     }
 
@@ -52,7 +52,7 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
 
     @Override
     public boolean aggiornaStatoCamera(Camera c) throws RemoteException {
-        Logger.getLogger("camera passata = "+c.getNumeroCamera()+ c.getStatoCamera());
+        log.info("camera passata = "+c.getNumeroCamera()+ c.getStatoCamera());
         return camList.aggiornaStatoCamera(c);
     }
 
@@ -63,8 +63,10 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     }
 
     @Override
-    public List<Prenotazione> getPrenotazioni() throws RemoteException{
-        return catalogoPrenotazioni.getListaPrenotazioni();
+    public ArrayList<Prenotazione> getPrenotazioni() throws RemoteException{
+         ArrayList<Prenotazione> list =CatalogoPrenotazioni.getListaPrenotazioni();
+        System.out.println("DENTRO LA CHIAMATA"+list);
+        return list;
     }
 
 
@@ -137,6 +139,7 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         CatalogoPrenotazioni.checkPrenotazione(p);   // Lancia InvalidInputException
         AddPrenotazioneCommand command = new AddPrenotazioneCommand(p);
         invoker.executeCommand(command);
+
     }
 
     @Override

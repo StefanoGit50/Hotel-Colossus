@@ -44,9 +44,9 @@
 .logo {
     -fx-font-family: "Segoe UI Light", "Helvetica Neue Light", "Arial";
     -fx-font-size: 28px;
-    -fx-font-weight: 600;
-    -fx-text-fill: -burgundy-primary;
-    -fx-letter-spacing: 4px; /* ✅ Spaziatura elegante */
+    -fx-font-weight: 800;
+    -fx-text-fill: #641004;
+    -fx-letter-spacing: 4px; /* Spaziatura elegante */
    /* -fx-effect: dropshadow(gaussian, rgba(164, 10, 29, 0.2), 4, 0, 0, 2);*/
 }
 
@@ -345,7 +345,7 @@ filters-section {
 
 /*==================== GUEST MANAGEMENT - REGISTRATION FORM ==================== */
 .registration-header {
-    -fx-background-color: linear-gradient(to right, #641004 0%, #8b1538 100%);
+    -fx-background-color: linear-gradient(to right, #860615 0%, #8b1538 100%);
     -fx-background-radius: 15 15 0 0;
     -fx-padding: 15px;
 }
@@ -490,9 +490,9 @@ filters-section {
 
 .planning-today-btn {
     -fx-background-color: white;
-    -fx-border-color: #667eea;
+    -fx-border-color: -burgundy-primary;       /*#667eea;*/
     -fx-border-width: 2;
-    -fx-text-fill: #667eea;
+    -fx-text-fill: -burgundy-primary;  /*#667eea;*/
     -fx-font-weight: 500;
     -fx-padding: 8px 16px;
     -fx-background-radius: 8;
@@ -501,7 +501,7 @@ filters-section {
 }
 
 .planning-today-btn:hover {
-    -fx-background-color: #667eea;
+    -fx-background-color: -burgundy-primary; /*#667eea;*/
     -fx-text-fill: white;
 }
 
@@ -524,7 +524,7 @@ filters-section {
 }
 
 .planning-room-header {
-    -fx-background-color: linear-gradient(to right, #667eea, #764ba2);
+    -fx-background-color: linear-gradient(to right, #b63726, #520C02);
     -fx-border-color: white;
     -fx-border-width: 0 1 0 0;
 }

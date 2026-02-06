@@ -78,6 +78,10 @@ public class PrenotazioniDatabase {
         ServizioDAO servizioDAO=new ServizioDAO();
         ArrayList<Servizio> servizioDalDB = (ArrayList<Servizio>) servizioDAO.doRetriveByAttribute("Nome","Parcheggio");
         servizio.add(servizioDalDB.getFirst());
+        servizioDalDB = (ArrayList<Servizio>) servizioDAO.doRetriveByAttribute("Nome","Spa e Benessere");
+        servizio.add(servizioDalDB.getFirst());
+        servizioDalDB = (ArrayList<Servizio>) servizioDAO.doRetriveByAttribute("Nome","Transfer Aeroporto");
+        servizio.add(servizioDalDB.getFirst());
 
         ArrayList<Cliente> cliente=new ArrayList<>();
 
@@ -105,6 +109,8 @@ public class PrenotazioniDatabase {
         CatalogoPrenotazioni.addPrenotazioni(prenotazione);
         // prendo dal database la prenotazione appena inserita
         Prenotazione p =fds.doRetriveByKey(prenotazione.getIDPrenotazione());
+        System.out.println(p);
+        System.out.println(prenotazione);
 
         assertEquals(p,prenotazione);
     }
