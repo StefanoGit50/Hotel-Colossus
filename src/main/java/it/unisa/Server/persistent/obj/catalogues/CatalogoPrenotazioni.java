@@ -162,7 +162,7 @@ public class CatalogoPrenotazioni implements Serializable {
      * @post se result == true allora fds.doUpdate(prenotazione) è stato invocato con successo
      */
     public static synchronized boolean UpdatePrenotazioni(Prenotazione prenotazione) {
-        if(prenotazione == null|| !listaPrenotazioni.contains(prenotazione)) {
+        if(prenotazione == null) {
             return false;
         }
 

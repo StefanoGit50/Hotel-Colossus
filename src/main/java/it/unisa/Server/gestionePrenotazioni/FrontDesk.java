@@ -124,8 +124,7 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     // Invoker --> mantiene l'ordine delle chiamate ai comandi
     private Invoker invoker = new Invoker();
     // Cataloghi
-    private CatalogoPrenotazioni catalogoPrenotazioni = new CatalogoPrenotazioni();
-    private CatalogoClienti catalogoClienti = new CatalogoClienti();
+
 
 
     // COMANDI PRENOTAZIONE

@@ -471,9 +471,6 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
     public synchronized void doUpdate(Prenotazione p) throws SQLException {
         String[] attributi = new String[17];
 
-        CameraDAO cameraDAO = new CameraDAO();
-        ServizioDAO serviziDAO = new ServizioDAO();
-
         String[] sql = new String[2];
         sql[0] = " UPDATE prenotazione " + " SET IDPrenotazione = ? , NomeIntestatario = ? , DataCreazionePrenotazione = ? , DataArrivoCliente = ? , DataPartenzaCliente = ?, DataEmissioneRicevuta = ? , " +
                 "NumeroDocumento = ? , DataRilascioDocumento = ? , DataScadenzaDocumento = ? , NomeTrattamento = ? , NoteAggiuntive = ? ," +
@@ -528,17 +525,20 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
                 attributi[16] = String.valueOf(p.getCittadinanza());
                 preparedStatement.setInt(18,p.getIDPrenotazione());
 
+                System.out.println(preparedStatement);
                 preparedStatement.executeUpdate();
 
-                if (p.getListaClienti() != null || !p.getListaClienti().isEmpty()) {
+                if (p.getListaClienti() == null || p.getListaClienti().isEmpty()) {
+                    throw new NoSuchElementException("registrare prima il cliente");
+                }else {
                     for (Cliente c : p.getListaClienti()) {
-                       if(!CatalogoClienti.getListaClienti().contains(c)){
-                                throw new NoSuchElementException("registrare prima il cliente");
-                       }
-
                         clienteDAO.doUpdate(c);
                     }
                 }
+
+
+
+
 
                 preparedStatement = connection.prepareStatement(sql[1]);
 

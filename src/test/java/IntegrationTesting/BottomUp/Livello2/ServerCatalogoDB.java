@@ -74,9 +74,9 @@ public class ServerCatalogoDB {
 
         prenotazione =new Prenotazione(
                 LocalDate.now(),                        // dataCreazionePrenotazione (Oggi)
-                LocalDate.of(2024, 8, 10),              // dataInizio
-                LocalDate.of(2024, 8, 20),              // dataFine
-                LocalDate.of(2024, 8,20),
+                LocalDate.of(2026, 8, 10),              // dataInizio
+                LocalDate.of(2026, 8, 20),              // dataFine
+                null,
                 new Trattamento("Pensione Completa",45),           // trattamento (Assumendo sia un Enum)
                 45.0,
                 "Carta d'Identità",                     // tipoDocumento
@@ -102,7 +102,7 @@ public class ServerCatalogoDB {
         DBPopulator.populator();
         CatalogoPrenotazioni.aggiornalista();
         CatalogoClienti.aggiornalista();
-        catCamere.getListaCamere().clear();
+        CatalogoCamere.aggiornalista();
     }
 
     @Test
@@ -170,7 +170,7 @@ public class ServerCatalogoDB {
         Prenotazione p = new Prenotazione(        // IDPrenotazione
                 LocalDate.now(),                        // dataCreazionePrenotazione
                 LocalDate.now(),                        // dataInizio
-                LocalDate.of(2026, 02, 01),             // dataFine
+                LocalDate.now().plusDays(5),             // dataFine
                 null,
                 new Trattamento("MEZZA PENSIONE", 60),
                 60.0,
@@ -181,7 +181,7 @@ public class ServerCatalogoDB {
                 "",                                     // noteAggiuntive
                 servizio,                               // listaServizi (Assicurati che sia un ArrayList!)
                 clienti,                                // listaClienti
-                "3453m",                             // numeroDocumento
+                "3453M",                             // numeroDocumento
                 "",
                 "italiana"
         );
@@ -229,8 +229,8 @@ public class ServerCatalogoDB {
 
         prenotazione= (Prenotazione) assertDoesNotThrow(()->frontDeskStorage.doRetriveByKey(p3.getIDPrenotazione()));
 
-        assertNotEquals(prenotazione, p2);
-        assertNotEquals(CatalogoPrenotazioni.getPrenotazione(prenotazione.getIDPrenotazione()), p2); //verifico se il catalogo ha preso la modifica
+        assertNotEquals(prenotazione, p3);
+        assertNotEquals(CatalogoPrenotazioni.getPrenotazione(prenotazione.getIDPrenotazione()), p3); //verifico se il catalogo ha preso la modifica
     }
 
     @Test
@@ -304,19 +304,14 @@ public class ServerCatalogoDB {
     @Test
     @DisplayName("Bottom up 4.1 TC 23: LV2 Test controllo dell interazione sul UNBan dell utente fra frontdeskServer command pattern e DB")
     @Tag("integration-LV2")
-    public void UnBanClienteTest() throws RemoteException {
-      //TODO  ArrayList<Cliente> c1= frontDesk.getListClienti();
-        for(Cliente c: cliente){ // TODO c1
-            if(c.isBlacklisted()){
-                frontDesk.banCliente(c);
-            }
-        }
-        Collection <?> clienti= null;
-        try{
-            clienti= frontDeskStorage.doRetriveAll("decrescente");
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-        assertEquals(clienti,CatalogoClienti.getListaClienti());
+    public void UnBanClienteTest() throws RemoteException, CloneNotSupportedException {
+        frontDeskStorage = new ClienteDAO();
+
+        Cliente c= CatalogoClienti.getListaClienti().get(0);
+        assertNotNull(c);
+        frontDesk.unBanCliente(c);
+        assertFalse(CatalogoClienti.getlistaBannati().contains(c));
+        assertNotEquals(CatalogoClienti.getCliente(c.getCf()), c);
     }
+
 }
