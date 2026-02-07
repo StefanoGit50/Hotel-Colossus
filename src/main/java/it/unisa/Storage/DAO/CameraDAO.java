@@ -64,7 +64,6 @@ public class CameraDAO implements FrontDeskStorage<Camera>, GovernanteStorage<Ca
                     preparedStatement.setInt(1,integer);
                     resultSet = preparedStatement.executeQuery();
 
-
                     if(resultSet.next()){
                         camera.setNumeroCamera(resultSet.getInt("NumeroCamera"));
                         camera.setCapacità(resultSet.getInt("NumeroMaxOcc"));

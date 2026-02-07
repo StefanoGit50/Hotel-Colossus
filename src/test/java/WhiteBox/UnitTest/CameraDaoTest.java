@@ -1,9 +1,11 @@
 package WhiteBox.UnitTest;
 
 import it.unisa.Common.Camera;
+import it.unisa.Common.Cliente;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.DAO.CameraDAO;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.DisabledIf;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.sql.ResultSet;
@@ -25,7 +27,6 @@ public class CameraDaoTest {
         DBPopulator.cancel();
     }
 
-
     @BeforeEach
     public void setUp() throws SQLException {
         // Inizializza DAO e oggetto Camera
@@ -39,29 +40,71 @@ public class CameraDaoTest {
         DBPopulator.cancel();
     }
 
+    @Test
+    @Tag("True")
+    @DisplayName("TC1: doDelete() quando va tutto")
+    public void doDelete(){
+       assertDoesNotThrow(()->cameraDAO.doDelete(camera));
+    }
+
+    @Test
+    @Tags({@Tag("Exception"),@Tag("Error")})
+    @DisplayName("TC2: doDelete() quando non va a buon fine")
+    public void doDeleteException(){
+        assertThrows(NoSuchElementException.class,()->cameraDAO.doDelete(null));
+    }
+
+    @Test
+    @Tags({@Tag("Exception"),@Tag("Error")})
+    @DisplayName("TC3: doRetriveByKey() quando lancia l'eccezione")
+    public void doRetriveByKeyException(){
+        assertThrows(SQLException.class,()->cameraDAO.doRetriveByKey(new Cliente()));
+    }
 
     @Test
     @Tag("True")
-    @DisplayName("TC1: doSaveAll() quando è tutto vero")
+    @DisplayName("TC4: doRetriveByKey() quando va tutto a buon fine")
+    public void doRetriveByKeyAllTrue() throws SQLException{
+      Camera camera2 = new Camera(101,Stato.Libera,2,80.0,"Vista interna","Camera Standard");
+      Camera camera1 = assertDoesNotThrow(()->cameraDAO.doRetriveByKey(101));
+      assertEquals(camera2,camera1);
+    }
+
+    @Test
+    @Tag("False")
+    @DisplayName("TC5: doRetriveByKey() quando il resultSet non va a buon fine")
+    public void doRetriveByKeyResulSetFalse(){
+        Camera camera =  new Camera();
+        Camera camera1 = assertDoesNotThrow(()->cameraDAO.doRetriveByKey(104));
+        assertEquals(camera,camera1);
+    }
+
+    @Test
+    @Tag("True")
+    @DisplayName("TC6: doSaveAll() quando è tutto vero")
     public void doSaveAllTrue(){
         DBPopulator.cancel();
         DBPopulator.populator();
         ArrayList<Camera> cameras = new ArrayList<>();
         cameras.add(camera);
-      assertDoesNotThrow(()->cameras.add(new Camera(105,Stato.Libera,3,155.0,"Sp","")));
+        cameras.add(new Camera(105,Stato.Libera,3,155.0,"GiorgioVanni è celiaco","Camera con balcone"));
+        cameras.add(new Camera(106,Stato.Libera,4,160.0,"Annapia ha le lentigini","Camera con 2 letti"));
+        assertDoesNotThrow(()->cameraDAO.doSaveAll(cameras));
     }
+
     @Test
     @Tags({@Tag("Error"),@Tag("Exception")})
-    @DisplayName("TC2: doSave() quando è tutto falso")
+    @DisplayName("TC7: doSave() quando è tutto falso")
    public void doSaveAllFalse() throws SQLException {
         DBPopulator.cancel();
         DBPopulator.populator();
         ArrayList<Camera> cameras = new ArrayList<>();
        assertThrows(NullPointerException.class,()->cameraDAO.doSaveAll(cameras));
    }
+
    @Test
    @Tag("True")
-   @DisplayName("TC3: doRetriveAll() quando è tutto vero")
+   @DisplayName("TC8: doRetriveAll() quando è tutto vero")
    public void doRetriveAllTrue() throws SQLException {
         DBPopulator.cancel();
         DBPopulator.populator();
@@ -75,9 +118,12 @@ public class CameraDaoTest {
         assertEquals(cameras1,cameras);
     }
 
+
+
+
     @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
-    @DisplayName("TC4: doRetriveAll() quando order è null")
+    @DisplayName("TC9: doRetriveAll() quando order è null")
     public void doRetriveAllOrderNull() throws SQLException{
         DBPopulator.cancel();
         DBPopulator.populator();
@@ -86,7 +132,7 @@ public class CameraDaoTest {
 
     @Test
     @Tag("False")
-    @DisplayName("TC5: doRetriveAll() quando è tutto false")
+    @DisplayName("TC10: doRetriveAll() quando è tutto false")
     public void doRetriveAllFalseTranneOrder() throws SQLException {
         DBPopulator.cancel();
         ArrayList<Camera> cameras;
@@ -97,7 +143,7 @@ public class CameraDaoTest {
 
     @Test
     @Tag("False")
-    @DisplayName("TC6: doUpdate() quando è False che camere è uguale a null")
+    @DisplayName("TC11: doUpdate() quando è False che camere è uguale a null")
     public void doUpdateCameraUgualeANull(){
         DBPopulator.cancel();
         DBPopulator.populator();
@@ -106,7 +152,7 @@ public class CameraDaoTest {
 
     @Test
     @Tag("True")
-    @DisplayName("TC7: doUpdate() quando è tutto vero")
+    @DisplayName("TC12: doUpdate() quando è tutto vero")
     public void doUpdateAllTrue() throws SQLException{
         DBPopulator.cancel();
         DBPopulator.populator();
@@ -116,7 +162,7 @@ public class CameraDaoTest {
 
     @Test
     @Tags({@Tag("Error"),@Tag("Exception")})
-    @DisplayName("TC8: doRetriveAttribute() quando manda l'eccezione")
+    @DisplayName("TC13: doRetriveAttribute() quando manda l'eccezione")
     public void doRetriveAttribute(){
         DBPopulator.cancel();
         DBPopulator.populator();
@@ -125,7 +171,7 @@ public class CameraDaoTest {
 
     @Test
     @Tag("True")
-    @DisplayName("TC9: doRetriveAttribute() quando va tutto bene")
+    @DisplayName("TC14: doRetriveAttribute() quando va tutto bene")
     public void doRetriveAttributeAllTrue() throws SQLException {
         DBPopulator.cancel();
         DBPopulator.populator();
@@ -141,7 +187,7 @@ public class CameraDaoTest {
 
     @Test
     @Tag("False")
-    @DisplayName("TC10: doRetriveAttribute() quando va male")
+    @DisplayName("TC15: doRetriveAttribute() quando va male")
     public void doRetriveAttributeException() throws SQLException {
         DBPopulator.cancel();
         DBPopulator.populator();
