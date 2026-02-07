@@ -86,7 +86,7 @@ public class CatalogoClienti implements Serializable {
     public static boolean updateCliente(Cliente cliente){
         boolean flag = false; // flag ci serve per sapere se abbiamo trovato e rimosso il vecchio
 
-        System.out.println("STAMPO IL CONTAINS" +listaClienti.contains(cliente));
+
             Iterator<Cliente> it = listaClienti.iterator();
             while (it.hasNext()) {
                 Cliente c = it.next();

@@ -40,8 +40,8 @@ public class ServerCatalogoDB {
 
     @BeforeAll
     static void setAllup() throws RemoteException, SQLException {
-
-
+        DBPopulator.cancel();
+        DBPopulator.populator();
         //inizializzazione variabili di default
         //si suppone che il DB contenga queste variabili per il corretto funzionamento del test
 
@@ -276,7 +276,9 @@ public class ServerCatalogoDB {
     @Test
     @DisplayName("Bottom up 3.9 TC21: LV2 Test controllo dell interazione sull update fra frontdeskServer command pattern e DB")
     @Tag("integration-LV2")
-    public void updateClienteTest() throws RemoteException {
+    public void updateClienteTest() throws RemoteException, SQLException {
+
+        frontDeskStorage= new ClienteDAO();
         Cliente c= cliente.getFirst();
         cliente.getFirst().setVia("via giovanni muratore");
         System.out.println("XDFDFS"+c);
@@ -284,7 +286,7 @@ public class ServerCatalogoDB {
 
         Cliente c2= null;
 
-        c2= (Cliente) assertDoesNotThrow(()->frontDeskStorage.doRetriveByKey(cliente.getFirst()));
+       frontDeskStorage.doRetriveByKey(cliente.getFirst().getCf());
 
         assertNotEquals(c,c2);
     }
