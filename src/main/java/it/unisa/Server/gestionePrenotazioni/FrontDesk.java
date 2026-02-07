@@ -187,7 +187,21 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         UnBanCommand command = new UnBanCommand(c.getCf());
         invoker.executeCommand(command);
     }
-    //TODO: COMMAND PER RICEVERE LA LISTA UTENTI
+
+    @Override
+    public ArrayList<Prenotazione> getListaPrenotazioni() throws RemoteException, IllegalAccess {
+        RetrieveAllPCommand command = new RetrieveAllPCommand();
+        invoker.executeCommand(command);
+        return command.getPrenotazioni();
+    }
+
+    @Override
+    public ArrayList<Cliente> getListaClienti() throws RemoteException, IllegalAccess {
+        RetrieveAllCCommand command = new RetrieveAllCCommand();
+        invoker.executeCommand(command);
+        return command.getClienti();
+    }
+
 
 
 
@@ -226,32 +240,7 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
      */
     @Override
     public Prenotazione getPrenotazioneById(int id) throws RemoteException {
-        PrenotazioneDAO dao = new PrenotazioneDAO();
-        Prenotazione prenotazione = null;
-        try {
-            prenotazione = dao.doRetriveByKey(id);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return prenotazione;
+        return CatalogoPrenotazioni.getPrenotazione(id);
     }
 
-    /**
-     * @param cf del cliente.
-     * @return l'oggetto {@code Cliente} tale per cui il cf corrisponde, {@code null} altrimenti.
-     * @throws RemoteException
-     */
-    @Override
-    public Cliente getClienteByCf(String cf) throws RemoteException {
-        if (cf == null || cf.isBlank())
-            return null;
-        ClienteDAO dao = new ClienteDAO();
-        Cliente cliente = null;
-        try {
-            cliente = dao.doRetriveByKey(cf);
-        } catch (SQLException e) {
-            throw new RemoteException(e.getMessage());
-        }
-        return cliente;
-    }
 }

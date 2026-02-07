@@ -174,7 +174,5 @@ public class Test {
 //        System.out.println(campione);
 //        System.out.println(p.equals(campione));
 
-        ArrayList<Cliente> cliente = frontDesk.getListaClienti();
-        cliente.forEach(System.out::println);
     }
 }

@@ -7,6 +7,7 @@ import it.unisa.Server.ObserverCamereInterface;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.List;
 
 public interface FrontDeskInterface extends Remote, ObserverCamereInterface
@@ -110,6 +111,22 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
      */
     void unBanCliente(Cliente c) throws RemoteException, IllegalAccess;
 
+    /**
+     * Recupera la lista {@code list} di tutte le prenotazioni presenti nel sistema.
+     *
+     * @post {@code list} ha dimensioni tra 0 (all'avvio non è presente alcuna prenotazione) e # prenotazioni.
+     * @throws RemoteException .
+     */
+    ArrayList<Prenotazione> getListaPrenotazioni() throws RemoteException, IllegalAccess;
+
+    /**
+     * Recupera la lista {@code list} di tutti i clienti presenti nel sistema.
+     *
+     * @post {@code list} ha dimensioni tra 0 (all'avvio non è presente alcun cliente) e # clienti.
+     * @throws RemoteException .
+     */
+    ArrayList<Cliente> getListaClienti() throws RemoteException, IllegalAccess;
+
     //autenticazione
     Impiegato authentication(String username, String password,String pwd2) throws RemoteException, IllegalAccess;
 
@@ -136,11 +153,4 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
     Prenotazione getPrenotazioneById(int id) throws RemoteException;
 
 
-    /**
-     * Restituisce cliente in base al cf.
-     *
-     * @pre cf != null
-     * @post result != null
-     */
-    Cliente getClienteByCf(String cf) throws RemoteException;
 }

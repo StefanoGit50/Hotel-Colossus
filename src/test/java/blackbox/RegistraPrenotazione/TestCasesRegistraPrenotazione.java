@@ -1,10 +1,15 @@
 package blackbox.RegistraPrenotazione;
 
+import IntegrationTesting.BottomUp.Livello3.ClientRMIServer;
 import it.unisa.Common.*;
+import it.unisa.Server.IllegalAccess;
+import it.unisa.Server.gestionePrenotazioni.FrontDesk;
 import it.unisa.Server.persistent.obj.catalogues.InvalidInputException;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.DAO.*;
 import it.unisa.interfacce.FrontDeskInterface;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.*;
 
 import java.net.MalformedURLException;
@@ -20,6 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @Tag("registraPrenotazione")
 public class TestCasesRegistraPrenotazione {
 
+    private static final Logger log = LogManager.getLogger(TestCasesRegistraPrenotazione.class);
+
     public static FrontDeskInterface frontDesk;
     public static ArrayList<Servizio> listaServizi = new ArrayList<>();
     public static ArrayList<Camera> listaCamere = new ArrayList<>();
@@ -27,10 +34,63 @@ public class TestCasesRegistraPrenotazione {
     public static Trattamento trattamento = new Trattamento("Mezza Pensione", 35);
     public static int autoIncrement; // simula l'autoincrement del DB
 
+    private static Thread serverThread;
+    private static final int PORT = 1099;
+    private static final String SERVICE_NAME = "GestionePrenotazioni";
+
+
+    // Metodo che blocca il test finché il server non risponde
+    private static void waitForServerToStart() {
+        boolean isConnected = false;
+        int tentativi = 0;
+        int maxTentativi = 20; // Aspetta massimo 10 secondi (20 * 500ms)
+
+        while (!isConnected && tentativi < maxTentativi) {
+            try {
+                // Proviamo a vedere se "GestionePrenotazioni" esiste nel registro
+
+                String url = "rmi://localhost:" + PORT + "/" + SERVICE_NAME;
+                Naming.lookup(url);
+
+                isConnected = true;
+                log.info("✓ Server rilevato online al tentativo " + (tentativi + 1));
+
+            } catch (Exception e) {
+                // Il server non è ancora pronto
+                tentativi++;
+                System.out.println("... server non ancora pronto (tentativo " + tentativi + ")...");
+                try {
+                    Thread.sleep(500); // Aspetta mezzo secondo
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+
+        if (!isConnected) {
+            throw new RuntimeException("TIMEOUT: Il Server RMI non si è avviato in tempo.");
+        }
+    }
 
     @BeforeAll
-    public static void istantiateFrontDesk() throws RemoteException, NotBoundException, MalformedURLException {
-        frontDesk = (FrontDeskInterface) Naming.lookup("rmi://localhost:1099/GestionePrenotazioni");
+    public static void setUp() throws RemoteException, NotBoundException, MalformedURLException, InterruptedException, IllegalAccess {
+
+        log.info("--- AVVIO SERVER IN BACKGROUND ---");
+
+        //  Lanciamo il server su un thread separato
+        serverThread = new Thread(() -> {
+            try {
+                // chiamerà il tuo costruttore che contiene il .join()
+                new FrontDesk();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        serverThread.setDaemon(true); //  Muore quando finisce il test
+        serverThread.start();
+
+        waitForServerToStart();
+        frontDesk = (FrontDeskInterface) Naming.lookup("rmi://localhost:"+PORT+"/"+SERVICE_NAME);
 
         // Lista clienti
 
