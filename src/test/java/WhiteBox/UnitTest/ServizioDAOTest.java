@@ -2,6 +2,7 @@ package WhiteBox.UnitTest;
 
 
 import it.unisa.Common.Servizio;
+import it.unisa.Common.Trattamento;
 import it.unisa.Storage.DAO.ServizioDAO;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,6 +36,26 @@ public class ServizioDAOTest {
         assertDoesNotThrow(()->servizioDAO.doDelete(new Servizio("WiFi Premium",5)));
     }
     @Test
+    @Tag("True")
+    @DisplayName("doSave() quando va tutto a buon fine")
+    public void doSave(){
+        DBPopulator.cancel();
+        Servizio servizio1 = new Servizio("Parcheggio",20.0);
+        assertDoesNotThrow(()->servizioDAO.doSave(servizio1));
+    }
+    @Test
+    @Tags({@Tag("Exception"),@Tag("Error")})
+    @DisplayName("doSave() quando lancia l'eccezzione")
+    public void doSaveException(){
+        DBPopulator.cancel();
+        Servizio servizio1 = new Servizio("Parcheggio",20.0);
+        assertDoesNotThrow(()->servizioDAO.doSave(servizio1));
+        Servizio servizio2 = new Servizio("Parcheggio",20.0);
+        assertThrows(SQLException.class,()->servizioDAO.doSave(servizio2));
+    }
+
+
+    @Test
     @DisplayName("TC39: doDelete(Servizio servizio) quando o la chiave di servizio o servizio sono uguale a null")
     @Tags({@Tag("Exception"),@Tag("Error")})
      public void doDeleteException() throws SQLException {
@@ -57,8 +78,7 @@ public class ServizioDAOTest {
     @Tags({@Tag("Error"),@Tag("Exception"),@Tag("False")})
     @Test
     public void doRetriveByKeyResultSetIsFalse() throws SQLException{
-        DBPopulator dbPopulator = new DBPopulator();
-        dbPopulator.cancel();
+        DBPopulator.cancel();
         assertThrows(NoSuchElementException.class,()->servizioDAO.doRetriveByKey("Spa"));
     }
 
