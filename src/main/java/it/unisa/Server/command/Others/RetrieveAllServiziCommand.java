@@ -1,6 +1,7 @@
 package it.unisa.Server.command.Others;
 
 import it.unisa.Common.Servizio;
+import it.unisa.Server.IllegalAccess;
 import it.unisa.Server.command.Command;
 import it.unisa.Storage.DAO.ServizioDAO;
 
@@ -39,11 +40,12 @@ public class RetrieveAllServiziCommand implements Command {
      * @post servizi = lista di tutti i servizi presenti nel sistema
      */
     @Override
-    public void execute() {
+    public void execute() throws IllegalAccess {
         try {
             servizi = (ArrayList<Servizio>) new ServizioDAO().doRetriveAll("nome asc");
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new IllegalAccess("ERROR: nessun servizio recuperato");
         }
     }
 

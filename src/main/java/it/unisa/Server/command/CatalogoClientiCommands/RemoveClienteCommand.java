@@ -1,6 +1,7 @@
 package it.unisa.Server.command.CatalogoClientiCommands;
 
 import it.unisa.Common.Cliente;
+import it.unisa.Server.IllegalAccess;
 import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
 import it.unisa.Storage.DAO.ClienteDAO;
@@ -83,7 +84,7 @@ public class RemoveClienteCommand implements Command {
      * @post not CatalogoClienti.listaClienti.contains(cliente) && !CatalogoClienti.listaClientiBannati.contains(cliente)
      */
     @Override
-    public void execute() {
+    public void execute() throws IllegalAccess {
         try {
             // Riprendi il cliente come lo è attualmente nel catalogo
             Cliente c = catalogue.getCliente(cliente.getCf());
@@ -98,10 +99,9 @@ public class RemoveClienteCommand implements Command {
 
             ClienteDAO clienteDAO = new ClienteDAO();
             clienteDAO.doDelete(c);
-        }catch (CloneNotSupportedException e) {
+        }catch (CloneNotSupportedException | SQLException e) {
             e.printStackTrace();
-        }catch (SQLException sqlException){
-            sqlException.printStackTrace();
+            throw new IllegalAccess("ERROR: il cliente non è stato rimosso");
         }
     }
 

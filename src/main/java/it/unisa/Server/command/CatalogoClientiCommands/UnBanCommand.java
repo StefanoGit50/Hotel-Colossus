@@ -1,6 +1,7 @@
 package it.unisa.Server.command.CatalogoClientiCommands;
 
 import it.unisa.Common.Cliente;
+import it.unisa.Server.IllegalAccess;
 import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
 import it.unisa.Storage.DAO.ClienteDAO;
@@ -61,7 +62,7 @@ public class UnBanCommand implements Command {
     private Cliente c = null;
 
     @Override
-    public void execute() {
+    public void execute() throws IllegalAccess {
         boolean bool=false;
         try {
              c = CatalogoClienti.getCliente(CFCliente);
@@ -74,11 +75,12 @@ public class UnBanCommand implements Command {
                     }
                 }
                 if (!bool) {
-                    throw new RuntimeException("Unban non disponibile");
+                    throw new RuntimeException("ERROR: Unban non riuscito");
                 }
             }
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
+            throw new IllegalAccess("ERROR: lo stato di ban del cliente non è stato modificato");
         }
     }
 

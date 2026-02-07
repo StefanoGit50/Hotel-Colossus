@@ -2,6 +2,7 @@ package it.unisa.Server.gestionePrenotazioni;
 
 import it.unisa.Server.Autentication.Autentication;
 import it.unisa.Server.IllegalAccess;
+import it.unisa.Server.command.Others.RetrieveAllCamereCommand;
 import it.unisa.Server.command.Others.RetrieveAllServiziCommand;
 import it.unisa.Server.command.Others.RetrieveAllTrattamentiCommand;
 import it.unisa.interfacce.*;
@@ -226,6 +227,19 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         RetrieveAllTrattamentiCommand command = new RetrieveAllTrattamentiCommand();
         invoker.executeCommand(command);
         return command.getTrattamenti();
+    }
+
+    /**
+     * Recupera la lista {@code list} di tutte le camere presenti nel sistema.
+     *
+     * @throws RemoteException .
+     * @post {@code list} ha dimensioni tra 0 (se all'avvio non è presente alcuna camere) e # camere.
+     */
+    @Override
+    public ArrayList<Camera> getListaCamere() throws RemoteException, IllegalAccess {
+        RetrieveAllCamereCommand command = new RetrieveAllCamereCommand();
+        invoker.executeCommand(command);
+        return command.getCamere();
     }
 
 

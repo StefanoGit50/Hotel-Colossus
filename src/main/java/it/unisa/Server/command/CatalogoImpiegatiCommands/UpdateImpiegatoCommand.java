@@ -1,6 +1,7 @@
 package it.unisa.Server.command.CatalogoImpiegatiCommands;
 
 import it.unisa.Common.Impiegato;
+import it.unisa.Server.IllegalAccess;
 import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoImpiegati;
 import it.unisa.Storage.DAO.ImpiegatoDAO;
@@ -85,7 +86,7 @@ public class UpdateImpiegatoCommand implements Command {
      * @post CatalogoImpiegati.listaImpiegati.stream().anyMatch(i | i.codiceFiscale == impiegato.codiceFiscale)
      */
     @Override
-    public void execute() {
+    public void execute() throws IllegalAccess {
         try {
             Impiegato i = CatalogoImpiegati.getImpiegato(impiegato.getCodiceFiscale());
             ArrayList<Impiegato> li = CatalogoImpiegati.getListaImpiegati();
@@ -105,6 +106,7 @@ public class UpdateImpiegatoCommand implements Command {
                         impiegatoDAO.doUpdate(i);
                     }catch(SQLException sqlException){
                         sqlException.printStackTrace();
+                        throw new IllegalAccess("ERROR: l'impiegato non è stato modificato");
                     }
                     break;
                 }

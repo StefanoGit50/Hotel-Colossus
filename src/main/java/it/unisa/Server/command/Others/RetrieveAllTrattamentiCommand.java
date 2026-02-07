@@ -1,6 +1,7 @@
 package it.unisa.Server.command.Others;
 
 import it.unisa.Common.Trattamento;
+import it.unisa.Server.IllegalAccess;
 import it.unisa.Server.command.Command;
 import it.unisa.Storage.DAO.TrattamentoDAO;
 
@@ -39,11 +40,12 @@ public class RetrieveAllTrattamentiCommand implements Command {
      * @post trattamenti = lista di tutti i trattamenti presenti nel sistema
      */
     @Override
-    public void execute() {
+    public void execute() throws IllegalAccess {
         try {
             trattamenti = (ArrayList<Trattamento>) new TrattamentoDAO().doRetriveAll("nome asc");
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new IllegalAccess("ERROR: nessun servizio recuperato");
         }
     }
 
