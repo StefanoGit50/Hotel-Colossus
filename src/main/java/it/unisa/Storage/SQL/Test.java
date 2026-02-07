@@ -1,10 +1,8 @@
 package it.unisa.Storage.SQL;
 
 import it.unisa.Common.*;
-import it.unisa.Server.gestionePrenotazioni.FrontDesk;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.DAO.PrenotazioneDAO;
-import it.unisa.Storage.DAO.ServizioDAO;
 import it.unisa.interfacce.FrontDeskInterface;
 
 import java.net.MalformedURLException;
@@ -14,9 +12,6 @@ import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.NoSuchElementException;
 
 public class Test {
 
@@ -156,23 +151,15 @@ public class Test {
         );
     }
 
-    static void main() throws Exception {
+    public static void main(String[] args) throws Exception {
 
         Test.istantiateNumberOfInstances();
         Test.istantiateFrontDesk();
-//        PrenotazioneDAO dao = new PrenotazioneDAO();
-//        Prenotazione p = Test.createBasePrenotazione(), campione;
-//        p.setIDPrenotazione(autoIncrement);
-//        dao.doSave(p);
-//        campione = dao.doRetriveByKey(autoIncrement);
-//
-//        listaServizi = new ArrayList<>(1);
-//  listaServizi.add(new Servizio("Colazione in Camera", 12.00));
-//        campione.setListaServizi(listaServizi);
-//        System.out.println(autoIncrement);
-//        System.out.println(p);
-//        System.out.println(campione);
-//        System.out.println(p.equals(campione));
 
+        ArrayList<Servizio> s = frontDesk.getListaServizi();
+        ArrayList<Trattamento> t = frontDesk.getListaTrattamenti();
+
+        s.forEach(System.out::println);
+        t.forEach(System.out::println);
     }
 }

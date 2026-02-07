@@ -2,6 +2,8 @@ package it.unisa.Server.gestionePrenotazioni;
 
 import it.unisa.Server.Autentication.Autentication;
 import it.unisa.Server.IllegalAccess;
+import it.unisa.Server.command.Others.RetrieveAllServiziCommand;
+import it.unisa.Server.command.Others.RetrieveAllTrattamentiCommand;
 import it.unisa.interfacce.*;
 import it.unisa.Server.command.*;
 import it.unisa.Common.*;
@@ -10,18 +12,14 @@ import it.unisa.Server.command.CatalogoClientiCommands.*;
 import it.unisa.Server.command.CatalogoImpiegatiCommands.*;
 import it.unisa.Server.command.CatalogoPrenotazioniCommands.*;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
-import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
 import it.unisa.Server.persistent.obj.catalogues.CatalogueUtils;
-import it.unisa.Storage.DAO.ClienteDAO;
-import it.unisa.Storage.DAO.PrenotazioneDAO;
 import org.apache.logging.log4j.LogManager;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
-import java.sql.SQLException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -202,7 +200,33 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         return command.getClienti();
     }
 
+    /**
+     * Recupera la lista {@code list} di tutti i servizi presenti nel sistema.
+     *
+     * @throws RemoteException .
+     * @throws IllegalAccess   .
+     * @post {@code list} ha dimensioni tra 0 (se all'avvio non è presente alcun servizio) e # Servizi.
+     */
+    @Override
+    public ArrayList<Servizio> getListaServizi() throws RemoteException, IllegalAccess {
+        RetrieveAllServiziCommand command = new RetrieveAllServiziCommand();
+        invoker.executeCommand(command);
+        return command.getServizi();
+    }
 
+    /**
+     * Recupera la lista {@code list} di tutti i trattamenti presenti nel sistema.
+     *
+     * @throws RemoteException .
+     * @throws IllegalAccess   .
+     * @post {@code list} ha dimensioni tra 0 (se all'avvio non è presente alcun trattamento) e # Trattamenti.
+     */
+    @Override
+    public ArrayList<Trattamento> getListaTrattamenti() throws RemoteException, IllegalAccess {
+        RetrieveAllTrattamentiCommand command = new RetrieveAllTrattamentiCommand();
+        invoker.executeCommand(command);
+        return command.getTrattamenti();
+    }
 
 
     @Override
