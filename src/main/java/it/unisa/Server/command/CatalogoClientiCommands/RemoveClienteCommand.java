@@ -84,8 +84,25 @@ public class RemoveClienteCommand implements Command {
      */
     @Override
     public void execute() {
-        CatalogoClienti.removeCliente(cliente);
+        try {
+            // Riprendi il cliente come lo è attualmente nel catalogo
+            Cliente c = catalogue.getCliente(cliente.getCf());
+            ArrayList<Cliente> lc;
+            if(c.isBlacklisted()) {
+                lc = CatalogoClienti.getListaClientiBannati();
+                lc.remove(c);
+            } else {
+                lc = CatalogoClienti.getListaClienti();
+                lc.remove(c);
+            }
 
+            ClienteDAO clienteDAO = new ClienteDAO();
+            clienteDAO.doDelete(c);
+        }catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }catch (SQLException sqlException){
+            sqlException.printStackTrace();
+        }
     }
 
 
@@ -98,7 +115,7 @@ public class RemoveClienteCommand implements Command {
     public void undo() {
         ArrayList<Cliente> lc;
         if(cliente.isBlacklisted()) {
-            lc = catalogue.getListaClientiBannati();
+            lc = CatalogoClienti.getListaClientiBannati();
             lc.add(cliente);
             try{
                 ClienteDAO clienteDAO = new ClienteDAO();
@@ -107,7 +124,7 @@ public class RemoveClienteCommand implements Command {
                 sqlException.printStackTrace();
             }
         } else {
-            lc = catalogue.getListaClienti();
+            lc = CatalogoClienti.getListaClienti();
             lc.add(cliente);
             try{
                 ClienteDAO clienteDAO = new ClienteDAO();

@@ -96,7 +96,7 @@ public class AddImpiegatoCommand implements Command {
     @Override
     public void undo() {
         try {
-            Impiegato i = catalogue.getImpiegato(impiegato.getCodiceFiscale());
+            Impiegato i = CatalogoImpiegati.getImpiegato(impiegato.getCodiceFiscale());
             ArrayList<Impiegato> li = CatalogoImpiegati.getListaImpiegati();
             li.remove(i);
             BackofficeStorage<Impiegato> impiegatoBackofficeStorage = new ImpiegatoDAO();

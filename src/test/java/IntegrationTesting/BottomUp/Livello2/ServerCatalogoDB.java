@@ -186,7 +186,7 @@ public class ServerCatalogoDB {
                 "italiana"
         );
 
-        frontDesk.addPrenotazione(p);
+        assertDoesNotThrow(()->frontDesk.addPrenotazione(p));
         Prenotazione p1= null;
         // controllo nel DB se la prenotazione è presente
         try{
@@ -201,9 +201,9 @@ public class ServerCatalogoDB {
     @DisplayName("Bottom up 3.5 TC17 : LV2 Test controllo dell'interazione sulla rimozione fra frontdeskServer command pattern e DB")
     @Tag("integration-LV2")
     public void removePrenotazioneTest() throws RemoteException {
-        frontDesk.addPrenotazione(prenotazione);
+        assertDoesNotThrow(()->frontDesk.addPrenotazione(prenotazione));
         List<Prenotazione> p = frontDesk.getPrenotazioni();
-        frontDesk.removePrenotazione(prenotazione);
+        assertDoesNotThrow(()->frontDesk.removePrenotazione(prenotazione));
 
         Collection<?> listDB= null;
         // controllo nel DB se le liste sono le stesse
@@ -239,7 +239,7 @@ public class ServerCatalogoDB {
     public void addClienteTest() throws RemoteException {
         frontDeskStorage = new ClienteDAO();
         Cliente c = new Cliente("Roberto","Rossi","napoli","napoli","via manzo",12,45,"323425","M",LocalDate.of(1998,12,1),"CF234rdfcfg","luca@gmail.com","italiana",new Camera());
-        frontDesk.addCliente(c);
+        assertDoesNotThrow(()->frontDesk.addCliente(c));
 
         Collection <?> clienti;
 
@@ -261,7 +261,7 @@ public class ServerCatalogoDB {
         ArrayList<Cliente> catalogoCopia = CatalogoClienti.getListaClienti();
 
         Cliente c = CatalogoClienti.getListaClienti().get(0);
-        frontDesk.removeCliente(CatalogoClienti.getListaClienti().getFirst());
+        assertDoesNotThrow(()->frontDesk.removeCliente(CatalogoClienti.getListaClienti().getFirst()));
 
         Collection<?> listDB;
 
@@ -282,7 +282,7 @@ public class ServerCatalogoDB {
         Cliente c= cliente.getFirst();
         cliente.getFirst().setVia("via giovanni muratore");
         System.out.println("XDFDFS"+c);
-        frontDesk.updateCliente(cliente.getFirst());
+        assertDoesNotThrow(()->frontDesk.updateCliente(cliente.getFirst()));
 
         Cliente c2= null;
 
@@ -298,7 +298,7 @@ public class ServerCatalogoDB {
         Cliente c= cliente.getFirst().clone();
         cliente.getFirst().setBlacklisted(false);
 
-        frontDesk.banCliente(cliente.getFirst());
+        assertDoesNotThrow(()->frontDesk.banCliente(cliente.getFirst()));
         assertNotEquals(cliente.getFirst(),c);
     }
 
@@ -310,7 +310,7 @@ public class ServerCatalogoDB {
 
         Cliente c= CatalogoClienti.getListaClienti().get(0);
         assertNotNull(c);
-        frontDesk.unBanCliente(c);
+        assertDoesNotThrow(()->frontDesk.unBanCliente(c));
         //assertFalse(CatalogoClienti.getlistaBannati().contains(c));
         //assertNotEquals(CatalogoClienti.getCliente(c.getCf()), c);
     }

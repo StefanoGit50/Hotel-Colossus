@@ -7,6 +7,7 @@ import it.unisa.Server.ObserverCamereInterface;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.List;
 
 public interface FrontDeskInterface extends Remote, ObserverCamereInterface
@@ -43,7 +44,7 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
      * @pre p != null
      * @post Prenotazione..contains(p)
      */
-    void addPrenotazione(Prenotazione p) throws RemoteException;
+    void addPrenotazione(Prenotazione p) throws RemoteException, IllegalAccess;
 
 
     /**
@@ -52,7 +53,7 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
      * @pre p != null
      * @post not Prenotazione..contains(p)
      */
-    void removePrenotazione(Prenotazione p) throws RemoteException;
+    void removePrenotazione(Prenotazione p) throws RemoteException, IllegalAccess;
 
     /**
      * Aggiorna i dati di prenotazione.
@@ -60,7 +61,7 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
      * @pre p != null
      * @post Prenotazione..contains(p)
      */
-    void updatePrenotazione(Prenotazione p) throws RemoteException;
+    void updatePrenotazione(Prenotazione p) throws RemoteException, IllegalAccess;
     // Filtro Prenotazioni
 
     // Comandi cliente
@@ -70,7 +71,7 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
      * @pre c != null
      * @post Cliente..contains(c)
      */
-    void addCliente(Cliente c) throws RemoteException;
+    void addCliente(Cliente c) throws RemoteException, IllegalAccess;
 
 
     /**
@@ -79,7 +80,7 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
      * @pre c != null
      * @post not Cliente..contains(c)
      */
-    void removeCliente(Cliente c) throws RemoteException;
+    void removeCliente(Cliente c) throws RemoteException, IllegalAccess;
 
     //TODO: Aggiungere comando per retrieve del cliente (singolo / lista)
 
@@ -89,7 +90,7 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
      * @pre c != null
      * @post Cliente..contains(c)
      */
-    void updateCliente(Cliente c) throws RemoteException;
+    void updateCliente(Cliente c) throws RemoteException, IllegalAccess;
 
     //TODO: Aggiungere comando per retrieve delle prenotazione (singolo / lista)
 
@@ -99,7 +100,7 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
      * @pre c != null
      * @post c.isBlacklisted == true
      */
-    void banCliente(Cliente c) throws RemoteException;
+    void banCliente(Cliente c) throws RemoteException, IllegalAccess;
 
 
     /**
@@ -108,7 +109,23 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
      * @pre c != null
      * @post c.isBlacklisted == false
      */
-    void unBanCliente(Cliente c) throws RemoteException;
+    void unBanCliente(Cliente c) throws RemoteException, IllegalAccess;
+
+    /**
+     * Recupera la lista {@code list} di tutte le prenotazioni presenti nel sistema.
+     *
+     * @post {@code list} ha dimensioni tra 0 (all'avvio non è presente alcuna prenotazione) e # prenotazioni.
+     * @throws RemoteException .
+     */
+    ArrayList<Prenotazione> getListaPrenotazioni() throws RemoteException, IllegalAccess;
+
+    /**
+     * Recupera la lista {@code list} di tutti i clienti presenti nel sistema.
+     *
+     * @post {@code list} ha dimensioni tra 0 (all'avvio non è presente alcun cliente) e # clienti.
+     * @throws RemoteException .
+     */
+    ArrayList<Cliente> getListaClienti() throws RemoteException, IllegalAccess;
 
     //autenticazione
     Impiegato authentication(String username, String password,String pwd2) throws RemoteException, IllegalAccess;
@@ -136,11 +153,4 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
     Prenotazione getPrenotazioneById(int id) throws RemoteException;
 
 
-    /**
-     * Restituisce cliente in base al cf.
-     *
-     * @pre cf != null
-     * @post result != null
-     */
-    Cliente getClienteByCf(String cf) throws RemoteException;
 }

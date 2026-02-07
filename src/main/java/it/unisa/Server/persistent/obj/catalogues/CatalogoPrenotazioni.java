@@ -228,9 +228,8 @@ public class CatalogoPrenotazioni implements Serializable {
      *
      * @param codicePrenotazione Il numero identificativo della prenotazione da cercare.
      * @return Una deep copy dell'oggetto Prenotazione trovata, o {@code null} se non esiste nessuna prenotazione con quel numero.
-     * @throws CloneNotSupportedException Se l'oggetto Prenotazione non supporta la clonazione.
      */
-    public static Prenotazione getPrenotazione(int codicePrenotazione) throws CloneNotSupportedException{
+    public static Prenotazione getPrenotazione(int codicePrenotazione){
         for (Prenotazione p : listaPrenotazioni) {
             if (p.getIDPrenotazione() == codicePrenotazione)
                 return p.clone();
@@ -332,45 +331,6 @@ public class CatalogoPrenotazioni implements Serializable {
         if (prenotazione.getNumeroDocumento().length() > 9) {
             throw new InvalidInputException("Il documento deve avere una lunghezza <= 9");
         }
-
-    }
-    /**
-
-     Metodo usato per controllare la validità dei campi passati al filtro delle prenotazioni.
-     @throws InvalidInputException se un campo presenta un valore errato.*/
-    public static void checkFiltroPrenotazione(String nome, String cognome, LocalDate dataInizioSoggiorno, LocalDate dataFineSoggiorno, String elementOrder) {
-        Pattern namePattern = Pattern.compile("^[A-Za-z\s]{0,49}$");
-
-        // Verifica se tutti i campi sono nulli / vuoti (stringhe)
-        if ( (nome == null || nome.isBlank()) && (cognome == null ||
-            cognome.isBlank()) && (dataInizioSoggiorno == null) && (dataFineSoggiorno == null)){
-            throw new NullPointerException("Tutti i campi sono nulli o vuoti");
-        }
-
-        // 1. Nome
-        if (nome != null && !namePattern.matcher(nome).matches()) {
-            throw new InvalidInputException("[Nome] errato");
-        }
-
-        // 2. Cognome
-        if (cognome != null && !namePattern.matcher(cognome).matches()) {
-            throw new InvalidInputException("[Cognome] errato");
-        }
-
-        // 3. Data di inizio del soggiorno
-        if (dataInizioSoggiorno != null && dataInizioSoggiorno.isBefore(LocalDate.now())) {
-            throw new InvalidInputException("[dataInizioSoggiorno] passata");
-        }
-
-        // 4. Data di fine del soggiorno
-        if (dataFineSoggiorno != null && dataFineSoggiorno.isBefore(LocalDate.now())) {
-            throw new InvalidInputException("[dataFineSoggiorno] passata");
-        }
-
-        if (dataFineSoggiorno != null && dataFineSoggiorno.isBefore(dataInizioSoggiorno)) {
-            throw new InvalidInputException("[dataFineSoggiorno] precedente a dataInizioSoggiorno");
-        }
-
 
     }
 

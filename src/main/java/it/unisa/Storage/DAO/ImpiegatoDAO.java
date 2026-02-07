@@ -197,12 +197,12 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato> {
             if (matcher.matches()) {
                 Connection connection = ConnectionStorage.getConnection();
                 Impiegato impiegato = null;
-                try(PreparedStatement pr = connection.prepareStatement("SELECT IDImpiegato, CF , Nome , Cognome , UserName , HashPasword , isTemporary , dataScadenzaToken , Sesso ," +
+                try(PreparedStatement ps = connection.prepareStatement("SELECT IDImpiegato, CF , Nome , Cognome , UserName , HashPasword , isTemporary , dataScadenzaToken , Sesso ," +
                                                                             "TipoDocumento , NumeroDocumento , Cap,Via ,Provincia " +
                                                                             ", Comune ,Civico,Telefono,Ruolo,Stipendio,DataAssunzione,DataScadenzaDocumento" +
                                                                         ",DataRilascioDocumento,EmailAziendale,Cittadinanza FROM Impiegato WHERE IDImpiegato = ?"))  {
-                    pr.setString(1,f);
-                    ResultSet resultSet = pr.executeQuery();
+                    ps.setString(1,f);
+                    ResultSet resultSet = ps.executeQuery();
                     if (resultSet.next()){
                         int id =   resultSet.getInt("IDImpiegato");
                         String cf = resultSet.getString("CF");

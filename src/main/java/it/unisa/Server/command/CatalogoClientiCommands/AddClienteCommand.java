@@ -1,6 +1,7 @@
 package it.unisa.Server.command.CatalogoClientiCommands;
 
 import it.unisa.Common.Cliente;
+import it.unisa.Server.IllegalAccess;
 import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
 import it.unisa.Storage.DAO.ClienteDAO;
@@ -8,7 +9,7 @@ import it.unisa.Storage.DAO.ClienteDAO;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-
+import java.util.List;
 
 
 /**
@@ -77,8 +78,9 @@ public class AddClienteCommand implements Command {
      * @post CatalogoClienti.listaClienti.contains(cliente)
      */
     @Override
-    public void execute() {
-       CatalogoClienti.aggiungiCliente(cliente);
+    public void execute() throws IllegalAccess {
+        CatalogoClienti.aggiungiCliente(cliente);
+        if(!CatalogoClienti.getListaClienti().contains(cliente))throw new IllegalAccess("cliente non inserito correttamente");
     }
 
     /**

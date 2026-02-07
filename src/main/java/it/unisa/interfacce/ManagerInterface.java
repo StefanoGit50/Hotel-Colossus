@@ -2,6 +2,7 @@ package it.unisa.interfacce;
 
 import it.unisa.Common.Impiegato;
 import it.unisa.Server.Autentication.TokenGenerator;
+import it.unisa.Server.IllegalAccess;
 import it.unisa.Server.persistent.util.Ruolo;
 
 import java.rmi.Remote;
@@ -23,7 +24,7 @@ public interface ManagerInterface extends Remote
      * @pre i != null
      * @post Impiegato..contains(i)
      */
-    void addImpiegato(Impiegato i) throws RemoteException;
+    void addImpiegato(Impiegato i) throws RemoteException, IllegalAccess;
 
 
     /**
@@ -32,7 +33,7 @@ public interface ManagerInterface extends Remote
      * @pre i != null
      * @post not Impiegato..contains(i)
      */
-    void removeImpiegato(Impiegato i) throws RemoteException;
+    void removeImpiegato(Impiegato i) throws RemoteException, IllegalAccess;
 
 
     /**
@@ -41,7 +42,7 @@ public interface ManagerInterface extends Remote
      * @pre i != null
      * @post Impiegato..contains(i)
      */
-    void updateImpiegato(Impiegato i) throws RemoteException;
+    void updateImpiegato(Impiegato i) throws RemoteException, IllegalAccess;
 
     // Recupera singolo impiegato
     Impiegato getImpiegatoByCF(String Cf) throws RemoteException;
