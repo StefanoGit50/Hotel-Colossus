@@ -27,6 +27,12 @@ public class prenotazioneDAOTesting{
     private PrenotazioneDAO prenotazioneDAO;
     private Prenotazione prenotazione;
 
+
+    @BeforeAll
+    public static void setUp1(){
+        DBPopulator.cancel();
+    }
+
     @BeforeEach
     public void setUp(){
         DBPopulator.populator();
@@ -64,8 +70,7 @@ public class prenotazioneDAOTesting{
 
     @AfterEach
     public void after(){
-       DBPopulator.cancel();
-       DBPopulator.populator();
+        DBPopulator.cancel();
     }
 
     @Test
@@ -281,8 +286,6 @@ public class prenotazioneDAOTesting{
         System.out.println(prenotaziones);
         assertEquals(prenotaziones1,prenotaziones);
     }
-
-
 
     @Test
     @Tag("False")

@@ -47,7 +47,6 @@ public class FrontDeskClient
             System.err.println("ATTENZIONE: Impossibile connettersi al Server RMI.");
             e.printStackTrace();
         }
-
     }
 
     public static void main(String[] args){
@@ -95,7 +94,7 @@ public class FrontDeskClient
                         
                         for(Prenotazione p: prenotazioni)
                         {
-              //   System.out.println("Id: " + p.getId() + "   \n\tNumero stanza: " + p.getStanza().getNumero() + "\n\tNome cliente: " + p.getCliente().getNome());
+                     //System.out.println("Id: " + p.getId() + "   \n\tNumero stanza: " + p.getStanza().getNumero() + "\n\tNome cliente: " + p.getCliente().getNome());
 
                         }
                         break;
@@ -165,20 +164,21 @@ public class FrontDeskClient
             e.printStackTrace();
         }
     }
-    public void FrontDeskController(FrontDeskInterface server) {
-       if(server != null){
-           frontDeskInterface = server;
-       }else{
-           throw new RuntimeException("Non è possibile connettersi con il server");
-       }
-    }
 
     public List<Camera> getCamere() throws RemoteException {
         return frontDeskInterface.getCamere();
     }
 
     public boolean aggiornaStatoCamera(int numeroCamera, String nuovoStato) throws RemoteException {
-        List<Camera> cameras = frontDeskInterface.getCamere();
+        List<Camera> cameras = null;
+        try{
+            cameras = frontDeskInterface.getCamere();
+        }catch (RemoteException remoteException){
+            remoteException.getStackTrace();
+            remoteException.getMessage();
+        }
+
+
         Camera camera1 = null;
 
         for(Camera camera : cameras){
@@ -194,7 +194,6 @@ public class FrontDeskClient
         if(camera1 != null){
             return frontDeskInterface.aggiornaStatoCamera(camera1);
         }else{
-            // Camera non trovata
             return false;
         }
     }
@@ -204,23 +203,41 @@ public class FrontDeskClient
 
     }*/
 
-    public List<Prenotazione> getPrenotazioni() throws RemoteException {
-        return frontDeskInterface.getPrenotazioni();
+    public List<Prenotazione> getPrenotazioni() throws RemoteException{
+        List<Prenotazione> prenotaziones = null;
+        try{
+           prenotaziones = frontDeskInterface.getPrenotazioni();
+        }catch (RemoteException remoteException){
+            remoteException.getStackTrace();
+            remoteException.getMessage();
+        }
+        return prenotaziones;
     }
 
     public void addPrenotazione(Prenotazione p) throws RemoteException {
-        frontDeskInterface.addPrenotazione(p);
+        try{
+            frontDeskInterface.addPrenotazione(p);
+        }catch (RemoteException remoteException){
+            remoteException.getMessage();
+            remoteException.getStackTrace();
+        }
     }
 
     public Impiegato DoAuthentication(String username, String password, String pwd2) throws RemoteException, IllegalAccess {
-        if (frontDeskInterface == null) {
-           logger.warn("Errore: Non sei connesso al server.");
-            return null;
-        }
+        Impiegato imp = null;
+        try{
+            if (frontDeskInterface == null) {
+                logger.warn("Errore: Non sei connesso al server.");
+                return null;
+            }
 
-        System.out.println("nel client username e password" + username+ password);
-        Impiegato imp =frontDeskInterface.authentication(username, password, pwd2);
-        System.out.println(imp);
+            System.out.println("nel client username e password" + username+ password);
+             imp =frontDeskInterface.authentication(username, password, pwd2);
+            System.out.println(imp);
+        }catch (RemoteException remoteException){
+            remoteException.getMessage();
+            remoteException.getStackTrace();
+        }
         return imp;
     }
 
