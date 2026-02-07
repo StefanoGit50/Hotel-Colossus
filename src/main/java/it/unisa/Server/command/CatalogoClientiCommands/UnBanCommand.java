@@ -85,7 +85,7 @@ public class UnBanCommand implements Command {
     public void execute() {
         try {
             Cliente c = catalogue.getCliente(CFCliente);
-            ArrayList<Cliente> lc = catalogue.getListaClienti(), lcb = catalogue.getListaClientiBannati();
+            ArrayList<Cliente> lc = CatalogoClienti.getListaClienti(), lcb = CatalogoClienti.getListaClientiBannati();
 
             Cliente cli;
             for(int i = 0; i < lcb.size(); i++){
@@ -120,7 +120,7 @@ public class UnBanCommand implements Command {
     public void undo() {
         try{
             Cliente c = catalogue.getCliente(CFCliente);
-            ArrayList<Cliente> lc = catalogue.getListaClienti(), lcb = catalogue.getListaClientiBannati();
+            ArrayList<Cliente> lc = CatalogoClienti.getListaClienti(), lcb = CatalogoClienti.getListaClientiBannati();
 
             Cliente cli;
             for(int i = 0; i < lc.size(); i++){

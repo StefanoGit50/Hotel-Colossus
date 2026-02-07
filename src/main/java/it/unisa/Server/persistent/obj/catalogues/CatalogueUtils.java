@@ -46,16 +46,3 @@ public class CatalogueUtils {
     }
 
 }
-
-
-
-
-
-
-
-
-//        List<String> excludedFields = List.of(
-//                "noteaggiuntive", "datascadenzaToken", "trattamento"
-//        );
-
-

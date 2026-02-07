@@ -81,7 +81,7 @@ public class RemovePrenotazioneCommand implements Command {
      */
     @Override
     public void execute() {
-        catalogue.removePrenotazioni(prenotazione);
+        CatalogoPrenotazioni.removePrenotazioni(prenotazione);
     }
 
 
@@ -92,7 +92,7 @@ public class RemovePrenotazioneCommand implements Command {
      */
     @Override
     public void undo() {
-        catalogue.getListaPrenotazioni();
-        catalogue.addPrenotazioni(prenotazione);
+        CatalogoPrenotazioni.getListaPrenotazioni();
+        CatalogoPrenotazioni.addPrenotazioni(prenotazione);
     }
 }

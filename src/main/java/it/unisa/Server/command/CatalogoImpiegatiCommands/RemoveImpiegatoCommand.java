@@ -87,7 +87,7 @@ public class RemoveImpiegatoCommand implements Command {
     public void execute() {
         try {
             // Riprendi l'impiegato per com'è attualmente nel catalogo
-            Impiegato i = catalogue.getImpiegato(impiegato.getCodiceFiscale());
+            Impiegato i = CatalogoImpiegati.getImpiegato(impiegato.getCodiceFiscale());
             ArrayList<Impiegato> li = CatalogoImpiegati.getListaImpiegati();
             li.remove(i);
             BackofficeStorage<Impiegato> backofficeStorage = new ImpiegatoDAO();

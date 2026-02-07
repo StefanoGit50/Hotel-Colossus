@@ -87,7 +87,7 @@ public class UpdatePrenotazioneCommand implements Command {
     public void execute() {
        prenotazioneNonModificata = null;
 
-        ArrayList<Prenotazione> lp = catalogue.getListaPrenotazioni();
+        ArrayList<Prenotazione> lp = CatalogoPrenotazioni.getListaPrenotazioni();
 
         for (int i = 0; i < lp.size(); i++) {
             Prenotazione corrente = lp.get(i);
@@ -99,7 +99,7 @@ public class UpdatePrenotazioneCommand implements Command {
                     c.printStackTrace();
                     return;
                 }
-                catalogue.UpdatePrenotazioni(prenotazione);
+                CatalogoPrenotazioni.UpdatePrenotazioni(prenotazione);
             }
         }
 
@@ -116,11 +116,11 @@ public class UpdatePrenotazioneCommand implements Command {
     public void undo() {
 
         if(prenotazioneNonModificata != null) {
-            ArrayList<Prenotazione> lp = catalogue.getListaPrenotazioni();
+            ArrayList<Prenotazione> lp = CatalogoPrenotazioni.getListaPrenotazioni();
 
             for (int i = 0; i < lp.size(); i++) {
                 if (Objects.equals(lp.get(i).getIDPrenotazione(), prenotazioneNonModificata.getIDPrenotazione())) {
-                    catalogue.UpdatePrenotazioni(prenotazioneNonModificata); // UNDO
+                    CatalogoPrenotazioni.UpdatePrenotazioni(prenotazioneNonModificata); // UNDO
                     return;
                 }
             }

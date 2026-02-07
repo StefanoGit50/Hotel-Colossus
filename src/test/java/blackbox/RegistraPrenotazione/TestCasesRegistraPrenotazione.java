@@ -241,7 +241,7 @@ public class TestCasesRegistraPrenotazione {
             Assertions.assertDoesNotThrow(() -> frontDesk.addPrenotazione(p));
             try {
                 campione =  frontDesk.getPrenotazioneById(autoIncrement);
-                Assertions.assertEquals(p, frontDesk.getPrenotazioneById(p.getIDPrenotazione()));
+                Assertions.assertEquals(p, campione);
                 autoIncrement++;
             } catch (RemoteException e) {
                 Assertions.fail(e.getMessage());

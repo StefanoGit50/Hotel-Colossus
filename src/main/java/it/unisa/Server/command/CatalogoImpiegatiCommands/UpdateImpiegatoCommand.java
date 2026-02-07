@@ -87,7 +87,7 @@ public class UpdateImpiegatoCommand implements Command {
     @Override
     public void execute() {
         try {
-            Impiegato i = catalogue.getImpiegato(impiegato.getCodiceFiscale());
+            Impiegato i = CatalogoImpiegati.getImpiegato(impiegato.getCodiceFiscale());
             ArrayList<Impiegato> li = CatalogoImpiegati.getListaImpiegati();
 
             Iterator<Impiegato> it = li.iterator(); // Evita di modificare l'array metre lo si itera
@@ -123,7 +123,7 @@ public class UpdateImpiegatoCommand implements Command {
     @Override
     public void undo() {
         try {
-            Impiegato c = catalogue.getImpiegato(impiegato.getCodiceFiscale());
+            Impiegato c = CatalogoImpiegati.getImpiegato(impiegato.getCodiceFiscale());
             ArrayList<Impiegato> li = CatalogoImpiegati.getListaImpiegati();
 
             Iterator<Impiegato> it = li.iterator(); // Evita di modificare l'array metre lo si itera
