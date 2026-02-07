@@ -71,14 +71,14 @@ public class prenotazioneDAOTest {
 
     @Test
     @Tag("True")
-    @DisplayName("TC25: doSave() quando va tutto bene")
+    @DisplayName("TC24: doSave() quando va tutto bene")
     public void doSaveAllTrue() throws SQLException{
         assertDoesNotThrow(()->prenotazioneDAO.doSave(prenotazione));
     }
 
     @Test
     @Tag("False")
-    @DisplayName("TC26: doSave() quando è tutto False")
+    @DisplayName("TC25: doSave() quando è tutto False")
     public void doSaveAllFalse() throws SQLException{
         prenotazione.setListaServizi(new ArrayList<>());
         prenotazione.setListaClienti(new ArrayList<>());
@@ -87,7 +87,7 @@ public class prenotazioneDAOTest {
 
     @Test
     @Tag("False")
-    @DisplayName("TC27: doSave() quando la condizione del for del cliente è falsa")
+    @DisplayName("TC26: doSave() quando la condizione del for del cliente è falsa")
     public void doSaveSecondoForCliente() throws SQLException {
         prenotazione.setListaClienti(new ArrayList<>());
         assertDoesNotThrow(()->prenotazioneDAO.doSave(prenotazione));
@@ -95,7 +95,7 @@ public class prenotazioneDAOTest {
 
     @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
-    @DisplayName("TC28: doRetriveDaException() quando non trova il cliente nel DB")
+    @DisplayName("TC27: doRetriveDaException() quando non trova il cliente nel DB")
     public void doSaveDaException() throws SQLException{
         DBPopulator.cancel();
         prenotazione.setListaClienti(null);
@@ -104,7 +104,7 @@ public class prenotazioneDAOTest {
 
     @Test
     @Tag("True")
-    @DisplayName("TC29: doRetriveByKey() quando è tutto true")
+    @DisplayName("TC28: doRetriveByKey() quando è tutto true")
     public void doRetriveByKeyAllTrue() throws SQLException{
         Prenotazione prenotazione1 = prenotazioneDAO.doRetriveByKey(2);
         ArrayList<Cliente> clientes = new ArrayList<>();
@@ -123,14 +123,14 @@ public class prenotazioneDAOTest {
 
     @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
-    @DisplayName("TC30: doRetriveByKey() quando va in errore e il DB ")
+    @DisplayName("TC29: doRetriveByKey() quando va in errore e il DB ")
     public void doRetriveByKeyException() throws SQLException{
         assertThrows(SQLException.class,()->prenotazioneDAO.doRetriveByKey(" "));
     }
 
     @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
-    @DisplayName("TC31: quando viene lancia l'eccezione SQLException ")
+    @DisplayName("TC30: quando viene lancia l'eccezione SQLException ")
     public void doRetriveByKeyResultSetIsFalse() throws SQLException{
         DBPopulator.cancel();
         assertThrows(SQLException.class,()->prenotazioneDAO.doRetriveByKey(1));
@@ -140,7 +140,7 @@ public class prenotazioneDAOTest {
 
     @Test
     @Tag("True")
-    @DisplayName("TC32: doRetriveAll() quando va tutto bene")
+    @DisplayName("TC31: doRetriveAll() quando va tutto bene")
     public void doRetriveAllAllTrue() throws SQLException {
         //prenotazioneDAO.doDelete();
         ArrayList<Prenotazione> prenotaziones = (ArrayList<Prenotazione>) prenotazioneDAO.doRetriveAll("IDPrenotazione");
@@ -185,7 +185,7 @@ public class prenotazioneDAOTest {
 
     @Test
     @Tag("False")
-    @DisplayName("TC33: doRetriveAll() quando va tutto male")
+    @DisplayName("TC32: doRetriveAll() quando va tutto male")
     public void doRetriveAll() throws SQLException{
         DBPopulator.cancel();
         ArrayList<Prenotazione> prenotaziones = new ArrayList<>();
@@ -196,7 +196,7 @@ public class prenotazioneDAOTest {
 
     @Test
     @Tag("True")
-    @DisplayName("TC34: doUpdate() quando va tutto bene")
+    @DisplayName("TC33: doUpdate() quando va tutto bene")
     public void doUpdateAllTrue() throws SQLException{
         Prenotazione p = new Prenotazione();
         ArrayList<Cliente> clientes;
@@ -215,7 +215,7 @@ public class prenotazioneDAOTest {
 
     @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
-    @DisplayName("TC35: doUpdate() quando la lista di clienti è vuota")
+    @DisplayName("TC34: doUpdate() quando la lista di clienti è vuota")
     public void doUpdateFalseClienteLista() throws SQLException {
         Prenotazione p = new Prenotazione();
         ArrayList<Cliente> clientes;
@@ -233,7 +233,7 @@ public class prenotazioneDAOTest {
 
     @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
-    @DisplayName("TC36: doUpdate() quando la lista di servizi è vuota e Trattamento è null")
+    @DisplayName("TC35: doUpdate() quando la lista di servizi è vuota e Trattamento è null")
     public void doUpdteFalseListaServizi() throws SQLException{
         Prenotazione p = new Prenotazione();
         ArrayList<Cliente> clientes;
