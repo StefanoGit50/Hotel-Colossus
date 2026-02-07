@@ -6,8 +6,6 @@ import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
 
 import java.util.ArrayList;
-import java.util.NoSuchElementException;
-import java.util.Objects;
 
 /**
  * Comando per modificare i dati di una prenotazione (eccetto il codice identificativo, il quale viene
@@ -94,7 +92,6 @@ public class UpdatePrenotazioneCommand implements Command {
         }
 
     }
-
 
     /**
      * Annulla il comando precedentemente eseguito.

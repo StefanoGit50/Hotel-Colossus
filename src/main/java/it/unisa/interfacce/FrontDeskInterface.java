@@ -147,6 +147,15 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
      */
     ArrayList<Trattamento>  getListaTrattamenti() throws RemoteException, IllegalAccess;
 
+    /**
+     * Recupera la lista {@code list} di tutte le camere presenti nel sistema.
+     *
+     * @post {@code list} ha dimensioni tra 0 (se all'avvio non è presente alcuna camere) e # camere.
+     * @throws RemoteException .
+     */
+    ArrayList<Camera> getListaCamere() throws RemoteException, IllegalAccess;
+
+
     //autenticazione
     Impiegato authentication(String username, String password,String pwd2) throws RemoteException, IllegalAccess;
 

@@ -1,6 +1,7 @@
 package it.unisa.Server.command.CatalogoImpiegatiCommands;
 
 import it.unisa.Common.Impiegato;
+import it.unisa.Server.IllegalAccess;
 import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoImpiegati;
 import it.unisa.Storage.Interfacce.BackofficeStorage;
@@ -84,7 +85,7 @@ public class RemoveImpiegatoCommand implements Command {
      * @post not CatalogoImpiegati.listaImpiegati.contains(impiegato)
      */
     @Override
-    public void execute() {
+    public void execute() throws IllegalAccess {
         try {
             // Riprendi l'impiegato per com'è attualmente nel catalogo
             Impiegato i = CatalogoImpiegati.getImpiegato(impiegato.getCodiceFiscale());
@@ -94,6 +95,7 @@ public class RemoveImpiegatoCommand implements Command {
             backofficeStorage.doDelete(i);
         } catch (CloneNotSupportedException | SQLException e) {
             e.printStackTrace();
+            throw new IllegalAccess("ERROR: l'impiegato non è stato rimosso");
         }
     }
 

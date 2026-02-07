@@ -1,6 +1,7 @@
 package it.unisa.Server.command.CatalogoClientiCommands;
 
 import it.unisa.Common.Cliente;
+import it.unisa.Server.IllegalAccess;
 import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
 import it.unisa.Storage.DAO.ClienteDAO;
@@ -79,7 +80,7 @@ public class BanCommand implements Command {
      * @post CatalogoClienti.listaClientiBannati.stream().anyMatch(c | c.cf == CFCliente && c.isBlacklisted == true)
      */
     @Override
-    public void execute() {
+    public void execute() throws IllegalAccess {
         try {
             Cliente c = catalogue.getCliente(CFCliente);
             ArrayList<Cliente> lc = CatalogoClienti.getListaClienti(), lcb = CatalogoClienti.getListaClientiBannati();
@@ -97,6 +98,7 @@ public class BanCommand implements Command {
                         clienteDAO.doUpdate(cli);
                     }catch (SQLException sqlException){
                         sqlException.printStackTrace();
+                        throw new IllegalAccess("ERROR: Stato di ban del cliente non modificato corretamente");
                     }
                     break;
                 }

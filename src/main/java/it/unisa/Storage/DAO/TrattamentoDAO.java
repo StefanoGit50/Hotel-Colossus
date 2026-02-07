@@ -93,7 +93,9 @@ public class TrattamentoDAO implements FrontDeskStorage<Trattamento>{
             ps = connection.prepareStatement(query);
 
             ps.setString(1, trattamento.getNome());
-            ps.executeUpdate();
+            if(ps.executeUpdate() == 0){
+                throw new SQLException();
+            }
         } catch (SQLException e) {
            throw e;
         } finally {

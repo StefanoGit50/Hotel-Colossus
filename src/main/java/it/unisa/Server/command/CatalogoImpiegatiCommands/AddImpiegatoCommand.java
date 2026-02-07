@@ -1,6 +1,7 @@
 package it.unisa.Server.command.CatalogoImpiegatiCommands;
 
 import it.unisa.Common.Impiegato;
+import it.unisa.Server.IllegalAccess;
 import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoImpiegati;
 import it.unisa.Storage.Interfacce.BackofficeStorage;
@@ -76,7 +77,7 @@ public class AddImpiegatoCommand implements Command {
      * @post CatalogoImpiegati.listaImpiegati.contains(impiegato)
      */
     @Override
-    public void execute() {
+    public void execute() throws IllegalAccess{
         ArrayList<Impiegato> li = CatalogoImpiegati.getListaImpiegati();
         li.add(impiegato);
         try{
@@ -85,6 +86,8 @@ public class AddImpiegatoCommand implements Command {
         } catch (SQLException e){
             if (e.getErrorCode() == 1062)
                 throw new DuplicateKeyEntry();
+            else
+                throw new IllegalAccess("ERROR: l'impiegato non è stato aggiunto");
         }
     }
 
