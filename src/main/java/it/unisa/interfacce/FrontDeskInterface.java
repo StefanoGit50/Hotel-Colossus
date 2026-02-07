@@ -43,7 +43,7 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
      * @pre p != null
      * @post Prenotazione..contains(p)
      */
-    void addPrenotazione(Prenotazione p) throws RemoteException;
+    void addPrenotazione(Prenotazione p) throws RemoteException, IllegalAccess;
 
 
     /**
@@ -52,7 +52,7 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
      * @pre p != null
      * @post not Prenotazione..contains(p)
      */
-    void removePrenotazione(Prenotazione p) throws RemoteException;
+    void removePrenotazione(Prenotazione p) throws RemoteException, IllegalAccess;
 
     /**
      * Aggiorna i dati di prenotazione.
@@ -60,7 +60,7 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
      * @pre p != null
      * @post Prenotazione..contains(p)
      */
-    void updatePrenotazione(Prenotazione p) throws RemoteException;
+    void updatePrenotazione(Prenotazione p) throws RemoteException, IllegalAccess;
     // Filtro Prenotazioni
 
     // Comandi cliente
@@ -70,7 +70,7 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
      * @pre c != null
      * @post Cliente..contains(c)
      */
-    void addCliente(Cliente c) throws RemoteException;
+    void addCliente(Cliente c) throws RemoteException, IllegalAccess;
 
 
     /**
@@ -79,7 +79,7 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
      * @pre c != null
      * @post not Cliente..contains(c)
      */
-    void removeCliente(Cliente c) throws RemoteException;
+    void removeCliente(Cliente c) throws RemoteException, IllegalAccess;
 
     //TODO: Aggiungere comando per retrieve del cliente (singolo / lista)
 
@@ -89,7 +89,7 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
      * @pre c != null
      * @post Cliente..contains(c)
      */
-    void updateCliente(Cliente c) throws RemoteException;
+    void updateCliente(Cliente c) throws RemoteException, IllegalAccess;
 
     //TODO: Aggiungere comando per retrieve delle prenotazione (singolo / lista)
 
@@ -99,7 +99,7 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
      * @pre c != null
      * @post c.isBlacklisted == true
      */
-    void banCliente(Cliente c) throws RemoteException;
+    void banCliente(Cliente c) throws RemoteException, IllegalAccess;
 
 
     /**
@@ -108,7 +108,7 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
      * @pre c != null
      * @post c.isBlacklisted == false
      */
-    void unBanCliente(Cliente c) throws RemoteException;
+    void unBanCliente(Cliente c) throws RemoteException, IllegalAccess;
 
     //autenticazione
     Impiegato authentication(String username, String password,String pwd2) throws RemoteException, IllegalAccess;

@@ -68,8 +68,9 @@ public class Autentication {
             if(password.contains("PWD-TMP-") || pwd2!=null){
                impiegato=null;
                return false;
-            } else {
-            // Log per capire cosa succede
+            }
+            else {
+
             System.out.println("Tentativo Login Standard...");
 
             bo = new ImpiegatoDAO();
@@ -87,13 +88,11 @@ public class Autentication {
             // Se la password corrisponde all'hash nel DB, il login è valido.
             if(CredenzialiUtils.checkPassword(password.trim(), impiegato.getHashPassword().trim())) {
 
-                // --- MODIFICA QUI ---
-                // Rimuoviamo il controllo sul nome che ti sta bloccando (Reception3 vs Reception33)
-                // if (impiegato.getUsername().equals(username)) {
+                 if (impiegato.getUsername().equals(username)) {
                 System.out.println("Password OK! Login effettuato.");
                 return true;
-                // }
-                // --------------------
+                 }
+
             } else {
                 System.out.println("Errore: Password non valida.");
             }

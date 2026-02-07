@@ -1,6 +1,7 @@
 package blackbox.RegistraImpiegato;
 
 import it.unisa.Common.*;
+import it.unisa.Server.IllegalAccess;
 import it.unisa.Server.persistent.obj.catalogues.InvalidInputException;
 import it.unisa.Server.persistent.util.Ruolo;
 import it.unisa.Storage.DuplicateKeyEntry;
@@ -123,6 +124,8 @@ public class TestCasesRegistraImpiegato {
                 manager.addImpiegato(i);
             } catch (RemoteException | DuplicateKeyEntry e) {
                 e.printStackTrace();
+            } catch (IllegalAccess e) {
+                throw new RuntimeException(e);
             }
             Assertions.assertThrows(DuplicateKeyEntry.class, () -> manager.addImpiegato(i));
         }

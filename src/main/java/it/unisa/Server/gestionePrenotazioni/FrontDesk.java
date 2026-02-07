@@ -29,11 +29,16 @@ import java.util.List;
 public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface {
     private CatalogoCamere camList = new CatalogoCamere();
     private static final int RMI_PORT = 1099;
+    private static boolean isServerRunning = false;
 
     private static final org.apache.logging.log4j.Logger log = LogManager.getLogger(FrontDesk.class);
 
     public FrontDesk() throws RemoteException {
         super();
+        if(!isServerRunning){
+            startServer(this);
+            isServerRunning = true;
+        }
     }
 
     //costruttore di Testing
@@ -43,31 +48,8 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         this.camList = catalogoCamere;
     }
 
-    public List<Camera> getCamere(){
-       return camList.getListaCamere();
-    }
 
-    @Override
-    public boolean aggiornaStatoCamera(Camera c) throws RemoteException {
-        log.info("camera passata = "+c.getNumeroCamera()+ c.getStatoCamera());
-        return camList.aggiornaStatoCamera(c);
-    }
-
-    // manda al client la camera ricevuta dall'update e il client dovrà aggiornare la sua lista da mostrare.
-    @Override
-    public Camera update() throws RemoteException {
-        return camList.getLastModified();
-    }
-
-    @Override
-    public ArrayList<Prenotazione> getPrenotazioni() throws RemoteException{
-         ArrayList<Prenotazione> list =CatalogoPrenotazioni.getListaPrenotazioni();
-        System.out.println("DENTRO LA CHIAMATA"+list);
-        return list;
-    }
-
-    public static void main(String[] args)
-    {
+    private static void startServer(FrontDesk instance) throws RemoteException {
         try
         {
             // IMPORTANTE: Avvia l'RMI registry programmaticamente
@@ -83,23 +65,20 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
                 log.info("✓ Connesso a RMI Registry esistente");
             }
 
-            log.info("Genero il gestore prenotazioni...");
-            FrontDesk gp = new FrontDesk();
-            log.info("✓ Gestore prenotazioni creato");
+
 
             log.info("Effettuo il rebind di gestione prenotazioni...");
-            Naming.rebind("rmi://localhost:" + RMI_PORT + "/GestionePrenotazioni", gp);
+            Naming.rebind("rmi://localhost:" + RMI_PORT + "/GestionePrenotazioni", instance);
             log.info("✓ Gestore prenotazioni registrato con successo!");
             log.info("✓ Servizio 'GestionePrenotazioni' pronto");
             log.info("Server in attesa di connessioni...");
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 System.out.println("\n--- SHUTDOWN IN CORSO ---");
                 try {
-                    // 1. Rimuove il nome dal registro
+
                     Naming.unbind("rmi://localhost:" + RMI_PORT + "/GestionePrenotazioni");
-                    // 2. Smette di ascoltare (Forza la disconnessione)
-                    // Questo è ciò che uccide veramente lo zombie lato RMI
-                    java.rmi.server.UnicastRemoteObject.unexportObject(gp, true);
+
+                    java.rmi.server.UnicastRemoteObject.unexportObject(instance, true);
                     System.out.println("✓ Server disconnesso correttamente.");
                 } catch (Exception e) {
                     // Ignora errori in chiusura
@@ -119,6 +98,10 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         }
     }
 
+    public static void main(String[] args) throws RemoteException {
+        FrontDesk instance = new FrontDesk();
+    }
+
     /// ////////////////////////////////////////////////////////////////////////////////////
 
     // Invoker --> mantiene l'ordine delle chiamate ai comandi
@@ -126,10 +109,33 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     // Cataloghi
 
 
+    public List<Camera> getCamere(){
+        return camList.getListaCamere();
+    }
+
+    @Override
+    public boolean aggiornaStatoCamera(Camera c) throws RemoteException {
+        log.info("camera passata = "+c.getNumeroCamera()+ c.getStatoCamera());
+        return camList.aggiornaStatoCamera(c);
+    }
+
+    // manda al client la camera ricevuta dall'update e il client dovrà aggiornare la sua lista da mostrare.
+    @Override
+    public Camera update() throws RemoteException {
+        return CatalogoCamere.getLastModified();
+    }
+
+    @Override
+    public ArrayList<Prenotazione> getPrenotazioni() throws RemoteException{
+        ArrayList<Prenotazione> list =CatalogoPrenotazioni.getListaPrenotazioni();
+        System.out.println("DENTRO LA CHIAMATA"+list);
+        return list;
+    }
+
 
     // COMANDI PRENOTAZIONE
     @Override
-    public void addPrenotazione(Prenotazione p) throws RemoteException {
+    public void addPrenotazione(Prenotazione p) throws RemoteException, IllegalAccess {
         CatalogueUtils.checkNull(p);                 // Lancia InvalidInputException
         CatalogoPrenotazioni.checkPrenotazione(p);   // Lancia InvalidInputException
         AddPrenotazioneCommand command = new AddPrenotazioneCommand(p);
@@ -138,46 +144,46 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     }
 
     @Override
-    public void removePrenotazione(Prenotazione p) throws RemoteException {
+    public void removePrenotazione(Prenotazione p) throws RemoteException, IllegalAccess {
 
-//        RemovePrenotazioneCommand command = new RemovePrenotazioneCommand(catalogoPrenotazioni, p);
-//        invoker.executeCommand(command);
+        RemovePrenotazioneCommand command = new RemovePrenotazioneCommand(p);
+        invoker.executeCommand(command);
     }
 
     @Override
-    public void updatePrenotazione(Prenotazione p) throws RemoteException {
+    public void updatePrenotazione(Prenotazione p) throws RemoteException, IllegalAccess {
          UpdatePrenotazioneCommand command = new UpdatePrenotazioneCommand(CatalogoPrenotazioni.getListaPrenotazioni(), p);
-        invoker.executeCommand(command);
+         invoker.executeCommand(command);
     }
 
 
     // COMANDI CLIENTE
     @Override
-    public void addCliente(Cliente c) throws RemoteException {
+    public void addCliente(Cliente c) throws RemoteException, IllegalAccess {
         AddClienteCommand command = new AddClienteCommand(c);
         invoker.executeCommand(command);
     }
 
     @Override
-    public void removeCliente(Cliente c) throws RemoteException {
+    public void removeCliente(Cliente c) throws RemoteException, IllegalAccess {
         RemoveClienteCommand command = new RemoveClienteCommand(c);
         invoker.executeCommand(command);
     }
 
     @Override
-    public void updateCliente(Cliente c) throws RemoteException {
+    public void updateCliente(Cliente c) throws RemoteException, IllegalAccess {
         UpdateClienteCommand command = new UpdateClienteCommand(c);
         invoker.executeCommand(command);
     }
 
     @Override
-    public void banCliente(Cliente c) throws RemoteException {
+    public void banCliente(Cliente c) throws RemoteException, IllegalAccess {
         BanCommand command = new BanCommand(c.getCf());
         invoker.executeCommand(command);
     }
 
     @Override
-    public void unBanCliente(Cliente c) throws RemoteException {
+    public void unBanCliente(Cliente c) throws RemoteException, IllegalAccess {
         UnBanCommand command = new UnBanCommand(c.getCf());
         invoker.executeCommand(command);
     }
