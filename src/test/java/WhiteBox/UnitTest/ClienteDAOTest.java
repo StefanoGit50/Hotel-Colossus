@@ -4,28 +4,20 @@ package WhiteBox.UnitTest;
 import it.unisa.Common.Camera;
 import it.unisa.Common.Cliente;
 import it.unisa.Server.persistent.util.Stato;
-import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.DAO.ClienteDAO;
-import net.bytebuddy.asm.Advice;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ClienteDAOTesting {
+public class ClienteDAOTest {
 
     private ClienteDAO clienteDAO;
     private Cliente cliente;

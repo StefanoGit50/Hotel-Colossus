@@ -2,29 +2,19 @@ package WhiteBox.UnitTest;
 
 import it.unisa.Common.Camera;
 import it.unisa.Server.persistent.util.Stato;
-import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.DAO.CameraDAO;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.condition.DisabledIfSystemProperties;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.MockedStatic;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.concurrent.locks.ReadWriteLock;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
-public class CameraDaoTesting{
+public class CameraDaoTest {
 
     private CameraDAO cameraDAO;
     private ResultSet resultSet;

@@ -2,14 +2,9 @@ package WhiteBox.UnitTest;
 
 
 import it.unisa.Common.Servizio;
-import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.DAO.ServizioDAO;
-import org.apache.logging.log4j.core.appender.db.DbAppenderLoggingException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.*;
@@ -17,10 +12,9 @@ import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ServizioDAOTesting{
+public class ServizioDAOTest {
 
     private Servizio servizio;
 

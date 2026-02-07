@@ -3,26 +3,22 @@ package WhiteBox.UnitTest;
 import it.unisa.Common.*;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.DAO.*;
-import net.bytebuddy.asm.Advice;
-import net.bytebuddy.implementation.bind.annotation.TargetMethodAnnotationDrivenBinder;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.lang.ref.Cleaner;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 /*
 * da finire
 * */
 
 @ExtendWith(MockitoExtension.class)
-public class prenotazioneDAOTesting{
+public class prenotazioneDAOTest {
 
     private PrenotazioneDAO prenotazioneDAO;
     private Prenotazione prenotazione;

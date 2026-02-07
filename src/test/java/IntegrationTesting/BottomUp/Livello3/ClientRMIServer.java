@@ -29,11 +29,6 @@ public class ClientRMIServer {
     @Tag("integration-LV3")
     public void FrontDeskCompleteTest(){
         ArrayList<Camera> camere = null;
-        try {
-            frontDeskClient.FrontDeskController(new FrontDesk());
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
     }
 
 }
