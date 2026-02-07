@@ -3,7 +3,6 @@ import it.unisa.Common.Camera;
 import it.unisa.Common.Cliente;
 import it.unisa.Common.Prenotazione;
 import it.unisa.Server.persistent.util.Util;
-import it.unisa.Storage.DAO.ClienteDAO;
 import it.unisa.Storage.DAO.PrenotazioneDAO;
 import it.unisa.Storage.DuplicateKeyEntry;
 import it.unisa.Storage.Interfacce.FrontDeskStorage;
@@ -14,7 +13,6 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -83,7 +81,7 @@ public class CatalogoPrenotazioni implements Serializable {
     /**
      * Aggiunge prenotazioni alla collezione.
      *
-     * @param prenotazione
+     * @param prenotazione un oggetto {@code Prenotazione}
      * @pre listaPrenotazioni1 != null
      * @post listaPrenotazioni.containsAll(listaPrenotazioni1)
      * @return true || false
@@ -250,7 +248,6 @@ public class CatalogoPrenotazioni implements Serializable {
                 rilascio = prenotazione.getDataRilascio(), scadenza = prenotazione.getDataScadenza();
 
         Pattern numeroDocumento = Pattern.compile("^[0-9A-Z]{0,9}$");
-        String documento = prenotazione.getTipoDocumento();
 
         int nClienti = prenotazione.getListaClienti().size();
         int nPostiCamere = 0;

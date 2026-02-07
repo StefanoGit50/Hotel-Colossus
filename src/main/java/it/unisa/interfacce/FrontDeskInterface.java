@@ -111,10 +111,12 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
      */
     void unBanCliente(Cliente c) throws RemoteException, IllegalAccess;
 
+    // Recuperare tutte le liste
+
     /**
      * Recupera la lista {@code list} di tutte le prenotazioni presenti nel sistema.
      *
-     * @post {@code list} ha dimensioni tra 0 (all'avvio non è presente alcuna prenotazione) e # prenotazioni.
+     * @post {@code list} ha dimensioni tra 0 (se all'avvio non è presente alcuna prenotazione) e # prenotazioni.
      * @throws RemoteException .
      */
     ArrayList<Prenotazione> getListaPrenotazioni() throws RemoteException, IllegalAccess;
@@ -122,10 +124,37 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
     /**
      * Recupera la lista {@code list} di tutti i clienti presenti nel sistema.
      *
-     * @post {@code list} ha dimensioni tra 0 (all'avvio non è presente alcun cliente) e # clienti.
+     * @post {@code list} ha dimensioni tra 0 (se all'avvio non è presente alcun cliente) e # clienti.
      * @throws RemoteException .
      */
     ArrayList<Cliente> getListaClienti() throws RemoteException, IllegalAccess;
+
+    /**
+     * Recupera la lista {@code list} di tutti i servizi presenti nel sistema.
+     *
+     * @post {@code list} ha dimensioni tra 0 (se all'avvio non è presente alcun servizio) e # Servizi.
+     * @throws RemoteException .
+     * @throws IllegalAccess .
+     */
+    ArrayList<Servizio>  getListaServizi() throws RemoteException, IllegalAccess;
+
+    /**
+     * Recupera la lista {@code list} di tutti i trattamenti presenti nel sistema.
+     *
+     * @post {@code list} ha dimensioni tra 0 (se all'avvio non è presente alcun trattamento) e # Trattamenti.
+     * @throws RemoteException .
+     * @throws IllegalAccess .
+     */
+    ArrayList<Trattamento>  getListaTrattamenti() throws RemoteException, IllegalAccess;
+
+    /**
+     * Recupera la lista {@code list} di tutte le camere presenti nel sistema.
+     *
+     * @post {@code list} ha dimensioni tra 0 (se all'avvio non è presente alcuna camere) e # camere.
+     * @throws RemoteException .
+     */
+    ArrayList<Camera> getListaCamere() throws RemoteException, IllegalAccess;
+
 
     //autenticazione
     Impiegato authentication(String username, String password,String pwd2) throws RemoteException, IllegalAccess;

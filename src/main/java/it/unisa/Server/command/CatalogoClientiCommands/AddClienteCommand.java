@@ -80,7 +80,7 @@ public class AddClienteCommand implements Command {
     @Override
     public void execute() throws IllegalAccess {
         CatalogoClienti.aggiungiCliente(cliente);
-        if(!CatalogoClienti.getListaClienti().contains(cliente))throw new IllegalAccess("cliente non inserito correttamente");
+        if(!CatalogoClienti.getListaClienti().contains(cliente))throw new IllegalAccess("ERROR: cliente non inserito correttamente");
     }
 
     /**
