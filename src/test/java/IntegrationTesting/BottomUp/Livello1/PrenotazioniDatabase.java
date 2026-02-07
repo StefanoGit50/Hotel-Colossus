@@ -103,7 +103,7 @@ public class PrenotazioniDatabase {
                 "Privacy assoluta",
                 servizio, cliente,
                 "UK1234567",
-                null,
+                "",
                 "Albanese"
         );
         CatalogoPrenotazioni.addPrenotazioni(prenotazione);
