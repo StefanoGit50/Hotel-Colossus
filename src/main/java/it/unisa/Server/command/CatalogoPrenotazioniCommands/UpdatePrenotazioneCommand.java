@@ -17,12 +17,12 @@ public class UpdatePrenotazioneCommand implements Command {
     private ArrayList<Prenotazione> listaPrenotazioni;
     private Prenotazione prenotazione;
     private Prenotazione prenotazioneNonModificata;
+
     /**
      * Costruttore del comando.
      * @param prenotazione  Prenotazione da modificare.
      */
-    public UpdatePrenotazioneCommand(ArrayList<Prenotazione> list,Prenotazione prenotazione) {
-        this.listaPrenotazioni = list;
+    public UpdatePrenotazioneCommand(Prenotazione prenotazione) {
         this.prenotazione = prenotazione;
     }
 

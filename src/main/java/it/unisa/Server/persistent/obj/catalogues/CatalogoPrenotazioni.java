@@ -232,11 +232,7 @@ public class CatalogoPrenotazioni implements Serializable {
     public static Prenotazione getPrenotazione(int codicePrenotazione){
         for (Prenotazione p : listaPrenotazioni) {
             if (p.getIDPrenotazione() == codicePrenotazione)
-                try {
-                    return p.clone();
-                } catch (CloneNotSupportedException e) {
-                    return null;
-                }
+                return p.clone();
         }
         return null;
     }
