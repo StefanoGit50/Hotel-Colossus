@@ -73,12 +73,9 @@ public class CatalogoPrenotazioni implements Serializable {
      */
     public static synchronized Prenotazione getPrenotazione(Integer ID){
         for(Prenotazione p : listaPrenotazioni){
-            if(p.getIDPrenotazione().equals(ID))
-                try {
-                    return p.clone();
-                }catch (CloneNotSupportedException e){
-                    e.printStackTrace();
-                }
+            if(p.getIDPrenotazione().equals(ID)){
+                return p.clone();
+            }
         }
         return null;
     }
@@ -162,7 +159,7 @@ public class CatalogoPrenotazioni implements Serializable {
      * @post se result == true allora fds.doUpdate(prenotazione) è stato invocato con successo
      */
     public static synchronized boolean UpdatePrenotazioni(Prenotazione prenotazione) {
-        if(prenotazione == null|| !listaPrenotazioni.contains(prenotazione)) {
+        if(prenotazione == null) {
             return false;
         }
 

@@ -34,10 +34,10 @@ public class    ConnectionStorage{
         Connection newConnection;
         String ip = "localhost";
         String port = "3306";
-        String db = "hotelcolossus";
+        String db = "Hotelcolossus";
         String username = "root";
-        String password = "_MySqlServer2024";  //_MySqlServer2024 E' mia --Giovanni
-
+        String password = "1uno2due";  //_MySqlServer2024 E' mia --Giovanni
+                                       //1uno2due
         newConnection = DriverManager.getConnection("jdbc:mysql://"+ ip+":"+ port+"/"+db+"?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", username, password);
         return newConnection;
     }

@@ -519,18 +519,22 @@ public class Prenotazione implements Cloneable, Serializable {
      * @throws CloneNotSupportedException Se un attributo non clonabile è presente o la clonazione fallisce.
      */
     @Override
-    public Prenotazione clone() throws CloneNotSupportedException {
-        Prenotazione cloned = (Prenotazione) super.clone();
+    public Prenotazione clone(){
+        try{
+            Prenotazione cloned = (Prenotazione) super.clone();
 
         // Clonazione degli oggetti interni mutabili (Trattamento e Liste)
         if (this.trattamento != null) {
             // Assumiamo che Trattamento sia clonabile
-            // cloned.trattamento = this.trattamento.clone();
+            cloned.trattamento = this.trattamento.clone();
         }
 
         cloned.listaServizi = Util.deepCopyArrayList(this.listaServizi);
         cloned.listaClienti = Util.deepCopyArrayList(this.listaClienti);
 
-        return cloned;
+            return cloned;
+        }catch (CloneNotSupportedException cloneNotSupportedException){
+            throw new RuntimeException(cloneNotSupportedException);
+        }
     }
 }

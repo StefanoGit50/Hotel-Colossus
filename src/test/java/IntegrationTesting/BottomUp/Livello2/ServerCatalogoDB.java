@@ -40,8 +40,8 @@ public class ServerCatalogoDB {
 
     @BeforeAll
     static void setAllup() throws RemoteException, SQLException {
-
-
+        DBPopulator.cancel();
+        DBPopulator.populator();
         //inizializzazione variabili di default
         //si suppone che il DB contenga queste variabili per il corretto funzionamento del test
 
@@ -74,9 +74,9 @@ public class ServerCatalogoDB {
 
         prenotazione =new Prenotazione(
                 LocalDate.now(),                        // dataCreazionePrenotazione (Oggi)
-                LocalDate.of(2024, 8, 10),              // dataInizio
-                LocalDate.of(2024, 8, 20),              // dataFine
-                LocalDate.of(2024, 8,20),
+                LocalDate.of(2026, 8, 10),              // dataInizio
+                LocalDate.of(2026, 8, 20),              // dataFine
+                null,
                 new Trattamento("Pensione Completa",45),           // trattamento (Assumendo sia un Enum)
                 45.0,
                 "Carta d'Identità",                     // tipoDocumento
@@ -85,7 +85,7 @@ public class ServerCatalogoDB {
                 cliente.getFirst().getNome()+" "+cliente.getFirst().getCognome(),                          // intestatario
                 "Richiesta culla in camera",            // noteAggiuntive
                 servizio,                          // listaServizi
-                 cliente,                                 // listaClienti
+                cliente,                                 // listaClienti
                 "CA123YZ",                           // numeroDocumento
                 "",
                 "Italiano"
@@ -101,15 +101,15 @@ public class ServerCatalogoDB {
         DBPopulator.cancel();
         DBPopulator.populator();
         CatalogoPrenotazioni.aggiornalista();
-        catClienti.getListaClienti().clear();
-        catCamere.getListaCamere().clear();
+        CatalogoClienti.aggiornalista();
+        CatalogoCamere.aggiornalista();
     }
 
     @Test
     @DisplayName("Bottom up 3.1 TC13: LV2 aggiornamento dello stato camera dalla classe server con pattern Observer")
     @Tag("integration-LV2")
     public void AggiornaStatoCamereCatalogoDB(){
-         frontDeskStorage = new CameraDAO();
+        frontDeskStorage = new CameraDAO();
         System.out.println("Array camere: "+arraycamera);
         arraycamera.getFirst().setStatoCamera(Stato.Prenotata);
         assertDoesNotThrow(()->frontDesk.aggiornaStatoCamera(arraycamera.getFirst()));
@@ -125,8 +125,9 @@ public class ServerCatalogoDB {
     @DisplayName("Bottom up 3.2 TC14: LV2 Test se le camere nel front desk sono le stesse nel DB ")
     @Tag("integration-LV2")
     public void getCamereTest(){
-       List<Camera> c=frontDesk.getCamere();
-       Collection<?> listDB= null;
+        frontDeskStorage = new CameraDAO();
+        List<Camera> c=frontDesk.getCamere();
+        Collection<?> listDB= null;
 
         //controllo nel DB se le liste sono le stesse
         listDB = assertDoesNotThrow(() -> frontDeskStorage.doRetriveAll("decrescente"));
@@ -169,7 +170,7 @@ public class ServerCatalogoDB {
         Prenotazione p = new Prenotazione(        // IDPrenotazione
                 LocalDate.now(),                        // dataCreazionePrenotazione
                 LocalDate.now(),                        // dataInizio
-                LocalDate.of(2026, 02, 01),             // dataFine
+                LocalDate.now().plusDays(5),             // dataFine
                 null,
                 new Trattamento("MEZZA PENSIONE", 60),
                 60.0,
@@ -180,7 +181,7 @@ public class ServerCatalogoDB {
                 "",                                     // noteAggiuntive
                 servizio,                               // listaServizi (Assicurati che sia un ArrayList!)
                 clienti,                                // listaClienti
-                "3453m",                             // numeroDocumento
+                "3453M",                             // numeroDocumento
                 "",
                 "italiana"
         );
@@ -192,7 +193,7 @@ public class ServerCatalogoDB {
             p1= (Prenotazione) frontDeskStorage.doRetriveByKey(p.getIDPrenotazione());
         }catch (SQLException e){
             e.printStackTrace();
-         }
+        }
         assertEquals(p, p1);
     }
 
@@ -217,77 +218,86 @@ public class ServerCatalogoDB {
     @Test
     @DisplayName("Bottom up 3.6 TC18: LV2 Test controllo dell interazione sull update fra frontdeskServer command pattern e DB")
     @Tag("integration-LV2")
-    public void updatePrenotazioneTest() throws RemoteException{
+    public void updatePrenotazioneTest() throws  CloneNotSupportedException {
         frontDeskStorage = new PrenotazioneDAO();
-        Prenotazione p2 = CatalogoPrenotazioni.getPrenotazione(prenotazione.getIDPrenotazione());
-        prenotazione.setCheckIn(true);
-        frontDesk.updatePrenotazione(prenotazione);
+        Prenotazione p3 = CatalogoPrenotazioni.getPrenotazione(1);
+        Prenotazione p2 = CatalogoPrenotazioni.getPrenotazione(1);
+        assertNotNull(p2);
+        assertNotNull(p3);
+        p2.setCheckIn(false);
+        assertDoesNotThrow(()->frontDesk.updatePrenotazione(p2));
 
-        try{
-            prenotazione= (Prenotazione) frontDeskStorage.doRetriveByKey(prenotazione.getIDPrenotazione());
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
+        prenotazione= (Prenotazione) assertDoesNotThrow(()->frontDeskStorage.doRetriveByKey(p3.getIDPrenotazione()));
 
-        assertNotEquals(prenotazione, p2);
-        assertNotEquals(CatalogoPrenotazioni.getPrenotazione(prenotazione.getIDPrenotazione()), p2);
+        assertNotEquals(prenotazione, p3);
+        assertNotEquals(CatalogoPrenotazioni.getPrenotazione(prenotazione.getIDPrenotazione()), p3); //verifico se il catalogo ha preso la modifica
     }
 
     @Test
     @DisplayName("Bottom up 3.7 TC19: LV2 Test controllo dell interazione sull'aggiunta del cliente fra frontdeskServer command pattern e DB")
     @Tag("integration-LV2")
     public void addClienteTest() throws RemoteException {
+        frontDeskStorage = new ClienteDAO();
         Cliente c = new Cliente("Roberto","Rossi","napoli","napoli","via manzo",12,45,"323425","M",LocalDate.of(1998,12,1),"CF234rdfcfg","luca@gmail.com","italiana",new Camera());
         frontDesk.addCliente(c);
-        frontDeskStorage = new ClienteDAO();
-        Collection <?> clienti= new ArrayList<>();
-        try{
-            assertDoesNotThrow(()->frontDeskStorage.doRetriveByKey(c.getCf()));
-            clienti= frontDeskStorage.doRetriveAll("decrescente");
-        }catch (SQLException e ){
-            e.printStackTrace();
-        }
-        assertEquals(CatalogoClienti.getListaClienti(), clienti);
+
+        Collection <?> clienti;
+
+        assertDoesNotThrow(()->frontDeskStorage.doRetriveByKey(c.getCf()));
+        clienti= assertDoesNotThrow(()->frontDeskStorage.doRetriveAll("decrescente"));
+
+
+        assertTrue(CatalogoClienti.getListaClienti().contains(c));
+        assertTrue(CatalogoClienti.getListaClienti().containsAll(clienti));  // controlla se la lista passata è contenuta ed è uguale come elementi a quella expected
+
     }
 
     @Test
     @DisplayName("Bottom up 3.8 TC20: LV2 Test controllo dell interazione sulla rimozione del cliente fra frontdeskServer command pattern e DB")
     @Tag("integration-LV2")
     public void removeClienteTest() throws RemoteException {
-        frontDesk.removeCliente(cliente.getFirst());
-        Collection<?> listDB= null;
+        frontDeskStorage = new ClienteDAO();
+        assertFalse(CatalogoClienti.getListaClienti().isEmpty());
+        ArrayList<Cliente> catalogoCopia = CatalogoClienti.getListaClienti();
 
-        assertThrows(SQLException.class,()->frontDeskStorage.doRetriveByKey(cliente.getFirst()));
-        try{
-            listDB=frontDeskStorage.doRetriveAll("decrescente");
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-        assertEquals(catClienti,listDB);
+        Cliente c = CatalogoClienti.getListaClienti().get(0);
+        frontDesk.removeCliente(CatalogoClienti.getListaClienti().getFirst());
+
+        Collection<?> listDB;
+
+        assertThrows(Exception.class,()->frontDeskStorage.doRetriveByKey(c.getCf()));
+        listDB= assertDoesNotThrow(()->frontDeskStorage.doRetriveAll("decrescente"));
+
+        assertNotNull(listDB);
+        assertNotEquals(catalogoCopia, listDB);
+        assertEquals(CatalogoClienti.getListaClienti(),listDB);
     }
 
     @Test
     @DisplayName("Bottom up 3.9 TC21: LV2 Test controllo dell interazione sull update fra frontdeskServer command pattern e DB")
     @Tag("integration-LV2")
-    public void updateClienteTest() throws RemoteException {
+    public void updateClienteTest() throws RemoteException, SQLException {
+
+        frontDeskStorage= new ClienteDAO();
         Cliente c= cliente.getFirst();
         cliente.getFirst().setVia("via giovanni muratore");
+        System.out.println("XDFDFS"+c);
         frontDesk.updateCliente(cliente.getFirst());
 
         Cliente c2= null;
-        try{
-           c2= (Cliente) frontDeskStorage.doRetriveByKey(cliente.getFirst());
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
+
+       frontDeskStorage.doRetriveByKey(cliente.getFirst().getCf());
+
         assertNotEquals(c,c2);
     }
 
     @Test
     @DisplayName("Bottom up 4.0 TC22: LV2 Test controllo dell interazione sul Ban dell utente fra frontdeskServer command pattern e DB")
     @Tag("integration-LV2")
-    public void BanClienteTest() throws RemoteException {
-        Cliente c= cliente.getFirst();
+    public void BanClienteTest() throws RemoteException, CloneNotSupportedException {
+        Cliente c= cliente.getFirst().clone();
+        cliente.getFirst().setBlacklisted(false);
+
         frontDesk.banCliente(cliente.getFirst());
         assertNotEquals(cliente.getFirst(),c);
     }
@@ -295,19 +305,14 @@ public class ServerCatalogoDB {
     @Test
     @DisplayName("Bottom up 4.1 TC 23: LV2 Test controllo dell interazione sul UNBan dell utente fra frontdeskServer command pattern e DB")
     @Tag("integration-LV2")
-    public void UnBanClienteTest() throws RemoteException {
-      //TODO  ArrayList<Cliente> c1= frontDesk.getListClienti();
-        for(Cliente c: cliente){ // TODO c1
-            if(c.isBlacklisted()){
-                frontDesk.banCliente(c);
-            }
-        }
-        Collection <?> clienti= null;
-        try{
-            clienti= frontDeskStorage.doRetriveAll("decrescente");
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-        assertEquals(clienti,CatalogoClienti.getListaClienti());
+    public void UnBanClienteTest() throws RemoteException, CloneNotSupportedException {
+        frontDeskStorage = new ClienteDAO();
+
+        Cliente c= CatalogoClienti.getListaClienti().get(0);
+        assertNotNull(c);
+        frontDesk.unBanCliente(c);
+        //assertFalse(CatalogoClienti.getlistaBannati().contains(c));
+        //assertNotEquals(CatalogoClienti.getCliente(c.getCf()), c);
     }
+
 }

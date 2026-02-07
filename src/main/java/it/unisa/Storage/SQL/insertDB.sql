@@ -65,7 +65,7 @@ VALUES
 ('Luigi Verdi', '2024-02-01', '2024-02-20', '2024-02-25', NULL, 'PT123456', '2019-05-05', '2029-05-05', 'Pensione Completa', 'Intolleranza Lattosio', 'Patente', true, true, 55.00, 'Contanti', 'italiana'),
 
 -- Prenotazione 3: Hans Muller
-('Hans Muller', '2024-02-15', '2024-03-01', '2024-03-07', NULL, 'PASSDE99', '2021-01-01', '2031-01-01', 'All Inclusive', 'Late arrival expected', 'Passaporto', true, false, 80.00, 'Bonifico', 'italiana');
+('Hans Muller', '2024-02-15', '2024-03-01', '2024-03-07', NULL, 'PASSDE99', '2021-01-01', '2031-01-01', 'All Inclusive', 'Late arrival expected', 'Patente', true, false, 80.00, 'Bonifico', 'italiana');
 
 -- =============================================
 -- 7. INSERT ASSOCIATO_A
@@ -73,7 +73,7 @@ VALUES
 -- =============================================
 INSERT INTO Associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto, NominativoCliente, NumeroCameraStorico ) VALUES
 -- Mario Rossi -> Camera 101 -> Prenotazione 1
-('RSSMRA80A01H501U', 101, 1, 350.00, 'Mario',101),
+('RSSMRA80A01H501U', 101, 1, 80.00, 'Mario',101),
 
 -- Luigi Verdi -> Suite 202 -> Prenotazione 2
 ('VRDLGI90B02F205K', 202, 2, 350.00, 'Luigi Verdi',202),
@@ -85,7 +85,7 @@ INSERT INTO Associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto, Nomin
 -- 8. INSERT HA (Dettaglio Servizi)
 -- Importante: Inseriamo manualmente NomeServizioAcquistato
 -- =============================================
-INSERT INTO Ha (IDPrenotazione, IDServizio, quantità , NomeServizioAcquistato, PrezzoAcquistoServizio) VALUES
+INSERT INTO Ha (IDPrenotazione, IDServizio, quantita , NomeServizioAcquistato, PrezzoAcquistoServizio) VALUES
 -- Prenotazione 1 (Mario) prende Parcheggio(1)
 (1, 1, 2,'Parcheggio', 10.00),
 

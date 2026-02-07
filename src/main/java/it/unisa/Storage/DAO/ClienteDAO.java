@@ -101,6 +101,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
     @Override
     public synchronized Cliente doRetriveByKey(Object oggetto) throws SQLException{
         if (oggetto instanceof String){
+            Cliente cliente = new Cliente();
             String cf = (String) oggetto;
             con = ConnectionStorage.getConnection();
 
@@ -124,8 +125,8 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                     cliente.setDataNascita(resultSet.getDate("DatadiNascita").toLocalDate());
                     cliente.setBlacklisted(resultSet.getBoolean("IsBlackListed"));
                     cliente.setCamera(new Camera());
-                } else {
-                    throw new NoSuchElementException("ERROR: Cliente non presente nel database");
+                }else{
+                    throw new NoSuchElementException("cliente non presente nel DB");
                 }
 
                 resultSet.close();
@@ -234,7 +235,7 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
             "nome = ?, cognome = ?, Cap = ?, comune = ?, " +
             "civico = ?, provincia = ?, via = ?, Email = ?, Sesso = ?, " +
             "telefono = ?, Nazionalita = ?, " +
-            "DataDiNascita = ?, IsBlackListed = ?";
+            "DataDiNascita = ?, IsBlackListed = ? WHERE CF = ?";
         if(o != null && o.getCf() != null){
             con = ConnectionStorage.getConnection();
             try(PreparedStatement preparedStatement = con.prepareStatement(query)){
@@ -252,6 +253,8 @@ public class ClienteDAO implements FrontDeskStorage<Cliente> {
                 preparedStatement.setString(11, o.getNazionalita());
                 preparedStatement.setDate(12, Date.valueOf(o.getDataNascita()));
                 preparedStatement.setBoolean(13, o.isBlacklisted());
+                preparedStatement.setString(14, o.getCf());
+                System.out.println(o.isBlacklisted());
                 int rowsAffected = preparedStatement.executeUpdate();
                 log.debug(rowsAffected+" rows affected");
             }

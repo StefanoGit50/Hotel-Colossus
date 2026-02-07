@@ -22,7 +22,6 @@ public class CredenzialiUtils {
         return BCrypt.withDefaults().hashToString(8, password.toCharArray());
     }
 
-
     /**
      * Verifica la validità di password.
      *
@@ -32,7 +31,7 @@ public class CredenzialiUtils {
     public static boolean checkPassword(String password, String HashedPassword) {
         password=password.trim();
         BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), HashedPassword.toCharArray());
-        if(result.verified) {
+        if(result.verified){
             return true;
         }
         return false;

@@ -86,7 +86,7 @@ public class CatalogoClienti implements Serializable {
     public static boolean updateCliente(Cliente cliente){
         boolean flag = false; // flag ci serve per sapere se abbiamo trovato e rimosso il vecchio
 
-        if(listaClienti.contains(cliente)){
+
             Iterator<Cliente> it = listaClienti.iterator();
             while (it.hasNext()) {
                 Cliente c = it.next();
@@ -105,7 +105,6 @@ public class CatalogoClienti implements Serializable {
                     break;
                 }
             }
-        }
 
         if (flag) {
             listaClienti.add(cliente);
@@ -118,7 +117,9 @@ public class CatalogoClienti implements Serializable {
     }
 
 
-
+    public static ArrayList<Cliente> getlistaBannati(){
+        return listaClientiBannati;
+    }
     /**
      * Aggiunge un nuovo cliente alla lista dei clienti e lo salva nel database.
      * Il cliente viene aggiunto solo se non è già presente nella lista.
@@ -168,8 +169,10 @@ public class CatalogoClienti implements Serializable {
      * @return Un nuovo ArrayList contenente copie (cloni) di tutti gli oggetti Cliente.
      */
     public synchronized static ArrayList<Cliente> getListaClienti() {
+        aggiornalista();
         return Util.deepCopyArrayList(listaClienti);
     }
+
 
     /**
      * Restituisce una deep copy dell'elenco dei clienti bannati.
@@ -228,7 +231,6 @@ public class CatalogoClienti implements Serializable {
     public synchronized static void setListaClientiBannati(ArrayList<Cliente> listaClientiBannati1) {
         listaClientiBannati = listaClientiBannati1;
     }
-
     //
     //  METODI INTERFACCIA PUBLICA
     //
@@ -311,15 +313,12 @@ public class CatalogoClienti implements Serializable {
      * @return Una deep copy dell'oggetto Cliente trovato, o {@code null} se non esiste nessun cliente con quel CF.
      * @throws CloneNotSupportedException Se l'oggetto Cliente non supporta la clonazione.
      */
-    public Cliente getCliente(String CFCliente) throws CloneNotSupportedException{
+    public static Cliente getCliente(String CFCliente) throws CloneNotSupportedException{
         for (Cliente c : listaClienti) {
             if (c.getCf().equals(CFCliente))
                 return c.clone();
         }
-        for (Cliente c : listaClientiBannati) {
-            if (c.getCf().equals(CFCliente))
-                return c.clone();
-        }
+
         return null;
     }
 

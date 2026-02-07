@@ -2,14 +2,9 @@ package WhiteBox.UnitTest;
 
 
 import it.unisa.Common.Servizio;
-import it.unisa.Storage.ConnectionStorage;
 import it.unisa.Storage.DAO.ServizioDAO;
-import org.apache.logging.log4j.core.appender.db.DbAppenderLoggingException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.*;
@@ -17,10 +12,9 @@ import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ServizioDAOTesting{
+public class ServizioDAOTest {
 
     private Servizio servizio;
 
@@ -32,7 +26,7 @@ public class ServizioDAOTesting{
         servizio = new Servizio("Minibar",30.0);
     }
 
-    @DisplayName("TC40: doDelete(Servizio servizio) quando va tutto bene")
+    @DisplayName("TC38: doDelete(Servizio servizio) quando va tutto bene")
     @Test
     @Tag("True")
     public void doDeleteAllTrue() throws SQLException{
@@ -41,7 +35,7 @@ public class ServizioDAOTesting{
         assertDoesNotThrow(()->servizioDAO.doDelete(new Servizio("WiFi Premium",5)));
     }
     @Test
-    @DisplayName("TC41: doDelete(Servizio servizio) quando o la chiave di servizio o servizio sono uguale a null")
+    @DisplayName("TC39: doDelete(Servizio servizio) quando o la chiave di servizio o servizio sono uguale a null")
     @Tags({@Tag("Exception"),@Tag("Error")})
      public void doDeleteException() throws SQLException {
         DBPopulator.cancel();
@@ -50,7 +44,7 @@ public class ServizioDAOTesting{
     }
 
     @Test
-    @DisplayName("TC42: doRetriveByKey(Object nome) quando vado tutto a buon fine")
+    @DisplayName("TC40: doRetriveByKey(Object nome) quando vado tutto a buon fine")
     @Tag("True")
     public void doRetriveByKeyAllTrue() throws SQLException {
         DBPopulator.cancel();
@@ -59,7 +53,7 @@ public class ServizioDAOTesting{
         Servizio servizio2 = new Servizio("Spa e Benessere",45);
         assertEquals(servizio2,servizio1);
     }
-    @DisplayName("TC43: doRetriveByKey(Object nome) quando resultSet.next() ritorno false")
+    @DisplayName("TC41: doRetriveByKey(Object nome) quando resultSet.next() ritorno false")
     @Tags({@Tag("Error"),@Tag("Exception"),@Tag("False")})
     @Test
     public void doRetriveByKeyResultSetIsFalse() throws SQLException{
@@ -68,7 +62,7 @@ public class ServizioDAOTesting{
         assertThrows(NoSuchElementException.class,()->servizioDAO.doRetriveByKey("Spa"));
     }
 
-    @DisplayName("TC44: doRetriByKey(Object nome) quando il nome non è una stringa")
+    @DisplayName("TC42: doRetriByKey(Object nome) quando il nome non è una stringa")
     @Tags({@Tag("Exception"),@Tag("Error")})
     @Test
     public void doRetriveByKeyNomeNonèUnaStringa(){
@@ -77,7 +71,7 @@ public class ServizioDAOTesting{
 
     @Test
     @Tag("True")
-    @DisplayName("TC45: doRetriveAll(String order) quando va tutto bene")
+    @DisplayName("TC43: doRetriveAll(String order) quando va tutto bene")
     public void doRetriveAllAllTrue() throws SQLException {
         DBPopulator.cancel();
         DBPopulator.populator();
@@ -96,7 +90,7 @@ public class ServizioDAOTesting{
 
     @Tag("False")
     @Test
-    @DisplayName("TC46: doRetriveAll(String order) quando resultSet.next() restituisce uguale a false")
+    @DisplayName("TC44: doRetriveAll(String order) quando resultSet.next() restituisce uguale a false")
     public void doRetriveAllResultSetIsFalse() throws SQLException{
         DBPopulator.cancel();
         assertThrows(NoSuchElementException.class,()->servizioDAO.doRetriveAll("nome"));
@@ -104,7 +98,7 @@ public class ServizioDAOTesting{
 
     @Tag("True")
     @Test
-    @DisplayName("TC47: doRetriveAll(String order) quando va tutto bene pero order = null")
+    @DisplayName("TC45: doRetriveAll(String order) quando va tutto bene pero order = null")
     public void doRetriveAllCrescente() throws SQLException{
         ArrayList<Servizio> servizios = new ArrayList<>();
         DBPopulator.cancel();
@@ -120,7 +114,7 @@ public class ServizioDAOTesting{
     }
 
     @Tag("True")
-    @DisplayName("TC48: doUpdate(Servizio servizio) quando va tutto bene")
+    @DisplayName("TC46: doUpdate(Servizio servizio) quando va tutto bene")
     @Test
     public void doUpdateAllTrue() throws SQLException{
         servizio.setPrezzo(20);
@@ -129,7 +123,7 @@ public class ServizioDAOTesting{
 
     @Tags({@Tag("Exception"),@Tag("Error")})
     @Test
-    @DisplayName("TC49: doUpdate(Servizio servizio) quando servizio è uguale a null")
+    @DisplayName("TC47: doUpdate(Servizio servizio) quando servizio è uguale a null")
     public void doUpdatException(){
         DBPopulator.cancel();
         assertThrows(SQLException.class,()->servizioDAO.doUpdate(null));
@@ -137,7 +131,7 @@ public class ServizioDAOTesting{
 
     @Tag("True")
     @Test
-    @DisplayName("TC50: doRetriveByAttribute(String attribute , Object value) quando va tutto bene ")
+    @DisplayName("TC48: doRetriveByAttribute(String attribute , Object value) quando va tutto bene ")
     public void doRetriveByAttributeAllTrue() throws SQLException {
         DBPopulator.cancel();
         DBPopulator.populator();
@@ -149,13 +143,13 @@ public class ServizioDAOTesting{
 
     @Tags({@Tag("Exception"),@Tag("Error"),@Tag("False")})
     @Test
-    @DisplayName("TC51: doRetriveByAttribute() quando resultSet.next() ritorna false")
+    @DisplayName("TC49: doRetriveByAttribute() quando resultSet.next() ritorna false")
     public void doRetriveByAttributeResultSetIsFalse() throws SQLException {
        DBPopulator.cancel();
        assertThrows(NoSuchElementException.class,()->servizioDAO.doRetriveByAttribute("Nome","Piscina"));
     }
     @Test
-    @DisplayName("TC52: doRetriveByAttribute() quando da un Eccezione ")
+    @DisplayName("TC50: doRetriveByAttribute() quando da un Eccezione ")
     @Tags({@Tag("Error"),@Tag("Exception")})
     public void doRetriveByAttributeException(){
         assertThrows(RuntimeException.class,()->servizioDAO.doRetriveByAttribute(null,null));

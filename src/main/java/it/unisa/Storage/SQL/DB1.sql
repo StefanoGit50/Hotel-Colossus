@@ -85,7 +85,7 @@ create table Ha(
                    IDDettaglio int AUTO_INCREMENT PRIMARY KEY,
                    IDPrenotazione int not null,
                    IDServizio int NULL,
-                   quantità int NULL,
+                   quantita int NULL,
                    NomeServizioAcquistato varchar(50) not null,
                    PrezzoAcquistoServizio double not null,
                    UNIQUE(IDServizio,IDPrenotazione),
