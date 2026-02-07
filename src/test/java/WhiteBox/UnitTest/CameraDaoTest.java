@@ -20,12 +20,25 @@ public class CameraDaoTest {
     private ResultSet resultSet;
     private Camera camera;
 
+    @BeforeAll
+    public static void setBeforeAll(){
+        DBPopulator.cancel();
+    }
+
+
     @BeforeEach
     public void setUp() throws SQLException {
         // Inizializza DAO e oggetto Camera
+        DBPopulator.populator();
         cameraDAO = new CameraDAO();
         camera = new Camera(104, Stato.Libera, 2, 150.0,"Camera prova","ho sole mio");
     }
+
+    @AfterEach
+    public void after(){
+        DBPopulator.cancel();
+    }
+
 
     @Test
     @Tag("True")
@@ -49,7 +62,6 @@ public class CameraDaoTest {
    @Test
    @Tag("True")
    @DisplayName("TC3: doRetriveAll() quando è tutto vero")
-
    public void doRetriveAllTrue() throws SQLException {
         DBPopulator.cancel();
         DBPopulator.populator();

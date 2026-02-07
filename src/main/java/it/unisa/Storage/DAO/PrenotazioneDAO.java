@@ -154,7 +154,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
             }
 
             // Salva i servizi associati
-            String query = "Insert into ha (IDPrenotazione,IDServizio,NomeServizioAcquistato,Quantità,PrezzoAcquistoServizio) values(?,?,?,?,?)";
+            String query = "Insert into ha (IDPrenotazione,IDServizio,NomeServizioAcquistato,Quantita,PrezzoAcquistoServizio) values(?,?,?,?,?)";
             PreparedStatement preparedStatement1 = connection.prepareStatement(query);
 
             HashMap<Integer, Integer> conteggioMapServizio = new HashMap<>(); // mappe per gestire il rapporto quantità - id
@@ -368,7 +368,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
             if (rs.next()){
                 try {
                     do {
-                        int num_servizi =  rs.getInt("quantità");
+                        int num_servizi =  rs.getInt("quantita");
                         Servizio servizio = null;
                         servizio = dao3.doRetriveByKey(rs.getString("NomeServizioAcquistato"));
                         servizio.setPrezzo(rs.getDouble("PrezzoAcquistoServizio"));
@@ -476,7 +476,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
                 "TipoDocumento = ? , Stato = ? , CheckIn = ? , PrezzoAcquistoTrattamento = ? , MetodoPagamento = ? , Cittadinanza = ?" +
                 " Where IDPrenotazione = ?";
 
-        sql[1] = "UPDATE HA SET NomeServizioAcquistato = ? , PrezzoAcquistoServizio = ? ,quantità =?" + " WHERE IDServizio = ? AND IDPrenotazione = ? ";
+        sql[1] = "UPDATE HA SET NomeServizioAcquistato = ? , PrezzoAcquistoServizio = ? ,quantita =?" + " WHERE IDServizio = ? AND IDPrenotazione = ? ";
         connection = ConnectionStorage.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql[0]);
             try {
@@ -618,7 +618,7 @@ public class PrenotazioneDAO implements FrontDeskStorage<Prenotazione>  {
 
                         try (ResultSet rs2 = stmt.executeQuery()) {
                             while (rs2.next()) {
-                                int n= rs2.getInt("quantità");
+                                int n= rs2.getInt("quantita");
                                 String nome = rs2.getString("NomeServizioAcquistato");
                                 Double prezzo = rs2.getDouble("PrezzoAcquistoServizio");
                                 for (int i = 0; i<n;i++){

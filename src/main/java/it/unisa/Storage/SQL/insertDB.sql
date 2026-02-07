@@ -85,7 +85,7 @@ INSERT INTO Associato_a (CF, NumeroCamera, IDPrenotazione, PrezzoAcquisto, Nomin
 -- 8. INSERT HA (Dettaglio Servizi)
 -- Importante: Inseriamo manualmente NomeServizioAcquistato
 -- =============================================
-INSERT INTO Ha (IDPrenotazione, IDServizio, quantità , NomeServizioAcquistato, PrezzoAcquistoServizio) VALUES
+INSERT INTO Ha (IDPrenotazione, IDServizio, quantita , NomeServizioAcquistato, PrezzoAcquistoServizio) VALUES
 -- Prenotazione 1 (Mario) prende Parcheggio(1)
 (1, 1, 2,'Parcheggio', 10.00),
 

@@ -102,7 +102,7 @@ public class FrontDeskClient
                     case 4:
                     {
                         List<Camera> camList= frontDeskInterface.getCamere();
-                        IO.println(camList.toString());
+                        System.out.println(camList.toString());
                         System.out.println("Inserisci numero camera da modificare: ");
                         Scanner sc2 = new Scanner(System.in);
                         int n=sc2.nextInt();
@@ -113,17 +113,17 @@ public class FrontDeskClient
                             if(c.getNumeroCamera()== n){
                                 c.setStatoCamera(Stato.Occupata);
                                 boolean b = frontDeskInterface.aggiornaStatoCamera(c);
-                                IO.println("Camera result : "+b);
+                                System.out.println("Camera result : "+b);
                                 flag=true;
                             }
                         }
 
                         if(!flag){
-                            IO.println("Camera non trovata inserire una camera nella lista");
+                           System.out.println("Camera non trovata inserire una camera nella lista");
                             break;
                         }
                         Camera c= frontDeskInterface.update();
-                        IO.println("Camera mandata dal server = " +c.toString());
+                        System.out.println("Camera mandata dal server = " +c.toString());
                         //aggiorna gui da qui
 
                         break;
@@ -132,16 +132,16 @@ public class FrontDeskClient
                     case 5:
                     {
                         List<Camera> camList= frontDeskInterface.getCamere();
-                        IO.println(camList.toString());
+                        System.out.println(camList.toString());
                         break;
                     }
                     case 6:{
                         CameraDAO cameraDAO = new CameraDAO();
                         ArrayList<Camera> cameras = (ArrayList<Camera>) frontDeskInterface.getCamere();
-                        IO.println("Questo è l'oggetto" + cameras.getFirst());
-                        IO.println("Sto salvando nel DB ...");
+                        System.out.println("Questo è l'oggetto" + cameras.getFirst());
+                        System.out.println("Sto salvando nel DB ...");
                         cameraDAO.doSave(cameras.getFirst());
-                        IO.println("Salvataggio effettuato");
+                        System.out.println("Salvataggio effettuato");
                         break;
                     }
                     case 7:{

@@ -37,8 +37,6 @@ public class ImpiegatoDAO implements BackofficeStorage<Impiegato> {
             "DataDiNascita",
             "IsBlackListed"
     };
-
-
     /**
      * Salva un nuovo impiegato nel database.
      *
