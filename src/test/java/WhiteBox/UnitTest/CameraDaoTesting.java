@@ -64,7 +64,7 @@ public class CameraDaoTesting{
         DBPopulator.cancel();
         DBPopulator.populator();
         ArrayList<Camera> cameras = new ArrayList<>();
-        cameras.add(new Camera(101,Stato.Occupata,2,80,"Vista interna","Camera Standard"));
+        cameras.add(new Camera(101,Stato.Libera,2,80,"Vista interna","Camera Standard"));
         cameras.add(new Camera(102,Stato.Occupata,2,80,"Vista strada","Camera Standard"));
         cameras.add(new Camera(201,Stato.Prenotata,3,180,"Vista mare laterale","Junior Suite"));
         cameras.add(new Camera(202,Stato.Occupata,2,350,"Jacuzzi privata","Suite Presidenziale"));
@@ -128,7 +128,6 @@ public class CameraDaoTesting{
         DBPopulator.cancel();
         DBPopulator.populator();
         ArrayList<Camera>cameras = new ArrayList<>();
-         cameras.add(new Camera(101,Stato.Occupata,2,80,"Vista interna","Camera Standard"));
          cameras.add(new Camera(102,Stato.Occupata,2,80,"Vista strada","Camera Standard"));
          cameras.add(new Camera(202,Stato.Occupata,2,350,"Jacuzzi privata","Suite Presidenziale"));
 

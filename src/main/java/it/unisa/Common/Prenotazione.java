@@ -532,6 +532,9 @@ public class Prenotazione implements Cloneable, Serializable {
         cloned.listaServizi = Util.deepCopyArrayList(this.listaServizi);
         cloned.listaClienti = Util.deepCopyArrayList(this.listaClienti);
 
-        return cloned;
+            return cloned;
+        }catch (CloneNotSupportedException cloneNotSupportedException){
+            throw new RuntimeException(cloneNotSupportedException);
+        }
     }
 }

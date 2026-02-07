@@ -279,14 +279,13 @@ public class ServerCatalogoDB {
     public void updateClienteTest() throws RemoteException {
         Cliente c= cliente.getFirst();
         cliente.getFirst().setVia("via giovanni muratore");
+        System.out.println("XDFDFS"+c);
         frontDesk.updateCliente(cliente.getFirst());
 
         Cliente c2= null;
-        try{
-           c2= (Cliente) frontDeskStorage.doRetriveByKey(cliente.getFirst());
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
+
+        c2= (Cliente) assertDoesNotThrow(()->frontDeskStorage.doRetriveByKey(cliente.getFirst()));
+
         assertNotEquals(c,c2);
     }
 

@@ -65,6 +65,7 @@ public class prenotazioneDAOTesting{
     @AfterEach
     public void after(){
        DBPopulator.cancel();
+       DBPopulator.populator();
     }
 
     @Test
@@ -287,7 +288,7 @@ public class prenotazioneDAOTesting{
     @Tag("False")
     @DisplayName("TC37: doRetriveByAttribute() quando va male il primo resultset")
     public void doRetriveByAttributeFalseIlPrimoResultSet() throws SQLException {
-       DBPopulator.cancel();
+        DBPopulator.cancel();
        ArrayList<Prenotazione> prenotaziones = new ArrayList<>();
        assertEquals(prenotaziones,prenotazioneDAO.doRetriveByAttribute("IDPrenotazione",1));
     }
