@@ -19,7 +19,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Main {
-    static void main() throws RemoteException, SQLException {
+    static void main() throws RemoteException, SQLException, IllegalAccess {
         System.out.println("QUI IL MAIN ");
         FrontDesk frontDesk = new FrontDesk();
         ClienteDAO clienteDAO = new ClienteDAO();

@@ -119,7 +119,7 @@ public class FrontDeskClient
                         }
 
                         if(!flag){
-                           System.out.println("Camera non trovata inserire una camera nella lista");
+                            System.out.println("Camera non trovata inserire una camera nella lista");
                             break;
                         }
                         Camera c= frontDeskInterface.update();
@@ -203,7 +203,7 @@ public class FrontDeskClient
 
     }*/
 
-    public List<Prenotazione> getPrenotazioni() throws RemoteException{
+    public List<Prenotazione> getPrenotazioni() {
         List<Prenotazione> prenotaziones = null;
         try{
            prenotaziones = frontDeskInterface.getPrenotazioni();
@@ -214,13 +214,56 @@ public class FrontDeskClient
         return prenotaziones;
     }
 
-    public void addPrenotazione(Prenotazione p) throws RemoteException {
+    public String addPrenotazione(Prenotazione p)  {
+        String message="";
         try{
             frontDeskInterface.addPrenotazione(p);
         }catch (RemoteException remoteException){
             remoteException.getMessage();
             remoteException.getStackTrace();
+        }catch (IllegalAccess illegalAccessException){
+            message = illegalAccessException.getMessage();
         }
+        return message;
+    }
+    public String removePrenotazione(Prenotazione p) {
+        String message="";
+        try{
+            frontDeskInterface.removePrenotazione(p);
+        }catch (RemoteException remoteException){
+            remoteException.getMessage();
+            remoteException.getStackTrace();
+        }catch (IllegalAccess illegalAccessException){
+            message = illegalAccessException.getMessage();
+        }
+        return message;
+
+    }
+
+    public String updatePrenotazione(Prenotazione p)  {
+        String message="";
+        try{
+            frontDeskInterface.updatePrenotazione(p);
+        }catch (RemoteException remoteException){
+            remoteException.getMessage();
+            remoteException.getStackTrace();
+        }catch (IllegalAccess illegalAccessException){
+            message = illegalAccessException.getMessage();
+        }
+        return message;
+    }
+
+    public String addCliente(Cliente c) {
+        String message="";
+        try{
+            frontDeskInterface.addCliente(c);
+        }catch (RemoteException remoteException){
+            remoteException.getMessage();
+            remoteException.getStackTrace();
+        }catch (IllegalAccess illegalAccessException){
+            message = illegalAccessException.getMessage();
+        }
+        return message;
     }
 
     public Impiegato DoAuthentication(String username, String password, String pwd2) throws RemoteException, IllegalAccess {
@@ -231,7 +274,7 @@ public class FrontDeskClient
                 return null;
             }
 
-            System.out.println("nel client username e password" + username+ password);
+            System.out.println("nel client username e password" + username+" " +password);
              imp =frontDeskInterface.authentication(username, password, pwd2);
             System.out.println(imp);
         }catch (RemoteException remoteException){

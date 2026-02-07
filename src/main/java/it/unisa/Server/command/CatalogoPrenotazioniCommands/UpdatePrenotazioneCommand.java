@@ -1,6 +1,7 @@
 package it.unisa.Server.command.CatalogoPrenotazioniCommands;
 
 import it.unisa.Common.Prenotazione;
+import it.unisa.Server.IllegalAccess;
 import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
 
@@ -85,11 +86,11 @@ public class UpdatePrenotazioneCommand implements Command {
      * @post CatalogoPrenotazioni.listaPrenotazioni.stream().anyMatch(p | p.IDPrenotazione == prenotazione.IDPrenotazione)
      */
     @Override
-    public void execute() {
+    public void execute() throws IllegalAccess {
        prenotazioneNonModificata= prenotazione;
        boolean bool =CatalogoPrenotazioni.UpdatePrenotazioni(prenotazione);
         if(!bool){
-            throw new NoSuchElementException("Prenotazione non trovata");
+            throw new IllegalAccess("Prenotazione non trovata");
         }
 
     }

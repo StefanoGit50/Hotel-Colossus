@@ -1,8 +1,11 @@
 package it.unisa.Server.command.CatalogoPrenotazioniCommands;
 
 import it.unisa.Common.Prenotazione;
+import it.unisa.Server.IllegalAccess;
 import it.unisa.Server.command.Command;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
+
+import java.util.ArrayList;
 
 
 /**
@@ -10,7 +13,6 @@ import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
  */
 public class RemovePrenotazioneCommand implements Command {
 
-    private CatalogoPrenotazioni catalogue = new CatalogoPrenotazioni();
     private Prenotazione prenotazione;
 
     /**
@@ -34,20 +36,8 @@ public class RemovePrenotazioneCommand implements Command {
      * @post result == catalogue
      * @return catalogue
      */
-    public CatalogoPrenotazioni getCatalogue() {
-        return catalogue;
-    }
-
-
-    /**
-     * Imposta il valore di catalogue.
-     *
-     * @param catalogue
-     * @pre catalogue != null
-     * @post this.catalogue == catalogue
-     */
-    public void setCatalogue(CatalogoPrenotazioni catalogue) {
-        this.catalogue = catalogue;
+    public ArrayList<Prenotazione> getCatalogue() {
+        return CatalogoPrenotazioni.getListaPrenotazioni();
     }
 
 
@@ -80,8 +70,10 @@ public class RemovePrenotazioneCommand implements Command {
      * @post not CatalogoPrenotazioni.listaPrenotazioni.contains(prenotazione)
      */
     @Override
-    public void execute() {
+    public void execute() throws IllegalAccess {
+        ArrayList<Prenotazione> p =CatalogoPrenotazioni.getListaPrenotazioni();
         CatalogoPrenotazioni.removePrenotazioni(prenotazione);
+        if(p.equals(CatalogoPrenotazioni.getListaPrenotazioni()))throw  new IllegalAccess("Prenotazione non rimossa");
     }
 
 
@@ -92,7 +84,6 @@ public class RemovePrenotazioneCommand implements Command {
      */
     @Override
     public void undo() {
-        CatalogoPrenotazioni.getListaPrenotazioni();
         CatalogoPrenotazioni.addPrenotazioni(prenotazione);
     }
 }

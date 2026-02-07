@@ -2,6 +2,7 @@ package it.unisa.Server.BackOffice;
 
 import it.unisa.Common.*;
 import it.unisa.Server.Autentication.TokenGenerator;
+import it.unisa.Server.IllegalAccess;
 import it.unisa.Server.command.CatalogoImpiegatiCommands.AddImpiegatoCommand;
 import it.unisa.Server.command.CatalogoImpiegatiCommands.RemoveImpiegatoCommand;
 import it.unisa.Server.command.CatalogoImpiegatiCommands.UpdateImpiegatoCommand;
@@ -108,7 +109,7 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
 
     //  COMANDI IMPIEGATO
     @Override
-    public void addImpiegato(Impiegato i) throws RemoteException {
+    public void addImpiegato(Impiegato i) throws RemoteException, IllegalAccess {
         CatalogueUtils.checkNull(i);            // Lancia InvalidInputException
         CatalogoImpiegati.checkImpiegato(i);    // Lancia InvalidInputException
         AddImpiegatoCommand command = new AddImpiegatoCommand(i);
@@ -116,14 +117,14 @@ public class ManagerImpl extends UnicastRemoteObject implements ManagerInterface
     }
 
     @Override
-    public void removeImpiegato(Impiegato i) throws RemoteException {
+    public void removeImpiegato(Impiegato i) throws RemoteException, IllegalAccess {
         RemoveImpiegatoCommand command = new RemoveImpiegatoCommand(i);
         invoker.executeCommand(command);
 
     }
 
     @Override
-    public void updateImpiegato(Impiegato i) throws RemoteException {
+    public void updateImpiegato(Impiegato i) throws RemoteException, IllegalAccess {
         UpdateImpiegatoCommand command = new UpdateImpiegatoCommand(i);
         invoker.executeCommand(command);
     }

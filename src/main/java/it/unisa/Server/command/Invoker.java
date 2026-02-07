@@ -1,6 +1,8 @@
 // Invoker
 package it.unisa.Server.command;
 
+import it.unisa.Server.IllegalAccess;
+
 import java.util.Objects;
 import java.util.Stack;
 
@@ -36,7 +38,7 @@ public class Invoker {
      *
      * @param c Comando da eseguire.
      */
-    public void executeCommand(Command c) {
+    public void executeCommand(Command c) throws IllegalAccess {
         undoStack.push(c);
         c.execute();
         redoStack.clear(); // Invalida il redo dopo nuova azione
@@ -63,10 +65,14 @@ public class Invoker {
      * @post undoStack.size() == undoStack@pre.size() + 1
      *
      */
-    public void redo() {
+    public void redo()  {
         if (!redoStack.isEmpty()) {
             Command command = redoStack.pop();
-            command.execute();
+            try {
+                command.execute();
+            }catch (Exception e) {
+                throw new RuntimeException(e);
+            }
             undoStack.push(command);
         }
     }

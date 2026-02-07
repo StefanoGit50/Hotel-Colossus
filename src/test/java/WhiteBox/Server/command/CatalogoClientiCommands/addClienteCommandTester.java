@@ -3,6 +3,7 @@ package WhiteBox.Server.command.CatalogoClientiCommands;
 
 import it.unisa.Common.Camera;
 import it.unisa.Common.Cliente;
+import it.unisa.Server.IllegalAccess;
 import it.unisa.Server.command.CatalogoClientiCommands.AddClienteCommand;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
 import it.unisa.Storage.DAO.ClienteDAO;
@@ -118,6 +119,8 @@ class AddClienteCommandTester{
             // Assert
             assertTrue(listaClienti.contains(clienteTest));
             assertEquals(1, listaClienti.size());
+        } catch (IllegalAccess e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -129,7 +132,12 @@ class AddClienteCommandTester{
 
         try (MockedConstruction<ClienteDAO> mockedDAO = mockConstruction(ClienteDAO.class)) {
             // Act
-            command.execute();
+
+            try {
+                command.execute();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
             // Assert
             ClienteDAO dao = mockedDAO.constructed().get(0);

@@ -1,34 +1,187 @@
 package IntegrationTesting.BottomUp.Livello3;
 
+import WhiteBox.UnitTest.DBPopulator;
 import it.unisa.Client.FrontDesk.FrontDeskClient;
 import it.unisa.Client.GUI.components.BookingCreation;
 import it.unisa.Common.Camera;
 import it.unisa.Common.Cliente;
 import it.unisa.Common.Prenotazione;
+import it.unisa.Common.Trattamento;
 import it.unisa.Server.gestionePrenotazioni.FrontDesk;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import it.unisa.Storage.DAO.CameraDAO;
+import it.unisa.Storage.DAO.ClienteDAO;
+import it.unisa.Storage.DAO.PrenotazioneDAO;
+import it.unisa.Storage.Interfacce.FrontDeskStorage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.PreInterruptCallback;
 
 import java.net.MalformedURLException;
+import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.LongSummaryStatistics;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ClientRMIServer {
-    private FrontDeskClient frontDeskClient = new FrontDeskClient();
+    private static final Logger log = LogManager.getLogger(ClientRMIServer.class);
+    private static FrontDesk frontDesk;
+    private static FrontDeskClient frontDeskClient;
+    private static FrontDeskStorage frontDeskStorage;
+    private static Thread serverThread;
+    private static final int PORT = 1099;
+    private static final String SERVICE_NAME = "GestionePrenotazioni";
 
-    public ClientRMIServer() throws MalformedURLException, NotBoundException, RemoteException {
+    private static List<Camera> cameras;
+    private static List<Prenotazione> plist;
+    private static List<Cliente> clientes;
+
+    @BeforeAll
+    public static void setUp() throws RemoteException, NotBoundException, MalformedURLException, InterruptedException {
+            log.info("--- 1. AVVIO SERVER IN BACKGROUND ---");
+
+            //  Lanciamo il server su un thread separato
+            serverThread = new Thread(() -> {
+                try {
+                    // chiamerà il tuo costruttore che contiene il .join()
+                    new FrontDesk();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+            serverThread.setDaemon(true); //  Muore quando finisce il test
+            serverThread.start();
+
+            ClientRMIServer.log.info("--- 2. ATTENDO CHE IL SERVER SIA PRONTO ---");
+            waitForServerToStart();
+
+            // C. Ora che il server è attivo collego il client
+            log.info("--- 3. AVVIO CLIENT ---");
+            frontDeskClient = new FrontDeskClient();
+            log.info("✓ Client connesso e pronto per i test.");
+        }
+
+        // Metodo che blocca il test finché il server non risponde
+        private static void waitForServerToStart() {
+            boolean isConnected = false;
+            int tentativi = 0;
+            int maxTentativi = 20; // Aspetta massimo 10 secondi (20 * 500ms)
+
+            while (!isConnected && tentativi < maxTentativi) {
+                try {
+                    // Proviamo a vedere se "GestionePrenotazioni" esiste nel registro
+
+                    String url = "rmi://localhost:" + PORT + "/GestionePrenotazioni";
+                    Naming.lookup(url);
+
+                    isConnected = true;
+                    log.info("✓ Server rilevato online al tentativo " + (tentativi + 1));
+
+                } catch (Exception e) {
+                    // Il server non è ancora pronto
+                    tentativi++;
+                    System.out.println("... server non ancora pronto (tentativo " + tentativi + ")...");
+                    try {
+                        Thread.sleep(500); // Aspetta mezzo secondo
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
+            }
+
+            if (!isConnected) {
+                throw new RuntimeException("TIMEOUT: Il Server RMI non si è avviato in tempo.");
+            }
+        }
+
+@AfterEach
+public void tearDown() {
+    DBPopulator.cancel();
+    DBPopulator.populator();
+}
+
+    @Test
+    @DisplayName("Bottom Up TC24: LV3 get camera dal DB attraverso il server RMI ")
+    @Tag("integration-LV3")
+    @SuppressWarnings("unchecked")
+    public void getCamereTest() {
+        frontDeskStorage= new CameraDAO();
+        List<Camera> cameraList = assertDoesNotThrow(()->frontDeskClient.getCamere());
+
+        //verifica se le camere sono le stesse del DB
+
+        cameras = (List<Camera>) assertDoesNotThrow(()->frontDeskStorage.doRetriveAll("decrescente"));
+        assertEquals(cameras,cameraList);
     }
 
     @Test
-    @DisplayName("Bottom Up TC24: LV3 FrontDeskClientRMI +FrontDeskServer+DB ")
+    @DisplayName("Bottom Up TC25: lV3 FrontDesk getPrenotazioni DB attraverso il server RMI")
     @Tag("integration-LV3")
-    public void FrontDeskCompleteTest(){
-        ArrayList<Camera> camere = null;
+    @SuppressWarnings("unchecked")
+    public void getPrenotazioneTest() {
+        frontDeskStorage= new PrenotazioneDAO();
+        List<Prenotazione> plist1 = assertDoesNotThrow(()-> frontDeskClient.getPrenotazioni());
+
+        plist = (List<Prenotazione>) assertDoesNotThrow(()->frontDeskStorage.doRetriveAll("decrescente"));
+        System.out.println(plist.size()+"  "+plist);
+        System.out.println(plist.size()+"  "+plist);
+        assertEquals(plist1,plist);
+    }
+
+    @Test
+    @DisplayName("Bottom up TC25 : LV3 FrontDesk addPrenotazioni DB attraverso il server RMI")
+    @Tag("integration-LV3")
+    public void addPrenotazioneTest() {
+        /*Prenotazione p = new Prenotazione(LocalDate.now(),LocalDate.now(),LocalDate.now().plusDays(5),null,new Trattamento("Mezza Pensione",87),87,"Patente",
+                LocalDate.of(2020,04,02),LocalDate.of(2030,05,02),"Mario Biondi","",);
+
+        List<Prenotazione> prenotazioneList = assertDoesNotThrow(()->frontDeskClient.addPrenotazione());*/
+    }
+
+    @Test
+    @DisplayName("Bottom up TC26 : LV3 FrontDesk rimozione prenotazione attraverso la chiamata RMI")
+    @Tag("integration-LV3")
+    @SuppressWarnings("unchecked")
+    public void removePrenotazioneTest() {
+        frontDeskStorage= new PrenotazioneDAO();
+        plist = (List<Prenotazione>) assertDoesNotThrow(()->frontDeskStorage.doRetriveAll("decrescente"));
+        assertDoesNotThrow(()->frontDeskClient.removePrenotazione(plist.getLast()));
+        List<Prenotazione>plist2 = (List<Prenotazione>) assertDoesNotThrow(()->frontDeskStorage.doRetriveAll("decrescente"));
+        assertNotEquals(plist2,plist);
+    }
+
+    @Test
+    @DisplayName("Bottom up TC27 : LV3 FrontDesk update prenotazione attraverso la chiamata RMI")
+    @SuppressWarnings("unchecked")
+    public void updatePrenotazioneTest() {
+        frontDeskStorage = new PrenotazioneDAO();
+        plist = (List<Prenotazione>) assertDoesNotThrow(()->frontDeskStorage.doRetriveAll("decrescente"));
+        plist.getLast().setMetodoPagamento("carta dello zio peppe");
+        assertDoesNotThrow(()->frontDeskClient.updatePrenotazione(plist.getLast()));
+    }
+    @Test
+    @DisplayName("Bottom up TC28 : LV3 FrontDesk aggiunta cliente attraverso la chiamata RMI")
+    @SuppressWarnings("unchecked")
+    public void addClienteTest(){
+        frontDeskStorage= new ClienteDAO();
+        Cliente c = new Cliente("luca","mannolo","caserta","caserta","via via",123,9832,"34564322","m",LocalDate.of(2001,3,30),"SDFGFDRTHJNBVFDF",
+                "luca@misafnfai","italiana",new Camera());
+        assertDoesNotThrow(()->frontDeskClient.addCliente(c));
+    }
+    @Test
+    @DisplayName("Bottom up TC28 : LV3 FrontDesk rimozione cliente attraverso la chiamata RMI")
+    @SuppressWarnings("unchecked")
+    public void removeClienteTest(){
+        frontDeskStorage= new ClienteDAO();
+        List<Cliente> clientes1 = frontDeskClient.getClienti();
+        Cliente c= clientes1.getFirst();
+        assertDoesNotThrow(frontDeskClient.removeCliente(c));
+        assertEquals(c,);
     }
 
 }
