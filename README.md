@@ -7,9 +7,12 @@ Il progetto per essere compilato ha bisogno dei seguenti prerequisiti
 -JDBC MYSQL : impostare una password nella classe connectorStorage deve essere la stessa che si usa nel DB, bisogna inoltre creare il pool di connessioni abbinando un datasource al progetto.
 
 **ESECUZIONE**
+-come prima condizione assicurarsi che il DB sia connesso e che tutte le create e insert nel pacchetto Server/Storage/SQL siano state eseguite   
 -avviare la classe Server GestionePrenotazione--> FrontDesk. 
 -Dopo che si sarà avviata impostare con maven EditConfiguration --> Commandline --> mvn javaFx:run
 Quest ultimo comando avvia l'interfaccia grafica e chiama il client per connettersi tramite RMI al server
+Se non ci sono errori il servizio di RMi sarà in running 
+Per il login entrare con queste credenziali Reception5 password Receptionist123!
 
 **ESECUZIONE TEST**
 Questo progetto usa jacoco come tool di copertura per eseguire i test fare le seguenti operazioni
