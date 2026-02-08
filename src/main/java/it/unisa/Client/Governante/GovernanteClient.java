@@ -58,7 +58,7 @@ public class GovernanteClient {
                     case 1:
                     {
 
-                        List<Camera> camere = governanteInterface.getListCamere();
+                        List<Camera> camere = governanteInterface.getListaCamere();
                        System.out.println("Inserisci 1 per visualizzare le camere: ");
                         Scanner sc2 = new Scanner(System.in);
 

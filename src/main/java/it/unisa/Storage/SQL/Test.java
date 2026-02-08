@@ -156,10 +156,11 @@ public class Test {
         Test.istantiateNumberOfInstances();
         Test.istantiateFrontDesk();
 
-        ArrayList<Servizio> s = frontDesk.getListaServizi();
-        ArrayList<Trattamento> t = frontDesk.getListaTrattamenti();
+        ArrayList<Prenotazione> p = frontDesk.getListaPrenotazioniAttive();
 
-        s.forEach(System.out::println);
-        t.forEach(System.out::println);
+        System.out.println(p.size());
+        p.forEach(prenotazione -> {
+            System.out.println("Inizio: " + prenotazione.getDataInizio() + "Fine: " + prenotazione.getDataFine());
+        });
     }
 }

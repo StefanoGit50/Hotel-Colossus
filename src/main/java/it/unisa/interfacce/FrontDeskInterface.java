@@ -13,13 +13,6 @@ import java.util.List;
 public interface FrontDeskInterface extends Remote, ObserverCamereInterface
 {
     // Comandi camere
-    /**
-     * Restituisce il valore di prenotazioni.
-     *
-     * @post result != null
-     */
-    List<Prenotazione> getPrenotazioni() throws RemoteException;
-
 
     /**
      * Aggiorna lo stato di statoCamera.
@@ -75,7 +68,6 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
      */
     void removeCliente(Cliente c) throws RemoteException, IllegalAccess;
 
-
     /**
      * Aggiorna i dati di cliente.
      *
@@ -83,7 +75,6 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
      * @post Cliente..contains(c)
      */
     void updateCliente(Cliente c) throws RemoteException, IllegalAccess;
-
 
     /**
      * Aggiunge il cliente alla blacklist.
@@ -111,6 +102,16 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
      * @throws RemoteException .
      */
     ArrayList<Prenotazione> getListaPrenotazioni() throws RemoteException, IllegalAccess;
+
+    /**
+     * Recupera la lista {@code list} di tutte le prenotazioni attive presenti nel sistema. Una prenotazione è considerata
+     * "attiva" se la data di arrivo prevista per il cliente è antecedente o uguale alla data odierna e se la data di
+     * partenza prevista per il cliente è successiva alla data odierna.
+     *
+     * @post {@code list} di oggetti {@code Prenotazione} p tale per cui p.dataInizio <= dataOrdierna && p.dataFine > dataOdierna.
+     * @throws RemoteException .
+     */
+    public ArrayList<Prenotazione> getListaPrenotazioniAttive() throws RemoteException, IllegalAccess;
 
     /**
      * Recupera la lista {@code list} di tutti i clienti presenti nel sistema.
@@ -145,7 +146,6 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
      * @throws RemoteException .
      */
     ArrayList<Camera> getListaCamere() throws RemoteException, IllegalAccess;
-
 
 
     //autenticazione
