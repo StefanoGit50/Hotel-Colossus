@@ -24,6 +24,18 @@ INSERT INTO Servizio (Nome, Prezzo) VALUES
 -- =============================================
 -- 3. INSERT CAMERA
 -- =============================================
+INSERT INTO Camera (NumeroCamera, NomeCamera, NumeroMaxOcc, NoteCamera, Stato, Prezzo)
+VALUES (103, 'Doppia Matrimoniale', 2, NULL, 'Libera', 80);
+
+INSERT INTO Camera (NumeroCamera, NomeCamera, NumeroMaxOcc, NoteCamera, Stato, Prezzo)
+VALUES (104, 'Suite', 3, 'salotto', 'Libera', 130);
+
+INSERT INTO Camera (NumeroCamera, NomeCamera, NumeroMaxOcc, NoteCamera, Stato, Prezzo)
+VALUES (105, 'Camera standard', 1, NULL, 'Libera', 60);
+
+INSERT INTO Camera (NumeroCamera, NomeCamera, NumeroMaxOcc, NoteCamera, Stato, Prezzo)
+VALUES (106, 'Camera standard', 2, NULL, 'Libera', 40);
+
 INSERT INTO Camera (NumeroCamera, NomeCamera, NumeroMaxOcc, NoteCamera, Stato, Prezzo) VALUES
                                                                                            (101, 'Camera Standard', 2, 'Vista interna', 'Libera', 80.00),
                                                                                            (102, 'Camera Standard', 2, 'Vista strada', 'Occupata', 80.00),

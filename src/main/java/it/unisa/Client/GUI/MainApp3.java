@@ -361,7 +361,6 @@ public class MainApp3 extends Application {
 
     private void showCheckout() {
         contentArea.getChildren().clear();
-        // TODO: Implementare
         Label placeholder = new Label("💰 Check-out - In sviluppo");
         contentArea.getChildren().add(placeholder);
     }
@@ -393,7 +392,7 @@ public class MainApp3 extends Application {
     private void showBookingCreation(){
         contentArea.getChildren().clear();
         if (bookingCreationView == null){
-            bookingCreationView = new BookingCreation();
+            bookingCreationView = new BookingCreation(frontDeskClient);
         }
         contentArea.getChildren().add(bookingCreationView);
         VBox.setVgrow(contoEconomicoView, Priority.ALWAYS);

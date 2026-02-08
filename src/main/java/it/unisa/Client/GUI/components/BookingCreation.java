@@ -1,5 +1,8 @@
 package it.unisa.Client.GUI.components;
 
+import it.unisa.Client.FrontDesk.FrontDeskClient;
+import it.unisa.Common.Cliente;
+import it.unisa.Common.Servizio;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -9,19 +12,22 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.animation.PauseTransition;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * BookingCreation - Creazione Prenotazione (V3 Modified with Services)
  */
 public class BookingCreation extends VBox {
 
-    private List<Client> clientDatabase;
-    private List<Client> selectedClients;
+    private List<Cliente> clientDatabase;
+    private List<Cliente> selectedClients;
     private List<ServiceItem> serviceItems; // Lista dei servizi disponibili
 
     private FlowPane selectedClientsPane;
@@ -38,10 +44,12 @@ public class BookingCreation extends VBox {
 
     private Label lblRoomTotal, lblTreatmentTotal, lblServiceTotal, lblGrandTotal; // Etichette Tab 3
     private Label lblSummaryNights;
+    private FrontDeskClient frontDeskClient;
 
-    public BookingCreation() {
-        this.clientDatabase = createMockClients();
-        this.serviceItems = createMockServices(); // Inizializza i servizi
+    public BookingCreation(FrontDeskClient frontDeskClient) {
+        this.frontDeskClient = frontDeskClient;
+        this.clientDatabase = createClients();
+        this.serviceItems = createServices(); // Inizializza i servizi
         this.selectedClients = new ArrayList<>();
         setupLayout();
         setupStyling();
@@ -215,23 +223,23 @@ public class BookingCreation extends VBox {
             int row = 0;
 
             // 3. Itera sul database e filtra
-            for (Client c : clientDatabase) {
+            for (Cliente c : clientDatabase) {
                 boolean match = true;
 
                 // Filtro Nome
-                if (!searchName.isEmpty() && !c.name.toLowerCase().contains(searchName)) {
+                if (!searchName.isEmpty() && !c.getNome().toLowerCase().contains(searchName)) {
                     match = false;
                 }
                 // Filtro Cognome
-                if (!searchSurname.isEmpty() && !c.surname.toLowerCase().contains(searchSurname)) {
+                if (!searchSurname.isEmpty() && !c.getCognome().toLowerCase().contains(searchSurname)) {
                     match = false;
                 }
                 // Filtro Nazionalità
-                if (searchNation != null && !searchNation.equals("Tutte") && !c.nationality.equalsIgnoreCase(searchNation)) {
+                if (searchNation != null && !searchNation.equals("Tutte") && !c.getNazionalita().equalsIgnoreCase(searchNation)) {
                     match = false;
                 }
                 // Filtro Data Nascita
-                if (searchDate != null && !c.birthDate.isEqual(searchDate)) {
+                if (searchDate != null && !c.getDataNascita().isEqual(searchDate)) {
                     match = false;
                 }
 
@@ -341,7 +349,7 @@ public class BookingCreation extends VBox {
 
         // AUTO-COMPILAZIONE: Se c'è un cliente selezionato nel Tab 1, lo mettiamo qui
         if (!selectedClients.isEmpty()) {
-            intestatario.setText(selectedClients.get(0).getFullName());
+            intestatario.setText(selectedClients.get(0).getNome()+" "+selectedClients.get(0).getCognome());
         }
 
         holderBox.getChildren().addAll(lblHolder, intestatario);
@@ -661,7 +669,7 @@ public class BookingCreation extends VBox {
         return box;
     }
 
-    private VBox createClientCard(Client client) {
+    private VBox createClientCard(@UnknownNullability Cliente client) {
         // Implementazione identica a prima...
         // Per brevità:
         VBox card = new VBox(15);
@@ -673,17 +681,17 @@ public class BookingCreation extends VBox {
         Label icon = new Label("👤");
         icon.getStyleClass().add("client-card-icon");
         VBox nameBox = new VBox(3);
-        Label name = new Label(client.getFullName());
+        Label name = new Label(client.getNome()+" "+client.getCognome());
         name.getStyleClass().add("client-card-name");
-        Label cf = new Label(client.cf);
+        Label cf = new Label(client.getCf());
         cf.getStyleClass().add("client-card-cf");
         nameBox.getChildren().addAll(name, cf);
         header.getChildren().addAll(icon, nameBox);
 
         VBox details = new VBox(8);
         details.getChildren().addAll(
-                createDetailRow("Data Nascita", client.birthDate.toString()),
-                createDetailRow("Nazionalità", client.nationality)
+                createDetailRow("Data Nascita", client.getDataNascita().toString()),
+                createDetailRow("Nazionalità", client.getNazionalita())
         );
 
         HBox actions = new HBox(10);
@@ -988,7 +996,7 @@ public class BookingCreation extends VBox {
         return 0.0;
     }
 
-    private void selectClient(Client client) {
+    private void selectClient(Cliente client) {
         if (selectedClients.contains(client)) {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Cliente già selezionato!", ButtonType.OK);
             alert.showAndWait();
@@ -1006,19 +1014,19 @@ public class BookingCreation extends VBox {
             placeholder.getStyleClass().add("clients-placeholder");
             selectedClientsPane.getChildren().add(placeholder);
         } else {
-            for (Client client : selectedClients) {
+            for (Cliente client : selectedClients) {
                 selectedClientsPane.getChildren().add(createClientTag(client));
             }
         }
     }
 
-    private HBox createClientTag(Client client) {
+    private HBox createClientTag(@UnknownNullability Cliente client) {
         HBox tag = new HBox(8);
         tag.setAlignment(Pos.CENTER_LEFT);
         tag.setPadding(new Insets(8, 14, 8, 14));
         tag.getStyleClass().add("client-tag");
 
-        Label name = new Label("✓ " + client.getFullName());
+        Label name = new Label("✓ " + client.getNome()+" "+client.getCognome());
         name.setStyle("-fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: 600;");
 
         Button removeBtn = new Button("✕");
@@ -1032,7 +1040,7 @@ public class BookingCreation extends VBox {
         return tag;
     }
 
-    private void openClientDialog(Client client) {
+    private void openClientDialog(@UnknownNullability Cliente client) {
         // ... [CODICE DIALOG RIMANE UGUALE] ...
         Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
@@ -1042,7 +1050,7 @@ public class BookingCreation extends VBox {
         // ... (resto della logica dialog che avevi già)
 
         // Dummy implementation per brevità
-        Label title = new Label("Dettagli Cliente " + (client != null ? client.surname : "Nuovo"));
+        Label title = new Label("Dettagli Cliente " + (client != null ? client.getCognome(): "Nuovo"));
         dialogContent.getChildren().add(title);
         javafx.scene.Scene dialogScene = new javafx.scene.Scene(dialogContent, 400, 300);
         dialog.setScene(dialogScene);
@@ -1063,23 +1071,106 @@ public class BookingCreation extends VBox {
 
     // === MOCK DATA GENERATION ===
 
-    private List<Client> createMockClients() {
-        List<Client> list = new ArrayList<>();
-        list.add(new Client("Mario", "Rossi", "RSSMRA80A01H501Z", LocalDate.of(1980, 1, 1), "Italiana", "M", "mario.rossi@email.com", "+39 333 1234567"));
-        list.add(new Client("Francesco", "Verdi", "VRDFNC85B15F205W", LocalDate.of(1985, 2, 15), "Italiana", "M", "francesco.verdi@email.com", "+39 333 7654321"));
-        list.add(new Client("Alberto", "Bianchi", "BNCBRT85C03L219K", LocalDate.of(1985, 3, 3), "Italiana", "M", "alberto.bianchi@email.com", "+39 333 9876543"));
-        return list;
+    private List<Cliente> createClients() {
+        return frontDeskClient.getListaClienti();
+
     }
 
-    private List<ServiceItem> createMockServices() {
-        List<ServiceItem> list = new ArrayList<>();
-        list.add(new ServiceItem("Spa & Wellness", 50.0, "🧖"));
-        list.add(new ServiceItem("Parcheggio", 15.0, "🚗"));
-        list.add(new ServiceItem("Colazione Camera", 10.0, "🥐"));
-        list.add(new ServiceItem("Tour Guidato", 30.0, "🗺️"));
-        list.add(new ServiceItem("Champagne", 80.0, "🍾"));
-        list.add(new ServiceItem("Late Checkout", 40.0, "⏰"));
-        return list;
+    private List<ServiceItem> createServices() {
+
+        List<Servizio> servizios = frontDeskClient.getServizi();
+
+        Map<String, ServiceItem> serviceMap = new HashMap<>();
+
+        for (Servizio servizio : servizios) {
+            String nome = servizio.getNome();
+
+            if (serviceMap.containsKey(nome)) {
+                // Servizio già presente → incrementa quantity
+                ServiceItem existing = serviceMap.get(nome);
+                existing.quantity++;
+            } else {
+                // Primo incontro → crea nuovo ServiceItem
+                ServiceItem item = new ServiceItem(
+                        servizio.getNome(),
+                        servizio.getPrezzo(),
+                        getEmojiForService(servizio.getNome())  // Genera emoji in base al nome
+                );
+                item.quantity = 1;  // Prima occorrenza
+                serviceMap.put(nome, item);
+            }
+        }
+
+        // 3. Converti la Map in List e ritorna
+        return new ArrayList<>(serviceMap.values());
+    }
+
+    /**
+     * Assegna un emoji appropriato in base al nome del servizio
+     */
+    private String getEmojiForService(String serviceName) {
+        if (serviceName == null) return "✨";
+
+        String name = serviceName.toLowerCase();
+
+        // Wellness & Relax
+        if (name.contains("spa") || name.contains("wellness") || name.contains("massaggi") || name.contains("sauna")) {
+            return "🧖";
+        }
+
+        // Trasporti
+        if (name.contains("parcheggio") || name.contains("parking") || name.contains("garage")) {
+            return "🚗";
+        }
+        if (name.contains("navetta") || name.contains("transfer") || name.contains("shuttle")) {
+            return "🚐";
+        }
+        if (name.contains("taxi")) {
+            return "🚕";
+        }
+
+        // Food & Beverage
+        if (name.contains("colazione") || name.contains("breakfast")) {
+            return "🥐";
+        }
+        if (name.contains("champagne") || name.contains("prosecco") || name.contains("spumante")) {
+            return "🍾";
+        }
+        if (name.contains("vino") || name.contains("wine")) {
+            return "🍷";
+        }
+        if (name.contains("cena") || name.contains("dinner") || name.contains("pranzo") || name.contains("lunch")) {
+            return "🍽️";
+        }
+
+        // Servizi Hotel
+        if (name.contains("tour") || name.contains("guida") || name.contains("escursion")) {
+            return "🗺️";
+        }
+        if (name.contains("checkout") || name.contains("late") || name.contains("early")) {
+            return "⏰";
+        }
+        if (name.contains("wifi") || name.contains("internet")) {
+            return "📶";
+        }
+        if (name.contains("lavanderia") || name.contains("laundry")) {
+            return "👔";
+        }
+        if (name.contains("animali") || name.contains("pet") || name.contains("dog") || name.contains("cat")) {
+            return "🐕";
+        }
+        if (name.contains("baby") || name.contains("culla") || name.contains("passeggino")) {
+            return "👶";
+        }
+        if (name.contains("bicicletta") || name.contains("bike")) {
+            return "🚴";
+        }
+        if (name.contains("palestra") || name.contains("gym") || name.contains("fitness")) {
+            return "💪";
+        }
+
+        // Default
+        return "✨";
     }
 
     // === INNER CLASSES ===

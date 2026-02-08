@@ -11,7 +11,7 @@ INSERT INTO Impiegato (
 
     -- Marco Esposito (FrontDesk)
     (
-     'SPSMRC88T12F839A', 1450.00, 'FrontDesk6', '', 0, NULL,
+     'SPSMRC88T12F839A', 1450.00, 'Reception6', '$2a$08$CHpqcJqMg57kslU3fu3CVu./hSleT5waYbkHuXrKMjh2z.n05d.kO', 0, NULL,
      'Marco', 'Esposito', '80132', '2021-11-05', '3331112233', 'marco.esposito@hotelcolossus.com', 'M', 'FrontDesk',
      'Via Toledo', 'NA', 'Napoli', 45, 'PP5566778', 'Passaporto',
      '2031-11-05', '2021-11-05', 'Italiana',
@@ -20,7 +20,7 @@ INSERT INTO Impiegato (
 
 -- Elena Rizzo (Governante)
     (
-     'RZZLNE75P45A662J', 1250.00, 'Governante7', '', 0, NULL,
+     'RZZLNE75P45A662J', 1250.00, 'Governante7', '$2a$08$m/bPYUUQbofUHj3numCOmOc0XXc9BsE.4ofOFlAEzxO.WaKL/jps6', 0, NULL,
      'Elena', 'Rizzo', '70121', '2019-06-20', '3339988776', 'elena.rizzo@hotelcolossus.com', 'F', 'Governante',
      'Corso Cavour', 'BA', 'Bari', 8, 'PT9988776', 'Patente',
      '2029-06-20', '2019-06-20', 'Italiana',
@@ -29,7 +29,7 @@ INSERT INTO Impiegato (
 
     -- Giulia Conti (FrontDesk)
     (
-     'CNTGLI92C54H501Z', 1350.00, 'FrontDesk5', '', 0, NULL,
+     'CNTGLI92C54H501Z', 1350.00, 'Reception5', '$2a$08$CHpqcJqMg57kslU3fu3CVu./hSleT5waYbkHuXrKMjh2z.n05d.kO', 0, NULL,
      'Giulia', 'Conti', '50123', '2023-01-10', '3334445566', 'giulia.conti@hotelcolossus.com', 'F', 'FrontDesk',
      'Via dei Calzaiuoli', 'FI', 'Firenze', 12, 'CI2233445', 'Carta Identità',
      '2033-01-10', '2023-01-10', 'Italiana',

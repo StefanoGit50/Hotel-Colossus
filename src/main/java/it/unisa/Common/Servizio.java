@@ -21,6 +21,7 @@ public class Servizio implements Cloneable, Serializable {
      */
     private double prezzo;
 
+    private  int quantita;
     private int id;
     /**
      * Costruttore per creare una nuova istanza di {@code Servizio}.
@@ -32,7 +33,16 @@ public class Servizio implements Cloneable, Serializable {
         this.id=0;  //l'id viene settato quando fatto il retrieve
         this.nome = nome;
         this.prezzo = prezzo;
+        this.quantita = 0;
     }
+
+    public int getQuantita(){
+        return this.quantita;
+    }
+    public void setQuantita(int quantita) {
+        this.quantita = quantita;
+    }
+
 
     /**
      * Costruttore vuoto
