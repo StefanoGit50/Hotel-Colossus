@@ -2,13 +2,12 @@ package it.unisa.interfacce;
 
 import it.unisa.Common.*;
 
-import it.unisa.Server.IllegalAccess;
-import it.unisa.Server.ObserverCamereInterface;
+import it.unisa.Server.Eccezioni.IllegalAccess;
+import it.unisa.Server.ObserverPattern.ObserverCamereInterface;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.List;
 
 public interface FrontDeskInterface extends Remote, ObserverCamereInterface
 {

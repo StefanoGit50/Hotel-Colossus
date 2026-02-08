@@ -1,12 +1,10 @@
 package blackbox.RegistraPrenotazione;
 
-import IntegrationTesting.BottomUp.Livello3.ClientRMIServer;
 import it.unisa.Common.*;
-import it.unisa.Server.IllegalAccess;
+import it.unisa.Server.Eccezioni.IllegalAccess;
 import it.unisa.Server.gestionePrenotazioni.FrontDesk;
 import it.unisa.Server.persistent.obj.catalogues.InvalidInputException;
 import it.unisa.Server.persistent.util.Stato;
-import it.unisa.Storage.DAO.*;
 import it.unisa.interfacce.FrontDeskInterface;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

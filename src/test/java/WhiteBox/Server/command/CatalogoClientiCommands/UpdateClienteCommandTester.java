@@ -2,7 +2,7 @@ package WhiteBox.Server.command.CatalogoClientiCommands;
 
 import it.unisa.Common.Camera;
 import it.unisa.Common.Cliente;
-import it.unisa.Server.command.CatalogoClientiCommands.UpdateClienteCommand;
+import it.unisa.Server.commandPattern.CatalogoClientiCommands.UpdateClienteCommand;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.DAO.ClienteDAO;

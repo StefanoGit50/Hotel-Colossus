@@ -3,7 +3,7 @@ package it.unisa.Client.GUI;
 import it.unisa.Client.FrontDesk.FrontDeskClient;
 import it.unisa.Client.GUI.components.*;
 import it.unisa.Common.*;
-import it.unisa.Server.IllegalAccess;
+import it.unisa.Server.Eccezioni.IllegalAccess;
 import it.unisa.Server.persistent.util.Stato;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -20,7 +20,6 @@ import org.apache.logging.log4j.Logger;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 

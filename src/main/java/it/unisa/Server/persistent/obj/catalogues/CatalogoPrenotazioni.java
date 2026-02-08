@@ -4,7 +4,7 @@ import it.unisa.Common.Cliente;
 import it.unisa.Common.Prenotazione;
 import it.unisa.Server.persistent.util.Util;
 import it.unisa.Storage.DAO.PrenotazioneDAO;
-import it.unisa.Storage.DuplicateKeyEntry;
+import it.unisa.Server.Eccezioni.DuplicateKeyEntry;
 import it.unisa.Storage.Interfacce.FrontDeskStorage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -2,11 +2,11 @@ package it.unisa.Server.BackOffice;
 
 import it.unisa.Common.*;
 import it.unisa.Server.Autentication.TokenGenerator;
-import it.unisa.Server.IllegalAccess;
-import it.unisa.Server.command.CatalogoImpiegatiCommands.AddImpiegatoCommand;
-import it.unisa.Server.command.CatalogoImpiegatiCommands.RemoveImpiegatoCommand;
-import it.unisa.Server.command.CatalogoImpiegatiCommands.UpdateImpiegatoCommand;
-import it.unisa.Server.command.Invoker;
+import it.unisa.Server.Eccezioni.IllegalAccess;
+import it.unisa.Server.commandPattern.CatalogoImpiegatiCommands.AddImpiegatoCommand;
+import it.unisa.Server.commandPattern.CatalogoImpiegatiCommands.RemoveImpiegatoCommand;
+import it.unisa.Server.commandPattern.CatalogoImpiegatiCommands.UpdateImpiegatoCommand;
+import it.unisa.Server.commandPattern.Invoker;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoImpiegati;
 import it.unisa.Server.persistent.obj.catalogues.CatalogueUtils;
 import it.unisa.Server.persistent.util.Ruolo;

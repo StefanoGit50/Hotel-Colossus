@@ -1,11 +1,10 @@
 package it.unisa.Server.gestioneCamere;
 
 import it.unisa.Common.Camera;
-import it.unisa.Server.IllegalAccess;
-import it.unisa.Server.ObserverCamereInterface;
-import it.unisa.Server.command.Invoker;
-import it.unisa.Server.command.Others.RetrieveAllCamereCommand;
-import it.unisa.Server.gestionePrenotazioni.FrontDesk;
+import it.unisa.Server.Eccezioni.IllegalAccess;
+import it.unisa.Server.ObserverPattern.ObserverCamereInterface;
+import it.unisa.Server.commandPattern.Invoker;
+import it.unisa.Server.commandPattern.Others.RetrieveAllCamereCommand;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
 import it.unisa.Storage.DAO.CameraDAO;
 import it.unisa.interfacce.GovernanteInterface;
@@ -18,8 +17,6 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
 
 public class Governante extends UnicastRemoteObject implements GovernanteInterface, ObserverCamereInterface {
 

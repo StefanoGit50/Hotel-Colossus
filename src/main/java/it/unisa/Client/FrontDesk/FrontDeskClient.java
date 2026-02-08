@@ -2,13 +2,11 @@ package it.unisa.Client.FrontDesk;
 
 import it.unisa.Common.*;
 
-import it.unisa.Server.IllegalAccess;
-import it.unisa.Server.command.CatalogoClientiCommands.AddClienteCommand;
-import it.unisa.Server.command.CatalogoClientiCommands.UnBanCommand;
-import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
+import it.unisa.Server.Eccezioni.IllegalAccess;
+import it.unisa.Server.commandPattern.CatalogoClientiCommands.AddClienteCommand;
+import it.unisa.Server.commandPattern.CatalogoClientiCommands.UnBanCommand;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.DAO.CameraDAO;
-import it.unisa.Storage.DAO.ImpiegatoDAO;
 import it.unisa.interfacce.FrontDeskInterface;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -88,7 +86,7 @@ public class FrontDeskClient
                     }
                     case 3:
                     {
-                        List<Prenotazione> prenotazioni = frontDeskInterface.getPrenotazioni();
+                        List<Prenotazione> prenotazioni = frontDeskInterface.getListaPrenotazioni();
                         
                         for(Prenotazione p: prenotazioni)
                         {
@@ -217,8 +215,8 @@ public class FrontDeskClient
     public List<Prenotazione> getPrenotazioni() {
         List<Prenotazione> prenotaziones = null;
         try{
-           prenotaziones = frontDeskInterface.getPrenotazioni();
-        }catch (RemoteException remoteException){
+           prenotaziones = frontDeskInterface.getListaPrenotazioni();
+        }catch (RemoteException | IllegalAccess remoteException){
             remoteException.getStackTrace();
             remoteException.getMessage();
         }

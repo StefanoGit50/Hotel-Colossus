@@ -1,17 +1,17 @@
 package it.unisa.Server.gestionePrenotazioni;
 
 import it.unisa.Server.Autentication.Autentication;
-import it.unisa.Server.IllegalAccess;
-import it.unisa.Server.command.Others.RetrieveAllCamereCommand;
-import it.unisa.Server.command.Others.RetrieveAllServiziCommand;
-import it.unisa.Server.command.Others.RetrieveAllTrattamentiCommand;
-import it.unisa.Server.command.Others.RetriveAllActiveCommand;
+import it.unisa.Server.Eccezioni.IllegalAccess;
+import it.unisa.Server.commandPattern.Others.RetrieveAllCamereCommand;
+import it.unisa.Server.commandPattern.Others.RetrieveAllServiziCommand;
+import it.unisa.Server.commandPattern.Others.RetrieveAllTrattamentiCommand;
+import it.unisa.Server.commandPattern.Others.RetriveAllActiveCommand;
 import it.unisa.interfacce.*;
-import it.unisa.Server.command.*;
+import it.unisa.Server.commandPattern.*;
 import it.unisa.Common.*;
 import it.unisa.Common.Prenotazione;
-import it.unisa.Server.command.CatalogoClientiCommands.*;
-import it.unisa.Server.command.CatalogoPrenotazioniCommands.*;
+import it.unisa.Server.commandPattern.CatalogoClientiCommands.*;
+import it.unisa.Server.commandPattern.CatalogoPrenotazioniCommands.*;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
 import it.unisa.Server.persistent.obj.catalogues.CatalogueUtils;

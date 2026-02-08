@@ -2,10 +2,9 @@ package it.unisa.Storage.DAO;
 
 
 import it.unisa.Common.*;
-import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.ConnectionStorage;
-import it.unisa.Storage.ErrorInputException;
+import it.unisa.Server.Eccezioni.ErrorInputException;
 import it.unisa.Storage.Interfacce.FrontDeskStorage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

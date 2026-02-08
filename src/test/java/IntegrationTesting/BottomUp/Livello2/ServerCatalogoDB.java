@@ -2,7 +2,7 @@ package IntegrationTesting.BottomUp.Livello2;
 
 import WhiteBox.UnitTest.DBPopulator;
 import it.unisa.Common.*;
-import it.unisa.Server.command.Invoker;
+import it.unisa.Server.commandPattern.Invoker;
 import it.unisa.Server.gestionePrenotazioni.FrontDesk;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
@@ -141,7 +141,7 @@ public class ServerCatalogoDB {
     public void getPrenotazioniTest() throws RemoteException {
         frontDeskStorage = new PrenotazioneDAO();
 
-        List<Prenotazione> p = frontDesk.getPrenotazioni();
+        List<Prenotazione> p = assertDoesNotThrow(()->frontDesk.getListaPrenotazioni());
         Collection<?> listDB= null;
 
         // controllo nel DB se le liste sono le stesse
@@ -200,9 +200,9 @@ public class ServerCatalogoDB {
     @Test
     @DisplayName("Bottom up 3.5 TC17 : LV2 Test controllo dell'interazione sulla rimozione fra frontdeskServer command pattern e DB")
     @Tag("integration-LV2")
-    public void removePrenotazioneTest() throws RemoteException {
+    public void removePrenotazioneTest() {
         assertDoesNotThrow(()->frontDesk.addPrenotazione(prenotazione));
-        List<Prenotazione> p = frontDesk.getPrenotazioni();
+        List<Prenotazione> p = assertDoesNotThrow(()->frontDesk.getListaPrenotazioni());
         assertDoesNotThrow(()->frontDesk.removePrenotazione(prenotazione));
 
         Collection<?> listDB= null;

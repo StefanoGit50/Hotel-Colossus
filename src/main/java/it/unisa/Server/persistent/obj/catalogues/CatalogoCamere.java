@@ -3,11 +3,10 @@ package it.unisa.Server.persistent.obj.catalogues;
 
 import it.unisa.Common.Camera;
 import it.unisa.Common.Cliente;
-import it.unisa.Server.ObserverCamereInterface;
-import it.unisa.Server.SubjectCamereInterface;
+import it.unisa.Server.ObserverPattern.ObserverCamereInterface;
+import it.unisa.Server.ObserverPattern.SubjectCamereInterface;
 import it.unisa.Server.persistent.util.Util;
 import it.unisa.Storage.DAO.CameraDAO;
-import it.unisa.Storage.DAO.ClienteDAO;
 import it.unisa.Storage.Interfacce.FrontDeskStorage;
 import org.apache.logging.log4j.LogManager;
 
@@ -16,8 +15,6 @@ import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Gestisce il catalogo delle camere dell'hotel.

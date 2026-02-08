@@ -1,6 +1,6 @@
 package it.unisa.Client.GUI.components;
 
-import it.unisa.Server.IllegalAccess;
+import it.unisa.Server.Eccezioni.IllegalAccess;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -8,7 +8,6 @@ import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;

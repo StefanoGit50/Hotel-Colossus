@@ -4,7 +4,7 @@ import it.unisa.Client.FrontDesk.FrontDeskClient;
 import it.unisa.Common.Camera;
 import it.unisa.Common.Cliente;
 import it.unisa.Common.Prenotazione;
-import it.unisa.Server.IllegalAccess;
+import it.unisa.Server.Eccezioni.IllegalAccess;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;

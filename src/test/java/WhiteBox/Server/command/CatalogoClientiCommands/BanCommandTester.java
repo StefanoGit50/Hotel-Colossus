@@ -2,8 +2,8 @@ package WhiteBox.Server.command.CatalogoClientiCommands;
 
 import it.unisa.Common.Camera;
 import it.unisa.Common.Cliente;
-import it.unisa.Server.IllegalAccess;
-import it.unisa.Server.command.CatalogoClientiCommands.BanCommand;
+import it.unisa.Server.Eccezioni.IllegalAccess;
+import it.unisa.Server.commandPattern.CatalogoClientiCommands.BanCommand;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.DAO.ClienteDAO;

@@ -2,11 +2,11 @@ package WhiteBox.UnitTest;
 
 import it.unisa.Common.*;
 import it.unisa.Server.Autentication.Autentication;
-import it.unisa.Server.IllegalAccess;
-import it.unisa.Server.command.CatalogoClientiCommands.*;
-import it.unisa.Server.command.CatalogoPrenotazioniCommands.*;
-import it.unisa.Server.command.Invoker;
-import it.unisa.Server.command.Others.RetrieveAllCamereCommand;
+import it.unisa.Server.Eccezioni.IllegalAccess;
+import it.unisa.Server.commandPattern.CatalogoClientiCommands.*;
+import it.unisa.Server.commandPattern.CatalogoPrenotazioniCommands.*;
+import it.unisa.Server.commandPattern.Invoker;
+import it.unisa.Server.commandPattern.Others.RetrieveAllCamereCommand;
 import it.unisa.Server.gestionePrenotazioni.FrontDesk;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
