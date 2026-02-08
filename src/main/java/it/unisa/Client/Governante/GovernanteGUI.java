@@ -1,7 +1,7 @@
 package it.unisa.Client.Governante;
 
 import it.unisa.Client.FrontDesk.FrontDeskClient;
-import it.unisa.Client.GUI.BookingFilter;
+import it.unisa.Client.GUI.components.BookingFilter;
 import it.unisa.Client.GUI.components.*;
 import it.unisa.Common.*;
 
@@ -42,7 +42,7 @@ public class GovernanteGUI extends Application {
     private String currentRole;
     private FrontDeskClient frontDeskClient;
     private String exception;
-    private ObservableList<BookingFilter> allBookings = FXCollections.observableArrayList();
+    private ObservableList<Prenotazione> allBookings = FXCollections.observableArrayList();
 
     @Override
     public void start(Stage stage) {

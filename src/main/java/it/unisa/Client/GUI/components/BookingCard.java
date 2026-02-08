@@ -1,7 +1,7 @@
 package it.unisa.Client.GUI.components;
 
 
-import it.unisa.Client.GUI.BookingFilter;
+import it.unisa.Common.Prenotazione;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -33,8 +33,8 @@ public class BookingCard extends HBox {
     private Label arrowLabel;
 
     // ===== DATI =====
-    private BookingFilter booking;
-    private Consumer<BookingFilter> onCardClick;
+    private Prenotazione booking;
+    private Consumer<Prenotazione> onCardClick;
 
     // ===== COSTRUTTORE =====
 
@@ -43,7 +43,7 @@ public class BookingCard extends HBox {
      *
      * @param booking prenotazione da visualizzare
      */
-    public BookingCard(BookingFilter booking) {
+    public BookingCard(Prenotazione booking) {
         this.booking = booking;
         initializeComponents();
         setupLayout();
@@ -59,14 +59,14 @@ public class BookingCard extends HBox {
         VBox infoBox = new VBox(6);
 
         // Nome cliente
-        nameLabel = new Label(booking.getGuestName());
+        nameLabel = new Label(booking.getIntestatario());
         nameLabel.getStyleClass().add("booking-name");
 
         // Dettagli (date + camera + piano pasti)
-        String dates = booking.getCheckIn().format(DATE_FORMATTER) +
+        String dates = booking.getDataInizio().format(DATE_FORMATTER) +
                 " - " +
-                booking.getCheckOut().format(DATE_FORMATTER);
-        String details = dates + " • Camera " + booking.getRoom() + " • " + booking.getMealPlan();
+                booking.getDataFine().format(DATE_FORMATTER);
+        String details = dates + " • Camera " + booking.getListaClienti().getFirst().getCamera() + " • " + booking.getTrattamento();
 
         detailsLabel = new Label(details);
         detailsLabel.getStyleClass().add("booking-details");
@@ -108,7 +108,7 @@ public class BookingCard extends HBox {
             if (onCardClick != null) {
                 onCardClick.accept(booking);
             }
-            System.out.println("📋 Prenotazione selezionata: " + booking.getGuestName());
+            System.out.println("📋 Prenotazione selezionata: " + booking.getIntestatario());
         });
     }
 
@@ -119,7 +119,7 @@ public class BookingCard extends HBox {
      *
      * @param callback funzione che riceve la prenotazione cliccata
      */
-    public void setOnCardClick(Consumer<BookingFilter> callback) {
+    public void setOnCardClick(Consumer<Prenotazione> callback) {
         this.onCardClick = callback;
     }
 
@@ -128,7 +128,7 @@ public class BookingCard extends HBox {
      *
      * @return prenotazione
      */
-    public BookingFilter getBooking() {
+    public Prenotazione getBooking() {
         return booking;
     }
 
@@ -137,7 +137,7 @@ public class BookingCard extends HBox {
      *
      * @param booking nuova prenotazione
      */
-    public void setBooking(BookingFilter booking) {
+    public void setBooking(Prenotazione booking) {
         this.booking = booking;
         updateDisplay();
     }
@@ -146,12 +146,12 @@ public class BookingCard extends HBox {
      * Aggiorna la visualizzazione con i dati attuali
      */
     private void updateDisplay() {
-        nameLabel.setText(booking.getGuestName());
+        nameLabel.setText(booking.getIntestatario());
 
-        String dates = booking.getCheckIn().format(DATE_FORMATTER) +
+        String dates = booking.getDataInizio().format(DATE_FORMATTER) +
                 " - " +
-                booking.getCheckOut().format(DATE_FORMATTER);
-        String details = dates + " • Camera " + booking.getRoom() + " • " + booking.getMealPlan();
+                booking.getDataFine().format(DATE_FORMATTER);
+        String details = dates + " • Camera " + booking.getListaClienti().getFirst().getCamera() + " • " + booking.getTrattamento();
 
         detailsLabel.setText(details);
     }

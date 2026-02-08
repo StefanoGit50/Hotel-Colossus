@@ -30,13 +30,6 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
     boolean aggiornaStatoCamera(Camera c) throws RemoteException;
 
 
-    /**
-     * Restituisce il valore di camere.
-     *
-     * @post result != null
-     */
-    List<Camera> getCamere() throws RemoteException;
-
     // Comandi prenotazione
     /**
      * Aggiunge prenotazione alla collezione.
@@ -82,7 +75,6 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
      */
     void removeCliente(Cliente c) throws RemoteException, IllegalAccess;
 
-    //TODO: Aggiungere comando per retrieve del cliente (singolo / lista)
 
     /**
      * Aggiorna i dati di cliente.
@@ -92,7 +84,6 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
      */
     void updateCliente(Cliente c) throws RemoteException, IllegalAccess;
 
-    //TODO: Aggiungere comando per retrieve delle prenotazione (singolo / lista)
 
     /**
      * Aggiunge il cliente alla blacklist.
@@ -156,6 +147,7 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
     ArrayList<Camera> getListaCamere() throws RemoteException, IllegalAccess;
 
 
+
     //autenticazione
     Impiegato authentication(String username, String password,String pwd2) throws RemoteException, IllegalAccess;
 
@@ -171,7 +163,8 @@ public interface FrontDeskInterface extends Remote, ObserverCamereInterface
      */
     void redoCommand() throws RemoteException;
 
-
+    boolean checkIn(Prenotazione p) throws RemoteException;
+    boolean checkOut(Prenotazione p) throws RemoteException;
     // MetodiFindSingoli
     /**
      * Restituisce prenotazione in base all'id.

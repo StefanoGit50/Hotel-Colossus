@@ -1,17 +1,14 @@
 package it.unisa.Client.Manager;
 
 import it.unisa.Client.FrontDesk.FrontDeskClient;
-import it.unisa.Client.GUI.BookingFilter;
+import it.unisa.Client.GUI.components.BookingFilter;
 import it.unisa.Client.GUI.components.*;
 import it.unisa.Common.*;
-import it.unisa.Server.IllegalAccess;
-import it.unisa.Server.persistent.util.Stato;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -19,8 +16,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.rmi.RemoteException;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;

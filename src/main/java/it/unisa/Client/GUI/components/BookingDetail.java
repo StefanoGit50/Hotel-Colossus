@@ -40,7 +40,7 @@ public class BookingDetail extends VBox {
     private Label lblServicesTotal;
     private Label lblGrandTotal;
 
-    // ===== COSTRUTTORE - RICEVE DATI E BASTA =====
+
     public BookingDetail(Prenotazione prenotazione, List<Servizio> catalogoServizi) {
         this.prenotazione = prenotazione;
         this.catalogoServizi = catalogoServizi;

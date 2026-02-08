@@ -1,5 +1,10 @@
 package it.unisa.Client.GUI.components;
 
+import it.unisa.Client.FrontDesk.FrontDeskClient;
+import it.unisa.Common.Camera;
+import it.unisa.Common.Cliente;
+import it.unisa.Common.Prenotazione;
+import it.unisa.Server.persistent.util.Stato;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
@@ -7,22 +12,30 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
+
+import static it.unisa.Client.GUI.components.BookingFilter.allBookings;
 
 public class Planning extends VBox {
     // ===== CONFIGURAZIONE =====
     private static final int DAYS_TO_SHOW = 13;
     private static final DateTimeFormatter DAY_FORMATTER = DateTimeFormatter.ofPattern("EEE");
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MMM");
+    private static final Logger log = LogManager.getLogger(Planning.class);
+
 
     // ===== DATI =====
     private LocalDate currentStartDate = LocalDate.now();
     private final LocalDate today = LocalDate.now();
-    private Map<Integer, List<Booking>> bookingsData;
-    private List<Room> rooms;
+    private Map<Integer, List<Prenotazione>> bookingsData = new HashMap<>();
+    protected static List<Camera>  rooms;
 
     // ===== COMPONENTI UI =====
     private Label currentPeriodLabel;
@@ -42,47 +55,42 @@ public class Planning extends VBox {
      */
     private void initializeData() {
         // Inizializza camere
-        rooms = Arrays.asList(
-                new Room(101, "Singola"),
-                new Room(102, "Singola"),
-                new Room(103, "Singola"),
-                new Room(104, "Doppia"),
-                new Room(105, "Doppia"),
-                new Room(106, "Doppia"),
-                new Room(107, "Doppia"),
-                new Room(108, "Suite"),
-                new Room(109, "Suite"),
-                new Room(110, "Suite")
-        );
+        FrontDeskClient frontDeskClient = new FrontDeskClient();
 
-        // Inizializza prenotazioni mock
-        bookingsData = new HashMap<>();
+        try {
+           rooms= frontDeskClient.getCamere();
+        }catch (Exception e){
+           log.error("CAMERE NON CARICATE");
+            throw new  RuntimeException(e);
 
-        bookingsData.put(101, Arrays.asList(
-                new Booking("Mario Rossi", LocalDate.now(), LocalDate.now().plusDays(3), BookingType.OCCUPIED),
-                new Booking("Sofia Loren", LocalDate.now().plusMonths(1).plusDays(5), LocalDate.now().plusMonths(1).plusDays(11), BookingType.OCCUPIED)
-        ));
+        }
 
-        bookingsData.put(102, Arrays.asList(
-                new Booking("Barbara d'Orso", LocalDate.now().plusDays(2), LocalDate.now().plusDays(5), BookingType.RESERVED),
-                new Booking("Luca Bianchi", LocalDate.now().plusMonths(2), LocalDate.now().plusMonths(2).plusDays(3), BookingType.RESERVED)
-        ));
 
-        bookingsData.put(103, Arrays.asList(
-                new Booking("Paolo Verdi", LocalDate.now().plusMonths(1), LocalDate.now().plusMonths(1).plusDays(6), BookingType.OCCUPIED)
-        ));
 
-        bookingsData.put(104, Arrays.asList(
-                new Booking("Giorgio Ventura", LocalDate.now().plusDays(1), LocalDate.now().plusDays(4), BookingType.OCCUPIED)
-        ));
 
-        bookingsData.put(107, Arrays.asList(
-                new Booking("Antonio Verdi", LocalDate.now(), LocalDate.now().plusDays(6), BookingType.OCCUPIED)
-        ));
+        for (Camera camera : rooms) {
+            bookingsData.put(camera.getNumeroCamera(), new ArrayList<>());
+        }
 
-        bookingsData.put(110, Arrays.asList(
-                new Booking("Laura Bianchi", LocalDate.now().plusDays(3), LocalDate.now().plusDays(5), BookingType.RESERVED)
-        ));
+        for (Prenotazione p : allBookings) {
+
+
+            Set<Integer> camereDellaPrenotazione = new HashSet<>();
+
+            for (Cliente c : p.getListaClienti()) {
+
+                if (c.getCamera() != null) {
+                    camereDellaPrenotazione.add(c.getCamera().getNumeroCamera());
+                }
+            }
+
+            //  aggiungo la prenotazione 'p' alle liste delle camere trovate
+            for (Integer numeroCamera : camereDellaPrenotazione) {
+                if (bookingsData.containsKey(numeroCamera)) {
+                    bookingsData.get(numeroCamera).add(p);
+                }
+            }
+        }
     }
 
     /**
@@ -158,7 +166,7 @@ public class Planning extends VBox {
         column.getChildren().add(roomHeader);
 
         // Room cells
-        for (Room room : rooms) {
+        for (Camera room : rooms) {
             VBox roomCell = new VBox(5);
             roomCell.setAlignment(Pos.CENTER);
             roomCell.setPadding(new Insets(15));
@@ -167,10 +175,16 @@ public class Planning extends VBox {
             roomCell.setMinWidth(120);
             roomCell.setMaxWidth(120);
 
-            Label roomNumber = new Label(String.valueOf(room.number));
+            Label roomNumber = new Label(String.valueOf(room.getNumeroCamera()));
             roomNumber.getStyleClass().add("planning-room-number");
 
-            Label roomType = new Label(room.type);
+            String capacità="";
+            if(room.getCapacità()==1) capacità = "Singola";
+            else if (room.getCapacità()==2) capacità= "Doppia";
+            else if (room.getCapacità()==3) capacità = "Tripla";
+
+
+            Label roomType = new Label(capacità);
             roomType.getStyleClass().add("planning-room-type");
 
             roomCell.getChildren().addAll(roomNumber, roomType);
@@ -323,7 +337,7 @@ public class Planning extends VBox {
 
         // Create room rows
         for (int i = 0; i < rooms.size(); i++) {
-            Room room = rooms.get(i);
+            Camera room = rooms.get(i);
             createRoomRow(room, dates, i + 1);
         }
 
@@ -373,7 +387,7 @@ public class Planning extends VBox {
     /**
      * Crea una riga per una camera
      */
-    private void createRoomRow(Room room, List<LocalDate> dates, int rowIndex) {
+    private void createRoomRow(Camera room, List<LocalDate> dates, int rowIndex) {
         // SOLO day cells (NO room cell)
         boolean[] occupied = new boolean[dates.size()];
 
@@ -381,7 +395,7 @@ public class Planning extends VBox {
             if (occupied[i]) continue; // Salta se già occupata
 
             LocalDate date = dates.get(i);
-            BookingInfo bookingInfo = getBookingForRoomAndDate(room.number, date, dates);
+            BookingInfo bookingInfo = getBookingForRoomAndDate(room.getNumeroCamera(), date, dates);
 
             StackPane dayCell = createDayCell(room, date, dates);
 
@@ -402,13 +416,13 @@ public class Planning extends VBox {
     /**
      * Crea una cella giorno
      */
-    private StackPane createDayCell(Room room, LocalDate date, List<LocalDate> visibleDates) {
+    private StackPane createDayCell( Camera room, LocalDate date, List<LocalDate> visibleDates) {
         StackPane cell = new StackPane();
         cell.setMinSize(150, 80);
         cell.getStyleClass().add("planning-day-cell");
 
         // Check for booking
-        BookingInfo bookingInfo = getBookingForRoomAndDate(room.number, date, visibleDates);
+        BookingInfo bookingInfo = getBookingForRoomAndDate(room.getNumeroCamera(), date, visibleDates);
 
         if (bookingInfo != null && bookingInfo.isStart) {
             // Create booking block
@@ -434,19 +448,19 @@ public class Planning extends VBox {
         block.setPadding(new Insets(10, 15, 10, 15));
         block.setMaxHeight(60);
 
-        String styleClass = bookingInfo.booking.type == BookingType.OCCUPIED
+        String styleClass = bookingInfo.booking.isCheckIn()
                 ? "planning-booking-occupied"
                 : "planning-booking-reserved";
         block.getStyleClass().add(styleClass);
 
         // Guest name
-        Label guestName = new Label(bookingInfo.booking.guestName);
+        Label guestName = new Label(bookingInfo.booking.getIntestatario());
         guestName.getStyleClass().add("planning-guest-name");
 
         // Booking dates
-        String datesText = bookingInfo.booking.startDate.format(DATE_FORMATTER) +
+        String datesText = bookingInfo.booking.getDataInizio().format(DATE_FORMATTER) +
                 " - " +
-                bookingInfo.booking.endDate.format(DATE_FORMATTER);
+                bookingInfo.booking.getDataFine().format(DATE_FORMATTER);
         Label bookingDates = new Label(datesText);
         bookingDates.getStyleClass().add("planning-booking-dates");
 
@@ -469,22 +483,24 @@ public class Planning extends VBox {
      * Ottiene la prenotazione per camera e data
      */
     private BookingInfo getBookingForRoomAndDate(int roomNumber, LocalDate date, List<LocalDate> visibleDates) {
-        List<Booking> roomBookings = bookingsData.get(roomNumber);
+        List<Prenotazione> roomBookings = bookingsData.get(roomNumber);
         if (roomBookings == null) return null;
 
-        for (Booking booking : roomBookings) {
-            if (!date.isBefore(booking.startDate) && !date.isAfter(booking.endDate)) {
+        for (Prenotazione p: roomBookings) {
+
+            if (!date.isBefore(p.getDataInizio()) && !date.isAfter(p.getDataFine())) {
                 // Check if this is the start date
-                if (date.equals(booking.startDate)) {
+                if (date.equals(p.getDataInizio())) {
                     // Calculate span
-                    long totalDays = java.time.temporal.ChronoUnit.DAYS.between(booking.startDate, booking.endDate) + 1;
+                    ChronoUnit days = ChronoUnit.DAYS;
+                    long totalDays = days.between(p.getDataInizio(), p.getDataFine()) + 1;
                     long visibleDays = visibleDates.stream()
-                            .filter(d -> !d.isBefore(booking.startDate) && !d.isAfter(booking.endDate))
+                            .filter(d -> !d.isBefore(p.getDataInizio()) && !d.isAfter(p.getDataFine()))
                             .count();
 
-                    return new BookingInfo(booking, true, (int) visibleDays);
+                    return new BookingInfo(p, true, (int) visibleDays);
                 }
-                return new BookingInfo(booking, false, 0);
+                return new BookingInfo(p, false, 0);
             }
         }
 
@@ -526,59 +542,45 @@ public class Planning extends VBox {
         // TODO: Aprire dialog per nuova prenotazione
     }
 
-    private void onBookingClick(Booking booking) {
+    private void onBookingClick(@UnknownNullability Prenotazione booking) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Dettagli Prenotazione");
-        alert.setHeaderText("Prenotazione di " + booking.guestName);
+        alert.setHeaderText("Prenotazione di " + booking.getIntestatario());
         alert.setContentText(
-                "Check-in: " + booking.startDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\n" +
-                        "Check-out: " + booking.endDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\n" +
-                        "Tipo: " + booking.type
+                "Check-in: " + booking.getDataInizio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\n" +
+                        "Check-out: " + booking.getDataFine().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\n"
         );
         alert.showAndWait();
     }
 
-    private void onEmptyCellClick(Room room, LocalDate date) {
-        System.out.println("Click su cella vuota: Camera " + room.number + ", Data: " + date);
+    private void onEmptyCellClick( Camera room, LocalDate date) {
+        System.out.println("Click su cella vuota: Camera " + room.getNumeroCamera() + ", Data: " + date);
         // TODO: Aprire dialog per nuova prenotazione
     }
 
     // ===== CLASSI INTERNE =====
 
-    private static class Room {
-        int number;
-        String type;
-
-        Room(int number, String type) {
-            this.number = number;
-            this.type = type;
-        }
-    }
 
     private static class Booking {
         String guestName;
         LocalDate startDate;
         LocalDate endDate;
-        BookingType type;
+        Stato statocamera;
 
-        Booking(String guestName, LocalDate startDate, LocalDate endDate, BookingType type) {
+        Booking(String guestName, LocalDate startDate, LocalDate endDate, Stato stato) {
             this.guestName = guestName;
             this.startDate = startDate;
             this.endDate = endDate;
-            this.type = type;
+            statocamera = stato;
         }
     }
 
-    private enum BookingType {
-        OCCUPIED, RESERVED
-    }
-
     private static class BookingInfo {
-        Booking booking;
+        Prenotazione booking;
         boolean isStart;
         int span;
 
-        BookingInfo(Booking booking, boolean isStart, int span) {
+        BookingInfo(Prenotazione booking, boolean isStart, int span) {
             this.booking = booking;
             this.isStart = isStart;
             this.span = span;

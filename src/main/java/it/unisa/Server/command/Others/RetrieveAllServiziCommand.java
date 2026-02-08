@@ -42,7 +42,7 @@ public class RetrieveAllServiziCommand implements Command {
     @Override
     public void execute() throws IllegalAccess {
         try {
-            servizi = (ArrayList<Servizio>) new ServizioDAO().doRetriveAll("nome asc");
+            servizi = (ArrayList<Servizio>) new ServizioDAO().doRetriveAll("id disc");
         } catch (SQLException e) {
             e.printStackTrace();
             throw new IllegalAccess("ERROR: nessun servizio recuperato");

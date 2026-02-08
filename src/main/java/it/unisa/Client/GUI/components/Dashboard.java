@@ -1,6 +1,6 @@
 package it.unisa.Client.GUI.components;
 
-import it.unisa.Client.GUI.BookingFilter;
+import it.unisa.Common.Prenotazione;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -38,8 +38,9 @@ public class Dashboard extends VBox {
     private boolean isAscending = true;
 
     // ===== DATI =====
-    private ObservableList<BookingFilter> allBookings = FXCollections.observableArrayList();
-    private ObservableList<BookingFilter> filteredBookings = FXCollections.observableArrayList();
+    private ObservableList<Prenotazione> allBookings = FXCollections.observableArrayList();
+    private ObservableList<Prenotazione> filteredBookings = FXCollections.observableArrayList();
+
 
     // ===== COSTRUTTORE =====
     public Dashboard() {
@@ -69,14 +70,14 @@ public class Dashboard extends VBox {
      * Setup del layout
      */
     private void setupLayout() {
-        // ✅ Ridotto spacing generale da 20 a 12
+        //  spacing generale
         this.setSpacing(12);
-        // ✅ Ridotto padding da 30 a 20
+        //   padding
         this.setPadding(new Insets(20));
 
         HBox sectionTitleBox = createSectionTitle();
-        // ✅ Ridotti i margini
-        VBox.setMargin(sectionTitleBox, new Insets(7, 0, 2, 0));  // ← Aumentato margine sopra da 5 a 15
+
+        VBox.setMargin(sectionTitleBox, new Insets(7, 0, 2, 0));
         VBox.setMargin(filtersSection, new Insets(-4, 0, 5, 0));
 
         this.getChildren().addAll(
@@ -103,10 +104,11 @@ public class Dashboard extends VBox {
      */
     private GridPane createStatsGrid() {
         GridPane grid = new GridPane();
-        // ✅ Ridotto gap da 15 a 10
+        // Ridotto gap da 15 a 10
         grid.setHgap(10);
         grid.setVgap(10);
         grid.getStyleClass().add("stats-grid");
+
 
         // Crea le stat cards
         occupiedRoomsCard = new StatCard(45, "Camere Occupate");
@@ -114,7 +116,7 @@ public class Dashboard extends VBox {
         checkoutsCard = new StatCard(8, "Check-out Oggi");
         availableRoomsCard = new StatCard(15, "Camere Libere");
 
-        // ✅ Ridotto margine da 15 a 8
+        //   margine
         GridPane.setMargin(occupiedRoomsCard, new Insets(0, 0, 10, 0));
         GridPane.setMargin(checkinsCard, new Insets(0, 0, 10, 0));
         GridPane.setMargin(checkoutsCard, new Insets(0, 0, 10, 0));
@@ -274,7 +276,7 @@ public class Dashboard extends VBox {
 
         bookingsContainer = new VBox(15);
         bookingsContainer.getStyleClass().add("bookings-container");
-        // ✅ Ridotto padding da 10,0,10,0 a 5,0,5,0
+
         bookingsContainer.setPadding(new Insets(5, 0, 5, 0));
 
         scrollPane.setContent(bookingsContainer);
@@ -291,15 +293,15 @@ public class Dashboard extends VBox {
         LocalDate startDate = startDateFilter.getValue();
         LocalDate endDate = endDateFilter.getValue();
 
-        for (BookingFilter booking : allBookings) {
+        for (Prenotazione booking : allBookings) {
             boolean matchesName = nameQuery.isEmpty() ||
-                    booking.getGuestName().toLowerCase().contains(nameQuery);
+                    booking.getIntestatario().toLowerCase().contains(nameQuery);
 
             boolean matchesStartDate = startDate == null ||
-                    !booking.getCheckIn().isBefore(startDate);
+                    !booking.getDataInizio().isBefore(startDate);
 
             boolean matchesEndDate = endDate == null ||
-                    !booking.getCheckIn().isAfter(endDate);
+                    !booking.getDataInizio().isAfter(endDate);
 
             if (matchesName && matchesStartDate && matchesEndDate) {
                 filteredBookings.add(booking);
@@ -307,9 +309,9 @@ public class Dashboard extends VBox {
         }
 
         if (isAscending) {
-            filteredBookings.sort(Comparator.comparing(BookingFilter::getCheckIn));
+            filteredBookings.sort(Comparator.comparing(Prenotazione::getDataInizio));
         } else {
-            filteredBookings.sort(Comparator.comparing(BookingFilter::getCheckIn).reversed());
+            filteredBookings.sort(Comparator.comparing(Prenotazione::getDataInizio).reversed());
         }
 
         updateBookingsList();
@@ -335,20 +337,20 @@ public class Dashboard extends VBox {
             return;
         }
 
-        for (BookingFilter booking : filteredBookings) {
+        for (Prenotazione booking : filteredBookings) {
             BookingCard card = new BookingCard(booking);
             card.setOnCardClick(this::onBookingCardClick);
             bookingsContainer.getChildren().add(card);
         }
     }
 
-    private void onBookingCardClick(BookingFilter booking) {
+    private void onBookingCardClick(Prenotazione booking) {
         System.out.println("🎯 Dettagli prenotazione: " + booking);
     }
 
-    // ===== METODI PUBBLICI =====
+    //metodi per settare le componenti nella dashboard
 
-    public void setBookings(ObservableList<BookingFilter> bookings) {
+    public void setBookings(ObservableList<Prenotazione> bookings) {
         this.allBookings = bookings;
         this.filteredBookings.clear();
         this.filteredBookings.addAll(bookings);
@@ -362,7 +364,7 @@ public class Dashboard extends VBox {
         availableRoomsCard.setNumber(available);
     }
 
-    public ObservableList<BookingFilter> getAllBookings() {
+    public ObservableList<Prenotazione> getAllBookings() {
         return allBookings;
     }
 }

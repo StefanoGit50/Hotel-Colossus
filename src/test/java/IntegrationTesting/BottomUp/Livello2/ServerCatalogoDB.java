@@ -126,7 +126,7 @@ public class ServerCatalogoDB {
     @Tag("integration-LV2")
     public void getCamereTest(){
         frontDeskStorage = new CameraDAO();
-        List<Camera> c=frontDesk.getCamere();
+        List<Camera> c=assertDoesNotThrow(()->frontDesk.getListaCamere());
         Collection<?> listDB= null;
 
         //controllo nel DB se le liste sono le stesse

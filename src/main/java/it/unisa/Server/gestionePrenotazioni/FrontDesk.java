@@ -10,7 +10,6 @@ import it.unisa.Server.command.*;
 import it.unisa.Common.*;
 import it.unisa.Common.Prenotazione;
 import it.unisa.Server.command.CatalogoClientiCommands.*;
-import it.unisa.Server.command.CatalogoImpiegatiCommands.*;
 import it.unisa.Server.command.CatalogoPrenotazioniCommands.*;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoPrenotazioni;
@@ -23,7 +22,6 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface {
     private CatalogoCamere camList = new CatalogoCamere();
@@ -106,11 +104,6 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     // Invoker --> mantiene l'ordine delle chiamate ai comandi
     private Invoker invoker = new Invoker();
     // Cataloghi
-
-
-    public List<Camera> getCamere(){
-        return camList.getListaCamere();
-    }
 
     @Override
     public boolean aggiornaStatoCamera(Camera c) throws RemoteException {
@@ -242,6 +235,25 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
         return command.getCamere();
     }
 
+    @Override
+    public boolean checkOut(Prenotazione p)throws RemoteException{
+        Prenotazione p1 =p.clone();
+        p.setStatoPrenotazione(false);
+        CatalogoPrenotazioni.UpdatePrenotazioni(p);
+        Prenotazione p2= CatalogoPrenotazioni.getPrenotazione(p.getIDPrenotazione());
+        if(!p1.equals(p2)) return true;
+        else return false;
+    }
+
+    @Override
+    public boolean checkIn(Prenotazione p) throws  RemoteException{
+        Prenotazione p1 =p.clone();
+        p.setCheckIn(true);
+        CatalogoPrenotazioni.UpdatePrenotazioni(p);
+        Prenotazione p2= CatalogoPrenotazioni.getPrenotazione(p.getIDPrenotazione());
+        if(!p1.equals(p2)) return true;
+        else return false;
+    }
 
     @Override
     public Impiegato authentication(String username, String password,String pwd2) throws RemoteException {
@@ -270,6 +282,7 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     public void redoCommand() throws RemoteException {
         invoker.redo();
     }
+
 
     /**
      * @param id della prenotazione.

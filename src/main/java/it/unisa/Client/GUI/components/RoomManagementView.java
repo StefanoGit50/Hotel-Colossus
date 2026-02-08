@@ -1,5 +1,10 @@
 package it.unisa.Client.GUI.components;
 
+import it.unisa.Client.FrontDesk.FrontDeskClient;
+import it.unisa.Common.Camera;
+import it.unisa.Common.Cliente;
+import it.unisa.Common.Prenotazione;
+import it.unisa.Server.IllegalAccess;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -7,9 +12,16 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class RoomManagementView extends VBox{
 
     private GridPane roomsGrid;
+    protected List<Camera> camere = new ArrayList<>();
+    protected FrontDeskClient frontDeskClient= new FrontDeskClient();
+    private List<Prenotazione> plist= new  ArrayList<>();
 
     // ===== COSTRUTTORE =====
     public RoomManagementView() {
@@ -31,10 +43,8 @@ public class RoomManagementView extends VBox{
      * Setup del layout
      */
     private void setupLayout() {
-        // ===== SFONDO CON IMMAGINE =====
         StackPane backgroundLayer = createBackground();
 
-        // ===== CONTENUTO PRINCIPALE =====
         VBox contentLayer = new VBox(18);
         contentLayer.setPadding(new Insets(15,30,30,30));
 
@@ -42,7 +52,12 @@ public class RoomManagementView extends VBox{
         VBox header = createHeader();
 
         // Grid con scroll
-        populateRoomsGrid();
+        try{
+            populateRoomsGrid();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
 
         ScrollPane scrollPane = new ScrollPane(roomsGrid);
         scrollPane.setFitToWidth(true);
@@ -89,7 +104,7 @@ public class RoomManagementView extends VBox{
             System.out.println("⚠️ Immagine sfondo non trovata");
         }
 
-        // ✅ Overlay scuro per leggibilità
+        // Overlay scuro
         Region overlay = new Region();
         overlay.prefWidthProperty().bind(bgLayer.widthProperty());
         overlay.prefHeightProperty().bind(bgLayer.heightProperty());
@@ -121,25 +136,50 @@ public class RoomManagementView extends VBox{
         return header;
     }
 
+    private String helper (int capacità){
+        String cap = "";
+        switch (capacità) {
+            case 1: {
+                cap = "Singola";
+                break;
+            }
+            case 2: {
+                cap = "Doppia";
+                break;
+            }
+            case 3: {
+                cap = "Tripla";
+                break;
+            }
+            default:cap = "";
+        }
+        return cap;
+    }
+
     /**
      * Popola la griglia delle camere
      */
-    private void populateRoomsGrid() {
-        // Mock data - camere di esempio
-        Object[][] rooms = {
-                {101, "Camera Doppia", "Disponibile", "available"},
-                {102, "Camera Singola", "Occupata", "occupied"},
-                {103, "Suite", "In Pulizia", "cleaning"},
-                {104, "Camera Doppia", "Disponibile", "available"},
-                {105, "Camera Singola", "Occupata", "occupied"},
-                {106, "Suite Deluxe", "Disponibile", "available"},
-                {107, "Camera Doppia", "In Pulizia", "cleaning"},
-                {108, "Suite", "Disponibile", "available"},
-                {109, "Camera Singola", "Occupata", "occupied"},
-                {110, "Camera Singola", "Occupata", "occupied"},
-                {111, "Camera Singola", "Occupata", "occupied"},
-                {112, "Camera Singola", "Occupata", "occupied"}
-        };
+    private void populateRoomsGrid() throws IllegalAccess, RemoteException {
+        FrontDeskClient frontDeskClient = new FrontDeskClient();
+         camere = frontDeskClient.getCamere();
+
+        String[][] rooms = new String[camere.size()][4];
+
+        for (int i = 0; i < camere.size(); i++) {
+            Camera c = camere.get(i);
+
+            // Colonna 0: Numero (convertito in stringa)
+            rooms[i][0] = String.valueOf(c.getNumeroCamera());
+
+            // Colonna 1: Nome
+            rooms[i][1] = String.valueOf(c.getNomeCamera());
+
+            // Colonna 2: Stato (Es: "Occupata")
+            rooms[i][2] = String.valueOf(helper(c.getCapacità()));
+
+
+            rooms[i][3] = String.valueOf(helper(c.getCapacità())).toLowerCase();
+        }
 
         int col = 0;
         int row = 0;
@@ -435,18 +475,15 @@ public class RoomManagementView extends VBox{
      * Mock - Ottieni ospite per camera
      */
     private String getGuestForRoom(int roomNumber) {
-        // TODO: Sostituire con query al database
-        switch (roomNumber) {
-            case 102:
-            case 105:
-            case 109:
-            case 110:
-            case 111:
-            case 112:
-                return "Mario Rossi";
-            default:
-                return "Nessun ospite";
-        }
+      //plist= frontDeskClient.getPrenotazioniOdierne();
+     for (Prenotazione p : plist) {
+         for(Cliente c :p.getListaClienti()){
+             if (c.getCamera().getNumeroCamera()== roomNumber){
+                 return p.getIntestatario();
+             }
+         }
+     }
+     return "Non presente";
     }
 
     // ===== PUBLIC METHODS =====
@@ -464,7 +501,13 @@ public class RoomManagementView extends VBox{
      */
     public void refreshRooms() {
         roomsGrid.getChildren().clear();
-        populateRoomsGrid();
+
+        try{
+            populateRoomsGrid();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         System.out.println("🔄 Camere ricaricate");
     }
 }

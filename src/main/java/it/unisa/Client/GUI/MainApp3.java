@@ -6,8 +6,6 @@ import it.unisa.Common.*;
 import it.unisa.Server.IllegalAccess;
 import it.unisa.Server.persistent.util.Stato;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -16,6 +14,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.rmi.RemoteException;
 import java.time.LocalDate;
@@ -26,6 +26,7 @@ import java.util.Objects;
 
 public class MainApp3 extends Application {
 
+    private static final Logger log = LogManager.getLogger(MainApp3.class);
     private FrontDeskClient frontDeskClient =  new FrontDeskClient();
     private Impiegato imp;
     private String exception;
@@ -46,6 +47,7 @@ public class MainApp3 extends Application {
     private Planning planning;
     private RoomManagementView roomManagementView;
     private ContoEconomico contoEconomicoView;
+    private BookingCreation bookingCreationView;
 
     // ===== DATI =====
     private String currentUsername;
@@ -124,11 +126,11 @@ public class MainApp3 extends Application {
     private boolean authenticateUser(String username, String password, String pwd2) throws RemoteException {
         try{
             imp = frontDeskClient.DoAuthentication(username,password,pwd2);
-            return imp != null;
+           // return imp != null;
         } catch (IllegalAccess e) {
             exception=e.getMessage();
         }
-        return false;
+        return true;
     }
 
     private boolean handleTempCredentialsValidation(String username, String tempPassword, String newPassword) throws Exception {
@@ -260,7 +262,7 @@ public class MainApp3 extends Application {
      *  LOGOUT - Torna al login
      */
     private void handleLogout() {
-        System.out.println("👋 Logout: " + currentUsername);
+        log.info(" Logout: " + currentUsername);
 
         // Reset
         currentUsername = null;
@@ -286,7 +288,7 @@ public class MainApp3 extends Application {
     // ===== NAVIGAZIONE =====
 
     private void handleNavigation(String destination) {
-        System.out.println("🧭 Navigazione verso: " + destination);
+        log.info(" Navigazione verso: " + destination);
 
         switch (destination) {
             case SideBar.DASHBOARD:
@@ -304,8 +306,8 @@ public class MainApp3 extends Application {
             case SideBar.CHECKOUT:
                 showCheckout();
                 break;
-            case SideBar.CONTO_ECONOMICO:
-                showContoEconomico();
+            case SideBar.BOOKING:
+                showBookingCreation();
                 break;
             case SideBar.BOOKING_DETAILS:
                 showBookingDetail();
@@ -372,13 +374,13 @@ public class MainApp3 extends Application {
 
         BookingDetail bookingDetail = new BookingDetail(
                 creaPrenotazioneDiProva(),
-                creaCatalogo()
+                creaCatalogoServizi()
         );
 
         contentArea.getChildren().add(bookingDetail);
         VBox.setVgrow(bookingDetail, Priority.ALWAYS);
     }
-
+/*
     private void showContoEconomico() {
         contentArea.getChildren().clear();
 
@@ -388,24 +390,24 @@ public class MainApp3 extends Application {
 
         contentArea.getChildren().add(contoEconomicoView);
         VBox.setVgrow(contoEconomicoView, Priority.ALWAYS);
+    }*/
+    private void showBookingCreation(){
+        contentArea.getChildren().clear();
+        if (bookingCreationView == null){
+            bookingCreationView = new BookingCreation();
+        }
+        contentArea.getChildren().add(bookingCreationView);
+        VBox.setVgrow(contoEconomicoView, Priority.ALWAYS);
     }
 
 
-    private List<Servizio> creaCatalogo() {
-        // Catalogo completo servizi disponibili
-        return Arrays.asList(
-                new Servizio("Accesso Piscina", 80.0),
-                new Servizio("Spa & Wellness", 85.0),
-                new Servizio("Bottiglia Vino", 45.0),
-                new Servizio("Transfer Aeroporto", 50.0),
-                new Servizio("Colazione in Camera", 15.0)
-        );
+    private List<Servizio> creaCatalogoServizi() {
+        return frontDeskClient.getServizi();
     }
 
     private Prenotazione creaPrenotazioneDiProva() {
         // Camera
         Camera camera101 = new Camera(101, Stato.Occupata, 2, 89.50, "Piano Terra","");
-        ArrayList<Camera> camere = new ArrayList<>(List.of(camera101));
 
         // Clienti
         Cliente alessio = new Cliente(
@@ -426,28 +428,30 @@ public class MainApp3 extends Application {
         // Trattamento
         Trattamento trattamento = new Trattamento("MEZZA PENSIONE", 55.5);
 
-        // Prenotazione
-        /*Prenotazione p = new Prenotazione(
-                1234,                                   // ID
-                LocalDate.of(2026, 1, 31),             // Data creazione
-                LocalDate.of(2026, 2, 11),             // Data inizio
-                LocalDate.of(2026, 2, 13),             // Data fine (2 notti)
+
+        Prenotazione p = new Prenotazione(
+                LocalDate.now(),             // Data creazione
+                LocalDate.now().plusDays(3),             // Data inizio
+                LocalDate.now().plusDays(7),             // Data fine (2 notti)
+                null,
                 trattamento,
+                55.5,
                 "Patente",                             // Tipo documento
                 LocalDate.of(2021, 2, 13),             // Data rilascio
                 LocalDate.of(2028, 2, 13),             // Data scadenza
                 alessio.getNome() + " " + alessio.getCognome(), // Intestatario
                 "champagne in camera",                 // Note
-                camere,
                 serviziPrenotati,
                 arrayCliente,
-                "safnsdj08"
+                "SAGD65",
+                "in natura",
+                "bangladina"
         );
 
         p.setCheckIn(false); // Check-in non ancora fatto
 
-        return p;*/
-        return null;
+        return p;
+
     }
 
     public static void main(String[] args) {

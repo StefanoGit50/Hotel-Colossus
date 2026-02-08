@@ -96,9 +96,7 @@ public class BookingCreation extends VBox {
     }
 
     private VBox createTab1Content() {
-        // ... [CODICE IDENTICO AL TUO PRECEDENTE PER TAB 1] ...
-        // Per brevità non lo copio tutto qui, ma nel file finale deve esserci.
-        // Utilizza il codice che avevi già scritto per la ricerca clienti.
+
         return createSearchPanelInternal();
     }
 
@@ -199,9 +197,9 @@ public class BookingCreation extends VBox {
         resultsSection.getChildren().addAll(resultsHeader, resultsScroll);
         VBox.setVgrow(resultsSection, Priority.ALWAYS); // Espande i risultati
 
-        // ============================================================
-        //  LOGICA DI FILTRO (Il pezzo che mancava!)
-        // ============================================================
+
+        //  LOGICA DI FILTRO
+
         searchBtn.setOnAction(e -> {
             // 1. Pulisci i risultati precedenti
             resultsGrid.getChildren().clear();
@@ -767,9 +765,7 @@ public class BookingCreation extends VBox {
         detailsBox.getChildren().addAll(lblDetTitle, new Separator(), lblSummaryName, lblSummaryNights, lblDates);
 
 
-        // ============================================================
-        // COLONNA DESTRA: IL CONTO (PREVENTIVO)
-        // ============================================================
+
         VBox costBox = new VBox(15);
         costBox.setPrefWidth(380);
         costBox.setPadding(new Insets(25));
@@ -783,7 +779,7 @@ public class BookingCreation extends VBox {
         costTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 18px; -fx-text-fill: #333;");
         costTitleBox.getChildren().addAll(icon, costTitle);
 
-        // --- INIZIALIZZIAMO LE LABEL GLOBALI ---
+
         // Queste variabili sono definite a livello di classe e usate da updateTotals()
         lblRoomTotal = new Label("0.00 €");
         lblTreatmentTotal = new Label("0.00 €");
@@ -807,9 +803,9 @@ public class BookingCreation extends VBox {
         // Aggiungiamo le due colonne al layout principale
         mainLayout.getChildren().addAll(detailsBox, costBox);
 
-        // ============================================================
+
         // BOTTONE CONFERMA
-        // ============================================================
+
         Button btnConfirm = new Button("✅ CONFERMA E SALVA PRENOTAZIONE");
         btnConfirm.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 12 30; -fx-cursor: hand; -fx-background-radius: 30;");
         // Effetto hover
@@ -826,7 +822,7 @@ public class BookingCreation extends VBox {
         content.getChildren().addAll(title, mainLayout, btnConfirm);
 
         // IMPORTANTE: Chiamiamo updateTotals adesso per assicurarci che
-        // appena apro il tab, i numeri siano già calcolati e non mostrino "0.00" se ho già scelto roba.
+
         updateTotals();
 
         return content;
@@ -912,7 +908,7 @@ public class BookingCreation extends VBox {
             }
         }
 
-        // --- 3. CALCOLO TRATTAMENTO ---
+        // . CALCOLO TRATTAMENTO
         // Formula: PrezzoTrattamento * NumeroPersone * Notti
         double treatmentPricePerPerson = 0.0;
         if (treatmentCombo != null && treatmentCombo.getValue() != null) {
@@ -921,7 +917,7 @@ public class BookingCreation extends VBox {
 
         double totalTreatmentCost = treatmentPricePerPerson * totalGuests * nights;
 
-        // --- 4. CALCOLO SERVIZI EXTRA ---
+        // CALCOLO SERVIZI EXTRA
         double totalServicesCost = 0.0;
         if (serviceItems != null) {
             for (ServiceItem item : serviceItems) {
@@ -929,10 +925,10 @@ public class BookingCreation extends VBox {
             }
         }
 
-        // --- 5. TOTALE GENERALE ---
+        // TOTALE GENERALE
         double grandTotal = totalRoomCost + totalTreatmentCost + totalServicesCost;
 
-        // --- 6. AGGIORNAMENTO UI (TAB 3) ---
+        // AGGIORNAMENTO UI (
         // Aggiorniamo le label solo se sono state inizializzate (cioè se siamo passati dal createTab3Content)
         if (lblRoomTotal != null)
             lblRoomTotal.setText(String.format("%.2f €", totalRoomCost));

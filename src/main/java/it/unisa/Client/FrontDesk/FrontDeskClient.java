@@ -28,10 +28,11 @@ public class FrontDeskClient
 {
     private static Logger logger = LogManager.getLogger(FrontDeskClient.class);
     private static FrontDeskInterface frontDeskInterface;
+    private static final boolean flag= false;
 
 
     public FrontDeskClient(){
-            startRMI();
+        if(!flag)startRMI();
     }
 
 
@@ -98,7 +99,7 @@ public class FrontDeskClient
                     }
                     case 4:
                     {
-                        List<Camera> camList= frontDeskInterface.getCamere();
+                        List<Camera> camList= frontDeskInterface.getListaCamere();
                         System.out.println(camList.toString());
                         System.out.println("Inserisci numero camera da modificare: ");
                         Scanner sc2 = new Scanner(System.in);
@@ -128,13 +129,13 @@ public class FrontDeskClient
 
                     case 5:
                     {
-                        List<Camera> camList= frontDeskInterface.getCamere();
+                        List<Camera> camList= frontDeskInterface.getListaCamere();
                         System.out.println(camList.toString());
                         break;
                     }
                     case 6:{
                         CameraDAO cameraDAO = new CameraDAO();
-                        ArrayList<Camera> cameras = (ArrayList<Camera>) frontDeskInterface.getCamere();
+                        ArrayList<Camera> cameras = (ArrayList<Camera>) frontDeskInterface.getListaCamere();
                         System.out.println("Questo è l'oggetto" + cameras.getFirst());
                         System.out.println("Sto salvando nel DB ...");
                         cameraDAO.doSave(cameras.getFirst());
@@ -162,17 +163,30 @@ public class FrontDeskClient
         }
     }
 
-    public List<Camera> getCamere() throws RemoteException {
-        return frontDeskInterface.getCamere();
+    public List<Camera> getCamere() throws RemoteException, IllegalAccess {
+
+        List<Camera> cameras = null;
+
+        try{
+            cameras = frontDeskInterface.getListaCamere();
+        }catch (RemoteException remoteException){
+            remoteException.getStackTrace();
+            remoteException.getMessage();
+        } catch (IllegalAccess e) {
+            throw new RuntimeException(e);
+        }
+        return cameras;
     }
 
     public boolean aggiornaStatoCamera(int numeroCamera, String nuovoStato) throws RemoteException {
         List<Camera> cameras = null;
         try{
-            cameras = frontDeskInterface.getCamere();
+            cameras = frontDeskInterface.getListaCamere();
         }catch (RemoteException remoteException){
             remoteException.getStackTrace();
             remoteException.getMessage();
+        } catch (IllegalAccess e) {
+            throw new RuntimeException(e);
         }
 
 
