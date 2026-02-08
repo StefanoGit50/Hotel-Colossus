@@ -65,9 +65,19 @@ public class RetriveAllActiveCommand implements Command {
     @Override
     public void execute() {
         prenotazioni = CatalogoPrenotazioni.getListaPrenotazioni();
-        prenotazioni.removeIf(
-                prenotazione -> prenotazione.getDataInizio().isAfter(LocalDate.now()) ||
-                prenotazione.getDataFine().isBefore(LocalDate.now()) || prenotazione.getDataFine().isEqual(LocalDate.now()));
+        boolean b;
+        int size = prenotazioni.size();
+
+        for (int i = 0; i < size; i++) {
+            Prenotazione prenotazione = prenotazioni.get(i);
+            b = !((prenotazione.getDataInizio().isBefore(LocalDate.now()) || prenotazione.getDataInizio().isEqual(LocalDate.now()))
+                    && prenotazione.getDataFine().isAfter(LocalDate.now()));
+            if (b) {
+                prenotazioni.remove(prenotazione);
+                size--;
+                i--;
+            }
+        }
     }
 
     /**

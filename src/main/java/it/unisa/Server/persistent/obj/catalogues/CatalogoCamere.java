@@ -29,7 +29,7 @@ public class CatalogoCamere implements SubjectCamereInterface, Serializable {
     private static final org.apache.logging.log4j.Logger log = LogManager.getLogger(CatalogoCamere.class);
     private static FrontDeskStorage<Camera> fds;
     private static List<ObserverCamereInterface> observers = new ArrayList<>();
-    private static Camera lastModified = nul;
+    private static Camera lastModified = null;
     /**
      * Lista interna contenente tutti gli oggetti {@link it.unisa.Common.Camera} del catalogo.
      * La lista viene gestita tramite deep copy per garantire l'incapsulamento.

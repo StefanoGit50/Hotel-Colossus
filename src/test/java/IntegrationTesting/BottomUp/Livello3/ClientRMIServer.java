@@ -2,7 +2,6 @@ package IntegrationTesting.BottomUp.Livello3;
 
 import WhiteBox.UnitTest.DBPopulator;
 import it.unisa.Client.FrontDesk.FrontDeskClient;
-import it.unisa.Client.GUI.components.BookingCreation;
 import it.unisa.Common.*;
 import it.unisa.Server.gestionePrenotazioni.FrontDesk;
 import it.unisa.Storage.DAO.*;
@@ -133,8 +132,8 @@ public void tearDown() {
     @Tag("integration-LV3")
     public void addPrenotazioneTest() {
         clientes =  assertDoesNotThrow(()->frontDeskClient.getListaClienti());
-        List<Prenotazione> prenotaziones = assertDoesNotThrow(()-> frontDeskClient.getPrenotazioni());
-        List<Camera> cameraList = assertDoesNotThrow(()->frontDeskClient.getCamere());
+        List<Prenotazione> prenotaziones = assertDoesNotThrow(()-> frontDeskClient.getListaPrenotazioni());
+        List<Camera> cameraList = assertDoesNotThrow(()->frontDeskClient.getListaCamere());
 
         List<Cliente> clist = new ArrayList<>();
         clist.add(clientes.get(0));
@@ -155,7 +154,7 @@ public void tearDown() {
                 "Mario Biondi","",(ArrayList<Servizio>) serviziop, (ArrayList<Cliente>) clist,"SADAS34","","italiana");
 
         assertDoesNotThrow(()->frontDeskClient.addPrenotazione(p));
-        assertNotEquals(prenotaziones,assertDoesNotThrow(()->frontDeskClient.getPrenotazioni()));
+        assertNotEquals(prenotaziones,assertDoesNotThrow(()->frontDeskClient.getListaPrenotazioni()));
 
     }
 
