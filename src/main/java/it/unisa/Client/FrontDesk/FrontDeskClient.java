@@ -90,7 +90,7 @@ public class FrontDeskClient
                     }
                     case 3:
                     {
-                        List<Prenotazione> prenotazioni = frontDeskInterface.getPrenotazioni();
+                        List<Prenotazione> prenotazioni = frontDeskInterface.getListaPrenotazioni();
                         
                         for(Prenotazione p: prenotazioni)
                         {
@@ -101,7 +101,7 @@ public class FrontDeskClient
                     }
                     case 4:
                     {
-                        List<Camera> camList= frontDeskInterface.getCamere();
+                        List<Camera> camList= frontDeskInterface.getListaCamere();
                         System.out.println(camList.toString());
                         System.out.println("Inserisci numero camera da modificare: ");
                         Scanner sc2 = new Scanner(System.in);
@@ -131,13 +131,13 @@ public class FrontDeskClient
 
                     case 5:
                     {
-                        List<Camera> camList= frontDeskInterface.getCamere();
+                        List<Camera> camList= frontDeskInterface.getListaCamere();
                         System.out.println(camList.toString());
                         break;
                     }
                     case 6:{
                         CameraDAO cameraDAO = new CameraDAO();
-                        ArrayList<Camera> cameras = (ArrayList<Camera>) frontDeskInterface.getCamere();
+                        ArrayList<Camera> cameras = (ArrayList<Camera>) frontDeskInterface.getListaCamere();
                         System.out.println("Questo è l'oggetto" + cameras.getFirst());
                         System.out.println("Sto salvando nel DB ...");
                         cameraDAO.doSave(cameras.getFirst());
@@ -165,14 +165,14 @@ public class FrontDeskClient
         }
     }
 
-    public List<Camera> getCamere() throws RemoteException {
-        return frontDeskInterface.getCamere();
+    public List<Camera> getListaCamere() throws RemoteException, IllegalAccess {
+        return frontDeskInterface.getListaCamere();
     }
 
-    public boolean aggiornaStatoCamera(int numeroCamera, String nuovoStato) throws RemoteException {
+    public boolean aggiornaStatoCamera(int numeroCamera, String nuovoStato) throws RemoteException, IllegalAccess {
         List<Camera> cameras = null;
         try{
-            cameras = frontDeskInterface.getCamere();
+            cameras = frontDeskInterface.getListaCamere();
         }catch (RemoteException remoteException){
             remoteException.getStackTrace();
             remoteException.getMessage();
@@ -203,13 +203,13 @@ public class FrontDeskClient
 
     }*/
 
-    public List<Prenotazione> getPrenotazioni() {
+    public List<Prenotazione> getListaPrenotazioni() {
         List<Prenotazione> prenotaziones = null;
         try{
-           prenotaziones = frontDeskInterface.getPrenotazioni();
-        }catch (RemoteException remoteException){
-            remoteException.getStackTrace();
-            remoteException.getMessage();
+           prenotaziones = frontDeskInterface.getListaPrenotazioni();
+        }catch (RemoteException | IllegalAccess exception){
+            exception.getStackTrace();
+            exception.getMessage();
         }
         return prenotaziones;
     }

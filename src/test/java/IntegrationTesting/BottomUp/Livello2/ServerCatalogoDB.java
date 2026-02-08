@@ -2,6 +2,7 @@ package IntegrationTesting.BottomUp.Livello2;
 
 import WhiteBox.UnitTest.DBPopulator;
 import it.unisa.Common.*;
+import it.unisa.Server.IllegalAccess;
 import it.unisa.Server.command.Invoker;
 import it.unisa.Server.gestionePrenotazioni.FrontDesk;
 import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
@@ -124,9 +125,9 @@ public class ServerCatalogoDB {
     @Test
     @DisplayName("Bottom up 3.2 TC14: LV2 Test se le camere nel front desk sono le stesse nel DB ")
     @Tag("integration-LV2")
-    public void getCamereTest(){
+    public void getCamereTest() throws RemoteException, IllegalAccess{
         frontDeskStorage = new CameraDAO();
-        List<Camera> c=frontDesk.getCamere();
+        List<Camera> c=frontDesk.getListaCamere();
         Collection<?> listDB= null;
 
         //controllo nel DB se le liste sono le stesse
@@ -138,10 +139,10 @@ public class ServerCatalogoDB {
     @Test
     @DisplayName("Bottom up 3.3 TC15: LV2 Test se le prenotazioni nel front desk sono le stesse nel DB")
     @Tag("integration-LV2")
-    public void getPrenotazioniTest() throws RemoteException {
+    public void getPrenotazioniTest() throws RemoteException, IllegalAccess {
         frontDeskStorage = new PrenotazioneDAO();
 
-        List<Prenotazione> p = frontDesk.getPrenotazioni();
+        List<Prenotazione> p = frontDesk.getListaPrenotazioni();
         Collection<?> listDB= null;
 
         // controllo nel DB se le liste sono le stesse
@@ -200,9 +201,9 @@ public class ServerCatalogoDB {
     @Test
     @DisplayName("Bottom up 3.5 TC17 : LV2 Test controllo dell'interazione sulla rimozione fra frontdeskServer command pattern e DB")
     @Tag("integration-LV2")
-    public void removePrenotazioneTest() throws RemoteException {
+    public void removePrenotazioneTest() throws RemoteException, IllegalAccess {
         assertDoesNotThrow(()->frontDesk.addPrenotazione(prenotazione));
-        List<Prenotazione> p = frontDesk.getPrenotazioni();
+        List<Prenotazione> p = frontDesk.getListaPrenotazioni();
         assertDoesNotThrow(()->frontDesk.removePrenotazione(prenotazione));
 
         Collection<?> listDB= null;

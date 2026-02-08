@@ -106,7 +106,7 @@ public void tearDown() {
     @SuppressWarnings("unchecked")
     public void getCamereTest() {
         frontDeskStorage= new CameraDAO();
-        List<Camera> cameraList = assertDoesNotThrow(()->frontDeskClient.getCamere());
+        List<Camera> cameraList = assertDoesNotThrow(()->frontDeskClient.getListaCamere());
 
         //verifica se le camere sono le stesse del DB
 
@@ -120,7 +120,7 @@ public void tearDown() {
     @SuppressWarnings("unchecked")
     public void getPrenotazioneTest() {
         frontDeskStorage= new PrenotazioneDAO();
-        List<Prenotazione> plist1 = assertDoesNotThrow(()-> frontDeskClient.getPrenotazioni());
+        List<Prenotazione> plist1 = assertDoesNotThrow(()-> frontDeskClient.getListaPrenotazioni());
 
         plist = (List<Prenotazione>) assertDoesNotThrow(()->frontDeskStorage.doRetriveAll("decrescente"));
         System.out.println(plist.size()+"  "+plist);

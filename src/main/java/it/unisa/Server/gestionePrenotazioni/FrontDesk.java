@@ -5,6 +5,7 @@ import it.unisa.Server.IllegalAccess;
 import it.unisa.Server.command.Others.RetrieveAllCamereCommand;
 import it.unisa.Server.command.Others.RetrieveAllServiziCommand;
 import it.unisa.Server.command.Others.RetrieveAllTrattamentiCommand;
+import it.unisa.Server.command.Others.RetriveAllActiveCommand;
 import it.unisa.interfacce.*;
 import it.unisa.Server.command.*;
 import it.unisa.Common.*;
@@ -107,11 +108,6 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     private Invoker invoker = new Invoker();
     // Cataloghi
 
-
-    public List<Camera> getCamere(){
-        return camList.getListaCamere();
-    }
-
     @Override
     public boolean aggiornaStatoCamera(Camera c) throws RemoteException {
         log.info("camera passata = "+c.getNumeroCamera()+ c.getStatoCamera());
@@ -123,14 +119,6 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     public Camera update() throws RemoteException {
         return CatalogoCamere.getLastModified();
     }
-
-    @Override
-    public ArrayList<Prenotazione> getPrenotazioni() throws RemoteException{
-        ArrayList<Prenotazione> list =CatalogoPrenotazioni.getListaPrenotazioni();
-        System.out.println("DENTRO LA CHIAMATA"+list);
-        return list;
-    }
-
 
     // COMANDI PRENOTAZIONE
     @Override
@@ -190,6 +178,21 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     @Override
     public ArrayList<Prenotazione> getListaPrenotazioni() throws RemoteException, IllegalAccess {
         RetrieveAllPCommand command = new RetrieveAllPCommand();
+        invoker.executeCommand(command);
+        return command.getPrenotazioni();
+    }
+
+    /**
+     * Recupera la lista {@code list} di tutte le prenotazioni attive presenti nel sistema. Una prenotazione è considerata
+     * "attiva" se la data di arrivo prevista per il cliente è antecedente o uguale alla data odierna e se la data di
+     * partenza prevista per il cliente è successiva alla data odierna.
+     *
+     * @throws RemoteException .
+     * @post {@code list} di oggetti {@code Prenotazione} p tale per cui p.dataInizio <= dataOrdierna && p.dataFine > dataOdierna.
+     */
+    @Override
+    public ArrayList<Prenotazione> getListaPrenotazioniAttive() throws RemoteException, IllegalAccess {
+        RetriveAllActiveCommand command = new RetriveAllActiveCommand();
         invoker.executeCommand(command);
         return command.getPrenotazioni();
     }
@@ -280,5 +283,6 @@ public class FrontDesk extends UnicastRemoteObject implements FrontDeskInterface
     public Prenotazione getPrenotazioneById(int id) throws RemoteException {
         return CatalogoPrenotazioni.getPrenotazione(id);
     }
+
 
 }
