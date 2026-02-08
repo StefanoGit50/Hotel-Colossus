@@ -87,7 +87,7 @@ public class RemoveClienteCommand implements Command {
     public void execute() throws IllegalAccess {
         try {
             // Riprendi il cliente come lo è attualmente nel catalogo
-            Cliente c = catalogue.getCliente(cliente.getCf());
+            Cliente c = CatalogoClienti.getCliente(cliente.getCf());
             ArrayList<Cliente> lc;
             if(c.isBlacklisted()) {
                 lc = CatalogoClienti.getListaClientiBannati();
@@ -99,9 +99,8 @@ public class RemoveClienteCommand implements Command {
 
             ClienteDAO clienteDAO = new ClienteDAO();
             clienteDAO.doDelete(c);
-        }catch (CloneNotSupportedException | SQLException e) {
-            e.printStackTrace();
-            throw new IllegalAccess("ERROR: il cliente non è stato rimosso");
+        }catch (Exception e) {
+            throw new IllegalAccess(e.getMessage());
         }
     }
 

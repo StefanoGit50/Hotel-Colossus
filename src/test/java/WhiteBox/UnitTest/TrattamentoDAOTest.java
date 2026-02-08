@@ -38,8 +38,28 @@ public class TrattamentoDAOTest {
     }
 
     @Test
+    @Tag("True")
+    @DisplayName("TC52: doSave() quando va tutto bene")
+    public void doSave() throws SQLException {
+        DBPopulator.cancel();
+        Trattamento trattamento1 = new Trattamento("Pensione Completa",40.0);
+        assertDoesNotThrow(()->trattamentoDAO.doSave(trattamento1));
+    }
+
+    @Test
     @Tags({@Tag("Exception"),@Tag("Error")})
-    @DisplayName("TC52: doRetriveByKey(Object nome) quando resultSet restituisce false")
+    @DisplayName("TC53: doSave() quando non va tutto bene")
+    public void doSaveAllFalse() throws SQLException{
+        DBPopulator.cancel();
+        Trattamento trattamento1 = new Trattamento("Pensione Completa",40.0);
+        trattamentoDAO.doSave(trattamento1);
+        Trattamento trattamento2 = new Trattamento("Pensione Completa",40.0);
+        assertThrows(SQLException.class,()->trattamentoDAO.doSave(trattamento2));
+    }
+
+    @Test
+    @Tags({@Tag("Exception"),@Tag("Error")})
+    @DisplayName("TC54: doRetriveByKey(Object nome) quando resultSet restituisce false")
     public void doRetriveByKeyResultSetFalse() throws SQLException {
         DBPopulator.cancel();
         assertThrows(NoSuchElementException.class,()->trattamentoDAO.doRetriveByKey("Mezza Pensione"));
@@ -47,7 +67,7 @@ public class TrattamentoDAOTest {
 
     @Tags({@Tag("Exception"),@Tag("Error")})
     @Test
-    @DisplayName("TC53: doRetriveByAttribute() se resultSet.next() ritorna false")
+    @DisplayName("TC55: doRetriveByAttribute() se resultSet.next() ritorna false")
     public void doRetriveByAttributeResultSetReturnFalse() throws SQLException {
         DBPopulator.cancel();
         assertThrows(NoSuchElementException.class,()->trattamentoDAO.doRetriveByAttribute("Nome","Quarto di Pensione"));
@@ -55,7 +75,7 @@ public class TrattamentoDAOTest {
 
     @Test
     @Tag("True")
-    @DisplayName("TC54: doDelete(Trattamento trattamento) quando va tutto a buon fine")
+    @DisplayName("TC56: doDelete(Trattamento trattamento) quando va tutto a buon fine")
     public void doDeleteAllTrue() throws SQLException {
       DBPopulator.cancel();
       DBPopulator.populator();
@@ -64,7 +84,7 @@ public class TrattamentoDAOTest {
 
     @Tags({@Tag("Exception"),@Tag("Error")})
     @Test
-    @DisplayName("TC55: doDelete(Trattamento trattamento) quando va in eccezione")
+    @DisplayName("TC57: doDelete(Trattamento trattamento) quando va in eccezione")
     public void doDeleteExecuteUpdate(){
       DBPopulator.cancel();
       assertThrows(SQLException.class,()->trattamentoDAO.doDelete(null));
@@ -73,7 +93,7 @@ public class TrattamentoDAOTest {
 
     @Test
     @Tag("True")
-    @DisplayName("TC56: doRetriveByKey(Object nome) quando va tutto a buon fine")
+    @DisplayName("TC58: doRetriveByKey(Object nome) quando va tutto a buon fine")
     public void doRetriveByKeyAllTrue() throws SQLException {
         DBPopulator.cancel();
         DBPopulator.populator();
@@ -86,7 +106,7 @@ public class TrattamentoDAOTest {
 
     @Tags({@Tag("Exception"),@Tag("Error")})
     @Test
-    @DisplayName("TC57: doRetriveByKey(Object nome) quando passi un parametro diverso da una stringa")
+    @DisplayName("TC59: doRetriveByKey(Object nome) quando passi un parametro diverso da una stringa")
     public void doRetriveByKeyParametroDiversoStringa(){
         DBPopulator.cancel();
         assertThrows(SQLException.class,()->trattamentoDAO.doRetriveByKey(new Cliente()));
@@ -94,7 +114,7 @@ public class TrattamentoDAOTest {
 
     @Tag("True")
     @Test
-    @DisplayName("TC58: doRetriveAll(String order) quando va tutto bene ")
+    @DisplayName("TC60: doRetriveAll(String order) quando va tutto bene ")
     public void doRetriveAllAllTrue() throws SQLException{
       DBPopulator.cancel();
       DBPopulator.populator();
@@ -111,7 +131,7 @@ public class TrattamentoDAOTest {
 
     @Tag("False")
     @Test
-    @DisplayName("TC59: doRetriveAll(String order) quando tutto è falso")
+    @DisplayName("TC61: doRetriveAll(String order) quando tutto è falso")
     public void doRetriveAllFalse() throws SQLException {
         DBPopulator.cancel();
         assertEquals(new ArrayList<>(),trattamentoDAO.doRetriveAll("nome"));
@@ -122,7 +142,7 @@ public class TrattamentoDAOTest {
 
     @Tag("True")
     @Test
-    @DisplayName("TC60: doUpdate(Trattamento trattamento) quando va tutto bene")
+    @DisplayName("TC62: doUpdate(Trattamento trattamento) quando va tutto bene")
     public void doUpdate() throws SQLException {
         DBPopulator.cancel();
         assertDoesNotThrow(()->trattamentoDAO.doUpdate(trattamento));
@@ -130,14 +150,14 @@ public class TrattamentoDAOTest {
 
     @Tags({@Tag("Exception"),@Tag("Error")})
     @Test
-    @DisplayName("TC61: doUpdate(Trattamento trattamento) quando tira una eccezione")
+    @DisplayName("TC63: doUpdate(Trattamento trattamento) quando tira una eccezione")
     public void doUpdateException(){
         assertThrows(SQLException.class,()->trattamentoDAO.doUpdate(null));
     }
 
     @Tag("True")
     @Test
-    @DisplayName("TC62: doRetriveByAttribute() quando va tutto bene")
+    @DisplayName("TC64: doRetriveByAttribute() quando va tutto bene")
     public void doRetriveByAttributeAllTrue() throws SQLException{
       Object o = 35;
       DBPopulator.populator();
@@ -149,7 +169,7 @@ public class TrattamentoDAOTest {
 
     @Tags({@Tag("Exception"),@Tag("Error")})
     @Test
-    @DisplayName("TC63: doRetriveByAttribute(String attribute,Object value) se attribute è uguale a false e se value è uguale a null")
+    @DisplayName("TC65: doRetriveByAttribute(String attribute,Object value) se attribute è uguale a false e se value è uguale a null")
     public void doRetriveByAttributeAttributeisNull(){
         DBPopulator.cancel();
         DBPopulator.populator();

@@ -2,24 +2,24 @@ package IntegrationTesting.BottomUp.Livello3;
 
 import WhiteBox.UnitTest.DBPopulator;
 import it.unisa.Client.FrontDesk.FrontDeskClient;
-import it.unisa.Common.Camera;
-import it.unisa.Common.Cliente;
-import it.unisa.Common.Prenotazione;
+import it.unisa.Client.GUI.components.BookingCreation;
+import it.unisa.Common.*;
 import it.unisa.Server.gestionePrenotazioni.FrontDesk;
-import it.unisa.Storage.DAO.CameraDAO;
-import it.unisa.Storage.DAO.ClienteDAO;
-import it.unisa.Storage.DAO.PrenotazioneDAO;
+import it.unisa.Storage.DAO.*;
 import it.unisa.Storage.Interfacce.FrontDeskStorage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.*;
+
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -132,10 +132,31 @@ public void tearDown() {
     @DisplayName("Bottom up TC25 : LV3 FrontDesk addPrenotazioni DB attraverso il server RMI")
     @Tag("integration-LV3")
     public void addPrenotazioneTest() {
-        /*Prenotazione p = new Prenotazione(LocalDate.now(),LocalDate.now(),LocalDate.now().plusDays(5),null,new Trattamento("Mezza Pensione",87),87,"Patente",
-                LocalDate.of(2020,04,02),LocalDate.of(2030,05,02),"Mario Biondi","",);
+        clientes =  assertDoesNotThrow(()->frontDeskClient.getListaClienti());
+        List<Prenotazione> prenotaziones = assertDoesNotThrow(()-> frontDeskClient.getPrenotazioni());
+        List<Camera> cameraList = assertDoesNotThrow(()->frontDeskClient.getCamere());
 
-        List<Prenotazione> prenotazioneList = assertDoesNotThrow(()->frontDeskClient.addPrenotazione());*/
+        List<Cliente> clist = new ArrayList<>();
+        clist.add(clientes.get(0));
+        clist.add(clientes.get(1));
+        clist.add(clientes.get(2));
+        clist.getFirst().setCamera(cameraList.get(0));
+        clist.get(1).setCamera(cameraList.get(1));
+        clist.get(2).setCamera(cameraList.get(2));
+
+        List<Servizio> servizioList = assertDoesNotThrow(()-> frontDeskClient.getServizi());
+        List<Servizio> serviziop= new ArrayList<>();
+        serviziop.add(servizioList.get(0));
+        serviziop.add(servizioList.get(0));
+        serviziop.add(servizioList.get(1));
+
+        Prenotazione p = new Prenotazione(LocalDate.now(),LocalDate.now(),LocalDate.now().plusDays(5),  null,new Trattamento("Mezza Pensione",87),
+                87.0,"Patente",LocalDate.of(2020,04,02),LocalDate.of(2030,05,02),
+                "Mario Biondi","",(ArrayList<Servizio>) serviziop, (ArrayList<Cliente>) clist,"SADAS34","","italiana");
+
+        assertDoesNotThrow(()->frontDeskClient.addPrenotazione(p));
+        assertNotEquals(prenotaziones,assertDoesNotThrow(()->frontDeskClient.getPrenotazioni()));
+
     }
 
     @Test
@@ -168,15 +189,69 @@ public void tearDown() {
                 "luca@misafnfai","italiana",new Camera());
         assertDoesNotThrow(()->frontDeskClient.addCliente(c));
     }
-    @Test
+   @Test
     @DisplayName("Bottom up TC28 : LV3 FrontDesk rimozione cliente attraverso la chiamata RMI")
     @SuppressWarnings("unchecked")
     public void removeClienteTest(){
         frontDeskStorage= new ClienteDAO();
-//        List<Cliente> clientes1 = frontDeskClient.getClienti();
-//        Cliente c= clientes1.getFirst();
-//        assertDoesNotThrow(frontDeskClient.removeCliente(c));
-//        assertEquals(c,);
+        List<Cliente> clientes1 = assertDoesNotThrow(()-> frontDeskClient.getListaClienti());
+        Cliente c= clientes1.getFirst();
+        assertDoesNotThrow(()->frontDeskClient.removeCliente(c));
+        assertEquals(clientes1,assertDoesNotThrow(()->frontDeskClient.getListaClienti()));
+    }
+
+    @Test
+    @DisplayName("Bottom up TC29: LV3 FrontDesk update cliente attraverso la chiamata RMI")
+    @SuppressWarnings("unchecked")
+    public void updateClienteTest(){
+        frontDeskStorage= new ClienteDAO();
+        clientes= assertDoesNotThrow(()->frontDeskClient.getListaClienti());
+        Cliente c = clientes.getFirst();
+        c.setCAP(11111);
+        assertDoesNotThrow(()->frontDeskClient.updateCliente(c));
+        assertNotEquals(clientes,assertDoesNotThrow(()->frontDeskClient.getListaClienti()));
+    }
+
+    @Test
+    @DisplayName("Bottom up TC30: LV3 FrontDesk banCliente attraverso la chiamata RMI")
+    @SuppressWarnings("unchecked")
+    public void banClienteTest(){
+        frontDeskStorage= new ClienteDAO();
+        clientes= assertDoesNotThrow(()->frontDeskClient.getListaClienti());
+        Cliente c = clientes.getFirst();
+        c.setBlacklisted(true);
+        assertDoesNotThrow(()->frontDeskClient.banCliente(c));
+    }
+
+    @Test
+    @DisplayName("Bottom up TC31: LV3 FrontDesk unBanCliente attraverso la chiamata RMI")
+    @SuppressWarnings("unchecked")
+    public void unBanClienteTest(){
+        frontDeskStorage= new ClienteDAO();
+        clientes= assertDoesNotThrow(()->frontDeskClient.getListaClienti());
+        Cliente c = clientes.get(1);
+        assertDoesNotThrow(()->frontDeskClient.unBanCliente(c));
+    }
+
+    @Test
+    @DisplayName("Bottom up TC32: LV3 Frontdesk getServizi attraverso la chiamata RMI")
+    @SuppressWarnings("unchecked")
+    public void getServiziTest(){
+        frontDeskStorage= new ServizioDAO();
+        List<Servizio> servizios =assertDoesNotThrow(()->frontDeskClient.getServizi());
+        assertFalse(servizios.isEmpty());
+        assertTrue(servizios.size()>3);
+        assertEquals(servizios,assertDoesNotThrow(()->frontDeskStorage.doRetriveAll("decrescente")));
+    }
+
+    @Test
+    @DisplayName("Bottom up TC33 : LV3 Frontdesk getTrattamento attraverso la chiamta RMI")
+    public void getTrattamentoTest(){
+        frontDeskStorage= new TrattamentoDAO();
+        List<Trattamento> trattamenti =assertDoesNotThrow(()->frontDeskClient.getTrattamenti());
+        assertFalse(trattamenti.isEmpty());
+        assertTrue(trattamenti.size()>3);
+        assertEquals(trattamenti,assertDoesNotThrow(()->frontDeskStorage.doRetriveAll("decrescente")));
     }
 
 }

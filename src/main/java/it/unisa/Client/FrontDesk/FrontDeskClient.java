@@ -1,10 +1,7 @@
 package it.unisa.Client.FrontDesk;
 
-import it.unisa.Common.Camera;
+import it.unisa.Common.*;
 
-import it.unisa.Common.Cliente;
-import it.unisa.Common.Impiegato;
-import it.unisa.Common.Prenotazione;
 import it.unisa.Server.IllegalAccess;
 import it.unisa.Server.command.CatalogoClientiCommands.AddClienteCommand;
 import it.unisa.Server.command.CatalogoClientiCommands.UnBanCommand;
@@ -257,6 +254,99 @@ public class FrontDeskClient
         String message="";
         try{
             frontDeskInterface.addCliente(c);
+        }catch (RemoteException remoteException){
+            remoteException.getMessage();
+            remoteException.getStackTrace();
+        }catch (IllegalAccess illegalAccessException){
+            message = illegalAccessException.getMessage();
+        }
+        return message;
+    }
+
+    public String removeCliente(Cliente c) {
+        String message="";
+        try{
+            frontDeskInterface.removeCliente(c);
+        }catch (RemoteException remoteException){
+            remoteException.getMessage();
+            remoteException.getStackTrace();
+        }catch (IllegalAccess illegalAccessException){
+            message = illegalAccessException.getMessage();
+        }
+        return message;
+    }
+
+    public String updateCliente(Cliente c) {
+        String message="";
+        try{
+            frontDeskInterface.updateCliente(c);
+        }catch (RemoteException remoteException){
+            remoteException.getMessage();
+            remoteException.getStackTrace();
+        }catch (IllegalAccess illegalAccessException){
+            message = illegalAccessException.getMessage();
+        }
+        return message;
+    }
+
+    public List<Servizio>getServizi() {
+        List<Servizio> servizi = null;
+        try{
+            servizi=frontDeskInterface.getListaServizi();
+        }catch (RemoteException remoteException){
+            remoteException.getMessage();
+            remoteException.getStackTrace();
+        }catch (IllegalAccess illegalAccessException){
+            throw  new RuntimeException(illegalAccessException.getMessage());
+        }
+        return servizi;
+    }
+
+    public List<Trattamento> getTrattamenti() {
+        List<Trattamento> trattamento = null;
+        try{
+            trattamento=frontDeskInterface.getListaTrattamenti();
+        }catch (RemoteException remoteException){
+            remoteException.getMessage();
+            remoteException.getStackTrace();
+        }catch (IllegalAccess illegalAccessException){
+            throw  new RuntimeException(illegalAccessException.getMessage());
+        }
+        return trattamento;
+    }
+
+    public List<Cliente> getListaClienti(){
+
+        List<Cliente> clienti = null;
+        try{
+            clienti=frontDeskInterface.getListaClienti();
+        }catch (RemoteException remoteException){
+            remoteException.getMessage();
+            remoteException.getStackTrace();
+        }catch (IllegalAccess illegalAccessException){
+            throw new RuntimeException(illegalAccessException.getMessage());
+        }
+        return clienti;
+    }
+
+
+    public String banCliente(Cliente c){
+        String message="";
+        try{
+            frontDeskInterface.banCliente(c);
+        }catch (RemoteException remoteException){
+            remoteException.getMessage();
+            remoteException.getStackTrace();
+        }catch (IllegalAccess illegalAccessException){
+            message = illegalAccessException.getMessage();
+        }
+        return message;
+    }
+
+    public String unBanCliente(Cliente c){
+        String message="";
+        try{
+            frontDeskInterface.unBanCliente(c);
         }catch (RemoteException remoteException){
             remoteException.getMessage();
             remoteException.getStackTrace();
