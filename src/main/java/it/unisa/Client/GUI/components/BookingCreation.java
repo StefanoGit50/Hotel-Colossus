@@ -840,7 +840,6 @@ public class BookingCreation extends VBox {
         // Qui collegherai l'azione di salvataggio nel DB
         btnConfirm.setOnAction(e -> {
 
-            LocalDate dataCreazione = LocalDate.now();
             LocalDate dataInizio = checkinDate.getValue();
             LocalDate dataFine = checkoutDate.getValue();
 
@@ -852,7 +851,10 @@ public class BookingCreation extends VBox {
 
 
             String trattamentoScelto = treatmentCombo.getValue();
-            // TODO: Converti in enum Trattamento se necessario
+            Trattamento trattamentoEffettivo = null;
+            for (Trattamento t : MainApp3.trattamenti)
+                if (trattamentoScelto.equalsIgnoreCase(t.getNome()))
+                    trattamentoEffettivo = t;
 
             // Servizi selezionati (solo quelli con quantity > 0)
             ArrayList<Servizio> listaServizi = new ArrayList<>();
@@ -869,24 +871,25 @@ public class BookingCreation extends VBox {
 
             // Clienti selezionati
             ArrayList<Cliente> listaClienti = new ArrayList<>(selectedClients);
+            listaClienti.forEach(System.out::println);
 
             Prenotazione p = new Prenotazione(
-                    dataCreazione,           // dataCreazionePrenotazione
+                    LocalDate.now(),         // dataCreazionePrenotazione
                     dataInizio,              // dataInizioPrenotazione
                     dataFine,                // dataFinePrenotazione
-                    null,                    // dataEmissioneRicevuta (null per ora)
-                    null,                    // trattamento (TODO: converti da String a enum)
+                    null,                    // dataEmissioneRicevuta (null fintanto che non si fa checkOut)
+                    trattamentoEffettivo,                    // trattamento
                     getPriceForTreatment(trattamentoScelto), // prezzoAcquistoTrattamento
-                    "",                      // tipoDocumento (TODO: aggiungi al form)
-                    null,                    // dataRilascio
-                    null,                    // dataScadenza
+                    "Patente",                      // tipoDocumento (TODO: aggiungi al form)
+                    LocalDate.of(2025, 1, 1),                    // dataRilascio
+                    LocalDate.of(2035, 1, 1),                    // dataScadenza
                     intestatarioNome,        // intestatario
                     note,                    // noteAggiuntive
                     listaServizi,            // listaServizi
                     listaClienti,            // listaClienti
-                    "",                      // numeroDocumento
+                    "CAAAAA",                      // numeroDocumento
                     "Carta",                 // metodoPagamento (TODO: aggiungi al form)
-                    ""                       // cittadinanza
+                                           // cittadinanza
             );
 
             frontDeskClient.addPrenotazione(p);
