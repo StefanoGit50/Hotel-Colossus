@@ -6,6 +6,7 @@ import it.unisa.Common.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
@@ -26,7 +27,6 @@ import java.util.Map;
  */
 public class BookingCreation extends VBox {
 
-    private List<Cliente> clientDatabase;
     private List<Cliente> selectedClients;
     private List<ServiceItem> serviceItems; // Lista dei servizi disponibili
 
@@ -46,10 +46,8 @@ public class BookingCreation extends VBox {
     private Label lblSummaryNights;
     private FrontDeskClient frontDeskClient;
 
-
     public BookingCreation(FrontDeskClient frontDeskClient) {
         this.frontDeskClient = frontDeskClient;
-        this.clientDatabase = MainApp3.clienti;
         this.serviceItems = createServices(); // Inizializza i servizi
         this.selectedClients = new ArrayList<>();
         setupLayout();
@@ -220,7 +218,7 @@ public class BookingCreation extends VBox {
             int row = 0;
 
             //  Itera sul database e filtra
-            for (Cliente c : clientDatabase) {
+            for (Cliente c : MainApp3.clienti) {
                 boolean match = true;
 
                 // Filtro Nome
@@ -302,11 +300,13 @@ public class BookingCreation extends VBox {
 
 // NUOVO: Selettore Trattamento
         treatmentCombo = new ComboBox<>();
-        for (Trattamento t : MainApp3.trattamenti) {
+        //chiamata al DB
+        MainApp3.trattamenti = frontDeskClient.getTrattamenti();
+        for(Trattamento t : MainApp3.trattamenti) {
             treatmentCombo.getItems().add(t.getNome());
         }
 
-        treatmentCombo.setValue(MainApp3.trattamenti.getFirst().getNome());
+        treatmentCombo.setValue("Bed & Breakfast");
         treatmentCombo.setMaxWidth(Double.MAX_VALUE);
 // LISTENER TRATTAMENTO: Se cambia, ricalcola
         treatmentCombo.setOnAction(e -> updateTotals());
@@ -498,7 +498,6 @@ public class BookingCreation extends VBox {
             container.getChildren().add(fieldBox);
         }
     }
-
 
     // METODI PER I SERVIZI (INTEGRATI)
 
@@ -834,11 +833,11 @@ public class BookingCreation extends VBox {
 
         Button btnConfirm = new Button("✅ CONFERMA E SALVA PRENOTAZIONE");
         btnConfirm.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 12 30; -fx-cursor: hand; -fx-background-radius: 30;");
-        // Effetto: hover
+        // Effetto hover
         btnConfirm.setOnMouseEntered(e -> btnConfirm.setStyle("-fx-background-color: #219150; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 12 30; -fx-cursor: hand; -fx-background-radius: 30;"));
         btnConfirm.setOnMouseExited(e -> btnConfirm.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 12 30; -fx-cursor: hand; -fx-background-radius: 30;"));
 
-        // eveno: salvataggio nel DB
+        // Qui collegherai l'azione di salvataggio nel DB
         btnConfirm.setOnAction(e -> {
 
             LocalDate dataCreazione = LocalDate.now();
@@ -850,6 +849,7 @@ public class BookingCreation extends VBox {
 
             // Note
             String note = notesArea.getText();
+
 
             String trattamentoScelto = treatmentCombo.getValue();
             // TODO: Converti in enum Trattamento se necessario
@@ -937,107 +937,86 @@ public class BookingCreation extends VBox {
 
     private void updateTotals() {
         //  CALCOLO NOTTI
-        LocalDate start = (checkinDate != null) ? checkinDate.getValue() : null;
-        LocalDate end = (checkoutDate != null) ? checkoutDate.getValue() : null;
-        long nights = 1;
 
-        if (start != null && end != null) {
-            nights = ChronoUnit.DAYS.between(start, end);
-            if (nights <= 0) nights = 1; // Evitiamo prezzi negativi o zero
-        }
+            LocalDate start = (checkinDate != null) ? checkinDate.getValue() : null;
+            LocalDate end = (checkoutDate != null) ? checkoutDate.getValue() : null;
+            long nights = 1;
 
-        // Aggiorna la label delle notti nel riepilogo (se esiste)
-        if (lblSummaryNights != null) {
-            lblSummaryNights.setText("Durata soggiorno: " + nights + " notti");
-        }
+            if (start != null && end != null) {
+                nights = ChronoUnit.DAYS.between(start, end);
+                if (nights <= 0) nights = 1;
+            }
 
-        // CALCOLO COSTO CAMERE E CONTEGGIO OSPITI
-        double totalRoomCost = 0.0;
-        int totalGuests = 0;
+            if (lblSummaryNights != null) {
+                lblSummaryNights.setText("Durata soggiorno: " + nights + " notti");
+            }
 
+            double totalRoomCost = 0.0;
+            int totalGuests = 0;
 
-        if (roomsContainer != null) {
-            for (Node node : roomsContainer.getChildren()) {
-                if (node instanceof HBox) {
-                    HBox row = (HBox) node;
+            // LEGGI DAL COMBOBOX<CAMERA>
+            if (roomsContainer != null) {
+                for (Node node : roomsContainer.getChildren()) {
+                    if (node instanceof HBox) {
+                        HBox row = (HBox) node;
 
-                    // La struttura della riga è: [0:NumBox, 1:TypeBox, 2:GuestsWrapper, 3:BtnRemove]
+                        try {
+                            // La struttura è: [0:CameraBox, 1:TypeBox, 2:GuestsWrapper, 3:BtnRemove]
+                            VBox cameraBox = (VBox) row.getChildren().get(0);
+                            ComboBox<Camera> cameraCombo = (ComboBox<Camera>) cameraBox.getChildren().get(1);
 
-                    try {
-                        VBox typeBox = (VBox) row.getChildren().get(1);
-                        ComboBox<String> combo = (ComboBox<String>) typeBox.getChildren().get(1);
+                            Camera camera = cameraCombo.getValue();
 
-                        String type = combo.getValue();
+                            if (camera != null) {
+                                // USA IL PREZZO DELLA CAMERA
+                                totalRoomCost += (camera.getPrezzoCamera() * nights);
 
-                        // Somma Costo Camera (Prezzo * Notti)
-                        totalRoomCost += (getPriceForRoomType(type) * nights);
+                                // USA LA CAPACITÀ DELLA CAMERA
+                                totalGuests += camera.getCapacità();
+                            }
 
-                        // Somma Ospiti (per calcolo trattamento)
-                        totalGuests += getGuestsCountForType(type);
-
-                    } catch (Exception e) {
-                        System.err.println("Errore nel parsing della riga camera: " + e.getMessage());
+                        } catch (Exception e) {
+                            System.err.println("Errore nel parsing della riga camera: " + e.getMessage());
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
-        }
 
-        // CALCOLO TRATTAMENTO
-        // Formula: PrezzoTrattamento * NumeroPersone * Notti
-        double treatmentPricePerPerson = 0.0;
-        if (treatmentCombo != null && treatmentCombo.getValue() != null) {
-            treatmentPricePerPerson = getPriceForTreatment(treatmentCombo.getValue());
-        }
-
-        double totalTreatmentCost = treatmentPricePerPerson * totalGuests * nights;
-
-        // CALCOLO SERVIZI EXTRA
-        double totalServicesCost = 0.0;
-        if (serviceItems != null) {
-            for (ServiceItem item : serviceItems) {
-                totalServicesCost += item.getTotalPrice(); // item.price * item.quantity
+            // CALCOLO TRATTAMENTO
+            double treatmentPricePerPerson = 0.0;
+            if (treatmentCombo != null && treatmentCombo.getValue() != null) {
+                treatmentPricePerPerson = getPriceForTreatment(treatmentCombo.getValue());
             }
+
+            double totalTreatmentCost = treatmentPricePerPerson * totalGuests * nights;
+
+            // CALCOLO SERVIZI EXTRA
+            double totalServicesCost = 0.0;
+            if (serviceItems != null) {
+                for (ServiceItem item : serviceItems) {
+                    totalServicesCost += item.getTotalPrice();
+                }
+            }
+
+            // TOTALE GENERALE
+            double grandTotal = totalRoomCost + totalTreatmentCost + totalServicesCost;
+
+            // AGGIORNAMENTO UI
+            if (lblRoomTotal != null)
+                lblRoomTotal.setText(String.format("%.2f €", totalRoomCost));
+
+            if (lblTreatmentTotal != null)
+                lblTreatmentTotal.setText(String.format("%.2f €", totalTreatmentCost));
+
+            if (lblServiceTotal != null)
+                lblServiceTotal.setText(String.format("%.2f €", totalServicesCost));
+
+            if (lblGrandTotal != null)
+                lblGrandTotal.setText(String.format("%,.2f €", grandTotal));
         }
 
-        // TOTALE GENERALE
-        double grandTotal = totalRoomCost + totalTreatmentCost + totalServicesCost;
 
-        // AGGIORNAMENTO UI
-        if (lblRoomTotal != null)
-            lblRoomTotal.setText(String.format("%.2f €", totalRoomCost));
-
-        if (lblTreatmentTotal != null)
-            lblTreatmentTotal.setText(String.format("%.2f €", totalTreatmentCost));
-
-        if (lblServiceTotal != null)
-            lblServiceTotal.setText(String.format("%.2f €", totalServicesCost));
-
-        if (lblGrandTotal != null)
-            lblGrandTotal.setText(String.format("%,.2f €", grandTotal));
-    }
-
-
-    private double getPriceForRoomType(String type) {
-        if (type == null) return 0.0;
-        switch (type) {
-            case "SINGOLA": return 80.00;
-            case "DOPPIA / MATR.": return 120.00;
-            case "TRIPLA": return 150.00;
-            case "QUADRUPLA": return 190.00;
-            default: return 100.00;
-        }
-    }
-
-    private int getGuestsCountForType(String type) {
-        if (type == null) return 1;
-        String t = type.toUpperCase();
-        if (t.contains("SINGOLA")) return 1;
-        if (t.contains("DOPPIA") || t.contains("MATR")) return 2;
-        if (t.contains("TRIPLA")) return 3;
-        if (t.contains("QUADRUPLA")) return 4;
-        if (t.contains("SUITE")) return 2;
-        return 1;
-    }
 
     /**
      * Restituisce il supplemento giornaliero A PERSONA per il trattamento scelto.
@@ -1045,10 +1024,10 @@ public class BookingCreation extends VBox {
     private double getPriceForTreatment(String treatmentName) {
         if (treatmentName == null) return 0.0;
 
-        for (Trattamento t : MainApp3.trattamenti)
-            if (treatmentName.equalsIgnoreCase(t.getNome()))
-                return t.getPrezzo();
-        throw new RuntimeException("Treatmento nome '" + treatmentName + "' invalido");
+       for(Trattamento t :MainApp3.trattamenti ){
+           if(treatmentName.equals(t.getNome())) return t.getPrezzo();
+       }
+       throw new IllegalArgumentException("Treatmento nome non valido o non presente nel sistema");
     }
 
     private void selectClient(Cliente client) {
@@ -1102,12 +1081,11 @@ public class BookingCreation extends VBox {
         dialog.setTitle(client == null ? "Nuovo Cliente" : "Dettaglio Cliente");
         VBox dialogContent = new VBox();
         dialogContent.getStyleClass().add("client-dialog");
-        // ... (resto della logica dialog che avevi già)
 
 
         Label title = new Label("Dettagli Cliente " + (client != null ? client.getCognome(): "Nuovo"));
         dialogContent.getChildren().add(title);
-        javafx.scene.Scene dialogScene = new javafx.scene.Scene(dialogContent, 400, 300);
+        Scene dialogScene = new Scene(dialogContent, 400, 300);
         dialog.setScene(dialogScene);
         dialog.show();
     }
@@ -1124,13 +1102,15 @@ public class BookingCreation extends VBox {
         return box;
     }
 
-    // === MOCK DATA GENERATION ===
+    //RETRIEVE DATA
+
+
 
     private List<ServiceItem> createServices() {
 
         Map<String, ServiceItem> serviceMap = new HashMap<>();
 
-        for (Servizio servizio : MainApp3.servizi) {
+        for (Servizio servizio : MainApp3.servizio) {
             String nome = servizio.getNome();
 
             if (serviceMap.containsKey(nome)) {
@@ -1221,8 +1201,20 @@ public class BookingCreation extends VBox {
         return "✨";
     }
 
+    // === INNER CLASSES ===
 
-    // Elemento grafico rappresentante i servizi
+    public static class Client {
+        String name, surname, cf, nationality, gender, email, phone;
+        LocalDate birthDate;
+
+        public Client(String name, String surname, String cf, LocalDate birthDate, String nationality, String gender, String email, String phone) {
+            this.name = name; this.surname = surname; this.cf = cf; this.birthDate = birthDate;
+            this.nationality = nationality; this.gender = gender; this.email = email; this.phone = phone;
+        }
+        public String getFullName() { return name + " " + surname; }
+    }
+
+    // Nuova classe per i servizi
     public static class ServiceItem {
         String name;
         double unitPrice;
