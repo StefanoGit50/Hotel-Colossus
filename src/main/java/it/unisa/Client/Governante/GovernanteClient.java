@@ -2,8 +2,15 @@ package it.unisa.Client.Governante;
 
 import it.unisa.Common.Camera;
 
+import it.unisa.Server.Eccezioni.IllegalAccess;
+import it.unisa.interfacce.FrontDeskInterface;
 import it.unisa.interfacce.GovernanteInterface;
+
+import java.net.MalformedURLException;
 import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
@@ -15,6 +22,23 @@ import java.util.logging.Logger;
 
 public class GovernanteClient {
     static Logger logger = Logger.getLogger("global");
+    private static GovernanteInterface governanteInterface;
+    private static final boolean flag= false;
+
+    public GovernanteClient(){
+        if(!flag)startRMI();
+    }
+
+    private static void startRMI()  {
+        logger.info("Sto cercando gli oggetti remoti GestionePrenotazioni e Gestionecamere...");
+        try {
+            governanteInterface = (GovernanteInterface) Naming.lookup("rmi://localhost/GestoreCamere");
+            logger.info("oggetto trovato.");
+        } catch (MalformedURLException | NotBoundException | RemoteException e) {
+            System.err.println("ATTENZIONE: Impossibile connettersi al Server RMI.");
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Metodo principale che avvia il client della governante.
@@ -113,4 +137,21 @@ public class GovernanteClient {
             e.printStackTrace();
         }
     }
+
+    public boolean aggiornaStatoCamera(Camera c) {
+        if (c == null) return false;
+
+        try {
+            governanteInterface.aggiornaStatoCamera(c);
+        } catch (RemoteException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public ArrayList<Camera> getListaCamere() throws RemoteException, IllegalAccess {
+        return governanteInterface.getListaCamere();
+    }
+
 }

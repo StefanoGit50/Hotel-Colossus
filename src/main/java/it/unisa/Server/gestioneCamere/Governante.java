@@ -62,15 +62,6 @@ public class Governante extends UnicastRemoteObject implements GovernanteInterfa
 
     public static void main(String[] args) throws RemoteException {
         log.info("Ottengo le camere...");
-        CameraDAO dao = new CameraDAO();
-        ArrayList<Camera> listaCamere = null;
-        try {
-            listaCamere = (ArrayList<Camera>) dao.doRetriveAll("decrescente");
-                catalogoCamere.addCamere(listaCamere);
-                System.out.println(catalogoCamere.getListaCamere().size());
-        } catch (SQLException e) {
-            throw new RemoteException("Try istantiate \"Governate\" again!");
-        }
 
             log.info("Camere ottenute!");
 
