@@ -3,6 +3,7 @@ package it.unisa.Client.GUI.components;
 import it.unisa.Client.FrontDesk.FrontDeskClient;
 import it.unisa.Client.GUI.MainApp3;
 import it.unisa.Common.*;
+import it.unisa.Server.persistent.util.Stato;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -17,10 +18,7 @@ import org.jetbrains.annotations.UnknownNullability;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * BookingCreation - Creazione Prenotazione (V3 Modified with Services)
@@ -45,6 +43,7 @@ public class BookingCreation extends VBox {
     private Label lblRoomTotal, lblTreatmentTotal, lblServiceTotal, lblGrandTotal; // Etichette Tab 3
     private Label lblSummaryNights;
     private FrontDeskClient frontDeskClient;
+    private Map<Camera, List<Cliente>> cameraClientiMap = new HashMap<>();
 
     public BookingCreation(FrontDeskClient frontDeskClient) {
         this.frontDeskClient = frontDeskClient;
@@ -405,8 +404,8 @@ public class BookingCreation extends VBox {
         cameraCombo.setPromptText("Seleziona camera");
         cameraCombo.setPrefWidth(180);
 
-        // ✅ Mostra "101 - Singola" nel ComboBox
-        cameraCombo.setButtonCell(new javafx.scene.control.ListCell<Camera>() {
+        // Mostra "101 - Singola" nel ComboBox
+        cameraCombo.setButtonCell(new ListCell<Camera>() {
             @Override
             protected void updateItem(Camera camera, boolean empty) {
                 super.updateItem(camera, empty);
@@ -432,7 +431,7 @@ public class BookingCreation extends VBox {
 
         cameraBox.getChildren().addAll(lblCamera, cameraCombo);
 
-        // ===== 2. LABEL TIPOLOGIA (solo visualizzazione) =====
+        // LABEL TIPOLOGIA (solo visualizzazione)
         VBox typeBox = new VBox(5);
         Label lblType = new Label("Tipologia");
         lblType.setStyle("-fx-font-size: 10px; -fx-text-fill: #666;");
@@ -442,7 +441,7 @@ public class BookingCreation extends VBox {
 
         typeBox.getChildren().addAll(lblType, typeLabel);
 
-        // ===== 3. CONTENITORE OSPITI =====
+        //  CONTENITORE OSPITI
         VBox guestsWrapper = new VBox(5);
         Label lblGuests = new Label("Ospiti in camera");
         lblGuests.setStyle("-fx-font-size: 10px; -fx-text-fill: #666;");
@@ -451,18 +450,14 @@ public class BookingCreation extends VBox {
         guestsWrapper.getChildren().addAll(lblGuests, guestsContainer);
         HBox.setHgrow(guestsWrapper, Priority.ALWAYS);
 
-        // ===== 4. LISTENER: Quando selezioni camera =====
+        // LISTENER: Quando selezioni camera
         cameraCombo.setOnAction(e -> {
             Camera selectedCamera = cameraCombo.getValue();
 
             if (selectedCamera != null) {
-                // Aggiorna label tipologia
                 typeLabel.setText(selectedCamera.getNomeCamera());
-
-                // Genera campi ospiti in base alla CAPACITÀ
                 int capacita = selectedCamera.getCapacità();
-                generateGuestFields(capacita, guestsContainer);
-
+                generateGuestFields(capacita, guestsContainer, selectedCamera); // ← Passa camera
                 updateTotals();
             }
         });
@@ -481,23 +476,88 @@ public class BookingCreation extends VBox {
         updateTotals();
     }
 
-    private void generateGuestFields(int numGuests, VBox container) {
-        container.getChildren().clear(); // Pulisce i campi precedenti
+    private void generateGuestFields(int numGuests, VBox container, Camera camera) {
+        container.getChildren().clear();
+
+        List<Cliente> clientiInCamera = new ArrayList<>();
+        cameraClientiMap.put(camera, clientiInCamera);
 
         for (int i = 0; i < numGuests; i++) {
-            TextField guestField = new TextField();
-            guestField.setPromptText("Nome Ospite " + (i + 1));
-            guestField.setMaxWidth(Double.MAX_VALUE);
+            final int index = i; //indice per il listner
+
+            ComboBox<Cliente> guestCombo = new ComboBox<>();
+            guestCombo.getItems().addAll(selectedClients);
+            guestCombo.setPromptText("Seleziona Ospite " + (i + 1));
+            guestCombo.setMaxWidth(Double.MAX_VALUE);
+
+            guestCombo.setButtonCell(new ListCell<Cliente>() {
+                @Override
+                protected void updateItem(Cliente cliente, boolean empty) {
+                    super.updateItem(cliente, empty);
+                    setText(empty || cliente == null ? null : cliente.getNome() + " " + cliente.getCognome());
+                }
+            });
+
+            guestCombo.setCellFactory(param -> new ListCell<Cliente>() {
+                @Override
+                protected void updateItem(Cliente cliente, boolean empty) {
+                    super.updateItem(cliente, empty);
+                    setText(empty || cliente == null ? null : cliente.getNome() + " " + cliente.getCognome());
+                }
+            });
+
+            // LISTENER: Quando selezioni cliente -> aggiorna mappa
+            guestCombo.setOnAction(e -> {
+                Cliente selected = guestCombo.getValue();
+
+                if (selected != null) {
+                    // Assicurati che la lista abbia spazio
+                    while (clientiInCamera.size() <= index) {
+                        clientiInCamera.add(null);
+                    }
+
+                    // Metti il cliente nella posizione giusta
+                    clientiInCamera.set(index, selected);
+
+                    // Rimuovi eventuali null
+                    clientiInCamera.removeIf(c -> c == null);
+
+                    System.out.println("📊 Camera " + camera.getNumeroCamera() + ": " + clientiInCamera.size() + " clienti");
+                }
+            });
+
 
             HBox fieldBox = new HBox(5);
             fieldBox.setAlignment(Pos.CENTER_LEFT);
             Label icon = new Label("👤");
-            fieldBox.getChildren().addAll(icon, guestField);
-            HBox.setHgrow(guestField, Priority.ALWAYS);
+            fieldBox.getChildren().addAll(icon, guestCombo);
+            HBox.setHgrow(guestCombo, Priority.ALWAYS);
 
             container.getChildren().add(fieldBox);
         }
     }
+
+    private boolean hasDuplicateClients() {
+        for (Map.Entry<Camera, List<Cliente>> entry : cameraClientiMap.entrySet()) {
+            Camera camera = entry.getKey();
+            List<Cliente> clienti = entry.getValue();
+
+            // Controlla duplicati
+            Set<Cliente> uniqueClienti = new HashSet<>(clienti);
+
+            if (uniqueClienti.size() < clienti.size()) {
+                // Ci sono duplicati!
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("⚠️ Attenzione");
+                alert.setHeaderText("Cliente duplicato nella Camera " + camera.getNumeroCamera());
+                alert.setContentText("Hai selezionato lo stesso cliente più volte nella stessa camera.\n\nCorreggi prima di confermare.");
+                alert.showAndWait();
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     // METODI PER I SERVIZI (INTEGRATI)
 
@@ -840,6 +900,8 @@ public class BookingCreation extends VBox {
         // Qui collegherai l'azione di salvataggio nel DB
         btnConfirm.setOnAction(e -> {
 
+            if(hasDuplicateClients()) return;
+
             LocalDate dataInizio = checkinDate.getValue();
             LocalDate dataFine = checkoutDate.getValue();
 
@@ -870,7 +932,17 @@ public class BookingCreation extends VBox {
             }
 
             // Clienti selezionati
-            ArrayList<Cliente> listaClienti = new ArrayList<>(selectedClients);
+            ArrayList<Cliente> listaClienti = new ArrayList<>();
+
+            for (Map.Entry<Camera, List<Cliente>> entry : cameraClientiMap.entrySet()) {
+                Camera camera = entry.getKey();
+                List<Cliente> clienti = entry.getValue();
+
+                for (Cliente cliente : clienti) {
+                    cliente.setCamera(camera); // Assegna camera
+                    listaClienti.add(cliente);
+                }
+            }
             listaClienti.forEach(System.out::println);
 
             Prenotazione p = new Prenotazione(
@@ -887,14 +959,35 @@ public class BookingCreation extends VBox {
                     note,                    // noteAggiuntive
                     listaServizi,            // listaServizi
                     listaClienti,            // listaClienti
-                    "CAAAAA",                      // numeroDocumento
-                    "Carta",                 // metodoPagamento (TODO: aggiungi al form)
-                                           // cittadinanza
+                    "CAAAAA",                // numeroDocumento
+                    "Carta",                 // metodoPagamento
+                    "da inserire"            // cittadinanza
             );
 
-            frontDeskClient.addPrenotazione(p);
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Prenotazione Salvata!\nTotale: " + lblGrandTotal.getText());
-            alert.show();
+
+           try{
+               frontDeskClient.addPrenotazione(p);
+               for(Cliente c : p.getListaClienti()){
+                   if(LocalDate.now().equals(p.getDataInizio())) c.getCamera().setStatoCamera(Stato.Occupata);
+                   c.getCamera().setStatoCamera(Stato.Prenotata);
+                   frontDeskClient.aggiornaStatoCamera(c.getCamera().getNumeroCamera());
+               }
+
+               Alert alert = new Alert(Alert.AlertType.INFORMATION);
+               alert.setTitle("Successo");
+               alert.setHeaderText("Prenotazione Salvata!");
+               alert.setContentText("Totale: " + lblGrandTotal.getText());
+               alert.showAndWait();
+           } catch (Exception ex) {
+               Alert alert = new Alert(Alert.AlertType.ERROR);
+               alert.setTitle("Errore");
+               alert.setHeaderText("Impossibile salvare errore nell inserimento");
+               alert.setContentText(ex.getMessage());
+               alert.showAndWait();
+           }
+
+
+
         });
 
         content.getChildren().addAll(title, mainLayout, btnConfirm);

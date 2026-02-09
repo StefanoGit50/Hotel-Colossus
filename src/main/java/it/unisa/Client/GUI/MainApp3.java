@@ -401,11 +401,12 @@ public class MainApp3 extends Application {
     }*/
     private void showBookingCreation(){
         contentArea.getChildren().clear();
-        if (bookingCreationView == null){
+
+        if (bookingCreationView == null) {
             bookingCreationView = new BookingCreation(frontDeskClient);
         }
         contentArea.getChildren().add(bookingCreationView);
-        VBox.setVgrow(contoEconomicoView, Priority.ALWAYS);
+        VBox.setVgrow(bookingCreationView, Priority.ALWAYS);
     }
 
 

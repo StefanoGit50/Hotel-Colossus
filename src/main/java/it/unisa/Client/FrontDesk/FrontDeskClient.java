@@ -176,7 +176,7 @@ public class FrontDeskClient
         return cameras;
     }
 
-    public boolean aggiornaStatoCamera(int numeroCamera, String nuovoStato) throws RemoteException {
+    public boolean aggiornaStatoCamera(int numeroCamera) throws RemoteException {
         List<Camera> cameras = null;
         try{
             cameras = frontDeskInterface.getListaCamere();
