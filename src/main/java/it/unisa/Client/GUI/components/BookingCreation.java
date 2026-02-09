@@ -67,7 +67,7 @@ public class BookingCreation extends VBox {
         this.setStyle("-fx-background-color: white;");
     }
 
-    // ... [METODI TOPBAR E TAB1 INVARIATI] ...
+
     private HBox createTopBar() {
         HBox topBar = new HBox();
         topBar.setAlignment(Pos.CENTER_LEFT);
@@ -77,11 +77,7 @@ public class BookingCreation extends VBox {
         title.getStyleClass().add("booking-top-bar-title");
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-        Button guideBtn = new Button("📋 GUIDA");
-        guideBtn.getStyleClass().add("top-bar-btn");
-        Button closeBtn = new Button("✕ CHIUDI");
-        closeBtn.getStyleClass().add("top-bar-btn");
-        topBar.getChildren().addAll(title, spacer, guideBtn, closeBtn);
+        topBar.getChildren().addAll(title, spacer);
         return topBar;
     }
 
@@ -114,7 +110,7 @@ public class BookingCreation extends VBox {
         content.setPadding(new Insets(30, 40, 30, 40));
         content.getStyleClass().add("full-search-panel");
 
-        // --- SEZIONE 1: I CAMPI DI RICERCA ---
+
         VBox searchSection = new VBox(20);
         Label searchTitle = new Label("🔍 RICERCA CLIENTE NEL SISTEMA");
         searchTitle.getStyleClass().add("search-section-title");
@@ -209,10 +205,10 @@ public class BookingCreation extends VBox {
         //  LOGICA DI FILTRO
 
         searchBtn.setOnAction(e -> {
-            // 1. Pulisci i risultati precedenti
+            //  Pulisci i risultati precedenti
             resultsGrid.getChildren().clear();
 
-            // 2. Prendi i valori dagli input
+            // Prendi i valori dagli input
             String searchName = nameField.getText().trim().toLowerCase();
             String searchSurname = surnameField.getText().trim().toLowerCase();
             String searchNation = nationalityCombo.getValue();
@@ -222,7 +218,7 @@ public class BookingCreation extends VBox {
             int col = 0;
             int row = 0;
 
-            // 3. Itera sul database e filtra
+            //  Itera sul database e filtra
             for (Cliente c : clientDatabase) {
                 boolean match = true;
 
@@ -243,7 +239,7 @@ public class BookingCreation extends VBox {
                     match = false;
                 }
 
-                // 4. Se corrisponde, crea la card
+                //  Se corrisponde, crea la card
                 if (match) {
                     resultsGrid.add(createClientCard(c), col, row);
                     count++;
@@ -257,7 +253,7 @@ public class BookingCreation extends VBox {
                 }
             }
 
-            // 5. Aggiorna il contatore
+            //  Aggiorna il contatore
             resultsCountLabel.setText(count + " clienti trovati");
 
             if (count == 0) {
@@ -274,21 +270,20 @@ public class BookingCreation extends VBox {
         return content;
     }
 
-    // ===== TAB 2: DATI PRENOTAZIONE (MODIFICATO CON SERVIZI) =====
+    // TAB 2: DATI PRENOTAZIONE
     private VBox createTab2Content() {
         VBox content = new VBox(18);
         content.setPadding(new Insets(25, 30, 25, 30));
         content.getStyleClass().add("booking-main-panel");
 
-        // 1. Sezione Clienti Selezionati (Rimane uguale)
+        //  Sezione Clienti Selezionati (Rimane uguale)
         VBox selectedSection = createSection("👥 Clienti Selezionati (Pool)");
         selectedClientsPane = new FlowPane(10, 10);
         selectedClientsPane.setAlignment(Pos.CENTER_LEFT);
         updateSelectedClients(); // Popola inizialmente
         selectedSection.getChildren().add(selectedClientsPane);
 
-        // 2. Sezione Date (Rimane uguale)
-        // 2. Sezione Date
+        //  Sezione Date
         VBox dateSection = createSection("📅 Date e Trattamento"); // Rinominato
         GridPane dateGrid = new GridPane();
         dateGrid.setHgap(15); dateGrid.setVgap(15); // Aggiunto Vgap
@@ -318,16 +313,15 @@ public class BookingCreation extends VBox {
 
         dateSection.getChildren().add(dateGrid);
 
-        // 3. SEZIONE CAMERE DINAMICA (NUOVA LOGICA)
+
         VBox roomSection = new VBox(15);
         roomSection.getStyleClass().add("form-section");
 
-        // === MODIFICA QUI ===
         // Header con Titolo + CAMPO INTESTATARIO + Bottone Aggiungi
         HBox roomHeader = new HBox(15);
         roomHeader.setAlignment(Pos.CENTER_LEFT);
 
-        // A. Titolo Sezione
+        // Titolo Sezione
         Label roomTitle = new Label("🛏️ Assegnazione Camere");
         roomTitle.getStyleClass().add("section-heading");
 
@@ -335,7 +329,7 @@ public class BookingCreation extends VBox {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        // B. Campo Intestatario (Nuovo)
+        // Campo Intestatario
         HBox holderBox = new HBox(10);
         holderBox.setAlignment(Pos.CENTER_RIGHT); // Allineato a destra
 
@@ -347,28 +341,28 @@ public class BookingCreation extends VBox {
         intestatario.setPrefWidth(220);
         intestatario.getStyleClass().add("form-field-input");
 
-        // AUTO-COMPILAZIONE: Se c'è un cliente selezionato nel Tab 1, lo mettiamo qui
+
         if (!selectedClients.isEmpty()) {
             intestatario.setText(selectedClients.get(0).getNome()+" "+selectedClients.get(0).getCognome());
         }
 
         holderBox.getChildren().addAll(lblHolder, intestatario);
 
-        // C. Bottone Aggiungi
+        //  Bottone Aggiungi
         Button addRoomBtn = new Button("➕ Aggiungi Camera");
         addRoomBtn.setStyle("-fx-background-color: #e4c418; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;");
         addRoomBtn.setOnAction(e -> addRoomRow());
 
         // Aggiungiamo tutto all'header: Titolo -> Spazio -> Intestatario -> Bottone
         roomHeader.getChildren().addAll(roomTitle, spacer, holderBox, addRoomBtn);
-        // ====================
+
 
         // Contenitore delle righe
         roomsContainer = new VBox(10);
         addRoomRow(); // Aggiunge la prima riga di default
 
         roomSection.getChildren().addAll(roomHeader, roomsContainer);
-        // 4. Servizi e Note (Rimangono uguali)
+        //  Servizi e Note (Rimangono uguali)
         VBox servicesSection = createServicesSection();
 
         VBox noteSection = createSection("📝 Note");
@@ -398,7 +392,7 @@ public class BookingCreation extends VBox {
         row.setPadding(new Insets(15));
         row.setStyle("-fx-background-color: #f8f9fa; -fx-border-color: #dee2e6; -fx-border-radius: 5; -fx-background-radius: 5;");
 
-        // 1. Numero Camera
+        //  Numero Camera
         VBox numBox = new VBox(5);
         Label lblNum = new Label("N. Camera");
         lblNum.setStyle("-fx-font-size: 10px; -fx-text-fill: #666;");
@@ -407,7 +401,7 @@ public class BookingCreation extends VBox {
         txtNum.setPrefWidth(70);
         numBox.getChildren().addAll(lblNum, txtNum);
 
-        // 2. Tipologia (Trigger per i campi ospiti)
+        // Tipologia (Trigger per i campi ospiti)
         VBox typeBox = new VBox(5);
         Label lblType = new Label("Tipologia");
         lblType.setStyle("-fx-font-size: 10px; -fx-text-fill: #666;");
@@ -417,7 +411,7 @@ public class BookingCreation extends VBox {
         typeCombo.setPrefWidth(130);
         typeBox.getChildren().addAll(lblType, typeCombo);
 
-        // 3. Contenitore Ospiti (Dinamico)
+        // Contenitore Ospiti
         VBox guestsWrapper = new VBox(5);
         Label lblGuests = new Label("Ospiti in camera");
         lblGuests.setStyle("-fx-font-size: 10px; -fx-text-fill: #666;");
@@ -435,7 +429,7 @@ public class BookingCreation extends VBox {
         // Generazione iniziale
         generateGuestFields("SINGOLA", guestsContainer);
 
-        // 4. Bottone Rimuovi Riga
+        //  Bottone Rimuovi Riga
         Button btnRemove = new Button("✕");
         btnRemove.setStyle("-fx-text-fill: red; -fx-background-color: transparent; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand;");
         btnRemove.setTooltip(new Tooltip("Rimuovi questa camera"));
@@ -466,7 +460,7 @@ public class BookingCreation extends VBox {
         for (int i = 0; i < numGuests; i++) {
             TextField guestField = new TextField();
             guestField.setPromptText("Nome Ospite " + (i + 1));
-            guestField.getStyleClass().add("guest-field-input"); // Classe CSS opzionale
+            guestField.getStyleClass().add("guest-field-input");
             guestField.setMaxWidth(Double.MAX_VALUE);
 
             // Opzionale: Aggiungiamo un'iconcina piccola accanto
@@ -481,7 +475,7 @@ public class BookingCreation extends VBox {
     }
 
 
-    // ===== METODI PER I SERVIZI (INTEGRATI) =====
+    // METODI PER I SERVIZI (INTEGRATI)
 
     private VBox createServicesSection() {
         VBox section = new VBox(15);
@@ -530,7 +524,7 @@ public class BookingCreation extends VBox {
 
     private VBox createServiceCard(ServiceItem item) {
         VBox card = new VBox(12);
-        // Assicurati che 'booking-service-card' sia definito nel CSS, o usa uno stile inline/fallback
+        //  stile inline/fallback
         card.getStyleClass().add("booking-service-card");
         card.setStyle("-fx-background-color: #f9fafb; -fx-border-color: #e5e7eb; -fx-border-radius: 8; -fx-background-radius: 8;");
         card.setPadding(new Insets(16));
@@ -640,7 +634,7 @@ public class BookingCreation extends VBox {
         }
     }
 
-    // ============================================
+
 
     private VBox createSection(String title) {
         VBox section = new VBox(15);
@@ -659,8 +653,7 @@ public class BookingCreation extends VBox {
         return box;
     }
 
-    // ... [METODI createSearchField, createClientCard, createDetailRow etc. rimangono uguali] ...
-    // Li includo per completezza o puoi usare quelli che hai già
+
     private VBox createSearchField(String label, Control control) {
         VBox box = new VBox(8);
         Label lbl = new Label(label);
@@ -670,12 +663,12 @@ public class BookingCreation extends VBox {
     }
 
     private VBox createClientCard(@UnknownNullability Cliente client) {
-        // Implementazione identica a prima...
-        // Per brevità:
+
+
         VBox card = new VBox(15);
         card.setPadding(new Insets(20));
         card.getStyleClass().add("client-card-full");
-        // ... costruzione card ...
+        //  costruzione card
         HBox header = new HBox(15);
         header.setAlignment(Pos.CENTER_LEFT);
         Label icon = new Label("👤");
@@ -730,16 +723,16 @@ public class BookingCreation extends VBox {
         content.setAlignment(Pos.TOP_CENTER);
         content.setStyle("-fx-background-color: #f4f4f4;"); // Sfondo leggero
 
-        // --- TITOLO ---
+        //
         Label title = new Label("📋 Riepilogo e Conferma");
         title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
 
         HBox mainLayout = new HBox(40); // Spazio tra le due colonne
         mainLayout.setAlignment(Pos.CENTER);
 
-        // ============================================================
+
         // COLONNA SINISTRA: DATI SOGGIORNO E INTESTATARIO
-        // ============================================================
+
         VBox detailsBox = new VBox(15);
         detailsBox.setPrefWidth(400);
         detailsBox.setPadding(new Insets(20));
@@ -748,10 +741,10 @@ public class BookingCreation extends VBox {
         Label lblDetTitle = new Label("Dettagli Soggiorno");
         lblDetTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 18px; -fx-text-fill: #6d1331;");
 
-        // Label per il nome (verrà aggiornata quando si entra nel tab o si digita)
+        // Label per il nome
         Label lblSummaryName = new Label("Intestatario: -");
         lblSummaryName.setStyle("-fx-font-size: 14px; -fx-text-fill: #555;");
-        // Piccolo trucco: leghiamo questa label al campo di testo del Tab 2
+
         if (intestatario != null) {
             lblSummaryName.textProperty().bind(javafx.beans.binding.Bindings.concat("Intestatario: ", intestatario.textProperty()));
         }
@@ -822,14 +815,13 @@ public class BookingCreation extends VBox {
 
         // Qui collegherai l'azione di salvataggio nel DB
         btnConfirm.setOnAction(e -> {
-            // handleSaveBooking(); // Metodo futuro
+            frontDeskClient.addPrenotazione();
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Prenotazione Salvata!\nTotale: " + lblGrandTotal.getText());
             alert.show();
         });
 
         content.getChildren().addAll(title, mainLayout, btnConfirm);
 
-        // IMPORTANTE: Chiamiamo updateTotals adesso per assicurarci che
 
         updateTotals();
 
@@ -853,7 +845,7 @@ public class BookingCreation extends VBox {
         return row;
     }
 
-    // Metodo helper specifico per la riga del TOTALE (font più grande)
+    // Metodo helper specifico per la riga del TOTALE con font più grande
     private HBox createSummaryRowTotal(String labelText, Label valueLabel) {
         HBox row = new HBox();
         row.setAlignment(Pos.CENTER_LEFT);
@@ -870,7 +862,7 @@ public class BookingCreation extends VBox {
     }
 
     private void updateTotals() {
-        // --- 1. CALCOLO NOTTI ---
+        //  CALCOLO NOTTI
         LocalDate start = (checkinDate != null) ? checkinDate.getValue() : null;
         LocalDate end = (checkoutDate != null) ? checkoutDate.getValue() : null;
         long nights = 1;
@@ -885,18 +877,18 @@ public class BookingCreation extends VBox {
             lblSummaryNights.setText("Durata soggiorno: " + nights + " notti");
         }
 
-        // --- 2. CALCOLO COSTO CAMERE E CONTEGGIO OSPITI ---
+        // CALCOLO COSTO CAMERE E CONTEGGIO OSPITI
         double totalRoomCost = 0.0;
         int totalGuests = 0;
 
-        // Iteriamo su tutti i figli del contenitore (le righe delle camere)
+
         if (roomsContainer != null) {
             for (Node node : roomsContainer.getChildren()) {
                 if (node instanceof HBox) {
                     HBox row = (HBox) node;
 
                     // La struttura della riga è: [0:NumBox, 1:TypeBox, 2:GuestsWrapper, 3:BtnRemove]
-                    // Dentro TypeBox (VBox) c'è: [0:Label, 1:ComboBox]
+
                     try {
                         VBox typeBox = (VBox) row.getChildren().get(1);
                         ComboBox<String> combo = (ComboBox<String>) typeBox.getChildren().get(1);
@@ -916,7 +908,7 @@ public class BookingCreation extends VBox {
             }
         }
 
-        // . CALCOLO TRATTAMENTO
+        // CALCOLO TRATTAMENTO
         // Formula: PrezzoTrattamento * NumeroPersone * Notti
         double treatmentPricePerPerson = 0.0;
         if (treatmentCombo != null && treatmentCombo.getValue() != null) {
@@ -936,8 +928,7 @@ public class BookingCreation extends VBox {
         // TOTALE GENERALE
         double grandTotal = totalRoomCost + totalTreatmentCost + totalServicesCost;
 
-        // AGGIORNAMENTO UI (
-        // Aggiorniamo le label solo se sono state inizializzate (cioè se siamo passati dal createTab3Content)
+        // AGGIORNAMENTO UI
         if (lblRoomTotal != null)
             lblRoomTotal.setText(String.format("%.2f €", totalRoomCost));
 
@@ -1049,7 +1040,7 @@ public class BookingCreation extends VBox {
         dialogContent.getStyleClass().add("client-dialog");
         // ... (resto della logica dialog che avevi già)
 
-        // Dummy implementation per brevità
+
         Label title = new Label("Dettagli Cliente " + (client != null ? client.getCognome(): "Nuovo"));
         dialogContent.getChildren().add(title);
         javafx.scene.Scene dialogScene = new javafx.scene.Scene(dialogContent, 400, 300);
@@ -1086,11 +1077,11 @@ public class BookingCreation extends VBox {
             String nome = servizio.getNome();
 
             if (serviceMap.containsKey(nome)) {
-                // Servizio già presente → incrementa quantity
+                // Servizio già presente -> incrementa quantity
                 ServiceItem existing = serviceMap.get(nome);
                 existing.quantity++;
             } else {
-                // Primo incontro → crea nuovo ServiceItem
+                // Primo incontro -> crea nuovo ServiceItem
                 ServiceItem item = new ServiceItem(
                         servizio.getNome(),
                         servizio.getPrezzo(),
@@ -1101,7 +1092,7 @@ public class BookingCreation extends VBox {
             }
         }
 
-        // 3. Converti la Map in List e ritorna
+        //  Converti la Map in List e ritorna
         return new ArrayList<>(serviceMap.values());
     }
 
