@@ -51,10 +51,20 @@ public class MainApp3 extends Application {
     // ===== DATI =====
     private String currentUsername;
     private String currentRole;
+    public static List<Camera> camere;
+    public static List<Servizio> servizio;
+    public static List<Trattamento> trattamenti;
+    public static List<Cliente> clienti;
+
 
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws IllegalAccess, RemoteException {
         this.primaryStage = stage;
+
+        camere = frontDeskClient.getCamere();
+        servizio = frontDeskClient.getServizi();
+        trattamenti= frontDeskClient.getTrattamenti();
+        clienti = frontDeskClient.getListaClienti();
 
         // CONFIGURAZIONE FINESTRA (una volta sola)
         primaryStage.setTitle("Hotel Colossus");
