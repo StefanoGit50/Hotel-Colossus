@@ -63,8 +63,7 @@ public class RetrieveAllCCommand implements Command {
      */
     @Override
     public void execute() {
-        clienti = CatalogoClienti.getListaClientiBannati();
-        clienti.addAll(CatalogoClienti.getListaClienti());
+        clienti = CatalogoClienti.getListaClienti();
     }
 
     /**

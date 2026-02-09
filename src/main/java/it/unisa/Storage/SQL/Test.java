@@ -1,6 +1,10 @@
 package it.unisa.Storage.SQL;
 
 import it.unisa.Common.*;
+import it.unisa.Server.commandPattern.Invoker;
+import it.unisa.Server.gestionePrenotazioni.FrontDesk;
+import it.unisa.Server.persistent.obj.catalogues.CatalogoCamere;
+import it.unisa.Server.persistent.obj.catalogues.CatalogoClienti;
 import it.unisa.Server.persistent.util.Stato;
 import it.unisa.Storage.DAO.PrenotazioneDAO;
 import it.unisa.interfacce.FrontDeskInterface;
@@ -12,10 +16,11 @@ import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Test {
 
-    public static FrontDeskInterface frontDesk;
+//    public static FrontDesk frontDesk;
     public static ArrayList<Servizio> listaServizi = new ArrayList<>();
     public static ArrayList<Camera> listaCamere = new ArrayList<>();
     public static ArrayList<Cliente> listaClienti = new ArrayList<>();
@@ -32,7 +37,8 @@ public class Test {
     }
 
     public static void istantiateFrontDesk() throws RemoteException, NotBoundException, MalformedURLException {
-        frontDesk = (FrontDeskInterface) Naming.lookup("rmi://localhost:1099/GestionePrenotazioni");
+//        frontDesk = new FrontDesk();
+                //= (FrontDeskInterface) Naming.lookup("rmi://localhost:1099/GestionePrenotazioni");
 
         // Lista clienti
 
@@ -153,14 +159,8 @@ public class Test {
 
     public static void main(String[] args) throws Exception {
 
-        Test.istantiateNumberOfInstances();
-        Test.istantiateFrontDesk();
-
-        ArrayList<Prenotazione> p = frontDesk.getListaPrenotazioniAttive();
-
-        System.out.println(p.size());
-        p.forEach(prenotazione -> {
-            System.out.println("Inizio: " + prenotazione.getDataInizio() + "Fine: " + prenotazione.getDataFine());
-        });
+        FrontDesk f = new FrontDesk(new Invoker(), new CatalogoCamere());
+        ArrayList<Cliente> cliente = f.getListaClienti();
+        cliente.forEach(System.out::println);
     }
 }

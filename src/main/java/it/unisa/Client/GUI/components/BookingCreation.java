@@ -1,8 +1,8 @@
 package it.unisa.Client.GUI.components;
 
 import it.unisa.Client.FrontDesk.FrontDeskClient;
-import it.unisa.Common.Cliente;
-import it.unisa.Common.Servizio;
+import it.unisa.Client.GUI.MainApp3;
+import it.unisa.Common.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -46,9 +46,10 @@ public class BookingCreation extends VBox {
     private Label lblSummaryNights;
     private FrontDeskClient frontDeskClient;
 
+
     public BookingCreation(FrontDeskClient frontDeskClient) {
         this.frontDeskClient = frontDeskClient;
-        this.clientDatabase = createClients();
+        this.clientDatabase = MainApp3.clienti;
         this.serviceItems = createServices(); // Inizializza i servizi
         this.selectedClients = new ArrayList<>();
         setupLayout();
@@ -301,8 +302,11 @@ public class BookingCreation extends VBox {
 
 // NUOVO: Selettore Trattamento
         treatmentCombo = new ComboBox<>();
-        treatmentCombo.getItems().addAll("B&B (Colazione)", "Mezza Pensione", "Pensione Completa", "All Inclusive");
-        treatmentCombo.setValue("B&B (Colazione)");
+        for (Trattamento t : MainApp3.trattamenti) {
+            treatmentCombo.getItems().add(t.getNome());
+        }
+
+        treatmentCombo.setValue(MainApp3.trattamenti.getFirst().getNome());
         treatmentCombo.setMaxWidth(Double.MAX_VALUE);
 // LISTENER TRATTAMENTO: Se cambia, ricalcola
         treatmentCombo.setOnAction(e -> updateTotals());
@@ -386,84 +390,105 @@ public class BookingCreation extends VBox {
     }
 
     private void addRoomRow() {
-        // Creiamo una "Card" o un Box per la singola riga camera
         HBox row = new HBox(15);
-        row.setAlignment(Pos.TOP_LEFT); // Allineato in alto per gestire i campi ospiti multipli
+        row.setAlignment(Pos.TOP_LEFT);
         row.setPadding(new Insets(15));
         row.setStyle("-fx-background-color: #f8f9fa; -fx-border-color: #dee2e6; -fx-border-radius: 5; -fx-background-radius: 5;");
 
-        //  Numero Camera
-        VBox numBox = new VBox(5);
-        Label lblNum = new Label("N. Camera");
-        lblNum.setStyle("-fx-font-size: 10px; -fx-text-fill: #666;");
-        TextField txtNum = new TextField();
-        txtNum.setPromptText("101");
-        txtNum.setPrefWidth(70);
-        numBox.getChildren().addAll(lblNum, txtNum);
+        // ===== 1. COMBOBOX CAMERA (unico!) =====
+        VBox cameraBox = new VBox(5);
+        Label lblCamera = new Label("Camera");
+        lblCamera.setStyle("-fx-font-size: 10px; -fx-text-fill: #666;");
 
-        // Tipologia (Trigger per i campi ospiti)
+        ComboBox<Camera> cameraCombo = new ComboBox<>();
+        cameraCombo.getItems().addAll(MainApp3.camere); // Tutte le camere
+        cameraCombo.setPromptText("Seleziona camera");
+        cameraCombo.setPrefWidth(180);
+
+        // ✅ Mostra "101 - Singola" nel ComboBox
+        cameraCombo.setButtonCell(new javafx.scene.control.ListCell<Camera>() {
+            @Override
+            protected void updateItem(Camera camera, boolean empty) {
+                super.updateItem(camera, empty);
+                if (empty || camera == null) {
+                    setText(null);
+                } else {
+                    setText(camera.getNumeroCamera() + " - " + camera.getNomeCamera());
+                }
+            }
+        });
+
+        cameraCombo.setCellFactory(param -> new javafx.scene.control.ListCell<Camera>() {
+            @Override
+            protected void updateItem(Camera camera, boolean empty) {
+                super.updateItem(camera, empty);
+                if (empty || camera == null) {
+                    setText(null);
+                } else {
+                    setText(camera.getNumeroCamera() + " - " + camera.getNomeCamera());
+                }
+            }
+        });
+
+        cameraBox.getChildren().addAll(lblCamera, cameraCombo);
+
+        // ===== 2. LABEL TIPOLOGIA (solo visualizzazione) =====
         VBox typeBox = new VBox(5);
         Label lblType = new Label("Tipologia");
         lblType.setStyle("-fx-font-size: 10px; -fx-text-fill: #666;");
-        ComboBox<String> typeCombo = new ComboBox<>();
-        typeCombo.getItems().addAll("SINGOLA", "DOPPIA / MATR.", "TRIPLA", "QUADRUPLA");
-        typeCombo.setValue("SINGOLA"); // Default
-        typeCombo.setPrefWidth(130);
-        typeBox.getChildren().addAll(lblType, typeCombo);
 
-        // Contenitore Ospiti
+        Label typeLabel = new Label("-");
+        typeLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #6d1331;");
+
+        typeBox.getChildren().addAll(lblType, typeLabel);
+
+        // ===== 3. CONTENITORE OSPITI =====
         VBox guestsWrapper = new VBox(5);
         Label lblGuests = new Label("Ospiti in camera");
         lblGuests.setStyle("-fx-font-size: 10px; -fx-text-fill: #666;");
 
-        VBox guestsContainer = new VBox(5); // Conterrà i TextField
+        VBox guestsContainer = new VBox(5);
         guestsWrapper.getChildren().addAll(lblGuests, guestsContainer);
-        HBox.setHgrow(guestsWrapper, Priority.ALWAYS); // Si espande
+        HBox.setHgrow(guestsWrapper, Priority.ALWAYS);
 
-        //Quando cambio la combo, rigenero i campi ospiti
-        typeCombo.setOnAction(e -> {
-            generateGuestFields(typeCombo.getValue(), guestsContainer);
+        // ===== 4. LISTENER: Quando selezioni camera =====
+        cameraCombo.setOnAction(e -> {
+            Camera selectedCamera = cameraCombo.getValue();
+
+            if (selectedCamera != null) {
+                // Aggiorna label tipologia
+                typeLabel.setText(selectedCamera.getNomeCamera());
+
+                // Genera campi ospiti in base alla CAPACITÀ
+                int capacita = selectedCamera.getCapacità();
+                generateGuestFields(capacita, guestsContainer);
+
+                updateTotals();
+            }
+        });
+
+        // ===== 5. BOTTONE RIMUOVI =====
+        Button btnRemove = new Button("✕");
+        btnRemove.setStyle("-fx-text-fill: red; -fx-background-color: transparent; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand;");
+        btnRemove.setOnAction(e -> {
+            roomsContainer.getChildren().remove(row);
             updateTotals();
         });
 
-        // Generazione iniziale
-        generateGuestFields("SINGOLA", guestsContainer);
-
-        //  Bottone Rimuovi Riga
-        Button btnRemove = new Button("✕");
-        btnRemove.setStyle("-fx-text-fill: red; -fx-background-color: transparent; -fx-font-weight: bold; -fx-font-size: 14px; -fx-cursor: hand;");
-        btnRemove.setTooltip(new Tooltip("Rimuovi questa camera"));
-        btnRemove.setOnAction(e -> {
-            roomsContainer.getChildren().remove(row);
-            updateTotals(); // Ricalcola se tolgo una stanza
-        });
-
-        // Assemblaggio Riga
-        row.getChildren().addAll(numBox, typeBox, guestsWrapper, btnRemove);
-
-        // Aggiunta al contenitore principale
+        // Aggiungi tutto alla riga
+        row.getChildren().addAll(cameraBox, typeBox, guestsWrapper, btnRemove);
         roomsContainer.getChildren().add(row);
         updateTotals();
     }
 
-    private void generateGuestFields(String roomType, VBox container) {
+    private void generateGuestFields(int numGuests, VBox container) {
         container.getChildren().clear(); // Pulisce i campi precedenti
-
-        int numGuests = 1;
-        switch (roomType) {
-            case "SINGOLA": numGuests = 1; break;
-            case "DOPPIA / MATR.": numGuests = 2; break;
-            case "TRIPLA": numGuests = 3; break;
-            case "QUADRUPLA": numGuests = 4; break;
-        }
 
         for (int i = 0; i < numGuests; i++) {
             TextField guestField = new TextField();
             guestField.setPromptText("Nome Ospite " + (i + 1));
-            guestField.getStyleClass().add("guest-field-input");
             guestField.setMaxWidth(Double.MAX_VALUE);
 
-            // Opzionale: Aggiungiamo un'iconcina piccola accanto
             HBox fieldBox = new HBox(5);
             fieldBox.setAlignment(Pos.CENTER_LEFT);
             Label icon = new Label("👤");
@@ -809,13 +834,62 @@ public class BookingCreation extends VBox {
 
         Button btnConfirm = new Button("✅ CONFERMA E SALVA PRENOTAZIONE");
         btnConfirm.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 12 30; -fx-cursor: hand; -fx-background-radius: 30;");
-        // Effetto hover
+        // Effetto: hover
         btnConfirm.setOnMouseEntered(e -> btnConfirm.setStyle("-fx-background-color: #219150; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 12 30; -fx-cursor: hand; -fx-background-radius: 30;"));
         btnConfirm.setOnMouseExited(e -> btnConfirm.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 12 30; -fx-cursor: hand; -fx-background-radius: 30;"));
 
-        // Qui collegherai l'azione di salvataggio nel DB
+        // eveno: salvataggio nel DB
         btnConfirm.setOnAction(e -> {
-            frontDeskClient.addPrenotazione();
+
+            LocalDate dataCreazione = LocalDate.now();
+            LocalDate dataInizio = checkinDate.getValue();
+            LocalDate dataFine = checkoutDate.getValue();
+
+            // Intestatario
+            String intestatarioNome = intestatario.getText();
+
+            // Note
+            String note = notesArea.getText();
+
+            String trattamentoScelto = treatmentCombo.getValue();
+            // TODO: Converti in enum Trattamento se necessario
+
+            // Servizi selezionati (solo quelli con quantity > 0)
+            ArrayList<Servizio> listaServizi = new ArrayList<>();
+            for (ServiceItem item : serviceItems) {
+                if (item.quantity > 0) {
+                    for (int i = 0; i < item.quantity; i++) {
+                        Servizio s = new Servizio();
+                        s.setNome(item.name);
+                        s.setPrezzo(item.unitPrice);
+                        listaServizi.add(s);
+                    }
+                }
+            }
+
+            // Clienti selezionati
+            ArrayList<Cliente> listaClienti = new ArrayList<>(selectedClients);
+
+            Prenotazione p = new Prenotazione(
+                    dataCreazione,           // dataCreazionePrenotazione
+                    dataInizio,              // dataInizioPrenotazione
+                    dataFine,                // dataFinePrenotazione
+                    null,                    // dataEmissioneRicevuta (null per ora)
+                    null,                    // trattamento (TODO: converti da String a enum)
+                    getPriceForTreatment(trattamentoScelto), // prezzoAcquistoTrattamento
+                    "",                      // tipoDocumento (TODO: aggiungi al form)
+                    null,                    // dataRilascio
+                    null,                    // dataScadenza
+                    intestatarioNome,        // intestatario
+                    note,                    // noteAggiuntive
+                    listaServizi,            // listaServizi
+                    listaClienti,            // listaClienti
+                    "",                      // numeroDocumento
+                    "Carta",                 // metodoPagamento (TODO: aggiungi al form)
+                    ""                       // cittadinanza
+            );
+
+            frontDeskClient.addPrenotazione(p);
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Prenotazione Salvata!\nTotale: " + lblGrandTotal.getText());
             alert.show();
         });
@@ -971,20 +1045,10 @@ public class BookingCreation extends VBox {
     private double getPriceForTreatment(String treatmentName) {
         if (treatmentName == null) return 0.0;
 
-        // Logica prezzi fittizia
-        if (treatmentName.contains("B&B") || treatmentName.contains("Colazione")) {
-            return 0.0; // Incluso nel prezzo base
-        }
-        if (treatmentName.contains("Mezza Pensione")) {
-            return 35.0; // +35€ a persona a notte
-        }
-        if (treatmentName.contains("Pensione Completa")) {
-            return 60.0; // +60€ a persona a notte
-        }
-        if (treatmentName.contains("All Inclusive")) {
-            return 90.0; // +90€ a persona a notte
-        }
-        return 0.0;
+        for (Trattamento t : MainApp3.trattamenti)
+            if (treatmentName.equalsIgnoreCase(t.getNome()))
+                return t.getPrezzo();
+        throw new RuntimeException("Treatmento nome '" + treatmentName + "' invalido");
     }
 
     private void selectClient(Cliente client) {
@@ -1062,18 +1126,11 @@ public class BookingCreation extends VBox {
 
     // === MOCK DATA GENERATION ===
 
-    private List<Cliente> createClients() {
-        return frontDeskClient.getListaClienti();
-
-    }
-
     private List<ServiceItem> createServices() {
-
-        List<Servizio> servizios = frontDeskClient.getServizi();
 
         Map<String, ServiceItem> serviceMap = new HashMap<>();
 
-        for (Servizio servizio : servizios) {
+        for (Servizio servizio : MainApp3.servizi) {
             String nome = servizio.getNome();
 
             if (serviceMap.containsKey(nome)) {
@@ -1164,20 +1221,8 @@ public class BookingCreation extends VBox {
         return "✨";
     }
 
-    // === INNER CLASSES ===
 
-    public static class Client {
-        String name, surname, cf, nationality, gender, email, phone;
-        LocalDate birthDate;
-
-        public Client(String name, String surname, String cf, LocalDate birthDate, String nationality, String gender, String email, String phone) {
-            this.name = name; this.surname = surname; this.cf = cf; this.birthDate = birthDate;
-            this.nationality = nationality; this.gender = gender; this.email = email; this.phone = phone;
-        }
-        public String getFullName() { return name + " " + surname; }
-    }
-
-    // Nuova classe per i servizi
+    // Elemento grafico rappresentante i servizi
     public static class ServiceItem {
         String name;
         double unitPrice;
